@@ -33,7 +33,7 @@
   $(function() {
     var context = $("#radar")[0].getContext("2d");
     new Chart(context).Radar({
-      labels: ["availability", "frequency of update", "information", "principles", "performance"],
+      labels: ["availability", "freshness", "operation", "usefulness", "validity", "performance"],
       datasets: [
         {
             label: "Pathway Commons @Malaga",
@@ -43,7 +43,7 @@
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
             pointHighlightStroke: "rgba(220,220,220,1)",
-            data: [75, 69, 64, 51, 56]
+            data: [75, 69, 64, 51, 56, 80]
         },
         {
             label: "Average",
@@ -53,7 +53,7 @@
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
             pointHighlightStroke: "rgba(151,187,205,1)",
-            data: [58, 48, 40, 69, 50]
+            data: [58, 48, 40, 69, 50, 45]
         }
     ]
   }, {
