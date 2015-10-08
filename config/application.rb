@@ -33,13 +33,11 @@ module YummydataUi
     config.active_record.raise_in_transactional_callbacks = true
 
     config.generators do |g|
-      g.stylesheets false
       g.javascripts false
+      g.stylesheets false
       g.template_engine :slim
       g.test_framework :rspec, view_specs: false, fixture: true
-      g.fixture_replacement :factory_girl, dir: "spec/factories"
+      g.fixture_replacement :factory_girl, dir: 'spec/factories'
     end
-
   end
 end
-
