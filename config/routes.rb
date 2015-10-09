@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
-  get 'endpoints/search'
+  root 'endpoints#top'
+
+  get  'endpoints/search'
+  get  'endpoints/view'
+  get  'endpoints/graph'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

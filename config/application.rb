@@ -39,5 +39,7 @@ module YummydataUi
       g.test_framework :rspec, view_specs: false, fixture: true
       g.fixture_replacement :factory_girl, dir: 'spec/factories'
     end
+
+    config.assets.precompile = ['*.js','*.css']
   end
 end

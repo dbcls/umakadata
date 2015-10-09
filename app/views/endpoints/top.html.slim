@@ -1,22 +1,21 @@
-h1 Endpoint Search
-form[action="#"]
-  .form-group
-    label name
-    input.form-control[type="text" name="name"]
-  .form-group
-    label keyword
-    input.form-control[type="text" name="keyword"]
-  .form-group
-    label.control-label order
-    select.form-control[name="order"]
-      option[value="availability"] Availability
-      option[value="freshness"]    Freshness
-      option[value="operation"]    Operation
-      option[value="usefulness"]   Usefulness
-      option[value="validity"]     Validity
-      option[value="performance"]  Performance
-  input.btn.btn-default[type="submit" value="Search"]
-hr
+= javascript_include_tag 'Chart.min'
+= javascript_include_tag 'yummydata/top'
+
+h1.page-header Dashboard
+.row.placeholders
+  .col-xs-6.col-sm-3.placeholder
+    canvas#score[width="200" height="200"]
+    h4 Scores
+    span.text-muted Total Scores
+  .col-xs-6.col-sm-3.placeholder
+    canvas#alive[width="200" height="200"]
+    h4 Alive
+    span.text-muted Alive
+  .col-xs-12.col-sm-6.placeholder
+    canvas#avg[width="400" height="200"]
+    h4 Transitions
+    span.text-muted Transistions
+h2.sub-header Last Updated
 .table-responsive
   table.table.table-striped
     thead

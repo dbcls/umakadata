@@ -12,4 +12,27 @@ html[lang="en"]
     = javascript_include_tag 'application'
     = csrf_meta_tags
   body
-    == yield
+    nav.navbar.navbar-inverse.navbar-fixed-top
+      .container-fluid
+        .navbar-header
+          button.navbar-toggle.collapsed[type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"]
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand[href="#"] Yummy Data
+        #navbar.navbar-collapse.collapse
+          form.navbar-form.navbar-right
+            input.form-control[type="text" placeholder="Search..."]
+    .container-fluid
+      .row
+        .col-sm-3.col-md-2.sidebar
+          ul.nav.nav-sidebar
+            li
+              = link_to 'Overview',  "/"
+            li
+              = link_to 'Endpoint Search',  {:controller => 'endpoints', :action => 'search'}
+            li
+              = link_to 'Link Graph',  {:controller => 'endpoints', :action => 'graph'}
+        .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
+          == yield
