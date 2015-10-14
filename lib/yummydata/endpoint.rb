@@ -46,6 +46,14 @@ module Yummydata
       end
     end
 
+    ##
+    # A boolan value whether if the SPARQL endpoint has service description documents.
+    #
+    # @return [Boolean]
+    def has_service_description?
+      !(get_service_description.nil?)
+    end
+
     private
     def send_get_request(headers)
       http = Net::HTTP.new(@uri.host, @uri.port)
