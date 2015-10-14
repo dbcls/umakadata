@@ -2,6 +2,8 @@ module Yummydata
 
   class Endpoint
 
+    SERVICE_DESC_CONTEXT_TYPE = %w(text/turtle application/rdf+xml).freeze
+
     ##
     # The time that the last query taken to get the results
     #
@@ -10,6 +12,7 @@ module Yummydata
 
     def initialize(uri)
       @uri = URI(uri)
+      @service_description = nil
     end
 
     ##
@@ -19,6 +22,28 @@ module Yummydata
     def is_alive?
       response = send_get_request(nil)
       response.is_a? Net::HTTPOK
+    end
+
+    ##
+    # A string value that describes what services are provided at the SPARQL endpoint.
+    #
+    # @return [String|nil]
+    def get_service_description
+      if @service_description && !@service_description.empty?
+        return @service_description
+      end
+
+      headers = {}
+      headers['Accept'] = SERVICE_DESC_CONTEXT_TYPE.join(',')
+
+      response = send_get_request(headers)
+      # TODO add validation of description
+
+      if response.is_a? Net::HTTPSuccess && !response.body.empty?
+        @service_description = response.body
+      else
+        @service_description = nil
+      end
     end
 
     private
