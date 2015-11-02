@@ -49,3 +49,11 @@ gem 'slim-rails'
 gem 'rspec-rails'
 gem 'factory_girl_rails'
 
+# ActiveAdmin
+gem 'activeadmin', github: 'activeadmin'
+gem 'devise'
+gem 'cancan' # or cancancan
+gem 'draper'
+gem 'pundit'
+
+gem 'yummydata', :path => '../yummydata'

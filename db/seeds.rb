@@ -5,3 +5,21 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+AdminUser.delete_all
+AdminUser.create!(email: 'doi@level-five.jp', password: 'password', password_confirmation: 'password')
+AdminUser.create!(email: 'daisuke.satoh@level-five.jp', password: 'password', password_confirmation: 'password')
+
+seeds = ['Endpoint']
+seeds.each do |table|
+  Model = Object.const_get(table)
+  Model.delete_all
+  csv = CSV.readlines("db/seeds_data/%s.csv" % table.underscore.pluralize)
+  columns = csv.shift
+  csv.each do |row|
+    data = {}
+    columns.each_with_index do |column, index|
+      data[column] = row[index]
+    end
+    Model.create!(data)
+  end
+end
