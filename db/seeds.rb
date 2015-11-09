@@ -5,9 +5,10 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-AdminUser.delete_all
-AdminUser.create!(email: 'doi@level-five.jp', password: 'password', password_confirmation: 'password')
-AdminUser.create!(email: 'daisuke.satoh@level-five.jp', password: 'password', password_confirmation: 'password')
+if AdminUser.count == 0
+  AdminUser.create!(email: 'doi@level-five.jp', password: 'password', password_confirmation: 'password')
+  AdminUser.create!(email: 'daisuke.satoh@level-five.jp', password: 'password', password_confirmation: 'password')
+end
 
 seeds = ['Endpoint']
 seeds.each do |table|

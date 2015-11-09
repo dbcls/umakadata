@@ -57,3 +57,5 @@ gem 'draper'
 gem 'pundit'
 
 gem 'yummydata', :path => '../yummydata'
+
+gem 'sparql-client'

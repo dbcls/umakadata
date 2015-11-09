@@ -5,6 +5,7 @@ class EndpointsController < ApplicationController
   end
 
   def search
+    puts Endpoint.all.inspect
   end
 
   def show

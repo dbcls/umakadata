@@ -40,6 +40,11 @@ module YummydataUi
       g.fixture_replacement :factory_girl, dir: 'spec/factories'
     end
 
+    # config.time_zone = 'Tokyo'
+    # config.active_record.default_timezone = :local
+    config.time_zone = 'UTC'
+    config.active_record.default_timezone = :utc
+
     config.assets.precompile = ['*.js','*.css']
 
     config.autoload_paths += %W(#{config.root}/lib)
