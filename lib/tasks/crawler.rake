@@ -1,8 +1,6 @@
-require 'yaml'
-
-class Tasks::Crawler
-
-  def self.check_endpoints
+namespace :crawler do
+  desc "check endpoint liveness"
+  task :endpoints => :environment do
     Endpoint.all.each do |endpoint|
       puts endpoint.name
       checker = Yummydata::Endpoint.new endpoint.url
@@ -14,7 +12,8 @@ class Tasks::Crawler
     end
   end
 
-  def self.check_updates
+  desc "check endpoint update"
+  task :updates => :environment do
     Endpoint.all.each do |endpoint|
       puts endpoint.name
       logs = CheckLog.where(:endpoint_id => endpoint.id).order("created_at DESC")
@@ -43,18 +42,24 @@ class Tasks::Crawler
     end
   end
 
-  def self.check_validity
+  desc "check endpoint validity"
+  task :validity => :environment do
     Endpoint.all.each do |endpoint|
-      puts endpoint.name
+      puts endpoint.id.to_s + ":" + endpoint.name
       logs = CheckLog.where(:endpoint_id => endpoint.id).order("created_at DESC")
       if logs == nil || !logs[0][:alive]
         next
       end
 
-      checker = Yummydata::LinkedData.new endpoint.url
-      results = checker.check
-      rules = LinkedDataRules.new results
-      rules.save!
+      begin
+        checker = Yummydata::LinkedData.new endpoint.url
+        results = checker.check
+        rules = LinkedDataRule.new results
+        rules.endpoint_id = endpoint.id
+        rules.save!
+      rescue
+        puts "failed."
+      end
     end
   end
 

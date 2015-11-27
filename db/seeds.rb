@@ -24,3 +24,7 @@ seeds.each do |table|
     Model.create!(data)
   end
 end
+
+CheckLog.delete_all
+EndpointUpdateInfo.delete_all
+LinkedDataRule.delete_all

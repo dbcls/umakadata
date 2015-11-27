@@ -1,7 +1,7 @@
 = javascript_include_tag 'Chart.min'
 = javascript_include_tag 'yummydata/view'
 
-h1.page-header Pathway Commons @Malaga
+h1.page-header = @endpoint.name
 .row
   .col-xs-12.col-sm-6
     h2 Rank A
@@ -13,54 +13,55 @@ h1.page-header Pathway Commons @Malaga
       tbody
         tr
           td Alive
-          td Alive (85%)
+          td -
         tr
             td Service Description
-            td Available
+            td -
         tr
           td Last Updated
-          td 2015/10/10 (per 30 days)
+          td -
         tr
           td VoID
-          td Available
+          td -
         tr
           td Organization Information
-          td Available
+          td -
         tr
           td License Information
-          td Available
+          td -
         tr
           td Vocabulary
-          td 1000
+          td -
         tr
           td Ontology
-          td Available
+          td -
         tr
           td 4 Principles of Linked Data
-          td 3/4
+          td
+            = @linked_data_rule_score
         tr
           td Cool URI
-          td 70%
+          td -
         tr
           td Support for Content Negotiation
-          td Available
+          td -
         tr
           td Support for HTML Data Format
-          td Available
+          td -
         tr
           td Support for Turtle Data Format
-          td Available
+          td -
         tr
           td Links to Other Dataset
-          td 1000
+          td -
         tr
           td Metadata
-          td Available
+          td -
         tr
           td Data Entry
-          td 100000
+          td -
         tr
           td Response Time
-          td 0.1 sec
+          td  -
   .col-xs-12.col-sm-6
     canvas#radar[width="400" height="400"]

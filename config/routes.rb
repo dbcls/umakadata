@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   root 'endpoints#top'
 
   get  'endpoints/search'
-  get  'endpoints/view'
+  get  'endpoints/:id'                 => 'endpoints#show',  as: 'endpoint'
   get  'endpoints/graph'
 
   # The priority is based upon order of creation: first created -> highest priority.

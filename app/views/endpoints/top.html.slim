@@ -24,28 +24,12 @@ h2.sub-header Last Updated
         th URL
         th Updated
     tbody
-      tr
-        td
-          = link_to 'Pathway Commons @Malaga', {:controller => 'endpoints', :action => 'view'}
-        td http://150.214.214.5/pathwaycommons/
-        td 2015/10/10
-      tr
-        td Linked Life Data
-        td http://linkedlifedata.com/sparql
-        td 2015/10/05
-      tr
-        td National Center for Biomedical Ontologies
-        td http://sparql.bioontology.org
-        td 2015/10/01
-      tr
-        td Allie
-        td http://data.allie.dbcls.jp/sparql
-        td 2015/10/01
-      tr
-        td HCLS DERI
-        td http://hcls.deri.org/sparql
-        td 2015/10/10
-      tr
-        td DrugBank @FU Berlin
-        td http://www4.wiwiss.fu-berlin.de/drugbank/sparql
-        td 2015/09/30
+
+      - @endpoints.each do |endpoint|
+        tr
+          td
+            = link_to endpoint.name, endpoint
+          td
+            = link_to endpoint.url, endpoint.url
+          td
+            = endpoint.last_updated
