@@ -1,3 +1,6 @@
+require 'net/http'
+require 'resolv-replace.rb'
+
 module Yummydata
 
   class Endpoint
@@ -19,7 +22,7 @@ module Yummydata
     # A boolan value whether if the SPARQL endpoint is alive.
     #
     # @return [Boolean]
-    def is_alive?
+    def alive?
       response = send_get_request(nil)
       response.is_a? Net::HTTPOK
     end
@@ -28,7 +31,7 @@ module Yummydata
     # A string value that describes what services are provided at the SPARQL endpoint.
     #
     # @return [String|nil]
-    def get_service_description
+    def service_description
       if @service_description && !@service_description.empty?
         return @service_description
       end
@@ -39,7 +42,7 @@ module Yummydata
       response = send_get_request(headers)
       # TODO add validation of description
 
-      if response.is_a? Net::HTTPSuccess && !response.body.empty?
+      if response.is_a?(Net::HTTPSuccess) && !response.body.empty?
         @service_description = response.body
       else
         @service_description = nil
@@ -50,8 +53,8 @@ module Yummydata
     # A boolan value whether if the SPARQL endpoint has service description documents.
     #
     # @return [Boolean]
-    def has_service_description?
-      !(get_service_description.nil?)
+    def service_description?
+      !(@service_description.nil?)
     end
 
     private
@@ -62,7 +65,8 @@ module Yummydata
       rec_time {
         begin
           http.get(path, headers)
-        rescue
+        rescue => e
+          puts $!
           nil
         end
       }
