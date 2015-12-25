@@ -40,8 +40,63 @@ describe Yummydata do
 
   end
 
+  describe 'ServiceDescription' do
 
+    def read_file(file_name)
+      cwd = File.expand_path('../', __FILE__)
+      File.open(File.join(cwd, file_name)) do |file|
+        file.read
+      end
     end
+
+    describe '#initialize' do
+
+      before do
+        @mock_response = double('net/HTTPResponse')
+        allow(@mock_response).to receive(:nil?).and_return(false)
+        allow(@mock_response).to receive(:each_key)
+      end
+
+      # TODO assetion for response header
+      it 'parse valid turtle text' do
+        test_string = read_file('sd_samples/good_turtle_01.ttl')
+        allow(@mock_response).to receive(:body).and_return(test_string)
+
+        service_description = Yummydata::ServiceDescription.new(@mock_response)
+
+        expect(service_description.type).to eq 'ttl'
+        expect(service_description.value).to eq test_string
+      end
+
+      it 'fail to parse invalid turtle text' do
+        test_string = read_file('sd_samples/bad_turtle_01.ttl')
+        allow(@mock_response).to receive(:body).and_return(test_string)
+
+        service_description = Yummydata::ServiceDescription.new(@mock_response)
+
+        expect(service_description.type).to eq 'unknown'
+        expect(service_description.value).to be nil
+      end
+
+      it 'parse valid xml' do
+        test_string = read_file('sd_samples/good_xml_01.xml')
+        allow(@mock_response).to receive(:body).and_return(test_string)
+
+        service_description = Yummydata::ServiceDescription.new(@mock_response)
+
+        expect(service_description.type).to eq 'xml'
+        expect(service_description.value).to eq test_string
+      end
+
+      it 'fail to parse invalid xml' do
+        test_string = read_file('sd_samples/bad_xml_01.xml')
+        allow(@mock_response).to receive(:body).and_return(test_string)
+
+        service_description = Yummydata::ServiceDescription.new(@mock_response)
+
+        expect(service_description.type).to eq 'unknown'
+        expect(service_description.value).to be nil
+      end
 
 
     end
