@@ -1,6 +1,6 @@
 require 'net/http'
 require 'resolv-replace.rb'
-require "rdf/turtle"
+require 'rdf/turtle'
 require 'rdf/rdfxml'
 
 module Yummydata
@@ -17,7 +17,7 @@ module Yummydata
     # return service description
     #
     # @return [String]
-    attr_reader :value
+    attr_reader :text
 
     ##
     # return response headers
@@ -33,7 +33,7 @@ module Yummydata
 
     def initialize(http_response)
       @type = TYPE[:unknown]
-      @value = nil
+      @text = ''
       @response_header = ''
 
       if (!http_response.nil?)
@@ -47,14 +47,14 @@ module Yummydata
 
     private
     def parse_body(str)
-      @value = str
+      @text = str
       if xml?(str)
         @type = TYPE[:xml]
       elsif ttl?(str)
         @type = TYPE[:ttl]
       else
         @type = TYPE[:unknown]
-        @value = nil
+        @text = ''
       end
     end
 
@@ -116,11 +116,9 @@ module Yummydata
     # @option opts [Integer] :time_out Seconds to wait until connection is opened.
     # @return      [Yummydata::ServiceDescription|nil]
     def service_description(opts={})
-      opts = { time_out: 10 }.merge(opts)
+      return @service_description unless @service_description.nil?
 
-      if @service_description && @service_description.valid?
-        return @service_description
-      end
+      opts = { time_out: 10 }.merge(opts)
 
       headers = {}
       headers['Accept'] = SERVICE_DESC_CONTEXT_TYPE.join(',')
