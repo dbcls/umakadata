@@ -7,7 +7,8 @@ namespace :crawler do
       log = CheckLog.new
       log.endpoint_id = endpoint.id
       log.alive = checker.alive?
-      log.service_description = checker.service_description?
+      log.service_description = checker.service_description.text
+      log.response_header = checker.service_description.response_header      
       log.save!
     end
   end

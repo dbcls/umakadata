@@ -16,6 +16,10 @@ class EndpointsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_endpoint
       @endpoint = Endpoint.find(params[:id])
+      @liveness = CheckLog.find(params[:id]).alive
+      @service_description = CheckLog.find(params[:id]).service_description
+      @response_header = CheckLog.find(params[:id]).response_header
+      @has_service_description = @service_description.present?
       @linked_data_rule_score = LinkedDataRule.calc_score(params[:id])
     end
 
