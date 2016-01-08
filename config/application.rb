@@ -49,5 +49,11 @@ module YummydataUi
 
     config.autoload_paths += %W(#{config.root}/lib)
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
+
+    # Enable Hirb automatically on running rails consle
+    console do
+      Hirb.enable
+    end
+
   end
 end

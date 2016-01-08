@@ -43,6 +43,10 @@ group :development do
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
+
+  # Hirb provides a mini view framework for console applications and uses it to improve ripl(irb)'s default inspect output
+  gem 'hirb'
+  gem 'hirb-unicode'
 end
 
 gem 'slim-rails'

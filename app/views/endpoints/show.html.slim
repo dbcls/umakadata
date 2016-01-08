@@ -13,10 +13,13 @@ h1.page-header = @endpoint.name
       tbody
         tr
           td Alive
-          td -
+          td
+            = @liveness
         tr
-            td Service Description
-            td -
+          td 
+            Service Description
+          td
+            = @has_service_description
         tr
           td Last Updated
           td -
@@ -65,3 +68,12 @@ h1.page-header = @endpoint.name
           td  -
   .col-xs-12.col-sm-6
     canvas#radar[width="400" height="400"]
+  .col-sm-12
+    details
+      summary Response Header
+      p
+        = format_text(@response_header)
+    details
+      summary Service Description
+      p
+        = format_text(@service_description)

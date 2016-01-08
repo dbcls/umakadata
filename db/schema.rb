@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151126004158) do
+ActiveRecord::Schema.define(version: 20160105032816) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,9 +52,10 @@ ActiveRecord::Schema.define(version: 20151126004158) do
   create_table "check_logs", force: :cascade do |t|
     t.integer  "endpoint_id"
     t.boolean  "alive"
-    t.boolean  "service_description"
+    t.text     "service_description"
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
+    t.text     "response_header"
   end
 
   create_table "endpoint_update_infos", force: :cascade do |t|
