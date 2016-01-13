@@ -64,4 +64,21 @@ namespace :crawler do
     end
   end
 
+  desc "fetch void turtle by well known URI"
+  task :well_known_void => :environment do
+    Endpoint.all.each do |endpoint|
+      puts endpoint.name
+      void = Void.new
+      client = Yummydata::WellKnownVoid.new endpoint.url
+      begin
+        void.endpoint_id = endpoint.id
+        void.uri = Yummydata::WellKnownVoid.well_known_uri endpoint.url
+        void.void_ttl = client.get_ttl
+        void.save!
+      rescue
+        p $!, "failed."
+      end
+    end
+  end
+
 end
