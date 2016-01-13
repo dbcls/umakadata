@@ -21,6 +21,7 @@ class EndpointsController < ApplicationController
       @response_header = CheckLog.find(params[:id]).response_header
       @has_service_description = @service_description.present?
       @linked_data_rule_score = LinkedDataRule.calc_score(params[:id])
+      @score = Score.where(:endpoint_id => params[:id]).order(created_at: :desc).first
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

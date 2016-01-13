@@ -4,7 +4,8 @@
 h1.page-header = @endpoint.name
 .row
   .col-xs-12.col-sm-6
-    h2 Rank A
+    h2
+      = "Rank " + @score.rank.to_s + " ( " + @score.score.to_s + " ) "
     table.table.table-striped
       thead
         tr
@@ -16,7 +17,7 @@ h1.page-header = @endpoint.name
           td
             = @liveness
         tr
-          td 
+          td
             Service Description
           td
             = @has_service_description
