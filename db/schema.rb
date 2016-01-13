@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160105032816) do
+ActiveRecord::Schema.define(version: 20160113030716) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -82,6 +82,14 @@ ActiveRecord::Schema.define(version: 20160105032816) do
     t.boolean  "contains_links"
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
+  end
+
+  create_table "voids", force: :cascade do |t|
+    t.integer  "endpoint_id"
+    t.text     "uri"
+    t.text     "void_ttl"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
 end
