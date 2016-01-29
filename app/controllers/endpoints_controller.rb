@@ -1,3 +1,6 @@
+require 'sparql/client'
+require 'rdf/turtle'
+
 class EndpointsController < ApplicationController
   before_action :set_endpoint, only: [:show]
 
@@ -53,6 +56,26 @@ class EndpointsController < ApplicationController
       @has_service_description = @service_description.present?
       @linked_data_rule_score = LinkedDataRule.calc_score(params[:id])
       @score = Score.where(:endpoint_id => params[:id]).order(created_at: :desc).first
+
+      void = getVoid(params[:id])
+      if void.present?
+        @void = true
+        @license = void[RDF::URI('http://purl.org/dc/terms/license')][0].to_s
+        @publisher = void[RDF::URI('http://purl.org/dc/terms/publisher')][0].to_s
+      else
+        @void = false
+      end
+    end
+
+    def getVoid(id)
+      void = nil
+      begin
+        str = Void.where(endpoint_id: params[:id]).last.void_ttl
+        void = RDF::Graph.new << RDF::Turtle::Reader.new(str)
+      rescue
+        return nil
+      end
+      void.to_hash.values[0]
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
