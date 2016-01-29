@@ -27,7 +27,7 @@ h1.page-header = @endpoint.name
         tr
           td VoID
           td
-            = @void
+            = @has_void
         tr
           td Organization Information
           td
@@ -81,3 +81,7 @@ h1.page-header = @endpoint.name
       summary Service Description
       p
         = format_text(@service_description)
+    details
+      summary VoID
+      p
+        = format_text(@void)
