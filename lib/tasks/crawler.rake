@@ -3,12 +3,12 @@ namespace :crawler do
   task :endpoints => :environment do
     Endpoint.all.each do |endpoint|
       puts endpoint.name
-      checker = Yummydata::Endpoint.new endpoint.url
+      retriever = Yummydata::Retriever.new endpoint.url
       log = CheckLog.new
       log.endpoint_id = endpoint.id
-      log.alive = checker.alive?
-      log.service_description = checker.service_description.text
-      log.response_header = checker.service_description.response_header      
+      log.alive = retriever.alive?
+      log.service_description = retriever.service_description.text
+      log.response_header = retriever.service_description.response_header
       log.save!
     end
   end
@@ -48,13 +48,18 @@ namespace :crawler do
     Endpoint.all.each do |endpoint|
       puts endpoint.id.to_s + ":" + endpoint.name
       logs = CheckLog.where(:endpoint_id => endpoint.id).order("created_at DESC")
-      if logs == nil || !logs[0][:alive]
+      if logs == nil || logs[0] == nil || !logs[0][:alive]
         next
       end
 
       begin
-        checker = Yummydata::LinkedData.new endpoint.url
-        results = checker.check
+        retriever = Yummydata::Retriever.new endpoint.url
+        results = {
+          subject_is_uri:      retriever.uri_subject?,
+          subject_is_http_uri: retriever.http_subject?,
+          uri_provides_info:   retriever.uri_provides_info?,
+          contains_links:      retriever.contains_links?
+        }
         rules = LinkedDataRule.new results
         rules.endpoint_id = endpoint.id
         rules.save!
@@ -69,11 +74,11 @@ namespace :crawler do
     Endpoint.all.each do |endpoint|
       puts endpoint.name
       void = Void.new
-      client = Yummydata::WellKnownVoid.new endpoint.url
+      retriever = Yummydata::Retriever.new endpoint.url
       begin
         void.endpoint_id = endpoint.id
-        void.uri = Yummydata::WellKnownVoid.well_known_uri endpoint.url
-        void.void_ttl = client.get_ttl
+        void.uri = retriever.well_known_uri
+        void.void_ttl = retriever.void_on_well_known_uri
         void.save!
       rescue
         p $!, "failed."
