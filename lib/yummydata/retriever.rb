@@ -35,8 +35,11 @@ module Yummydata
     end
 
     include Yummydata::Criteria::VoID
-    def void_on_well_known_uri()
+    def well_known_uri
       super(@uri)
+    end
+    def void_on_well_known_uri
+      super(@uri, 10)
     end
 
   end

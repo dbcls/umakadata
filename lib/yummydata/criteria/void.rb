@@ -9,9 +9,12 @@ module Yummydata
 
       WELL_KNOWN_VOID_PATH = "/.well-known/void".freeze
 
+      def well_known_uri(uri)
+        URI::HTTP.build({:host => uri.host, :path => WELL_KNOWN_VOID_PATH})
+      end
+
       def void_on_well_known_uri(uri, time_out = 10)
-        well_known_uri = URI::HTTP.build({:host => uri.host, :path => WELL_KNOWN_VOID_PATH})
-        http_get_recursive(well_known_uri, time_out)
+        http_get_recursive(self.well_known_uri, time_out)
       end
     end
   end
