@@ -14,12 +14,14 @@ describe 'Yummydata' do
         end
 
         it 'should return true when the response code is 200' do
-          allow(target).to receive(:http_get).and_return(Net::HTTPOK.new('1.1', '200', 'OK'))
+          allow(target).to receive(:http_get).with(@uri, nil, 10)
+            .and_return(Net::HTTPOK.new('1.1', '200', 'OK'))
           expect(target.alive?(@uri, 10)).to be true
         end
 
         it 'should return false when the response code is 404' do
-          allow(target).to receive(:http_get).and_return(Net::HTTPNotFound.new('1.1', '404', 'Not Found'))
+          allow(target).to receive(:http_get).with(@uri, nil, 10)
+            .and_return(Net::HTTPNotFound.new('1.1', '404', 'Not Found'))
           expect(target.alive?(@uri, 10)).to be false
         end
 
