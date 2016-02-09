@@ -3,6 +3,8 @@ require "yummydata/service_description"
 module Yummydata
   module Functions
     module ServiceDescription
+      SERVICE_DESC_CONTEXT_TYPE = %w(text/turtle application/rdf+xml).freeze
+
       ##
       # A string value that describes what services are provided at the SPARQL endpoint.
       #
