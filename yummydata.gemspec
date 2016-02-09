@@ -21,9 +21,12 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec", "~> 0"
-  spec.add_development_dependency "yard", "~> 0"
+  spec.add_development_dependency "rspec", "~> 3.4"
+  spec.add_development_dependency "yard", "~> 0.8.7.6"
 
-  spec.add_development_dependency "sparql", "~> 0"
-  spec.add_development_dependency "sparql-client", "~> 0"
+  spec.add_dependency "sparql", "~> 1.99"
+  spec.add_dependency "sparql-client", "~> 1.99"
+  
+  spec.add_dependency "rdf-turtle", "~> 1.99"
+  spec.add_dependency "rdf-rdfxml", "~> 1.99"
 end
