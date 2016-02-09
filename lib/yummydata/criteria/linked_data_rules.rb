@@ -1,5 +1,5 @@
 module Yummydata
-  module Functions
+  module Criteria
     module LinkedDataRules
 
       def prepare(uri)

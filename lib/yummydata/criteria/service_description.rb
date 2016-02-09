@@ -1,8 +1,12 @@
+require 'yummydata/data_format'
 require "yummydata/service_description"
 
 module Yummydata
-  module Functions
+  module Criteria
     module ServiceDescription
+
+      include Yummydata::HTTPHelper
+
       SERVICE_DESC_CONTEXT_TYPE = %w(text/turtle application/rdf+xml).freeze
 
       ##
@@ -15,7 +19,7 @@ module Yummydata
         headers = {}
         headers['Accept'] = SERVICE_DESC_CONTEXT_TYPE.join(',')
 
-        response = send_get_request(uri, headers, time_out)
+        response = http_get(uri, headers, time_out)
 
         return Yummydata::ServiceDescription.new(response)
       end
