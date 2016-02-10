@@ -1,36 +1,12 @@
 h1 Endpoint Search
 
-form[action="#"]
+= form_tag :controller => :endpoints, :action => :search
   .form-inline.row
     label.col-xs-4 Name
-    input.form-control[type="text" name="name"]
+    = text_field_tag :name, @conditions[:name], :class => 'form-control'
   .form-inline.row
-    label.col-xs-4 Keyword
-    input.form-control[type="text" name="keyword"]
-  .form-inline.row
-    label.col-xs-4 Alive Rate >
-    input.form-control[type="text" name="alive"]
-  .form-inline.row
-    label.col-xs-4 Frequency of Update <
-    input.form-control[type="text" name="update"]
-  .form-inline.row
-    label.col-xs-4 Vocabulary >
-    input.form-control[type="text" name="vocabulary"]
-  .form-inline.row
-    label.col-xs-4 4 Principles of Linked Data >
-    input.form-control[type="text" name="principles"]
-  .form-inline.row
-    label.col-xs-4 Cool URI >
-    input.form-control[type="text" name="cooluri"]
-  .form-inline.row
-    label.col-xs-4 Links to Other Dataset >
-    input.form-control[type="text" name="links"]
-  .form-inline.row
-    label.col-xs-4 Data Entry >
-    input.form-control[type="text" name="dataentry"]
-  .form-inline.row
-    label.col-xs-4 Response Time <
-    input.form-control[type="text" name="responsetime"]
+    label.col-xs-4 Score >
+    = text_field_tag :score, @conditions[:score], :class => 'form-control'
 
   .row
     label.col-xs-4 Attributes
@@ -59,47 +35,24 @@ form[action="#"]
         label.checkbox-inline.col-xs-4
           input[name="metadata" type="checkbox"] Metadata
 
-  .form-inline
-    label.col-xs-4 Order
-    select.form-control[name="order"]
-      option[value="availability"] Availability
-      option[value="freshness"]    Freshness
-      option[value="operation"]    Operation
-      option[value="usefulness"]   Usefulness
-      option[value="validity"]     Validity
-      option[value="performance"]  Performance
   input.btn.btn-default[type="submit" value="Search"]
 hr
-.table-responsive
-  table.table.table-striped
-    thead
-      tr
-        th Name
-        th URL
-        th Updated
-    tbody
-      tr
-        td
-          = link_to 'Pathway Commons @Malaga', {:controller => 'endpoints', :action => 'view'}
-        td http://150.214.214.5/pathwaycommons/
-        td 2015/10/10
-      tr
-        td Linked Life Data
-        td http://linkedlifedata.com/sparql
-        td 2015/10/05
-      tr
-        td National Center for Biomedical Ontologies
-        td http://sparql.bioontology.org
-        td 2015/10/01
-      tr
-        td Allie
-        td http://data.allie.dbcls.jp/sparql
-        td 2015/10/01
-      tr
-        td HCLS DERI
-        td http://hcls.deri.org/sparql
-        td 2015/10/10
-      tr
-        td DrugBank @FU Berlin
-        td http://www4.wiwiss.fu-berlin.de/drugbank/sparql
-        td 2015/09/30
+
+- if !@endpoints.empty?
+
+  .table-responsive
+    table.table.table-striped
+      thead
+        tr
+          th Name
+          th URL
+          th Score
+      tbody
+      - @endpoints.each do |endpoint|
+        tr
+          td
+            = link_to endpoint.name, endpoint
+          td
+            = link_to endpoint.url, endpoint.url
+          td
+            = endpoint.evaluation.first.score

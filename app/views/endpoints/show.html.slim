@@ -5,7 +5,7 @@ h1.page-header = @endpoint.name
 .row
   .col-xs-12.col-sm-6
     h2
-      = "Rank " + @score.rank.to_s + " ( " + @score.score.to_s + " ) "
+      = "Rank " + @evaluation.rank.to_s + " ( " + @evaluation.score.to_s + " ) "
     table.table.table-striped
       thead
         tr
@@ -15,12 +15,12 @@ h1.page-header = @endpoint.name
         tr
           td Alive
           td
-            = @liveness
+            = @evaluation.alive
         tr
           td
             Service Description
           td
-            = @has_service_description
+            = !@evaluation.service_description.empty?
         tr
           td Last Updated
           td -
@@ -76,12 +76,12 @@ h1.page-header = @endpoint.name
     details
       summary Response Header
       p
-        = format_text(@response_header)
+        = format_text(@evaluation.response_header)
     details
       summary Service Description
       p
-        = format_text(@service_description)
+        = format_text(@evaluation.service_description)
     details
       summary VoID
       p
-        = format_text(@void)
+        = format_text(@evaluation.void_ttl)
