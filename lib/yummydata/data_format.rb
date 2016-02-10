@@ -4,7 +4,6 @@ module Yummydata
       begin
         RDF::RDFXML::Reader.new(str, {:validate => true})
       rescue
-        puts $!
         return false
       end
       return true
@@ -15,7 +14,6 @@ module Yummydata
         ttl = RDF::Graph.new << RDF::Turtle::Reader.new(str, {:validate => true})
         raise RDF::ReaderError.new "Empty turtle." if ttl.count == 0
       rescue
-        puts $!
         return false
       end
       return true
