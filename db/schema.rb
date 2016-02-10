@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160113042045) do
+ActiveRecord::Schema.define(version: 20160209135057) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,23 @@ ActiveRecord::Schema.define(version: 20160113042045) do
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
     t.date     "last_updated"
+  end
+
+  create_table "evaluations", force: :cascade do |t|
+    t.integer  "endpoint_id"
+    t.boolean  "latest"
+    t.boolean  "alive"
+    t.text     "service_description"
+    t.text     "void_uri"
+    t.text     "void_ttl"
+    t.boolean  "subject_is_uri"
+    t.boolean  "subject_is_http_uri"
+    t.boolean  "uri_provides_info"
+    t.boolean  "contains_links"
+    t.integer  "score"
+    t.integer  "rank"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
   end
 
   create_table "linked_data_rules", force: :cascade do |t|
