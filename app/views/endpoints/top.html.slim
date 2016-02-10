@@ -22,7 +22,7 @@ h2.sub-header Last Updated
       tr
         th Name
         th URL
-        th Updated
+        th Score
     tbody
 
       - @endpoints.each do |endpoint|
@@ -32,4 +32,4 @@ h2.sub-header Last Updated
           td
             = link_to endpoint.url, endpoint.url
           td
-            = endpoint.last_updated
+            = endpoint.evaluation.first[:score]

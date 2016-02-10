@@ -62,6 +62,8 @@ gem 'pundit'
 
 gem 'pg'
 
-gem 'yummydata', :path => '../yummydata'
-
 gem 'sparql-client'
+
+gem 'parallel'
+
+gem 'yummydata', :path => '../yummydata'

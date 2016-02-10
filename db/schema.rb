@@ -78,6 +78,8 @@ ActiveRecord::Schema.define(version: 20160209135057) do
     t.integer  "endpoint_id"
     t.boolean  "latest"
     t.boolean  "alive"
+    t.float    "alive_rate"
+    t.text     "response_header"
     t.text     "service_description"
     t.text     "void_uri"
     t.text     "void_ttl"

@@ -6,6 +6,8 @@ class CreateEvaluations < ActiveRecord::Migration
       t.boolean :latest
 
       t.boolean :alive
+      t.float :alive_rate
+      t.text :response_header
       t.text :service_description
       t.text :void_uri
       t.text :void_ttl

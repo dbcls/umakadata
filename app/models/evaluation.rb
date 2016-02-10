@@ -1,32 +1,49 @@
 class Evaluation < ActiveRecord::Base
 
+  belongs_to :endpoint
+
   def self.record(endpoint, retriever)
     self.transaction do
       self.where(endpoint_id: endpoint.id).update_all("latest = false")
-      self.record_new endpoint, retriever
+      self.retrieve_and_record endpoint, retriever
     end
   end
 
-  def self.record_new(endpoint, retriever)
+  def self.retrieve_and_record(endpoint, retriever)
     eval = Evaluation.new
-    eval.endpoint_id         = endpoint.id
+    eval.endpoint_id = endpoint.id
 
-    eval.latest              = true
+    eval.latest = true
+    eval.alive = retriever.alive?
 
-    eval.alive               = retriever.alive?
-    eval.service_description = retriever.service_description
+    if eval.alive
+      self.retrieve_service_description(retriever, eval)
+      self.retrieve_void(retriever, eval)
+      self.retrieve_linked_data_rules(retriever, eval)
+    end
+
+    eval.score = Evaluation.calc_score(eval)
+    eval.rank  = Evaluation.calc_rank(eval.score)
+
+    eval.save!
+  end
+
+  def self.retrieve_service_description(retriever, eval)
+    service_description = retriever.service_description
+    eval.response_header     = service_description.response_header
+    eval.service_description = service_description.text
+  end
+
+  def self.retrieve_void(retriever, eval)
     eval.void_uri            = retriever.well_known_uri
     eval.void_ttl            = retriever.void_on_well_known_uri
+  end
 
+  def self.retrieve_linked_data_rules(retriever, eval)
     eval.subject_is_uri      = retriever.uri_subject?
     eval.subject_is_http_uri = retriever.http_subject?
     eval.uri_provides_info   = retriever.uri_provides_info?
     eval.contains_links      = retriever.contains_links?
-
-    eval.score               = Evaluation.calc_score(eval)
-    eval.rank                = Evaluation.calc_rank(eval.score)
-
-    eval.save!
   end
 
   def self.calc_score(eval)
@@ -43,7 +60,7 @@ class Evaluation < ActiveRecord::Base
     count += 1 if eval.contains_links
     score += (count / 4.0 * 100) / 4
 
-    score += 25 if eval.void_ttl.nil?
+    score += 25 if !eval.void_ttl.nil?
     return score
   end
 
