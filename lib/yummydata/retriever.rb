@@ -11,12 +11,12 @@ module Yummydata
     end
 
     include Yummydata::Criteria::Liveness
-    def alive?(time_out = 10)
+    def alive?(time_out = 30)
       super(@uri, time_out)
     end
 
     include Yummydata::Criteria::ServiceDescription
-    def service_description(time_out = 10)
+    def service_description(time_out = 30)
       super(@uri, time_out)
     end
 
@@ -38,8 +38,8 @@ module Yummydata
     def well_known_uri
       super(@uri)
     end
-    def void_on_well_known_uri
-      super(@uri, 10)
+    def void_on_well_known_uri(time_out = 30)
+      super(@uri, time_out)
     end
 
   end
