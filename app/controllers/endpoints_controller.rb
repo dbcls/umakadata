@@ -130,7 +130,7 @@ class EndpointsController < ApplicationController
         {
           value: count[3],
           color: "#009944",
-          highlight: "#3EB37",
+          highlight: "#03EB37",
           label: "Rank C"
         },
         {
