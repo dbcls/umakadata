@@ -36,9 +36,10 @@ class EndpointsController < ApplicationController
   def scores
     count = Hash.new(0)
     conditions = {'evaluations.latest': true}
-    @endpoints = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions)
+    @endpoints = Endpoint.includes(:evaluation).where(conditions).order('evaluations.score DESC')
     @endpoints.each do |endpoint|
       rank = endpoint.evaluation.first.rank
+      puts "#{rank} : #{endpoint.name}"
       count[rank] += 1
     end
     render :json => scores_json(count)
@@ -116,13 +117,13 @@ class EndpointsController < ApplicationController
     def scores_json(count)
       [
         {
-          value: count[1],
+          value: count[5],
           color: "#1D2088",
           highlight: "#6356A3",
           label: "Rank A"
         },
         {
-          value: count[2],
+          value: count[4],
           color: "#00A0E9",
           highlight: "#00B9EF",
           label: "Rank B"
@@ -134,13 +135,13 @@ class EndpointsController < ApplicationController
           label: "Rank C"
         },
         {
-          value: count[4],
+          value: count[2],
           color: "#FFF100",
           highlight: "#FFF462",
           label: "Rank D"
         },
         {
-          value: count[5],
+          value: count[1],
           color: "#E60012",
           highlight: "#FF5A5E",
           label: "Rank E"
