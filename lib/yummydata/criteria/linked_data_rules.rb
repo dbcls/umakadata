@@ -1,6 +1,10 @@
+require 'yummydata/http_helper'
+
 module Yummydata
   module Criteria
     module LinkedDataRules
+
+      include Yummydata::HTTPHelper
 
       def prepare(uri)
         @client = SPARQL::Client.new(uri) if @uri == uri && @client == nil
@@ -19,7 +23,13 @@ GRAPH ?g { ?s ?p ?o } .
 }
 LIMIT 1
 SPARQL
-        results = @client.query(sparql_query)
+
+        begin
+          results = @client.query(sparql_query)
+        rescue => e
+          return false
+        end
+
         results != nil && results.count == 0
       end
 
@@ -35,7 +45,12 @@ WHERE {
 }
 LIMIT 1
 SPARQL
-        results = @client.query(sparql_query)
+
+        begin
+          results = @client.query(sparql_query)
+        rescue => e
+          return false
+        end
         results != nil && results.count == 0
       end
 
@@ -46,10 +61,12 @@ SPARQL
         if uri == nil
           return false
         end
-        uri = URI(@uri)
-        http = Net::HTTP.new(uri.host, uri.port)
-        path = uri.path.empty? ? '/' : uri.path
-        response = http.get(path, {})
+        begin
+          response = http_get(URI(uri), {})
+        rescue => e
+          puts "INVALID URI: #{uri}"
+          return false
+        end
 
         response.is_a?(Net::HTTPSuccess) && !response.body.empty?
       end
@@ -64,8 +81,12 @@ WHERE {
 }
 LIMIT 1
 SPARQL
-        results = @client.query(sparql_query)
-        if results != nil
+        begin
+          results = @client.query(sparql_query)
+        rescue => e
+          return nil
+        end
+        if results != nil && results[0] != nil
           results[0][:s]
         else
           nil
@@ -88,7 +109,11 @@ WHERE {
 }
 LIMIT 1
 SPARQL
-        results = @client.query(sparql_query)
+        begin
+          results = @client.query(sparql_query)
+        rescue => e
+          return false
+        end
         results != nil && results.count > 0
       end
 
@@ -102,7 +127,11 @@ WHERE {
 }
 LIMIT 1
 SPARQL
-        results = @client.query(sparql_query)
+        begin
+          results = @client.query(sparql_query)
+        rescue => e
+          return false
+        end
         results != nil && results.count > 0
       end
 

@@ -2,9 +2,8 @@ module Yummydata
   module DataFormat
     def xml?(str)
       begin
-        RDF::RDFXML::Reader.new(str, {:validate => true})
+        RDF::RDFXML::Reader.new(str, {validate: true})
       rescue
-        puts $!
         return false
       end
       return true
@@ -12,10 +11,9 @@ module Yummydata
 
     def ttl?(str)
       begin
-        ttl = RDF::Graph.new << RDF::Turtle::Reader.new(str, {:validate => true})
-        raise RDF::ReaderError.new "Empty turtle." if ttl.count == 0
+        ttl = RDF::Graph.new << RDF::Turtle::Reader.new(str, {validate: true})
+        return false if ttl.count == 0
       rescue
-        puts $!
         return false
       end
       return true
