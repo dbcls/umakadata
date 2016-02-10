@@ -64,6 +64,4 @@ gem 'pg'
 
 gem 'sparql-client'
 
-gem 'parallel'
-
 gem 'yummydata', :path => '../yummydata'
