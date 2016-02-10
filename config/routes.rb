@@ -5,11 +5,12 @@ Rails.application.routes.draw do
   root 'endpoints#top'
 
   get  'endpoints/search'
+  post 'endpoints/search'
   get  'endpoints/graph'
   get  'endpoints/scores'
   get  'endpoints/alive'
   get  'endpoints/service_descriptions'
-  get  'endpoints/:id'                 => 'endpoints#show',  as: 'endpoint'
+  get  'endpoints/:id' => 'endpoints#show',  as: 'endpoint'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
