@@ -90,13 +90,6 @@ class EndpointsController < ApplicationController
       end
       @license = @license.join('<br/>')
       @publisher = @publisher.join('<br/>')
-
-      @linked_data_rule_score = 0
-      @linked_data_rule_score += 25 if @evaluation.subject_is_uri
-      @linked_data_rule_score += 25 if @evaluation.subject_is_http_uri
-      @linked_data_rule_score += 25 if @evaluation.uri_provides_info
-      @linked_data_rule_score += 25 if @evaluation.contains_links
-      @linked_data_rule_score = @linked_data_rule_score.to_s + "%"
     end
 
     def parseVoid(str)

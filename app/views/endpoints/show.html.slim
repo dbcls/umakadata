@@ -45,7 +45,10 @@ h1.page-header = @endpoint.name
         tr
           td 4 Principles of Linked Data
           td
-            = @linked_data_rule_score
+            .item all subjects are URI: #{@evaluation.subject_is_uri}
+            .item all subjects are HTTP URI: #{@evaluation.subject_is_http_uri}
+            .item URI provides information: #{@evaluation.uri_provides_info}
+            .item contains external links: #{@evaluation.contains_links}
         tr
           td Cool URI
           td -
