@@ -77,12 +77,11 @@ class EndpointsController < ApplicationController
 
       @void = @evaluation.void_ttl
       void = parseVoid(@void)
+      @license = []
+      @publisher = []
       if void.nil?
-        @has_void = false
+        @void = ''
       else
-        @has_void = true
-        @license = []
-        @publisher = []
         void.each do |graph, verb, object|
           @license.push object.to_s   if verb == RDF::URI('http://purl.org/dc/terms/license')
           @publisher.push object.to_s if verb == RDF::URI('http://purl.org/dc/terms/publisher')
@@ -93,6 +92,7 @@ class EndpointsController < ApplicationController
     end
 
     def parseVoid(str)
+      return nil if str.blank?
       begin
         graphs = RDF::Graph.new << RDF::Turtle::Reader.new(str)
         return graphs
