@@ -2,6 +2,7 @@ require "yummydata/criteria/liveness"
 require "yummydata/criteria/service_description"
 require "yummydata/criteria/linked_data_rules"
 require "yummydata/criteria/void"
+require "yummydata/criteria/cool_uri"
 
 module Yummydata
   class Retriever
@@ -40,6 +41,11 @@ module Yummydata
     end
     def void_on_well_known_uri(time_out = 30)
       super(@uri, time_out)
+    end
+
+    include Yummydata::Criteria::CoolURI
+    def cool_uri_rate
+      super(@uri)
     end
 
   end
