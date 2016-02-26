@@ -2,6 +2,7 @@ require 'sparql/client'
 require 'rdf/turtle'
 
 class EndpointsController < ApplicationController
+
   before_action :set_endpoint, only: [:show]
 
   def top
@@ -43,6 +44,17 @@ class EndpointsController < ApplicationController
       count[rank] += 1
     end
     render :json => scores_json(count)
+  end
+
+  def rader
+    data = {
+      data: Evaluation.rates(params[:id]),
+      avg: Evaluation.avg_rates
+    }
+    respond_to do |format|
+      format.any { render :json => data }
+      format.json { render :json => data }
+    end
   end
 
   def alive
