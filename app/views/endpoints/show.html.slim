@@ -51,7 +51,7 @@ h1.page-header = @endpoint.name
             .item contains external links: #{@evaluation.contains_links}
         tr
           td Cool URI
-          td -
+          td =@evaluation.cool_uri_rate.to_i
         tr
           td Support for Content Negotiation
           td -
