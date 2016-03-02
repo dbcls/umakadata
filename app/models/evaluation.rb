@@ -22,6 +22,7 @@ class Evaluation < ActiveRecord::Base
       self.retrieve_linked_data_rules(retriever, eval)
     end
 
+    eval.alive_rate = Evaluation.calc_alive_rate(eval.alive)
     eval.score = Evaluation.calc_score(eval)
     eval.rank  = Evaluation.calc_rank(eval.score)
 
@@ -46,6 +47,15 @@ class Evaluation < ActiveRecord::Base
     eval.subject_is_http_uri = retriever.http_subject?
     eval.uri_provides_info   = retriever.uri_provides_info?
     eval.contains_links      = retriever.contains_links?
+  end
+
+  def self.calc_alive_rate(eval)
+    evaluations = self.where(endpoint_id: eval.endpoint_id).where(created_at: (30.days.ago)..(Time.now))	
+    count = 0
+    evaluations.each do |evaluation|
+      count += evaluation.alive? ? 1 : 0  
+    end
+    return (count / evaluations.size) * 100
   end
 
   def self.calc_score(eval)
