@@ -15,7 +15,7 @@ h1.page-header = @endpoint.name
         tr
           td Alive
           td
-            = @evaluation.alive
+            = @evaluation.alive.to_s + " (" + @evaluation.alive_rate.to_s + "%)"
         tr
           td
             Service Description
