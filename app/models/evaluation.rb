@@ -50,12 +50,16 @@ class Evaluation < ActiveRecord::Base
   end
 
   def self.calc_alive_rate(eval)
-    evaluations = self.where(endpoint_id: eval.endpoint_id).where(created_at: (30.days.ago)..(Time.now))	
-    count = 0
+    today = Time.zone.now
+    first = 29.days.ago(Time.zone.local(today.year, today.month, today.day, 0, 0, 0))
+    last = 1.days.ago(Time.zone.local(today.year, today.month, today.day, 23, 59, 59))
+    evaluations = self.where(endpoint_id: eval.endpoint_id, created_at: first..last)
+    count = eval.alive? ? 1.0 : 0.0
     evaluations.each do |evaluation|
-      count += evaluation.alive? ? 1 : 0  
+      count += evaluation.alive? ? 1.0 : 0.0
     end
-    return (count / evaluations.size) * 100
+    rate = (count / (evaluations.size + 1)) * 100
+    return BigDecimal.new(rate.to_s).floor(1).to_f
   end
 
   def self.calc_score(eval)
