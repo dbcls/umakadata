@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160226043049) do
+ActiveRecord::Schema.define(version: 20160303085928) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,6 +96,7 @@ ActiveRecord::Schema.define(version: 20160226043049) do
     t.boolean  "support_turtle_format"
     t.boolean  "support_xml_format"
     t.boolean  "support_html_format"
+    t.float    "response_time"
   end
 
   create_table "linked_data_rules", force: :cascade do |t|
