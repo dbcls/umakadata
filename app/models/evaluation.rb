@@ -53,13 +53,13 @@ class Evaluation < ActiveRecord::Base
     today = Time.zone.now
     first = 29.days.ago(Time.zone.local(today.year, today.month, today.day, 0, 0, 0))
     last = 1.days.ago(Time.zone.local(today.year, today.month, today.day, 23, 59, 59))
-    evaluations = self.where(endpoint_id: eval.endpoint_id, created_at: first..last)
-    count = eval.alive? ? 1.0 : 0.0
-    evaluations.each do |evaluation|
-      count += evaluation.alive? ? 1.0 : 0.0
-    end
-    rate = (count / (evaluations.size + 1)) * 100
-    return BigDecimal.new(rate.to_s).floor(1).to_f
+    count = self.where(endpoint_id: eval.endpoint_id, created_at: first..last).group(:alive).count
+    count[true] || count[true] = 0
+    count[false] || count[false] = 0
+    total = count[true] + count[false] + 1.0
+    alive = count[true] + (eval.alive? ? 1 : 0)
+    percentage = (alive / total) * 100
+    return percentage.round(1)
   end
 
   def self.calc_score(eval)
