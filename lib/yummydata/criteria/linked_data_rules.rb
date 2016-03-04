@@ -105,6 +105,10 @@ SPARQL
         self.contains_same_as?() || self.contains_see_also?()
       end
 
+      def response_time?(uri)
+
+      end
+
       def contains_same_as?
         sparql_query = <<-'SPARQL'
 PREFIX owl:<http://www.w3.org/2002/07/owl#>
