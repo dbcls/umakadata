@@ -22,7 +22,7 @@ class Evaluation < ActiveRecord::Base
       self.retrieve_linked_data_rules(retriever, eval)
     end
 
-    eval.alive_rate = Evaluation.calc_alive_rate(eval.alive)
+    eval.alive_rate = Evaluation.calc_alive_rate(eval)
     eval.score = Evaluation.calc_score(eval)
     eval.rank  = Evaluation.calc_rank(eval.score)
 
