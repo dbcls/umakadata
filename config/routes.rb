@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   post 'endpoints/search'
   get  'endpoints/graph'
   get  'endpoints/scores'
+  get  'endpoints/:id/rader' => 'endpoints#rader'
   get  'endpoints/alive'
   get  'endpoints/service_descriptions'
   get  'endpoints/:id' => 'endpoints#show',  as: 'endpoint'

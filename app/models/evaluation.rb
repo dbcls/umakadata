@@ -90,4 +90,60 @@ class Evaluation < ActiveRecord::Base
     end
   end
 
+  def self.rates(id)
+    conditions = {'evaluations.endpoint_id': id, 'evaluations.latest': true}
+    endpoint = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions).first
+    evaluation = endpoint.evaluation.first
+    return self.calc_rates(evaluation)
+  end
+
+  def self.avg_rates
+    total = [0, 0, 0, 0, 0, 0]
+    count = 0
+    conditions = {'evaluations.latest': true}
+    endpoints = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions).all
+    endpoints.each do |endpoint|
+      evaluation = endpoint.evaluation.first
+      rates = self.calc_rates(evaluation)
+      for i in 0..5 do
+        total[i] += rates[i]
+      end
+      count += 1
+    end
+    avg = [0, 0, 0, 0, 0, 0]
+    for i in 0..5 do
+      avg[i] = total[i] / count
+    end
+    return avg
+  end
+
+  def self.calc_rates(eval)
+    rates = [0, 0, 0, 0, 0, 0]
+
+    # availability
+    rates[0] += 100 if eval.alive
+
+    #freshness
+    rates[1] = 50
+
+    #operation
+    rates[2] += 50 unless eval.service_description.blank?
+    rates[2] += 50 unless eval.void_ttl.blank?
+
+    #usefulness
+    rates[3] = 50
+
+    #validity
+    rates[4] += 40 unless eval.void_ttl.blank?
+    rates[4] += 15 if eval.subject_is_uri
+    rates[4] += 15 if eval.subject_is_http_uri
+    rates[4] += 15 if eval.uri_provides_info
+    rates[4] += 15 if eval.contains_links
+
+    #performance
+    rates[5] = 50
+
+    return rates
+  end
+
 end
