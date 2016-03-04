@@ -105,8 +105,45 @@ SPARQL
         self.contains_same_as?() || self.contains_see_also?()
       end
 
-      def response_time?(uri)
+      def response_time(uri)
+        self.prepare(uri)
 
+        ask_query = <<-'SPARQL'
+ASK{}
+SPARQL
+        ask_response_time = self.get_response_time(ask_query)
+
+        target_query = <<-'SPARQL'
+SELECT DISTINCT
+  ?g
+WHERE {
+  GRAPH ?g {
+    ?s ?p ?o
+  }
+}
+SPARQL
+
+        target_response_time = self.get_response_time(target_query)
+        if ask_response_time.nil? || target_response_time.nil?
+          return nil
+        end
+
+        response_time = target_response_time - ask_response_time
+        response_time >= 0.0 ? response_time : nil
+      end
+
+      def get_response_time(sparql_query)
+        begin
+          start_time = Time.now
+
+          @client.query(sparql_query)
+
+          end_time = Time.now
+        rescue => e
+          return nil
+        end
+
+        end_time - start_time
       end
 
       def contains_same_as?
