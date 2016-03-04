@@ -18,65 +18,100 @@ h1.page-header = @endpoint.name
           th Value
       tbody
         tr
-          td Alive
+          td
+            span[data-toggle="tooltip" title="The endpoint is alive or not. How much the endpoint was active in these 30 days"]
+              | Alive
           td
             = @evaluation.alive.to_s + " (" + @evaluation.alive_rate.to_s + "%)"
         tr
           td
-            Service Description
+            span [data-toggle="tooltip" title="Service Description can be retrieved as turtle or rdf+xml or not."]
+              | Service Description
           td
             = !@evaluation.service_description.blank?
         tr
-          td Last Updated
+          td
+            span [data-toggle="tooltip" title="The date when data in the endpoint is updated."]
+              | Last Updated
           td -
         tr
-          td VoID
+          td
+            span [data-toggle="tooltip" title="VoID can be retrieved as turtle or rdf+xml or not."]
+              | VoID
           td
             = !@void.blank?
         tr
-          td Organization Information
+          td
+            span [data-toggle="tooltip" title="Publisher described in VoID"]
+              | Organization Information
           td
             = @publisher
         tr
-          td License Information
+          td
+            span [data-toggle="tooltip" title="License described in VoID"]
+              | License Information
           td
             = @license
         tr
-          td Vocabulary
+          td
+            span [data-toggle="tooltip" title="Not Implemented Yet"]
+              | Vocabulary
           td -
         tr
-          td Ontology
+          td
+            span [data-toggle="tooltip" title="Not Implemented Yet"]
+              |  Ontology
           td -
         tr
-          td 4 Principles of Linked Data
+          td
+            span [data-toggle="tooltip"
+                  title="Whether data in this endpoint is satisfy the 4 principles of Linked Data or not. We assume blank nodes valid for subjects."
+                 ]
+              |  4 Principles of Linked Data
           td
             .item all subjects are URI: #{@evaluation.subject_is_uri}
             .item all subjects are HTTP URI: #{@evaluation.subject_is_http_uri}
             .item URI provides information: #{@evaluation.uri_provides_info}
             .item contains external links: #{@evaluation.contains_links}
         tr
-          td Cool URI
+          td
+            span [data-toggle="tooltip" title="We score the cool URI according 4 criteria. 1: the address of the endpoint is represented using host name not IP address. 2: the endpoint should listen 80 port. 3: the URI of the endpoint does not contain URL parameters. 4: the length of the URI is less than 30 characters."]
+              | Cool URI
           td =@evaluation.cool_uri_rate.to_i
         tr
-          td Support for Content Negotiation
+          td
+            span [data-toggle="tooltip" title="Not Implemented Yet"]
+              |  Support for Content Negotiation
           td -
         tr
-          td Support for HTML Data Format
+          td
+            span [data-toggle="tooltip" title="Not Implemented Yet"]
+              |  Support for HTML Data Format
           td -
         tr
-          td Support for Turtle Data Format
+          td
+            span [data-toggle="tooltip" title="Not Implemented Yet"]
+              |  Support for Turtle Data Format
           td -
         tr
-          td Links to Other Dataset
+          td
+            span [data-toggle="tooltip" title="Not Implemented Yet"]
+              |  Links to Other Dataset
           td -
         tr
-          td Metadata
+          td
+            span [data-toggle="tooltip" title="Not Implemented Yet"]
+              |  Metadata
           td -
         tr
-          td Data Entry
+          td
+            span [data-toggle="tooltip" title="Not Implemented Yet"]
+              | Data Entry
           td -
         tr
-          td Response Time
+          td
+            span [data-toggle="tooltip" title="Not Implemented Yet"]
+              | Response Time
           td  -
   .col-xs-12.col-sm-6
     canvas#radar[width="400" height="400"]
