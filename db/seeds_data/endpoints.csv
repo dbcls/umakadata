@@ -55,3 +55,4 @@ BioSamples,http://www.ebi.ac.uk/rdf/services/biosamples/sparql
 chEMBL,http://www.ebi.ac.uk/rdf/services/chembl/sparql
 Reactome,http://www.ebi.ac.uk/rdf/services/reactome/sparql
 UniProt,http://sparql.uniprot.org/
+Bio2RDF,http://sparql.openlifedata.org/
