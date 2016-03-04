@@ -7,7 +7,7 @@ module Yummydata
       include Yummydata::HTTPHelper
 
       def prepare(uri)
-        @client = SPARQL::Client.new(uri) if @uri == uri && @client == nil
+        @client = SPARQL::Client.new(uri, {'read_timeout': 5 * 60}) if @uri == uri && @client == nil
         @uri = uri
       end
 
@@ -19,7 +19,9 @@ SELECT
   *
 WHERE {
 GRAPH ?g { ?s ?p ?o } .
-  filter (!isURI(?s))
+  filter (!isURI(?s) AND !isBLANK(?s) AND ?g NOT IN (
+    <http://www.openlinksw.com/schemas/virtrdf#>
+  ))
 }
 LIMIT 1
 SPARQL
@@ -41,14 +43,18 @@ SELECT
   *
 WHERE {
   GRAPH ?g { ?s ?p ?o } .
-  filter (!regex(?s, "http://", "i"))
+  filter (!regex(?s, "http://", "i") AND !isBLANK(?s) AND ?g NOT IN (
+    <http://www.openlinksw.com/schemas/virtrdf#>
+  ))
 }
 LIMIT 1
 SPARQL
 
         begin
           results = @client.query(sparql_query)
+          puts results
         rescue => e
+          puts e
           return false
         end
         results != nil && results.count == 0
