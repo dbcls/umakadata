@@ -36,9 +36,6 @@ module Yummydata
     def contains_links?
       super(@uri)
     end
-    def response_time
-      super(@uri)
-    end
 
     include Yummydata::Criteria::VoID
     def well_known_uri
