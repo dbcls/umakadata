@@ -1,4 +1,6 @@
 require 'yummydata/http_helper'
+require 'sparql/client'
+require 'rdf/turtle'
 
 module Yummydata
   module Criteria
