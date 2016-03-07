@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe 'Yummydata' do
   describe 'Criteria' do
-    describe 'LinkedDataRules' do
+    describe 'ResponseTime' do
 
       describe '#response_time' do
 
-        let(:test_class) { Struct.new(:target) { include Yummydata::Criteria::LinkedDataRules } }
+        let(:test_class) { Struct.new(:target) { include Yummydata::Criteria::ResponseTime } }
         let(:target) { test_class.new }
 
         before do
