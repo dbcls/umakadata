@@ -10,7 +10,7 @@ describe 'Yummydata' do
         let(:target) { test_class.new }
 
         before do
-          @uri = URI('http://example.com')
+          @uri = URI("http://dbpedia.org/sparql")
           @ask_query = <<-'SPARQL'
 ASK{}
 SPARQL
@@ -74,6 +74,12 @@ SPARQL
           expect(target.response_time(@uri)).to eq 0
         end
 
+          describe '#get_response_time' do
+            it 'should return a numeric more than 0' do
+              target.prepare(@uri)
+              expect(target.get_response_time(@ask_query)).to eq 0
+            end
+          end
       end
     end
   end
