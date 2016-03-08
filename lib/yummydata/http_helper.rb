@@ -22,16 +22,18 @@ module Yummydata
       http.open_timeout = time_out
 
       begin
-        response = http.get(uri.path)
+        resource = uri.path
+        resource += "?" + uri.query unless uri.query.nil?
+        response = http.get(resource)
       rescue => e
         return nil
       end
 
       case response
       when Net::HTTPSuccess
-        body = response.body
+        return response
       when Net::HTTPRedirection
-        http_get_recursive(URI(response['location']), time_out, limit - 1)
+        return http_get_recursive(URI(response['location']), time_out, limit - 1)
       else
         nil
       end

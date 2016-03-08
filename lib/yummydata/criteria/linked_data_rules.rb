@@ -66,12 +66,11 @@ SPARQL
           return false
         end
         begin
-          response = http_get(URI(uri), {})
+          response = http_get_recursive(URI(uri), 10)
         rescue => e
           puts "INVALID URI: #{uri}"
           return false
         end
-
         response.is_a?(Net::HTTPSuccess) && !response.body.empty?
       end
 
@@ -81,9 +80,12 @@ SELECT
   ?s
 WHERE {
   GRAPH ?g { ?s ?p ?o } .
-  filter (isURI(?s))
+  filter (isURI(?s) AND ?g NOT IN (
+    <http://www.openlinksw.com/schemas/virtrdf#>
+  ))
 }
 LIMIT 1
+OFFSET 100
 SPARQL
         begin
           results = @client.query(sparql_query)

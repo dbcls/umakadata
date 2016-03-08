@@ -20,7 +20,7 @@ SPARQL
         headers['Accept'] = content_type
         request =  URI(uri.to_s + "?query=" + query)
 
-        response = http_get(request, headers)
+        response = http_get_recursive(request, headers)
         return false if response.nil?
 
         return response.content_type == content_type
