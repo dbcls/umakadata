@@ -40,7 +40,6 @@ class EndpointsController < ApplicationController
     @endpoints = Endpoint.includes(:evaluation).where(conditions).order('evaluations.score DESC')
     @endpoints.each do |endpoint|
       rank = endpoint.evaluation.first.rank
-      puts "#{rank} : #{endpoint.name}"
       count[rank] += 1
     end
     render :json => scores_json(count)

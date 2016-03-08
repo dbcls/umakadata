@@ -35,6 +35,8 @@ class Evaluation < ActiveRecord::Base
                                        eval.support_xml_format ||
                                        eval.support_html_format
 
+    eval.metadata_coverage = retriever.check_metadata
+
     eval.save!
   end
 
