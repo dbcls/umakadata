@@ -47,13 +47,12 @@ SPARQL
           start_time = Time.now
 
           result = @client.query(sparql_query)
+          return nil if result.nil?
 
           end_time = Time.now
         rescue => e
           return nil
         end
-
-        return nil if result.nil?
 
         end_time - start_time
       end
