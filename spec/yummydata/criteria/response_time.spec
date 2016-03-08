@@ -51,7 +51,7 @@ SPARQL
           allow(target).to receive(:response_time).with(ASK_QUERY)
             .and_return(1000)
           allow(target).to receive(:response_time).with(TARGET_QUERY)
-            .and_return(nil)
+          .and_return(nil)
           expect(target.execution_time(@uri)).to be_nil
         end
 
@@ -80,15 +80,28 @@ SPARQL
         end
 
 	describe '#response_time' do
-          it 'should return nil' do
-            target.instance_varaiable_set(:@uri, @uri)
+          it 'should return nil when query is malformed' do
+            target.instance_variable_set(:@uri, @uri)
             target.prepare(@uri)
-	    expect(target.response_time(MALFORMED_QUERY)).to eq 0
+
+            client = double('client', :query => nil)
+            target.set_client(client)
+
+	    expect(target.response_time(MALFORMED_QUERY)).to eq nil
+	  end
+
+          it 'should return time when query is correctly' do
+	    target.instance_variable_set(:@uri, @uri)
+            target.prepare(@uri)
+	    
+            client = double('client', :query => [])
+            target.set_client(client)
+
+	    expect(target.response_time(ASK_QUERY).instance_of?(Float)).to be true
+  	    expect(target.response_time(TARGET_QUERY).instance_of?(Float)).to be true
 	  end
 	end
-
       end
     end
   end
 end
-

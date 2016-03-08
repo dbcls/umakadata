@@ -13,6 +13,10 @@ module Yummydata
         @uri = uri
       end
 
+      def set_client(client)
+        @client = client
+      end
+
       def execution_time(uri)
         self.prepare(uri)
 
