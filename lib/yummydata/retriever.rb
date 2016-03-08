@@ -3,6 +3,7 @@ require "yummydata/criteria/service_description"
 require "yummydata/criteria/linked_data_rules"
 require "yummydata/criteria/void"
 require "yummydata/criteria/cool_uri"
+require "yummydata/criteria/content_negotiation"
 
 module Yummydata
   class Retriever
@@ -45,6 +46,11 @@ module Yummydata
 
     include Yummydata::Criteria::CoolURI
     def cool_uri_rate
+      super(@uri)
+    end
+
+    include Yummydata::Criteria::ContentNegotiation
+    def check_content_negotiation
       super(@uri)
     end
 
