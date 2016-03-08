@@ -50,7 +50,7 @@ module Yummydata
     end
 
     include Yummydata::Criteria::ContentNegotiation
-    def check_content_negotiation
+    def check_content_negotiation(content_type)
       super(@uri, content_type)
     end
 
