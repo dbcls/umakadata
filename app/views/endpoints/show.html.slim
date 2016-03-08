@@ -80,19 +80,22 @@ h1.page-header = @endpoint.name
           td =@evaluation.cool_uri_rate.to_i
         tr
           td
-            span [data-toggle="tooltip" title="Not Implemented Yet"]
+            span [data-toggle="tooltip" title="The endpoint support content negotiation."]
               |  Support for Content Negotiation
-          td -
+          td
+            = @evaluation.support_content_negotiation
         tr
           td
-            span [data-toggle="tooltip" title="Not Implemented Yet"]
+            span [data-toggle="tooltip" title="The endpoint provide data in HTML format."]
               |  Support for HTML Data Format
-          td -
+          td
+            = @evaluation.support_html_format
         tr
           td
-            span [data-toggle="tooltip" title="Not Implemented Yet"]
+            span [data-toggle="tooltip" title="The endpoint provide data in Turtle format."]
               |  Support for Turtle Data Format
-          td -
+          td
+            = @evaluation.support_turtle_format
         tr
           td
             span [data-toggle="tooltip" title="Not Implemented Yet"]

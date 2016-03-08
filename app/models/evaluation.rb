@@ -28,6 +28,13 @@ class Evaluation < ActiveRecord::Base
 
     eval.cool_uri_rate = retriever.cool_uri_rate
 
+    eval.support_turtle_format = retriever.check_content_negotiation(Yummydata::ContentType::TURTLE)
+    eval.support_xml_format    = retriever.check_content_negotiation(Yummydata::ContentType::RDFXML)
+    eval.support_html_format   = retriever.check_content_negotiation(Yummydata::ContentType::HTML)
+    eval.support_content_negotiation = eval.support_turtle_format ||
+                                       eval.support_xml_format ||
+                                       eval.support_html_format
+
     eval.save!
   end
 

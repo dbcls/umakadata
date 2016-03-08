@@ -8,11 +8,4 @@ namespace :yummydata do
       Evaluation.record(endpoint, retriever)
     end
   end
-
-  desc "test"
-  task :test => :environment do |variable|
-    endpoint = Endpoint.first
-    retriever = Yummydata::Retriever.new endpoint.url
-    puts retriever.cool_uri_rate
-  end
 end
