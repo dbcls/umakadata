@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160308093155) do
+ActiveRecord::Schema.define(version: 20160303085928) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -92,11 +92,11 @@ ActiveRecord::Schema.define(version: 20160308093155) do
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
     t.integer  "cool_uri_rate"
-    t.float    "execution_time"
     t.boolean  "support_content_negotiation"
     t.boolean  "support_turtle_format"
     t.boolean  "support_xml_format"
     t.boolean  "support_html_format"
+    t.float    "execution_time"
   end
 
   create_table "linked_data_rules", force: :cascade do |t|
