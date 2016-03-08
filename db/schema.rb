@@ -92,11 +92,11 @@ ActiveRecord::Schema.define(version: 20160303085928) do
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
     t.integer  "cool_uri_rate"
+    t.float    "response_time"
     t.boolean  "support_content_negotiation"
     t.boolean  "support_turtle_format"
     t.boolean  "support_xml_format"
     t.boolean  "support_html_format"
-    t.float    "response_time"
   end
 
   create_table "linked_data_rules", force: :cascade do |t|
