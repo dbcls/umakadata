@@ -4,7 +4,7 @@ require 'rdf/turtle'
 
 module Yummydata
   module Criteria
-    module ResponseTime
+    module ExecutionTime
 
       # include Yummydata::HTTPHelper
 

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'Yummydata' do
   describe 'Criteria' do
-    describe 'ResponseTime' do
+    describe 'ExecutionTime' do
 
       ASK_QUERY = <<-'SPARQL'
 ASK{}
@@ -24,7 +24,7 @@ SPARQL
       describe '#execution_time' do
 
 
-        let(:test_class) { Struct.new(:target) { include Yummydata::Criteria::ResponseTime } }
+        let(:test_class) { Struct.new(:target) { include Yummydata::Criteria::ExecutionTime } }
         let(:target) { test_class.new }
 
         before do

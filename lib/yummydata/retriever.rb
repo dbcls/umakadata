@@ -2,7 +2,7 @@ require "yummydata/criteria/liveness"
 require "yummydata/criteria/service_description"
 require "yummydata/criteria/linked_data_rules"
 require "yummydata/criteria/void"
-require "yummydata/criteria/response_time"
+require "yummydata/criteria/execution_time"
 require "yummydata/criteria/cool_uri"
 require "yummydata/criteria/content_negotiation"
 
@@ -45,7 +45,7 @@ module Yummydata
       super(@uri, time_out)
     end
 
-    include Yummydata::Criteria::ResponseTime
+    include Yummydata::Criteria::ExecutionTime
     def execution_time
       super(@uri)
     end
