@@ -6,6 +6,20 @@ module Yummydata
   module Criteria
     module ExecutionTime
 
+      BASE_QUERY = <<-'SPARQL'
+ASK{}
+SPARQL
+
+      TARGET_QUERY = <<-'SPARQL'
+SELECT DISTINCT
+  ?g
+WHERE {
+  GRAPH ?g {
+    ?s ?p ?o
+  }
+}
+SPARQL
+
       def prepare(uri)
         @client = SPARQL::Client.new(uri, {'read_timeout': 5 * 60}) if @uri == uri && @client == nil
         @uri = uri
@@ -18,27 +32,16 @@ module Yummydata
       def execution_time(uri)
         self.prepare(uri)
 
-        ask_query = <<-'SPARQL'
-ASK{}
-SPARQL
-        ask_execution_time = self.response_time(ask_query)
 
-        target_query = <<-'SPARQL'
-SELECT DISTINCT
-  ?g
-WHERE {
-  GRAPH ?g {
-    ?s ?p ?o
-  }
-}
-SPARQL
+        base_response_time = self.response_time(BASE_QUERY)
 
-        tarresponse_time = self.response_time(target_query)
-        if ask_execution_time.nil? || tarresponse_time.nil?
+
+        target_response_time = self.response_time(TARGET_QUERY)
+        if base_response_time.nil? || target_response_time.nil?
           return nil
         end
 
-        execution_time = tarresponse_time - ask_execution_time
+        execution_time = target_response_time - base_response_time
         execution_time >= 0.0 ? execution_time : nil
       end
 
