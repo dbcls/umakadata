@@ -52,9 +52,7 @@ SPARQL
 
         begin
           results = @client.query(sparql_query)
-          puts results
         rescue => e
-          puts e
           return false
         end
         results != nil && results.count == 0
