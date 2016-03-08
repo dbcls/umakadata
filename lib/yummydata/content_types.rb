@@ -1,3 +1,9 @@
-CONTENT_TYPE_TURTLE = 'text/turtle'.freeze
-CONTENT_TYPE_RDFXML = 'rdf+xml'.freeze
-CONTENT_TYPE_HTML   = 'text/html'.freeze
+module Yummydata
+  module ContentType
+
+    TURTLE = 'text/turtle'.freeze
+    RDFXML = 'rdf+xml'.freeze
+    HTML   = 'text/html'.freeze
+
+  end
+end

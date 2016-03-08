@@ -8,7 +8,7 @@ module Yummydata
 
       include Yummydata::HTTPHelper
 
-      SERVICE_DESC_CONTEXT_TYPE = [CONTENT_TYPE_TURTLE, CONTENT_TYPE_RDFXML].freeze
+      SERVICE_DESC_CONTEXT_TYPE = [Yummydata::ContentType::TURTLE, Yummydata::ContentType::RDFXML].freeze
 
       ##
       # A string value that describes what services are provided at the SPARQL endpoint.
