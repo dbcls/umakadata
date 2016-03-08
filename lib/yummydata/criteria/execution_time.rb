@@ -32,10 +32,7 @@ SPARQL
       def execution_time(uri)
         self.prepare(uri)
 
-
         base_response_time = self.response_time(BASE_QUERY)
-
-
         target_response_time = self.response_time(TARGET_QUERY)
         if base_response_time.nil? || target_response_time.nil?
           return nil
