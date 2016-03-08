@@ -80,11 +80,6 @@ SPARQL
         end
 
 	describe '#response_time' do
-          it 'should return a numeric more than 0' do
-            target.prepare(@uri)
-	    expect(target.response_time(ASK_QUERY)).to eq 0
-	  end
-
           it 'should return nil' do
             target.instance_varaiable_set(:@uri, @uri)
             target.prepare(@uri)
