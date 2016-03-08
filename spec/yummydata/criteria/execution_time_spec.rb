@@ -64,7 +64,7 @@ SPARQL
           expect(target.execution_time(@uri)).to eq 0
         end
 
-	describe '#response_time' do
+        describe '#response_time' do
           it 'should return nil when query is malformed' do
             target.instance_variable_set(:@uri, @uri)
             target.prepare(@uri)
@@ -72,21 +72,22 @@ SPARQL
             client = double('client', :query => nil)
             target.set_client(client)
 
-	    expect(target.response_time(MALFORMED_QUERY)).to eq nil
-	  end
+            expect(target.response_time(MALFORMED_QUERY)).to eq nil
+          end
 
           it 'should return time when query is correctly' do
-	    target.instance_variable_set(:@uri, @uri)
-            target.prepare(@uri)
+           target.instance_variable_set(:@uri, @uri)
+           target.prepare(@uri)
 
-            client = double('client', :query => [])
-            target.set_client(client)
+           client = double('client', :query => [])
+           target.set_client(client)
 
-	    expect(target.response_time(Yummydata::Criteria::ExecutionTime::BASE_QUERY).instance_of?(Float)).to be true
-  	    expect(target.response_time(Yummydata::Criteria::ExecutionTime::TARGET_QUERY).instance_of?(Float)).to be true
-	  end
-	end
-      end
+           expect(target.response_time(Yummydata::Criteria::ExecutionTime::BASE_QUERY).instance_of?(Float)).to be true
+           expect(target.response_time(Yummydata::Criteria::ExecutionTime::TARGET_QUERY).instance_of?(Float)).to be true
+         end
+       end
+
+     end
     end
   end
 end
