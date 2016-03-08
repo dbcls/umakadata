@@ -6,8 +6,6 @@ module Yummydata
   module Criteria
     module ExecutionTime
 
-      # include Yummydata::HTTPHelper
-
       def prepare(uri)
         @client = SPARQL::Client.new(uri, {'read_timeout': 5 * 60}) if @uri == uri && @client == nil
         @uri = uri
