@@ -46,16 +46,9 @@ module Yummydata
     end
 
     include Yummydata::Criteria::ResponseTime
-    def response_time
+    def execution_time
       super(@uri)
     end
-
-    include Yummydata::Criteria::VoID
-    include Yummydata::Criteria::ResponseTime
-    def response_time
-      super(@uri)
-    end
-
 
     include Yummydata::Criteria::CoolURI
     def cool_uri_rate
