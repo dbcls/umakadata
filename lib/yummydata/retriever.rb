@@ -2,6 +2,7 @@ require "yummydata/criteria/liveness"
 require "yummydata/criteria/service_description"
 require "yummydata/criteria/linked_data_rules"
 require "yummydata/criteria/void"
+require "yummydata/criteria/execution_time"
 require "yummydata/criteria/cool_uri"
 require "yummydata/criteria/content_negotiation"
 require "yummydata/criteria/metadata"
@@ -43,6 +44,11 @@ module Yummydata
     end
     def void_on_well_known_uri(time_out = 30)
       super(@uri, time_out)
+    end
+
+    include Yummydata::Criteria::ExecutionTime
+    def execution_time
+      super(@uri)
     end
 
     include Yummydata::Criteria::CoolURI
