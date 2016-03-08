@@ -51,7 +51,7 @@ module Yummydata
 
     include Yummydata::Criteria::ContentNegotiation
     def check_content_negotiation
-      super(@uri)
+      super(@uri, content_type)
     end
 
   end
