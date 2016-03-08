@@ -28,7 +28,7 @@ SPARQL
         let(:target) { test_class.new }
 
         before do
-          @uri = URI("http://dbpedia.org/sparql")
+          @uri = URI("http://example.com")
         end
 
         it 'should return not nil' do
