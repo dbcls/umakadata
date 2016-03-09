@@ -55,6 +55,7 @@ WHERE {
 }
 SPARQL
         results = self.query_metadata(query)
+        return nil if !results
         results.map { |solution| solution[:g] }
       end
 
@@ -79,6 +80,7 @@ WHERE {
 }
 SPARQL
         results = self.query_metadata(query)
+        return nil if !results
         results.map { |solution| solution[:c] }
       end
 
@@ -90,6 +92,7 @@ FROM <#{graph}>
 WHERE { [] rdf:type ?c. }
 SPARQL
         results = self.query_metadata(query)
+        return nil if !results
         results.map { |solution| solution[:c] }
       end
 
@@ -101,6 +104,7 @@ FROM <#{graph}>
 WHERE{ <#{cls}> rdfs:label ?label. }
 SPARQL
         results = self.query_metadata(query)
+        return nil if !results
         results.map { |solution| solution[:label] }
       end
 
@@ -118,6 +122,7 @@ WHERE {
 }
 SPARQL
         results = self.query_metadata(query)
+        return nil if !results
         results.map { |solution| solution[:label] }
       end
 
@@ -136,6 +141,7 @@ WHERE{
 }
 SPARQL
         results = self.query_metadata(query)
+        return nil if !results
         return results[0][:num]
       end
 
@@ -148,6 +154,7 @@ WHERE{
 }
 SPARQL
         results = self.query_metadata(query)
+        return nil if !results
         results.map { |solution| solution[:p] }
       end
 
@@ -161,6 +168,7 @@ WHERE {
 }
 SPARQL
         results = self.query_metadata(query)
+        return nil if !results
         results.map { |solution| solution[:d] }
       end
 
@@ -174,6 +182,7 @@ WHERE{
 }
 SPARQL
         results = self.query_metadata(query)
+        return nil if !results
         results.map { |solution| solution[:d] }
       end
 
@@ -190,6 +199,7 @@ WHERE{
 }
 SPARQL
         results = self.query_metadata(query)
+        return nil if !results
         results.map { |solution| [ solution[:d], solution[:r] ] }
       end
 
@@ -223,6 +233,7 @@ WHERE {
 }
 SPARQL
         results = self.query_metadata(query)
+        return nil if !results
         return [ results[0][:numTriples], results[0][:numDomIns], results[0][:numRanIns] ]
       end
 
@@ -240,6 +251,7 @@ WHERE{
 }
 SPARQL
         results = self.query_metadata(query)
+        return nil if !results
         return [ results[0][:numTriples], results[0][:numDomIns], results[0][:numRanIns] ]
       end
 
@@ -252,6 +264,7 @@ WHERE{
 }
 SPARQL
         results = self.query_metadata(query)
+        return nil if !results
         return [ results[0][:numTriples], results[0][:numDomIns], results[0][:numRanIns] ]
       end
 
@@ -269,6 +282,7 @@ WHERE {
 }
 SPARQL
         results = self.query_metadata(query)
+        return nil if !results
         return [ results[0][:numDomIns], results[0][:numTriplesWithDom] ]
       end
 
@@ -286,6 +300,7 @@ WHERE {
 }
 SPARQL
         results = self.query_metadata(query)
+        return nil if !results
         return [ results[0][:numRanIns], results[0][:numTriplesWithRan] ]
       end
 
@@ -302,6 +317,7 @@ WHERE {
 }
 SPARQL
         results = self.query_metadata(query)
+        return nil if !results
         return [ results[0][:numRanIns], results[0][:numTriplesWithRan] ]
       end
 
@@ -316,6 +332,7 @@ WHERE{
 }
 SPARQL
         results = self.query_metadata(query)
+        return nil if !results
         results.map { |solution| [ solution[:p], solution[:d], solution[:r] ] }
       end
 
