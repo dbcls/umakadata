@@ -29,14 +29,17 @@ class Evaluation < ActiveRecord::Base
     eval.execution_time = retriever.execution_time
     eval.cool_uri_rate = retriever.cool_uri_rate
 
-    eval.support_turtle_format = retriever.check_content_negotiation(Yummydata::ContentType::TURTLE)
-    eval.support_xml_format    = retriever.check_content_negotiation(Yummydata::ContentType::RDFXML)
-    eval.support_html_format   = retriever.check_content_negotiation(Yummydata::ContentType::HTML)
+    eval.support_turtle_format = retriever.check_content_negotiation(Yummydata::DataFormat::TURTLE)
+    eval.support_xml_format    = retriever.check_content_negotiation(Yummydata::DataFormat::RDFXML)
+    eval.support_html_format   = retriever.check_content_negotiation(Yummydata::DataFormat::HTML)
     eval.support_content_negotiation = eval.support_turtle_format ||
                                        eval.support_xml_format ||
                                        eval.support_html_format
 
-    eval.metadata_coverage = retriever.check_metadata
+    metadata = retriever.metadata
+    eval.metadata_coverage = self.score_metadata(metadata)
+    puts "METADATA SCORE"
+    puts eval.metadata_coverage
 
     eval.save!
   end
@@ -48,8 +51,9 @@ class Evaluation < ActiveRecord::Base
   end
 
   def self.retrieve_void(retriever, eval)
-    eval.void_uri            = retriever.well_known_uri
-    eval.void_ttl            = retriever.void_on_well_known_uri
+    eval.void_uri = retriever.well_known_uri
+    void = retriever.void_on_well_known_uri
+    eval.void_ttl = void.text
   end
 
   def self.retrieve_linked_data_rules(retriever, eval)
@@ -57,7 +61,7 @@ class Evaluation < ActiveRecord::Base
     eval.subject_is_http_uri = retriever.http_subject?
     eval.uri_provides_info   = retriever.uri_provides_info?
     eval.contains_links      = retriever.contains_links?
-    eval.execution_time       = retriever.execution_time
+    eval.execution_time      = retriever.execution_time
   end
 
   def self.calc_alive_rate(eval)
@@ -155,6 +159,22 @@ class Evaluation < ActiveRecord::Base
     rates[5] = 50
 
     return rates
+  end
+
+  def self.score_metadata(metadata)
+    return 0 if metadata.empty?
+
+    score_list = []
+    metadata.each do |graph, data|
+      score = 0
+      score += 25 unless data[:classes].empty?
+      score += 25 unless data[:labels].empty?
+      score += 25 unless data[:datatypes].empty?
+      score += 25 unless data[:properties].empty?
+      score_list.push score
+    end
+
+    return score_list.inject(0.0) { |r, i| r += i } / score_list.size
   end
 
 end
