@@ -8,6 +8,12 @@ module Yummydata
     include Yummydata::DataFormat
 
     ##
+    # return the VoID as string
+    #
+    # @return [String]
+    attr_reader :text
+
+    ##
     # return the license of VoID
     #
     # @return [String]
@@ -26,30 +32,19 @@ module Yummydata
     attr_reader :last_modified
 
     def initialize(http_response)
-      @license = []
-      @publisher = []
-      @last_modified = ''
+      @text = http_response.body
+      @license = nil
+      @publisher = nil
+      @modified = nil
 
-      if (!http_response.nil?)
-        text = http_response.body
-        data = parse(text, TTL)
-        if (!data.nil?)
-          data.each do |subject, predicate, object|
-            @licanse.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/license')
-            @publisher.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/publisher')
-          end
-        else
-          data = parse(text, XML)
-          if (!data.nil?)
-            data.each do |subject, predicate, object|
-              @licanse.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/license')
-              @publisher.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/publisher')
-            end
-          end
-        end
-        @modified = if data.nil? ? 'N/A' : data['dcterms:modified']
-        @license = @license.join('<br/>')
-        @publisher = @publisher.join('<br/>')
+      data = parse(@text, TTL)
+      data = parse(@text, XML) if data.nil?
+      return if data.nil?
+
+      data.each do |subject, predicate, object|
+        @licanse.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/license')
+        @publisher.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/publisher')
+        @modified.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/modified')
       end
     end
 
