@@ -21,7 +21,7 @@ class EndpointsController < ApplicationController
     conditions = {'evaluations.latest': true}
     @endpoints = Endpoint.includes(:evaluation).where(conditions).order('evaluations.score DESC')
     @endpoints.each do |endpoint|
-      rank = endpoint.evaluation.first.rank
+      rank = endpoint.evaluation.rank
       puts "#{rank} : #{endpoint.name}"
       count[rank] += 1
     end
@@ -44,7 +44,7 @@ class EndpointsController < ApplicationController
     conditions = {'evaluations.latest': true}
     @endpoints = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions)
     @endpoints.each do |endpoint|
-      alive = endpoint.evaluation.first.alive
+      alive = endpoint.evaluation.alive
       alive ? count[:alive] += 1 : count[:dead] += 1
     end
     render :json => alive_json(count)
@@ -55,7 +55,7 @@ class EndpointsController < ApplicationController
     conditions = {'evaluations.latest': true}
     @endpoints = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions)
     @endpoints.each do |endpoint|
-      sd = endpoint.evaluation.first.service_description
+      sd = endpoint.evaluation.service_description
       sd.present? ? count[:true] += 1 : count[:false] += 1
     end
     render :json => service_descriptions_json(count)
@@ -67,7 +67,7 @@ class EndpointsController < ApplicationController
       conditions = {'evaluations.latest': true}
       @endpoints = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions)
       @endpoint = @endpoints.find(params[:id])
-      @evaluation = @endpoint.evaluation.first
+      @evaluation = @endpoint.evaluation
 
       @void = @evaluation.void_ttl
       void = parseVoid(@void)
