@@ -7,8 +7,20 @@ h1 Endpoint Search
     label.col-xs-4 Name
     = text_field_tag :name, "", :class => 'form-control'
   .form-inline.row
-    label.col-xs-4 Score >
+    label.col-xs-4 Score
     = text_field_tag :score, "", :class => 'form-control'
+  .form-inline.row
+    label.col-xs-4 Alive Rate
+    = text_field_tag :alive_rate, "", :class => 'form-control'
+  .form-inline.row
+    label.col-xs-4 Rank
+    = text_field_tag :rank, "", :class => 'form-control'
+  .form-inline.row
+    label.col-xs-4 Cool URI Rate
+    = text_field_tag :cool_uri_rate, "", :class => 'form-control'
+  .form-inline.row
+    label.col-xs-4 Execution Time
+    = text_field_tag :execution_time, "", :class => 'form-control'
 
   .row
     label.col-xs-4 Attributes
@@ -33,6 +45,9 @@ h1 Endpoint Search
           input[name="html" type="checkbox"] HTML Data Format
         label.checkbox-inline.col-xs-4
           input[name="turtle" type="checkbox"] Turtle Data Format
+      .form-group.row
+        label.checkbox-inline.col-xs-4
+          input[name="metadata" type="checkbox"] XML Data Format
       .form-group.row
         label.checkbox-inline.col-xs-4
           input[name="metadata" type="checkbox"] Metadata
