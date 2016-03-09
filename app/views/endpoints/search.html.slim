@@ -8,19 +8,37 @@ h1 Endpoint Search
     = text_field_tag :name, "", :class => 'form-control'
   .form-inline.row
     label.col-xs-4 Score
-    = text_field_tag :score, "", :class => 'form-control'
+    = text_field_tag :score_lower, "", :class => 'form-control form-inline'
+    span ~
+    = text_field_tag :score_upper, "", :class => 'form-control form-inline'
   .form-inline.row
     label.col-xs-4 Alive Rate
-    = text_field_tag :alive_rate, "", :class => 'form-control'
+    = text_field_tag :alive_rate_lower, "", :class => 'form-control form-inline'
+    span ~
+    = text_field_tag :alive_rate_upper, "", :class => 'form-control form-inline'
   .form-inline.row
     label.col-xs-4 Rank
     = text_field_tag :rank, "", :class => 'form-control'
   .form-inline.row
     label.col-xs-4 Cool URI Rate
-    = text_field_tag :cool_uri_rate, "", :class => 'form-control'
+    = text_field_tag :cool_uri_rate_lower, "", :class => 'form-control form-inline'
+    span ~
+    = text_field_tag :cool_uri_rate_upper, "", :class => 'form-control form-inline'
   .form-inline.row
-    label.col-xs-4 Execution Time
-    = text_field_tag :execution_time, "", :class => 'form-control'
+    label.col-xs-4 Ontology
+    = text_field_tag :ontology_lower, "", :class => 'form-control form-inline'
+    span ~
+    = text_field_tag :ontology_upper, "", :class => 'form-control form-inline'
+  .form-inline.row
+    label.col-xs-4 Metadata
+    = text_field_tag :metadata_lower, "", :class => 'form-control form-inline'
+    span ~
+    = text_field_tag :metadata_upper, "", :class => 'form-control form-inline'
+  .form-inline.row
+    label.col-xs-4 Vocabulary
+    = text_field_tag :vocabulary_lower, "", :class => 'form-control form-inline'
+    span ~
+    = text_field_tag :vocabulary_upper, "", :class => 'form-control form-inline'
 
   .row
     label.col-xs-4 Attributes
@@ -37,8 +55,6 @@ h1 Endpoint Search
           input[name="license" type="checkbox"] License Information
       .form-group.row
         label.checkbox-inline.col-xs-4
-          input[name="ontology" type="checkbox"] Ontology
-        label.checkbox-inline.col-xs-4
           input[name="content_negtiation" type="checkbox"] Content Negotiation
       .form-group.row
         label.checkbox-inline.col-xs-4
@@ -48,8 +64,6 @@ h1 Endpoint Search
       .form-group.row
         label.checkbox-inline.col-xs-4
           input[name="xml" type="checkbox"] XML Data Format
-        label.checkbox-inline.col-xs-4
-          input[name="metadata" type="checkbox"] Metadata
 
   input#search_button.btn.btn-default[type="button" value="Search"]
 hr
