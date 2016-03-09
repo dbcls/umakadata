@@ -9,6 +9,24 @@ module Yummydata
         @client = SPARQL::Client.new(uri)
       end
 
+      def retrieve
+        graphs = self.list_of_graph_uris
+        return nil if !graphs
+
+        metadata = {}
+        graphs.each do |graph|
+          classes = self.classes_on_graph(graph)
+          metadata[graph] = {
+            classes: classes,
+            labels: self.list_of_labels_of_classes(graph, classes),
+            datatypes: self.list_of_datatypes(graph),
+            properties: self.list_of_properties_on_graph(graph)
+          }
+        end
+
+        return metadata
+      end
+
       def score
         score_list = []
         graphs = self.list_of_graph_uris
