@@ -33,14 +33,13 @@ module Yummydata
 
     def initialize(http_response)
       @text = http_response.body
-      @license = nil
-      @publisher = nil
-      @modified = nil
-
       data = parse(@text, TTL)
       data = parse(@text, XML) if data.nil?
       return if data.nil?
 
+      @license = []
+      @publisher = []
+      @modified = []
       data.each do |subject, predicate, object|
         @licanse.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/license')
         @publisher.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/publisher')
