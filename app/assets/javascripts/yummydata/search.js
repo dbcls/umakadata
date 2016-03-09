@@ -7,6 +7,7 @@ $(function() {
     var url = "/api/endpoints/search/?name=" + name + "&score=" + score;
     $.getJSON(url, function(data) {
       $("#result").show();
+      $("#result_body").empty();
       for (var i = 0; i < data.length; i++) {
         var endpoint = data[i];
         var row = $("<tr>");
