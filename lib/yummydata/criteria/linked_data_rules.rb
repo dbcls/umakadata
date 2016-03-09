@@ -66,7 +66,7 @@ SPARQL
           return false
         end
         begin
-          response = http_get_recursive(URI(uri), 10)
+          response = http_get_recursive(URI(uri), {}, 10)
         rescue => e
           puts "INVALID URI: #{uri}"
           return false

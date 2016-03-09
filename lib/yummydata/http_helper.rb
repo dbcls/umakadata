@@ -15,7 +15,7 @@ module Yummydata
       end
     end
 
-    def http_get_recursive(uri, time_out, limit = 10)
+    def http_get_recursive(uri, headers = {}, time_out = 10, limit = 10)
       raise RuntimeError, 'HTTP redirect too deep' if limit == 0
 
       http = Net::HTTP.new(uri.host, uri.port)
@@ -24,8 +24,9 @@ module Yummydata
       begin
         resource = uri.path
         resource += "?" + uri.query unless uri.query.nil?
-        response = http.get(resource)
+        response = http.get(resource, headers)
       rescue => e
+        puts e
         return nil
       end
 
@@ -33,7 +34,7 @@ module Yummydata
       when Net::HTTPSuccess
         return response
       when Net::HTTPRedirection
-        return http_get_recursive(URI(response['location']), time_out, limit - 1)
+        return http_get_recursive(URI(response['location']), headers, time_out, limit - 1)
       else
         nil
       end
