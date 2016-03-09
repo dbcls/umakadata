@@ -12,7 +12,8 @@ module Yummydata
       def score
         score_list = []
         graphs = self.list_of_graph_uris
-        return 0 if graphs.empty?
+        return 0 if !graphs
+
         graphs.each do |graph|
           score_list.push(self.score_graph(graph))
         end
@@ -23,16 +24,16 @@ module Yummydata
       def score_graph(graph)
         score = 0
         classes = self.classes_on_graph(graph)
-        score += 25 unless classes.empty?
+        score += 25 if !classes.nil? && !classes.empty?
 
         labels = self.list_of_labels_of_classes(graph, classes)
-        score += 25 unless labels.empty?
+        score += 25 if !labels.nil? && !labels.empty?
 
         datatypes = self.list_of_datatypes(graph)
-        score += 25 unless labels.empty?
+        score += 25 if !labels.nil? && !labels.empty?
 
         properties = self.list_of_properties_on_graph(graph)
-        score += 25 unless properties.empty?
+        score += 25 if !properties.nil? && !properties.empty?
 
         return score
       end
