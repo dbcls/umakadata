@@ -2,9 +2,9 @@ $(function() {
   $("#result").hide();
 
   $("#search_button").on("click", function() {
-    var name = $("#name").val();
-    var score = $("#score").val();
-    var url = "/api/endpoints/search/?name=" + name + "&score=" + score;
+    var values = getInputValues();
+    var params = createParams(values);
+    var url = "/api/endpoints/search/?" + params;
     $.getJSON(url, function(data) {
       $("#result").show();
       $("#result_body").empty();
@@ -19,3 +19,31 @@ $(function() {
     });
   });
 });
+
+function getInputValues(){
+  var params = new Object();
+  $('form input').each(function(){
+    var name = $(this).attr('name')
+    if (name == undefined){
+      return true;
+    }
+    if ($(this).attr('type') == 'text'){
+      params[name] = $(this).val();
+    }
+    else if ($(this).attr('type') == 'checkbox'){
+      if ($(this).is(':checked')){
+        params[name] = $(this).val();
+      }
+    }
+  });
+  return params;
+}
+
+function createParams(values) {
+  var list = new Array();
+  for (key in values) {
+    list.push(key + "=" + values[key]);
+  }
+
+  return list.join("&");
+}
