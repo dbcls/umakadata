@@ -1,5 +1,6 @@
 require 'yummydata/data_format'
 require 'yummydata/http_helper'
+require 'yummydata/void'
 
 module Yummydata
   module Criteria
