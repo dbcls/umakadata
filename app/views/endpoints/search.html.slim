@@ -4,65 +4,58 @@ h1 Endpoint Search
 
 = form_tag :controller => :endpoints, :action => :search
   .form-inline.row
-    label.col-xs-4 Name
+    label.col-xs-3 Name
     = text_field_tag :name, "", :class => 'form-control'
   .form-inline.row
-    label.col-xs-4 Score
+    label.col-xs-3 Score
     = text_field_tag :score_lower, "", :class => 'form-control form-inline'
     span ~
     = text_field_tag :score_upper, "", :class => 'form-control form-inline'
   .form-inline.row
-    label.col-xs-4 Alive Rate
+    label.col-xs-3 Alive Rate
     = text_field_tag :alive_rate_lower, "", :class => 'form-control form-inline'
     span ~
     = text_field_tag :alive_rate_upper, "", :class => 'form-control form-inline'
   .form-inline.row
-    label.col-xs-4 Rank
+    label.col-xs-3 Rank
     = text_field_tag :rank, "", :class => 'form-control'
   .form-inline.row
-    label.col-xs-4 Cool URI Rate
+    label.col-xs-3 Cool URI Rate
     = text_field_tag :cool_uri_rate_lower, "", :class => 'form-control form-inline'
     span ~
     = text_field_tag :cool_uri_rate_upper, "", :class => 'form-control form-inline'
   .form-inline.row
-    label.col-xs-4 Ontology
+    label.col-xs-3 Ontology
     = text_field_tag :ontology_lower, "", :class => 'form-control form-inline'
     span ~
     = text_field_tag :ontology_upper, "", :class => 'form-control form-inline'
   .form-inline.row
-    label.col-xs-4 Metadata
+    label.col-xs-3 Metadata Coverage
     = text_field_tag :metadata_lower, "", :class => 'form-control form-inline'
     span ~
     = text_field_tag :metadata_upper, "", :class => 'form-control form-inline'
   .form-inline.row
-    label.col-xs-4 Vocabulary
+    label.col-xs-3 Vocabulary
     = text_field_tag :vocabulary_lower, "", :class => 'form-control form-inline'
     span ~
     = text_field_tag :vocabulary_upper, "", :class => 'form-control form-inline'
 
   .row
-    label.col-xs-4 Attributes
-    .col-xs-8
+    label.col-xs-3 Attributes
+    .col-xs-9
       .form-group.row
-        label.checkbox-inline.col-xs-4
+        label.checkbox-inline.col-xs-3
           input[name="service_description" type="checkbox"] Service Description
-        label.checkbox-inline.col-xs-4
+        label.checkbox-inline.col-xs-3
           input[name="void" type="checkbox"] VoID
-      .form-group.row
-        label.checkbox-inline.col-xs-4
-          input[name="organization" type="checkbox"] Organization Information
-        label.checkbox-inline.col-xs-4
-          input[name="license" type="checkbox"] License Information
-      .form-group.row
-        label.checkbox-inline.col-xs-4
+        label.checkbox-inline.col-xs-3
           input[name="content_negtiation" type="checkbox"] Content Negotiation
       .form-group.row
-        label.checkbox-inline.col-xs-4
+        label.checkbox-inline.col-xs-3
           input[name="html" type="checkbox"] HTML Data Format
-        label.checkbox-inline.col-xs-4
+        label.checkbox-inline.col-xs-3
           input[name="turtle" type="checkbox"] Turtle Data Format
-      .form-group.row
-        label.checkbox-inline.col-xs-4
+        label.checkbox-inline.col-xs-3
           input[name="xml" type="checkbox"] XML Data Format
 
   input#search_button.btn.btn-default[type="button" value="Search"]
