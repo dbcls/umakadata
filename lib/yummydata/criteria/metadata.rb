@@ -12,6 +12,7 @@ module Yummydata
       def score
         score_list = []
         graphs = self.list_of_graph_uris
+        return 0 if graphs.empty?
         graphs.each do |graph|
           score_list.push(self.score_graph(graph))
         end
