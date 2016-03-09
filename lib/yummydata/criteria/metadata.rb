@@ -6,7 +6,7 @@ module Yummydata
     class Metadata
 
       def initialize(uri)
-        @client = SPARQL::Client.new(uri, {'read_timeout': 5 * 60})
+        @client = SPARQL::Client.new(uri)
       end
 
       def score
