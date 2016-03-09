@@ -1,3 +1,5 @@
+= javascript_include_tag 'yummydata/search'
+
 h1 Endpoint Search
 
 = form_tag :controller => :endpoints, :action => :search
@@ -35,5 +37,16 @@ h1 Endpoint Search
         label.checkbox-inline.col-xs-4
           input[name="metadata" type="checkbox"] Metadata
 
-  input.btn.btn-default[type="submit" value="Search"]
+  input#search_button.btn.btn-default[type="button" value="Search"]
 hr
+
+#result
+
+  .table-responsive
+    table.table.table-striped
+      thead
+        tr
+          th Name
+          th URL
+          th Score
+      tbody#result_body

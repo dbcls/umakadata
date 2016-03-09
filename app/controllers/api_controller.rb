@@ -6,7 +6,7 @@ class ApiController < ApplicationController
     @endpoints = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions)
     self.add_like_condition('name', params['name']) if !params['name'].blank?
     self.add_gte_condition('evaluations.score', params['score']) if !params['score'].blank?
-    render :json => @endpoints
+    render :json => @endpoints.to_json(:include => [:evaluation])
   end
 
   def add_like_condition(column, value)
