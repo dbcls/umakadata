@@ -30,34 +30,24 @@ module Yummydata
     # @return [String]
     attr_reader :modified
 
-    TYPE = {
-      ttl: 'ttl',
-      xml: 'xml',
-      unknown: 'unknown'
-    }.freeze
-
     def initialize(http_response)
-      @type = TYPE[:unknown]
-      @text = ''
-      @response_header = ''
+      @type = UNKNOWN
+      @text = http_response.body
       @modified = ''
 
-      if (!http_response.nil?)
-        @text = http_response.body
-        data = parse(@text, TTL)
+      data = triples(@text, TURTLE)
+      if (!data.nil?)
+        @type = TURTLE
+      else
+        data = triples(@text, RDFXML)
         if (!data.nil?)
-          @type = TYPE[:ttl]
-        else
-          data = parse(@text, XML)
-          if (!data.nil?)
-            @type = TYPE[:xml]
-          end
+          @type = RDFXML
         end
-        @modified = if data.nil? ? 'N/A' : data['dcterms:modified']
+      end
 
-        http_response.each_key do |key|
-          @response_header << key << ": " << http_response[key] << "\n"
-        end
+      @response_header = ''
+      http_response.each_key do |key|
+        @response_header << key << ": " << http_response[key] << "\n"
       end
     end
 

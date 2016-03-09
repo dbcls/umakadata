@@ -33,8 +33,8 @@ module Yummydata
 
     def initialize(http_response)
       @text = http_response.body
-      data = parse(@text, TTL)
-      data = parse(@text, XML) if data.nil?
+      data = triples(@text, TURTLE)
+      data = triples(@text, RDFXML) if data.nil?
       return if data.nil?
 
       @license = []

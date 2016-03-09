@@ -4,8 +4,10 @@ require 'rdf/rdfxml'
 module Yummydata
   module DataFormat
 
-    TTL = 'ttl'.freeze    
-    XML = 'xml'.freeze
+    UNKNOWN = 'unknown'
+    TURTLE = 'text/turtle'.freeze
+    RDFXML = 'rdf+xml'.freeze
+    HTML   = 'text/html'.freeze
 
     def xml?(str)
       return !make_reader_for_xml(str).nil?
@@ -33,10 +35,10 @@ module Yummydata
       end
     end
 
-    def parse(str, type=nil)
+    def triples(str, type=nil)
       reader = nil
-      reader = make_reader_for_ttl(str) if type == TTL || (type.nil? && ttl?(str))
-      reader = make_reader_for_xml(str) if type == XML || (type.nil? && xml?(str))
+      reader = make_reader_for_ttl(str) if type == TURTLE || (type.nil? && ttl?(str))
+      reader = make_reader_for_xml(str) if type == RDFXML || (type.nil? && xml?(str))
       return nil if reader.nil?
 
       data = {}
