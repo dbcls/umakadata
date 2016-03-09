@@ -3,10 +3,10 @@ h1 Endpoint Search
 = form_tag :controller => :endpoints, :action => :search
   .form-inline.row
     label.col-xs-4 Name
-    = text_field_tag :name, @conditions[:name], :class => 'form-control'
+    = text_field_tag :name, "", :class => 'form-control'
   .form-inline.row
     label.col-xs-4 Score >
-    = text_field_tag :score, @conditions[:score], :class => 'form-control'
+    = text_field_tag :score, "", :class => 'form-control'
 
   .row
     label.col-xs-4 Attributes
@@ -37,22 +37,3 @@ h1 Endpoint Search
 
   input.btn.btn-default[type="submit" value="Search"]
 hr
-
-- if !@endpoints.empty?
-
-  .table-responsive
-    table.table.table-striped
-      thead
-        tr
-          th Name
-          th URL
-          th Score
-      tbody
-      - @endpoints.each do |endpoint|
-        tr
-          td
-            = link_to endpoint.name, endpoint
-          td
-            = link_to endpoint.url, endpoint.url
-          td
-            = endpoint.evaluation.first.score
