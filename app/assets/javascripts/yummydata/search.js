@@ -11,9 +11,8 @@ $(function() {
         var row = $("<tr>");
         row.append($("<td>").text(data[i].name));
         row.append($("<td>").text(data[i].url));
-        row.append($("<td>").text(data[i].score));
+        row.append($("<td>").text(data[i].evaluation.score));
         $("#result_body").append(row);
-        console.log(row);
       }
     });
   });
