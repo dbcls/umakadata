@@ -1,5 +1,3 @@
-require 'rdf/turtle'
-require 'rdf/rdfxml'
 require 'yummydata/data_format'
 
 module Yummydata
@@ -45,7 +43,17 @@ module Yummydata
       @modified = ''
 
       if (!http_response.nil?)
-        parse_body(http_response.body)
+        @text = http_response.body
+        data = parse(@text, TTL)
+        if (!data.nil?)
+          @type = TYPE[:ttl]
+        else
+          data = parse(@text, XML)
+          if (!data.nil?)
+            @type = TYPE[:xml]
+          end
+        end
+        @modified = if data.nil? ? 'N/A' : data['dcterms:modified']
 
         http_response.each_key do |key|
           @response_header << key << ": " << http_response[key] << "\n"
@@ -53,42 +61,5 @@ module Yummydata
       end
     end
 
-    private
-    def parse_body(str)
-      @text = str
-      if xml?(str)
-        @type = TYPE[:xml]
-        data = parse_body_as_xml(str)
-        @modified = data['dcterms:modified']
-      elsif ttl?(str)
-        @type = TYPE[:ttl]
-        data = parse_body_as_ttl(str)
-        @modified = data['dcterms:modified']
-      else
-        @type = TYPE[:unknown]
-        @text = ''
-        @modified = 'N/A'
-      end
-    end
-
-    def parse_body_as_xml(str)
-      data = {}
-      reader = RDF::RDFXML::Reader.new(str, {validate: true})
-      reader.each_triple do |subject, predicate, object|
-        data[predicate] = object
-      end
-      data
-    end
-
-    def parse_body_as_ttl(str)
-      data = {}
-      reader =RDF::Graph.new << RDF::Turtle::Reader.new(str, {validate: true})
-      reader.each_triple do |subject, predicate, object|
-        data[predicate] = object
-      end
-      data
-    end
-
   end
-
 end
