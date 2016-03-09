@@ -26,6 +26,7 @@ class Evaluation < ActiveRecord::Base
     eval.score = Evaluation.calc_score(eval)
     eval.rank  = Evaluation.calc_rank(eval.score)
 
+    eval.execution_time = retriever.execution_time
     eval.cool_uri_rate = retriever.cool_uri_rate
 
     eval.support_turtle_format = retriever.check_content_negotiation(Yummydata::ContentType::TURTLE)
@@ -56,6 +57,7 @@ class Evaluation < ActiveRecord::Base
     eval.subject_is_http_uri = retriever.http_subject?
     eval.uri_provides_info   = retriever.uri_provides_info?
     eval.contains_links      = retriever.contains_links?
+    eval.execution_time       = retriever.execution_time
   end
 
   def self.calc_alive_rate(eval)
@@ -102,7 +104,7 @@ class Evaluation < ActiveRecord::Base
   def self.rates(id)
     conditions = {'evaluations.endpoint_id': id, 'evaluations.latest': true}
     endpoint = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions).first
-    evaluation = endpoint.evaluation.first
+    evaluation = endpoint.evaluation
     return self.calc_rates(evaluation)
   end
 
@@ -112,7 +114,7 @@ class Evaluation < ActiveRecord::Base
     conditions = {'evaluations.latest': true}
     endpoints = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions).all
     endpoints.each do |endpoint|
-      evaluation = endpoint.evaluation.first
+      evaluation = endpoint.evaluation
       rates = self.calc_rates(evaluation)
       for i in 0..5 do
         total[i] += rates[i]

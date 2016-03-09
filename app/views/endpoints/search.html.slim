@@ -1,12 +1,14 @@
+= javascript_include_tag 'yummydata/search'
+
 h1 Endpoint Search
 
 = form_tag :controller => :endpoints, :action => :search
   .form-inline.row
     label.col-xs-4 Name
-    = text_field_tag :name, @conditions[:name], :class => 'form-control'
+    = text_field_tag :name, "", :class => 'form-control'
   .form-inline.row
     label.col-xs-4 Score >
-    = text_field_tag :score, @conditions[:score], :class => 'form-control'
+    = text_field_tag :score, "", :class => 'form-control'
 
   .row
     label.col-xs-4 Attributes
@@ -35,10 +37,10 @@ h1 Endpoint Search
         label.checkbox-inline.col-xs-4
           input[name="metadata" type="checkbox"] Metadata
 
-  input.btn.btn-default[type="submit" value="Search"]
+  input#search_button.btn.btn-default[type="button" value="Search"]
 hr
 
-- if !@endpoints.empty?
+#result
 
   .table-responsive
     table.table.table-striped
@@ -47,12 +49,4 @@ hr
           th Name
           th URL
           th Score
-      tbody
-      - @endpoints.each do |endpoint|
-        tr
-          td
-            = link_to endpoint.name, endpoint
-          td
-            = link_to endpoint.url, endpoint.url
-          td
-            = endpoint.evaluation.first.score
+      tbody#result_body

@@ -114,9 +114,9 @@ h1.page-header = @endpoint.name
           td -
         tr
           td
-            span [data-toggle="tooltip" title="Not Implemented Yet"]
-              | Response Time
-          td  -
+            span [data-toggle="tooltip" title="The execution time of query to the endpoint"]
+              | Execution Time
+          td  = @evaluation.execution_time.nil? ? 'N/A' : @evaluation.execution_time
   .col-xs-12.col-sm-6
     canvas#radar[width="400" height="400"]
   .col-sm-12

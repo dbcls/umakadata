@@ -11,24 +11,6 @@ class EndpointsController < ApplicationController
   end
 
   def search
-    @conditions = {:name => '', :score => ''}
-    if request.post?
-      @conditions = params
-      conditions = {'evaluations.latest': true}
-      @endpoints = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions)
-      add_like_condition('name', params['name']) if !params['name'].empty?
-      add_gte_condition('evaluations.score', params['score']) if !params['score'].empty?
-    else
-      @endpoints = []
-    end
-  end
-
-  def add_like_condition(column, value)
-    @endpoints = @endpoints.where("#{column} LIKE ?", "%#{value}%")
-  end
-
-  def add_gte_condition(column, value)
-    @endpoints = @endpoints.where("#{column} >= ?", "#{value}")
   end
 
   def show
@@ -61,7 +43,7 @@ class EndpointsController < ApplicationController
     conditions = {'evaluations.latest': true}
     @endpoints = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions)
     @endpoints.each do |endpoint|
-      alive = endpoint.evaluation.first.alive
+      alive = endpoint.evaluation.alive
       alive ? count[:alive] += 1 : count[:dead] += 1
     end
     render :json => alive_json(count)
@@ -72,7 +54,7 @@ class EndpointsController < ApplicationController
     conditions = {'evaluations.latest': true}
     @endpoints = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions)
     @endpoints.each do |endpoint|
-      sd = endpoint.evaluation.first.service_description
+      sd = endpoint.evaluation.service_description
       sd.present? ? count[:true] += 1 : count[:false] += 1
     end
     render :json => service_descriptions_json(count)
@@ -84,7 +66,7 @@ class EndpointsController < ApplicationController
       conditions = {'evaluations.latest': true}
       @endpoints = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions)
       @endpoint = @endpoints.find(params[:id])
-      @evaluation = @endpoint.evaluation.first
+      @evaluation = @endpoint.evaluation
 
       @void = @evaluation.void_ttl
       void = parseVoid(@void)
