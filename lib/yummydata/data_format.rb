@@ -36,6 +36,8 @@ module Yummydata
     end
 
     def triples(str, type=nil)
+      return nil if str.nil? || str.empty?
+
       reader = nil
       reader = make_reader_for_ttl(str) if type == TURTLE || (type.nil? && ttl?(str))
       reader = make_reader_for_xml(str) if type == RDFXML || (type.nil? && xml?(str))

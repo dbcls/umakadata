@@ -29,7 +29,7 @@ describe 'Yummydata' do
 
           service_description = target.service_description(@uri, 10)
 
-          expect(service_description.type).to eq 'ttl'
+          expect(service_description.type).to eq Yummydata::DataFormat::TURTLE
           expect(service_description.text).to eq valid_ttl
         end
 
@@ -42,7 +42,7 @@ describe 'Yummydata' do
 
           service_description = target.service_description(@uri, 10)
 
-          expect(service_description.type).to eq 'unknown'
+          expect(service_description.type).to eq Yummydata::DataFormat::UNKNOWN
           expect(service_description.text).to eq ''
         end
 

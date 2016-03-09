@@ -1,6 +1,5 @@
 require 'yummydata/data_format'
 require "yummydata/service_description"
-require "yummydata/content_types"
 
 module Yummydata
   module Criteria
@@ -8,7 +7,7 @@ module Yummydata
 
       include Yummydata::HTTPHelper
 
-      SERVICE_DESC_CONTEXT_TYPE = [Yummydata::ContentType::TURTLE, Yummydata::ContentType::RDFXML].freeze
+      SERVICE_DESC_CONTEXT_TYPE = [Yummydata::DataFormat::TURTLE, Yummydata::DataFormat::RDFXML].freeze
 
       ##
       # A string value that describes what services are provided at the SPARQL endpoint.
