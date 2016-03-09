@@ -16,8 +16,9 @@ module Yummydata
       def void_on_well_known_uri(uri, time_out = 10)
         response = http_get_recursive(self.well_known_uri, {}, time_out)
         return nil if response.nil?
-        return response.body
+        return Yummydata::VoID.new(response)
       end
+
     end
   end
 end

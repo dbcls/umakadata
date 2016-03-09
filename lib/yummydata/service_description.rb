@@ -1,5 +1,3 @@
-require 'rdf/turtle'
-require 'rdf/rdfxml'
 require 'yummydata/data_format'
 
 module Yummydata
@@ -26,40 +24,32 @@ module Yummydata
     # @return [String]
     attr_reader :response_header
 
-    TYPE = {
-      ttl: 'ttl',
-      xml: 'xml',
-      unknown: 'unknown'
-    }.freeze
+    ##
+    # return modified
+    #
+    # @return [String]
+    attr_reader :modified
 
     def initialize(http_response)
-      @type = TYPE[:unknown]
-      @text = ''
-      @response_header = ''
+      @type = UNKNOWN
+      @text = http_response.body
+      @modified = ''
 
-      if (!http_response.nil?)
-        parse_body(http_response.body)
-
-        http_response.each_key do |key|
-          @response_header << key << ": " << http_response[key] << "\n"
+      data = triples(@text, TURTLE)
+      if (!data.nil?)
+        @type = TURTLE
+      else
+        data = triples(@text, RDFXML)
+        if (!data.nil?)
+          @type = RDFXML
         end
       end
-    end
 
-    private
-    def parse_body(str)
-      @text = str
-      if xml?(str)
-        @type = TYPE[:xml]
-      elsif ttl?(str)
-        @type = TYPE[:ttl]
-      else
-        @type = TYPE[:unknown]
-        @text = ''
+      @response_header = ''
+      http_response.each_key do |key|
+        @response_header << key << ": " << http_response[key] << "\n"
       end
     end
 
-
   end
-
 end

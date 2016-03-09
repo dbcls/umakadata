@@ -15,55 +15,55 @@ describe 'Yummydata' do
 
         it 'detect_ttl_support_if_response_is_ttl' do
           response = double(Net::HTTPResponse)
-          allow(response).to receive(:content_type).and_return(Yummydata::ContentType::TURTLE)
+          allow(response).to receive(:content_type).and_return(Yummydata::DataFormat::TURTLE)
           allow(target).to receive(:http_get_recursive).and_return(response)
 
-          result = target.check_content_negotiation(@uri, Yummydata::ContentType::TURTLE)
+          result = target.check_content_negotiation(@uri, Yummydata::DataFormat::TURTLE)
           expect(result).to eq(true)
         end
 
         it 'detect_not_ttl_support_if_response_is_not_ttl' do
           response = double(Net::HTTPResponse)
-          allow(response).to receive(:content_type).and_return(Yummydata::ContentType::RDFXML)
+          allow(response).to receive(:content_type).and_return(Yummydata::DataFormat::RDFXML)
           allow(target).to receive(:http_get_recursive).and_return(response)
 
-          result = target.check_content_negotiation(@uri, Yummydata::ContentType::TURTLE)
+          result = target.check_content_negotiation(@uri, Yummydata::DataFormat::TURTLE)
           expect(result).to eq(false)
         end
 
         it 'detect_rdfxml_support_if_response_is_rdfxml' do
           response = double(Net::HTTPResponse)
-          allow(response).to receive(:content_type).and_return(Yummydata::ContentType::RDFXML)
+          allow(response).to receive(:content_type).and_return(Yummydata::DataFormat::RDFXML)
           allow(target).to receive(:http_get_recursive).and_return(response)
 
-          result = target.check_content_negotiation(@uri, Yummydata::ContentType::RDFXML)
+          result = target.check_content_negotiation(@uri, Yummydata::DataFormat::RDFXML)
           expect(result).to eq(true)
         end
 
         it 'detect_not_rdfxml_support_if_response_is_rdfxml' do
           response = double(Net::HTTPResponse)
-          allow(response).to receive(:content_type).and_return(Yummydata::ContentType::TURTLE)
+          allow(response).to receive(:content_type).and_return(Yummydata::DataFormat::TURTLE)
           allow(target).to receive(:http_get_recursive).and_return(response)
 
-          result = target.check_content_negotiation(@uri, Yummydata::ContentType::RDFXML)
+          result = target.check_content_negotiation(@uri, Yummydata::DataFormat::RDFXML)
           expect(result).to eq(false)
         end
 
         it 'detect_html_support_if_response_is_html' do
           response = double(Net::HTTPResponse)
-          allow(response).to receive(:content_type).and_return(Yummydata::ContentType::HTML)
+          allow(response).to receive(:content_type).and_return(Yummydata::DataFormat::HTML)
           allow(target).to receive(:http_get_recursive).and_return(response)
 
-          result = target.check_content_negotiation(@uri, Yummydata::ContentType::HTML)
+          result = target.check_content_negotiation(@uri, Yummydata::DataFormat::HTML)
           expect(result).to eq(true)
         end
 
         it 'detect_not_html_support_if_response_is_turtle' do
           response = double(Net::HTTPResponse)
-          allow(response).to receive(:content_type).and_return(Yummydata::ContentType::TURTLE)
+          allow(response).to receive(:content_type).and_return(Yummydata::DataFormat::TURTLE)
           allow(target).to receive(:http_get_recursive).and_return(response)
 
-          result = target.check_content_negotiation(@uri, Yummydata::ContentType::HTML)
+          result = target.check_content_negotiation(@uri, Yummydata::DataFormat::HTML)
           expect(result).to eq(false)
         end
 
