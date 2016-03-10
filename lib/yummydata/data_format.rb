@@ -45,11 +45,11 @@ module Yummydata
       reader = make_reader_for_xml(str) if type == RDFXML || (type.nil? && xml?(str))
       return nil if reader.nil?
 
-      data = {}
+      data = []
       reader.each_triple do |subject, predicate, object|
-        data[predicate] = object
+        data.push [subject, predicate, object]
       end
-      data
+      return data
     end
 
   end
