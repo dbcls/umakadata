@@ -41,7 +41,8 @@ h1.page-header = @endpoint.name
               | Last Updated
               span
                 | TBD
-          td -
+          td
+            = @endpoint.last_updated.nil? ? "N/A" : @endpoint.last_updated
         tr
           td
             .yummydata-tooltip

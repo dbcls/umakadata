@@ -41,7 +41,7 @@ class Evaluation < ActiveRecord::Base
     eval.score = Evaluation.calc_score(eval)
     eval.rank  = Evaluation.calc_rank(eval.score)
 
-    eval.save!
+    return eval if eval.save!
   end
 
   def self.retrieve_service_description(retriever, eval)

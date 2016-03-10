@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160310042201) do
+ActiveRecord::Schema.define(version: 20160310143434) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,8 +96,8 @@ ActiveRecord::Schema.define(version: 20160310042201) do
     t.boolean  "support_turtle_format"
     t.boolean  "support_xml_format"
     t.boolean  "support_html_format"
-    t.float    "metadata_score"
     t.float    "execution_time"
+    t.float    "metadata_score"
     t.float    "ontology_score"
     t.float    "vocabulary_score"
   end
@@ -116,6 +116,15 @@ ActiveRecord::Schema.define(version: 20160310042201) do
     t.integer  "endpoint_id"
     t.integer  "score"
     t.integer  "rank"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  create_table "update_statuses", force: :cascade do |t|
+    t.integer  "endpoint_id"
+    t.integer  "count"
+    t.text     "first"
+    t.text     "last"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
   end
