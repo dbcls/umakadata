@@ -32,15 +32,18 @@ module Yummydata
 
     def initialize(http_response)
       @type = UNKNOWN
-      @text = http_response.body
+      @text = nil
       @modified = ''
 
-      data = triples(@text, TURTLE)
+      body = http_response.body
+      data = triples(body, TURTLE)
       if (!data.nil?)
+        @text = body
         @type = TURTLE
       else
-        data = triples(@text, RDFXML)
+        data = triples(body, RDFXML)
         if (!data.nil?)
+          @text = body
           @type = RDFXML
         else
           return

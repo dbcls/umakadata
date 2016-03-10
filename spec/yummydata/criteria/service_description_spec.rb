@@ -58,7 +58,7 @@ describe 'Yummydata' do
           service_description = target.service_description(@uri, 10)
 
           expect(service_description.type).to eq Yummydata::DataFormat::UNKNOWN
-          expect(service_description.text).to eq ''
+          expect(service_description.text).to eq nil
         end
 
 

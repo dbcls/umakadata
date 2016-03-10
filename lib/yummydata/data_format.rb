@@ -28,6 +28,8 @@ module Yummydata
 
     def make_reader_for_ttl(str)
       begin
+        str = str.gsub(/@prefix\s*:\s*?<#>\s*\.\n/, '')
+        str = str.gsub(/<>/, '<http://blank>')
         reader = RDF::Graph.new << RDF::Turtle::Reader.new(str, {validate: true})
         return reader
       rescue
@@ -43,16 +45,11 @@ module Yummydata
       reader = make_reader_for_xml(str) if type == RDFXML || (type.nil? && xml?(str))
       return nil if reader.nil?
 
-      data = {}
+      data = []
       reader.each_triple do |subject, predicate, object|
-        predicate_objects = data[subject]
-        if predicate_objects.nil?
-          predicate_objects = []
-          data[subject] = predicate_objects
-        end
-        predicate_objects.push({ predicate => object })
+        data.push [subject, predicate, object]
       end
-      data
+      return data
     end
 
   end

@@ -61,9 +61,9 @@ module Yummydata
       super(@uri, content_type)
     end
 
+    include Yummydata::Criteria::Metadata
     def metadata
-      metadata = Yummydata::Criteria::Metadata.new(@uri)
-      return metadata.retrieve
+      super(@uri)
     end
 
   end
