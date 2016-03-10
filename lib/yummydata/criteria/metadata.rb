@@ -61,6 +61,7 @@ module Yummydata
 
       def score_ontologies(metadata)
         score_proc = lambda do |graph, data|
+          return 0 if data[:properties].empty?
           ontologies = self.ontologies(data[:properties])
           commons = ontologies.count{ |ontology| COMMON_ONTOLOGIES.include?(ontology) }
           return commons.to_f / ontologies.count.to_f
@@ -82,7 +83,7 @@ module Yummydata
           if uri.include?('#')
             ontologies.push uri.split('#')[0]
           else
-            ontologies.push uri.rpartition('/')[0]
+            ontologies.push /^(.*\/).*?$/.match(uri)[1]
           end
         end
         return ontologies.uniq
@@ -97,6 +98,7 @@ module Yummydata
           score_list.push(score_proc.call(graph, data))
         end
 
+        return 0 if score_list.empty?
         return score_list.inject(0.0) { |r, i| r += i } / score_list.size
       end
 
