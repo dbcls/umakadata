@@ -77,31 +77,20 @@ class Evaluation < ActiveRecord::Base
   end
 
   def self.calc_score(eval)
-    score = 0
-
-    score += 15 if eval.alive
-
-    score += 15 if eval.service_description
-
-    count = 0
-    count += 1 if eval.subject_is_uri
-    count += 1 if eval.subject_is_http_uri
-    count += 1 if eval.uri_provides_info
-    count += 1 if eval.contains_links
-    score += (count / 4.0 * 100) / 4
-
-    score += 25 if !eval.void_ttl.nil?
-    return score
+    rates = self.calc_rates(eval)
+    puts rates
+    return rates.inject(0.0) { |r, i| r += i } / rates.count
   end
 
   def self.calc_rank(score)
-    return case
-    when  0 <= score && score < 30 then 1
-    when 30 <= score && score < 50 then 2
-    when 50 <= score && score < 70 then 3
-    when 70 <= score && score < 85 then 4
-    when 85 <= score               then 5
-    end
+    return
+      case score
+        when  0..20  then 1
+        when 20..40  then 2
+        when 40..60  then 3
+        when 60..80  then 4
+        when 80..100 then 5
+      end
   end
 
   def self.rates(id)
@@ -135,7 +124,7 @@ class Evaluation < ActiveRecord::Base
     rates = [0, 0, 0, 0, 0, 0]
 
     # availability
-    rates[0] += 100 if eval.alive
+    rates[0] += eval.alive_rate
 
     #freshness
     rates[1] = 50
@@ -145,19 +134,22 @@ class Evaluation < ActiveRecord::Base
     rates[2] += 50 unless eval.void_ttl.blank?
 
     #usefulness
-    rates[3] = 50
+    rates[3] += 40 * (eval.vocabulary_score > 10 ? 10 : eval.vocabulary_score) / 10.0
+    rates[3] += 30 * eval.ontology_score / 100.0
+    rates[3] += 30 * eval.metadata_score / 100.0
 
     #validity
-    rates[4] += 40 unless eval.void_ttl.blank?
+    rates[4] += 40 * eval.cool_uri_rate.to_f / 100.0
     rates[4] += 15 if eval.subject_is_uri
     rates[4] += 15 if eval.subject_is_http_uri
     rates[4] += 15 if eval.uri_provides_info
     rates[4] += 15 if eval.contains_links
 
     #performance
-    rates[5] = 50
+    rates[5] = 100 * (1.0 - eval.execution_time)
+    rates[5] = 0 if rates[5] < 0
 
-    return rates
+    return rates.map{ |v| v.to_i }
   end
 
 end
