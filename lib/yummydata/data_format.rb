@@ -45,7 +45,7 @@ module Yummydata
 
       data = {}
       reader.each_triple do |subject, predicate, object|
-        data[predicate] = object
+        data[subject] = { predicate => object }
       end
       data
     end

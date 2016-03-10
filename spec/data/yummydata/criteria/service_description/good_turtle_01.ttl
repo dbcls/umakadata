@@ -2,8 +2,10 @@
 @prefix ent: <http://www.w3.org/ns/entailment/> .
 @prefix prof: <http://www.w3.org/ns/owl-profile/> .
 @prefix void: <http://rdfs.org/ns/void#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
 
-[] a sd:Service ;
+[] a
+  sd:Service ;
     sd:endpoint <http://www.example/sparql/> ;
     sd:supportedLanguage sd:SPARQL11Query ;
     sd:resultFormat <http://www.w3.org/ns/formats/RDF_XML>, <http://www.w3.org/ns/formats/Turtle> ;
@@ -26,6 +28,8 @@
                 void:triples 2000
             ]
         ]
-    ] .
+    ] ;
+
+    dcterms:modified "2016-01-01 10:00:00" .
 
 <http://example.org/Distance> a sd:Function .
