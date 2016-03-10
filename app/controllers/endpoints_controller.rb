@@ -1,7 +1,10 @@
 require 'sparql/client'
 require 'rdf/turtle'
+require 'yummydata/data_format'
 
 class EndpointsController < ApplicationController
+
+  include Yummydata::DataFormat
 
   before_action :set_endpoint, only: [:show]
 
@@ -69,7 +72,7 @@ class EndpointsController < ApplicationController
       @evaluation = @endpoint.evaluation
 
       @void = @evaluation.void_ttl
-      void = parseVoid(@void)
+      void = triples(@void)
       @license = []
       @publisher = []
       if void.nil?
@@ -82,17 +85,6 @@ class EndpointsController < ApplicationController
       end
       @license = @license.join('<br/>')
       @publisher = @publisher.join('<br/>')
-    end
-
-    def parseVoid(str)
-      return nil if str.blank?
-      begin
-        graphs = RDF::Graph.new << RDF::Turtle::Reader.new(str)
-        return graphs
-      rescue => e
-        puts e
-      end
-      return nil
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
