@@ -78,7 +78,6 @@ class Evaluation < ActiveRecord::Base
 
   def self.calc_score(eval)
     rates = self.calc_rates(eval)
-    puts rates
     return rates.inject(0.0) { |r, i| r += i } / rates.count
   end
 
