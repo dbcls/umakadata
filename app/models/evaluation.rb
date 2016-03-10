@@ -35,6 +35,8 @@ class Evaluation < ActiveRecord::Base
       eval.metadata_score = retriever.score_metadata(metadata)
       eval.ontology_score = retriever.score_ontologies(metadata)
       eval.vocabulary_score = retriever.score_vocabularies(metadata)
+
+      self.check_update(retriever, eval)
     end
 
     eval.alive_rate = Evaluation.calc_alive_rate(eval)
@@ -149,6 +151,37 @@ class Evaluation < ActiveRecord::Base
     rates[5] = 0.0 if rates[5] < 0.0
 
     return rates.map{ |v| v.to_i }
+  end
+
+  def self.check_update(retriever, eval)
+    last_updated = retriever.last_updated
+    if !last_updated.nil?
+      eval.last_updated = last_updated[:date]
+      eval.last_updated_source = last_updated[:source]
+      return
+    end
+
+    current = retriever.count_first_last
+    return if current.nil?
+
+    prevStatus = UpdateStatus.where(:endpoint_id => eval.endpoint_id).order('created_at DESC').first
+    currentStatus = UpdateStatus.record(eval.endpoint_id, current)
+
+    if  UpdateStatus.different?(prevStatus, currentStatus)
+      eval.last_updated = Time.now.strftime('%Y-%m-%d %H:%M:%s')
+      eval.last_updated_source = 'Adhoc'
+      return
+    end
+
+    previous = self.where(:endpoint_id => eval.endpoint_id).order('created_at DESC').first
+    if previous.nil?
+      eval.last_updated = Time.now.strftime('%Y-%m-%d %H:%M:%s')
+      eval.last_updated_source = 'Adhoc'
+      return
+    end
+
+    eval.last_updated = previous[:last_updated]
+    eval.last_updated_source = previous[:last_updated_source]
   end
 
 end

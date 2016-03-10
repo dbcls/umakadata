@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160310143434) do
+ActiveRecord::Schema.define(version: 20160310190127) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,29 +49,11 @@ ActiveRecord::Schema.define(version: 20160310143434) do
   add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true, using: :btree
   add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
 
-  create_table "check_logs", force: :cascade do |t|
-    t.integer  "endpoint_id"
-    t.boolean  "alive"
-    t.text     "service_description"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
-    t.text     "response_header"
-  end
-
-  create_table "endpoint_update_infos", force: :cascade do |t|
-    t.integer  "endpoint_id"
-    t.integer  "num_of_triples"
-    t.text     "samples"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-  end
-
   create_table "endpoints", force: :cascade do |t|
     t.string   "name"
     t.string   "url"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.date     "last_updated"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "evaluations", force: :cascade do |t|
@@ -96,28 +78,13 @@ ActiveRecord::Schema.define(version: 20160310143434) do
     t.boolean  "support_turtle_format"
     t.boolean  "support_xml_format"
     t.boolean  "support_html_format"
-    t.float    "execution_time"
     t.float    "metadata_score"
+    t.float    "execution_time"
     t.float    "ontology_score"
     t.float    "vocabulary_score"
-  end
-
-  create_table "linked_data_rules", force: :cascade do |t|
-    t.integer  "endpoint_id"
-    t.boolean  "subject_is_uri"
-    t.boolean  "subject_is_http_uri"
-    t.boolean  "uri_provides_info"
-    t.boolean  "contains_links"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
-  end
-
-  create_table "scores", force: :cascade do |t|
-    t.integer  "endpoint_id"
-    t.integer  "score"
-    t.integer  "rank"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.date     "last_updated"
+    t.text     "last_updated_source"
+    t.integer  "update_interval"
   end
 
   create_table "update_statuses", force: :cascade do |t|
@@ -125,14 +92,6 @@ ActiveRecord::Schema.define(version: 20160310143434) do
     t.integer  "count"
     t.text     "first"
     t.text     "last"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-  end
-
-  create_table "voids", force: :cascade do |t|
-    t.integer  "endpoint_id"
-    t.text     "uri"
-    t.text     "void_ttl"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
   end
