@@ -11,7 +11,7 @@ h1.page-header = @endpoint.name
 .row
   .col-xs-12.col-sm-6
     h2
-      = "Rank " + @evaluation.rank.to_s + " ( " + @evaluation.score.to_s + " ) "
+      = "Rank " + show_rank(@evaluation.rank) + " ( " + @evaluation.score.to_s + " ) "
     table.table.table-striped
       thead
         tr

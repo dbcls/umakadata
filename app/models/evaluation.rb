@@ -82,14 +82,14 @@ class Evaluation < ActiveRecord::Base
   end
 
   def self.calc_rank(score)
-    return
-      case score
-        when  0..20  then 1
-        when 20..40  then 2
-        when 40..60  then 3
-        when 60..80  then 4
-        when 80..100 then 5
-      end
+    case score
+    when (0..20)   then 1
+    when (20..40)  then 2
+    when (40..60)  then 3
+    when (60..80)  then 4
+    when (80..100) then 5
+    else 1
+    end
   end
 
   def self.rates(id)
