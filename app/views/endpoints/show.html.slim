@@ -82,7 +82,7 @@ h1.page-header = @endpoint.name
                 a href="http://stats.lod2.eu/vocabularies"
                   | http://stats.lod2.eu/vocabularies
           td
-            = @evaluation.vocabulary_score.nil? ? '-' : sprintf("%.2f", @evaluation.vocabulary_score) + '%'
+            = @evaluation.vocabulary_score.nil? ? '-' : sprintf("%.2f", @evaluation.vocabulary_score)
         tr
           td
             .yummydata-tooltip
@@ -99,7 +99,7 @@ h1.page-header = @endpoint.name
                 a href="http://stats.lod2.eu/vocabularies"
                   | http://stats.lod2.eu/vocabularies
           td
-            = @evaluation.ontology_score.nil? ? '-' : sprintf("%.2f", @evaluation.ontology_score) + '%'
+            = @evaluation.ontology_score.nil? ? '-' : sprintf("%.2f", @evaluation.ontology_score)
         tr
           td
             .yummydata-tooltip
@@ -216,7 +216,7 @@ h1.page-header = @endpoint.name
                 a href="http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-builder-metadata/"
                   | http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-builder-metadata/
           td
-            = @evaluation.metadata_score.nil? ? '-' : sprintf("%.2f", @evaluation.metadata_score) + '%'
+            = @evaluation.metadata_score.nil? ? '-' : sprintf("%.2f", @evaluation.metadata_score)
         tr
           td
             .yummydata-tooltip
