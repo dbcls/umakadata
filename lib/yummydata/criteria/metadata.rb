@@ -64,7 +64,7 @@ module Yummydata
           return 0 if data[:properties].empty?
           ontologies = self.ontologies(data[:properties])
           commons = ontologies.count{ |ontology| COMMON_ONTOLOGIES.include?(ontology) }
-          return commons.to_f / ontologies.count.to_f
+          return commons.to_f / ontologies.count.to_f * 100.0
         end
         self.score_each_graph(metadata, score_proc)
       end
