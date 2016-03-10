@@ -48,6 +48,16 @@ module Yummydata
         end
       end
 
+      if (!data.nil?)
+        data.each do |subject, predicate_object|
+          predicate_object.each do |predicate, object|
+            if predicate == RDF::URI("http://purl.org/dc/terms/modified")
+              @modified = object.to_s
+            end
+          end
+        end
+      end
+
       @response_header = ''
       http_response.each_key do |key|
         @response_header << key << ": " << http_response[key] << "\n"
