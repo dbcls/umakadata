@@ -45,7 +45,13 @@ module Yummydata
         @publisher.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/publisher')
         @modified.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/modified')
       end
-    end
 
+      if @modified.empty?
+        @modified = nil
+      else
+        @modified = @modified[0]
+      end
+
+    end
   end
 end

@@ -6,7 +6,7 @@ require "yummydata/criteria/execution_time"
 require "yummydata/criteria/cool_uri"
 require "yummydata/criteria/content_negotiation"
 require "yummydata/criteria/metadata"
-require "yummydata/criteria/last_update"
+require "yummydata/criteria/basic_sparql"
 
 module Yummydata
   class Retriever
@@ -67,18 +67,24 @@ module Yummydata
       super(@uri)
     end
 
-    include Yummydata::Criteria::LastUpdate
-    def last_modified
-      super
+    def last_updated
+      sd   = self.service_description
+      return { date: sd.modified, source: 'ServiceDescription' } unless sd.nil? || sd.modified.nil?
+
+      void = self.void_on_well_known_uri
+      return { date: void.modified, source: 'VoID' } unless void.nil? || void.modified.nil?
+
+      return nil
     end
 
     def count_first_last
-      count = count_statements
-      return {count: nil, first: nil, last: nil } if count.nil?
+      sparql = Yummydata::Criteria::BasicSPARQL.new(@uri)
+      count = sparql.count_statements
+      return { count: nil, first: nil, last: nil } if count.nil?
 
-      first = first_statement
-      last = last_statement(count)
-      return {count: count, first: first, last: last}
+      first = sparql.nth_statement(0)
+      last  = sparql.nth_statement(count - 1)
+      return { count: count, first: first, last: last }
     end
 
   end

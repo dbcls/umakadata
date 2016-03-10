@@ -33,7 +33,7 @@ module Yummydata
     def initialize(http_response)
       @type = UNKNOWN
       @text = nil
-      @modified = ''
+      @modified = nil
       @response_header = ''
       return if http_response.nil?
 
