@@ -87,5 +87,10 @@ module Yummydata
       return { count: count, first: first, last: last }
     end
 
+    def number_of_statements
+      sparql = Yummydata::Criteria::BasicSPARQL.new(@uri)
+      return sparql.count_statements
+    end
+
   end
 end
