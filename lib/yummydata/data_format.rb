@@ -28,6 +28,8 @@ module Yummydata
 
     def make_reader_for_ttl(str)
       begin
+        str = str.gsub(/@prefix\s*:\s*?<#>\s*\.\n/, '')
+        str = str.gsub(/<>/, '<http://blank>')
         reader = RDF::Graph.new << RDF::Turtle::Reader.new(str, {validate: true})
         return reader
       rescue
