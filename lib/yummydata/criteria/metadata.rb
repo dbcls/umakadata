@@ -29,14 +29,18 @@ module Yummydata
         graphs = self.list_of_graph_uris(client)
         return nil if !graphs
 
+        index = 0
         metadata = {}
         graphs.each do |graph|
           classes = self.classes_on_graph(client, graph)
+          labels = list_of_labels_of_classes(client, graph, classes)
+          datatypes = self.list_of_datatypes(client, graph)
+          properties = self.list_of_properties_on_graph(client, graph)
           metadata[graph] = {
             classes: classes,
-            labels: self.list_of_labels_of_classes(client, graph, classes),
-            datatypes: self.list_of_datatypes(client, graph),
-            properties: self.list_of_properties_on_graph(client, graph)
+            labels: labels,
+            datatypes: datatypes,
+            properties: properties
           }
         end
 
@@ -136,6 +140,7 @@ WHERE {
   UNION
   { [] rdfs:subclassOf ?c. }
 }
+LIMIT 100
 SPARQL
         results = self.query_metadata(client, query)
         return [] if !results
