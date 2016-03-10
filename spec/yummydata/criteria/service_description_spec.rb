@@ -20,7 +20,7 @@ describe 'Yummydata' do
           end
         end
 
-        it 'should return service description object when valid response is retrieved' do
+        it 'should return service description object when valid response is retrieved of ttl format' do
           valid_ttl = read_file('good_turtle_01.ttl')
           response = double(Net::HTTPResponse)
           allow(target).to receive(:http_get).with(@uri, anything, 10).and_return(response)
@@ -30,6 +30,20 @@ describe 'Yummydata' do
           service_description = target.service_description(@uri, 10)
 
           expect(service_description.type).to eq Yummydata::DataFormat::TURTLE
+          expect(service_description.text).to eq valid_ttl
+          expect(service_description.modified).to eq "2016-01-01 10:00:00"
+        end
+        
+        it 'should return service description object when response is retrieved of xml format' do
+          valid_ttl = read_file('good_xml_01.xml')
+          response = double(Net::HTTPResponse)
+          allow(target).to receive(:http_get).with(@uri, anything, 10).and_return(response)
+          allow(response).to receive(:each_key)
+          allow(response).to receive(:body).and_return(valid_ttl)
+
+          service_description = target.service_description(@uri, 10)
+
+          expect(service_description.type).to eq Yummydata::DataFormat::RDFXML
           expect(service_description.text).to eq valid_ttl
           expect(service_description.modified).to eq "2016-01-01 10:00:00"
         end
@@ -46,6 +60,7 @@ describe 'Yummydata' do
           expect(service_description.type).to eq Yummydata::DataFormat::UNKNOWN
           expect(service_description.text).to eq nil
         end
+
 
       end
     end

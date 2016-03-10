@@ -16,13 +16,13 @@ module Yummydata
     ##
     # return the license of VoID
     #
-    # @return [String]
+    # @return [Array]
     attr_reader :license
 
     ##
     # return the publisher of VoID
     #
-    # @return [String]
+    # @return [Array]
     attr_reader :publisher
 
     ##
