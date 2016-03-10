@@ -42,16 +42,17 @@ module Yummydata
         data = triples(@text, RDFXML)
         if (!data.nil?)
           @type = RDFXML
+        else
+          return
         end
       end
 
-      if (!data.nil?)
-        data.each do |subject, subject_array|
-          subject_array.each do |predicate_object|
-            predicate_object.each do |predicate, object|
-              if predicate == RDF::URI("http://purl.org/dc/terms/modified")
-                @modified = object.to_s
-              end
+      data.each do |subject, predicate_objects|
+        predicate_objects.each do |predicate_object|
+          predicate_object.each do |predicate, object|
+            if predicate == RDF::URI("http://purl.org/dc/terms/modified")
+              @modified = object.to_s
+              break
             end
           end
         end

@@ -45,12 +45,12 @@ module Yummydata
 
       data = {}
       reader.each_triple do |subject, predicate, object|
-        subject_array = data[subject]
-        if subject_array.nil?
-          subject_array = []
-          data[subject] = subject_array
+        predicate_objects = data[subject]
+        if predicate_objects.nil?
+          predicate_objects = []
+          data[subject] = predicate_objects
         end
-        subject_array.push({ predicate => object })
+        predicate_objects.push({ predicate => object })
       end
       data
     end

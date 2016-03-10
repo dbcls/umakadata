@@ -16,13 +16,13 @@ module Yummydata
     ##
     # return the license of VoID
     #
-    # @return [String]
+    # @return [Array]
     attr_reader :license
 
     ##
     # return the publisher of VoID
     #
-    # @return [String]
+    # @return [Array]
     attr_reader :publisher
 
     ##
@@ -40,8 +40,8 @@ module Yummydata
       @license = []
       @publisher = []
       @modified = []
-      data.each do |subject, subject_array|
-        subject_array.each do |predicate_object|
+      data.each do |subject, predicate_objects|
+        predicate_objects.each do |predicate_object|
           predicate_object.each do |predicate, object|
             @license.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/license')
             @publisher.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/publisher')
