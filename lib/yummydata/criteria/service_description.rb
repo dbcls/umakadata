@@ -1,3 +1,4 @@
+require 'yummydata/http_helper'
 require 'yummydata/data_format'
 require "yummydata/service_description"
 
