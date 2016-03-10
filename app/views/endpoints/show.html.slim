@@ -196,9 +196,12 @@ h1.page-header = @endpoint.name
           td
             .yummydata-tooltip
               |  Links to Other Dataset
-              span
-                | TBD
-          td -
+              span.medium
+                | List of datasets specified by void:Linkset in VoID
+          td
+            - @linksets.each do |linkset|
+              = linkset
+              br
         tr
           td
             .yummydata-tooltip

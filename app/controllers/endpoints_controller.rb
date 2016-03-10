@@ -1,10 +1,12 @@
 require 'sparql/client'
 require 'rdf/turtle'
 require 'yummydata/data_format'
+require 'yummydata/linkset'
 
 class EndpointsController < ApplicationController
 
   include Yummydata::DataFormat
+  include Yummydata::Linkset
 
   before_action :set_endpoint, only: [:show]
 
@@ -73,6 +75,8 @@ class EndpointsController < ApplicationController
 
       @void = @evaluation.void_ttl
       void = triples(@void)
+      @linksets = self.linksets(void)
+
       @license = []
       @publisher = []
       if void.nil?
