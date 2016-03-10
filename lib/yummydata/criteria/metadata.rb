@@ -55,7 +55,7 @@ module Yummydata
         self.score_each_graph(metadata, score_proc)
       end
 
-      def score_ontology(metadata)
+      def score_ontologies(metadata)
         score_proc = lambda do |graph, data|
           ontologies = self.ontologies(data[:properties])
           commons = ontologies.count{ |ontology| COMMON_ONTOLOGIES.include?(ontology) }
