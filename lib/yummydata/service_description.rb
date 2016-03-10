@@ -34,6 +34,8 @@ module Yummydata
       @type = UNKNOWN
       @text = nil
       @modified = ''
+      @response_header = ''
+      return if http_response.nil?
 
       body = http_response.body
       data = triples(body, TURTLE)
@@ -61,7 +63,6 @@ module Yummydata
         end
       end
 
-      @response_header = ''
       http_response.each_key do |key|
         @response_header << key << ": " << http_response[key] << "\n"
       end
