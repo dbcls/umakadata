@@ -1,5 +1,6 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'yummydata'
+require 'yummydata/linkset'
 
 RSpec.configure do |config|
   original_stderr = $stderr
