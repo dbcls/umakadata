@@ -41,7 +41,7 @@ module Yummydata
       @publisher = []
       @modified = []
       data.each do |subject, predicate, object|
-        @licanse.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/license')
+        @license.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/license')
         @publisher.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/publisher')
         @modified.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/modified')
       end
