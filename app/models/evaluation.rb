@@ -61,7 +61,6 @@ class Evaluation < ActiveRecord::Base
     eval.subject_is_http_uri = retriever.http_subject?
     eval.uri_provides_info   = retriever.uri_provides_info?
     eval.contains_links      = retriever.contains_links?
-    eval.execution_time      = retriever.execution_time
   end
 
   def self.calc_alive_rate(eval)
