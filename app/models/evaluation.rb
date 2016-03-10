@@ -124,7 +124,7 @@ class Evaluation < ActiveRecord::Base
     rates = [0, 0, 0, 0, 0, 0]
 
     # availability
-    rates[0] += eval.alive_rate
+    rates[0] += eval.alive_rate unless eval.alive_rate.blank?
 
     #freshness
     rates[1] = 50
@@ -134,12 +134,12 @@ class Evaluation < ActiveRecord::Base
     rates[2] += 50 unless eval.void_ttl.blank?
 
     #usefulness
-    rates[3] += 40 * (eval.vocabulary_score > 10 ? 10 : eval.vocabulary_score) / 10.0
-    rates[3] += 30 * eval.ontology_score / 100.0
-    rates[3] += 30 * eval.metadata_score / 100.0
+    rates[3] += 40 * (eval.vocabulary_score > 10 ? 10 : eval.vocabulary_score) / 10.0 unless eval.vocabulary_score.blank?
+    rates[3] += 30 * eval.ontology_score / 100.0 unless eval.ontology_score.blank?
+    rates[3] += 30 * eval.metadata_score / 100.0 unless eval.metadata_score.blank?
 
     #validity
-    rates[4] += 40 * eval.cool_uri_rate.to_f / 100.0
+    rates[4] += 40 * eval.cool_uri_rate.to_f / 100.0 unless eval.cool_uri_rate.blank?
     rates[4] += 15 if eval.subject_is_uri
     rates[4] += 15 if eval.subject_is_http_uri
     rates[4] += 15 if eval.uri_provides_info
