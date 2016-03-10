@@ -1,5 +1,6 @@
 = javascript_include_tag 'Chart.min'
 = javascript_include_tag 'yummydata/view'
+= stylesheet_link_tag 'tooltip'
 
 javascript:
   $(function(){
@@ -19,105 +20,217 @@ h1.page-header = @endpoint.name
       tbody
         tr
           td
-            span[data-toggle="tooltip" title="The endpoint is alive or not. How much the endpoint was active in these 30 days"]
-              | Alive
+            .yummydata-tooltip
+              | Alive (Alive Rate)
+              span.medium
+                | The enpoint was alive or not when we cheked the endpoint last time. <br/>
+                  Alive rate shows how much the endpoint was alive in these 30 days.
           td
             = @evaluation.alive.to_s + " (" + @evaluation.alive_rate.to_s + "%)"
         tr
           td
-            span [data-toggle="tooltip" title="Service Description can be retrieved as turtle or rdf+xml or not."]
+            .yummydata-tooltip
               | Service Description
+              span.medium
+                | true if Service Description can be retrieved as turtle or rdf+xml, otherwise false.
           td
             = !@evaluation.service_description.blank?
         tr
           td
-            span [data-toggle="tooltip" title="The date when data in the endpoint is updated."]
+            .yummydata-tooltip
               | Last Updated
+              span
+                | TBD
           td -
         tr
           td
-            span [data-toggle="tooltip" title="VoID can be retrieved as turtle or rdf+xml or not."]
+            .yummydata-tooltip
               | VoID
+              span.small
+                | true if VoID can be found on well known URI, otherwise false.
           td
             = !@void.blank?
         tr
           td
-            span [data-toggle="tooltip" title="Publisher described in VoID"]
+            .yummydata-tooltip
               | Organization Information
+              span.small
+                | data specified by dcterms:publisher in VoID
           td
             = @publisher
         tr
           td
-            span [data-toggle="tooltip" title="License described in VoID"]
+            .yummydata-tooltip
               | License Information
+              span.small
+                | data specified by dcterms:license in VoID
           td
             = @license
         tr
           td
-            span [data-toggle="tooltip" title="Not Implemented Yet"]
+            .yummydata-tooltip
               | Vocabulary
+              span.medium
+                | This value shows the how many vocabularies are used in the endpoint.
+                | We calculate the value as the average of the number of properties in metadata for each graph.
+                br
+                | Please see also the following pages:
+                br
+                a href="http://lov.okfn.org/dataset/lov"
+                  | http://lov.okfn.org/dataset/lov
+                br
+                a href="http://stats.lod2.eu/vocabularies"
+                  | http://stats.lod2.eu/vocabularies
           td
             = @evaluation.vocabulary_score.nil? ? '-' : sprintf("%.2f", @evaluation.vocabulary_score) + '%'
         tr
           td
-            span [data-toggle="tooltip" title="Not Implemented Yet"]
+            .yummydata-tooltip
               |  Ontology
+              span.medium
+                | This value show the how the endpoint use common ontologies.
+                | We calculate the value as the average of the rate of the ontologies used in properties in metadata for each graph.
+                br
+                | Please see also the following pages:
+                br
+                a href="http://lov.okfn.org/dataset/lov"
+                  | http://lov.okfn.org/dataset/lov
+                br
+                a href="http://stats.lod2.eu/vocabularies"
+                  | http://stats.lod2.eu/vocabularies
           td
             = @evaluation.ontology_score.nil? ? '-' : sprintf("%.2f", @evaluation.ontology_score) + '%'
         tr
           td
-            span [data-toggle="tooltip"
-                  title="Whether data in this endpoint is satisfy the 4 principles of Linked Data or not. We assume blank nodes valid for subjects."
-                 ]
-              |  4 Principles of Linked Data
+            .yummydata-tooltip
+              | 4 Principles of Linked Data
+              span.medium
+                | This shows how much the endpoint obey the following 4 principles of Linked Data:
+                ul
+                  li
+                    | Use URIs as names for things
+                  li
+                    | Use HTTP URIs so that people can look up those names.
+                  li
+                    | When someone looks up a URI, provide useful information, using the standards (RDF*, SPARQL)
+                  li
+                    | Include links to other URIs. so that they can discover more things.
+                | Please see the following page for more details:
+                br
+                a href="https://www.w3.org/DesignIssues/LinkedData.html"
+                  | https://www.w3.org/DesignIssues/LinkedData.html
+
           td
-            .item all subjects are URI: #{@evaluation.subject_is_uri}
-            .item all subjects are HTTP URI: #{@evaluation.subject_is_http_uri}
-            .item URI provides information: #{@evaluation.uri_provides_info}
-            .item contains external links: #{@evaluation.contains_links}
+            .item
+              .yummydata-tooltip
+                | URIs are used as names?:
+                span
+                  | true if all subjects are URI or blank node, otherwise false.
+              | #{@evaluation.subject_is_uri}
+            .item
+              .yummydata-tooltip
+                | HTTP URIs are used?:
+                span
+                  | true if all subjects are HTTP URI or blank node, otherwise false.
+              | #{@evaluation.subject_is_http_uri}
+            .item
+              .yummydata-tooltip
+                | URI provides useful information?:
+                span
+                  | true if we can get some data from a HTTP URI of a subject, otherwise false.
+              | #{@evaluation.uri_provides_info}
+            .item
+              .yummydata-tooltip
+                | Include links to other URIs?:
+                span
+                  | true if the endpoint contains owl:sameAs or rdf:seeAlso dataset, otherwise false.
+              | #{@evaluation.contains_links}
         tr
           td
-            span [data-toggle="tooltip" title="We score the cool URI according 4 criteria. 1: the address of the endpoint is represented using host name not IP address. 2: the endpoint should listen 80 port. 3: the URI of the endpoint does not contain URL parameters. 4: the length of the URI is less than 30 characters."]
+            .yummydata-tooltip
               | Cool URI
+              span.medium
+                | We score the cool URI according 4 criteria:
+                ul
+                  li
+                    | the address of the endpoint is represented using host name not IP address.
+                  li
+                    | the endpoint should listen 80 port.
+                  li
+                    | the URI of the endpoint does not contain URL parameters.
+                  li
+                    | the length of the URI is less than 30 characters.
+                | Please see the following pages for more details:
+                br
+                a href="https://www.w3.org/TR/cooluris/"
+                  | https://www.w3.org/TR/cooluris/
+                br
+                a href="http://patterns.dataincubator.org/book/identifier-patterns.html"
+                  | http://patterns.dataincubator.org/book/identifier-patterns.html
           td =@evaluation.cool_uri_rate.to_i
         tr
           td
-            span [data-toggle="tooltip" title="The endpoint support content negotiation."]
+            .yummydata-tooltip
               |  Support for Content Negotiation
+              span.medium
+                | true if the endpoint returns a response in one of data formats(Turtle, RDF/XML, HTML), otherwise false.
           td
             = @evaluation.support_content_negotiation
         tr
           td
-            span [data-toggle="tooltip" title="The endpoint provide data in HTML format."]
+            .yummydata-tooltip
               |  Support for HTML Data Format
+              span.medium
+                | true if the endpoint returns a response in HTML format, otherwise false.
           td
             = @evaluation.support_html_format
         tr
           td
-            span [data-toggle="tooltip" title="The endpoint provide data in Turtle format."]
+            .yummydata-tooltip
               |  Support for Turtle Data Format
+              span.medium
+                | true if the endpoint returns a response in Turtle format, otherwise false.
           td
             = @evaluation.support_turtle_format
         tr
           td
-            span [data-toggle="tooltip" title="Not Implemented Yet"]
+            .yummydata-tooltip
               |  Links to Other Dataset
+              span
+                | TBD
           td -
         tr
           td
-            span [data-toggle="tooltip" title="How much data can be retrieved by SPARQL queries defined in http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-builder-metadata/. "]
+            .yummydata-tooltip
               |  Metadata
+              span.medium
+                | This value shows how much metadata can be retrieved using the specified SPARQL query.
+                br
+                | 0 if any graph information can be retrieved.
+                br
+                | For each graph, we score the status by retrieving classes, labels, properties and datatypes.
+                | The average of the scores are shown.
+                br
+                | Please see the following pages for more details:
+                br
+                a href="http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-builder-metadata/"
+                  | http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-builder-metadata/
           td
             = @evaluation.metadata_score.nil? ? '-' : sprintf("%.2f", @evaluation.metadata_score) + '%'
         tr
           td
-            span [data-toggle="tooltip" title="Not Implemented Yet"]
+            .yummydata-tooltip
               | Data Entry
+              span
+                | TBD
           td -
         tr
           td
-            span [data-toggle="tooltip" title="The execution time of query to the endpoint"]
+            .yummydata-tooltip
               | Execution Time
+              span.medium
+                | This value represents the calculation performance.
+                | It is calculated as a difference of the response time of ASK{} query and listing graph query.
           td  = @evaluation.execution_time.nil? ? 'N/A' : @evaluation.execution_time
   .col-xs-12.col-sm-6
     canvas#radar[width="400" height="400"]
