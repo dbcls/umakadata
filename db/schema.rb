@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160310190127) do
+ActiveRecord::Schema.define(version: 20160310202635) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -85,6 +85,7 @@ ActiveRecord::Schema.define(version: 20160310190127) do
     t.date     "last_updated"
     t.text     "last_updated_source"
     t.integer  "update_interval"
+    t.integer  "number_of_statements"
   end
 
   create_table "update_statuses", force: :cascade do |t|

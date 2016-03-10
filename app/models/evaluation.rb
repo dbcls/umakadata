@@ -37,6 +37,8 @@ class Evaluation < ActiveRecord::Base
       eval.vocabulary_score = retriever.score_vocabularies(metadata)
 
       self.check_update(retriever, eval)
+
+      eval.number_of_statements = retriever.number_of_statements
     end
 
     eval.alive_rate = Evaluation.calc_alive_rate(eval)

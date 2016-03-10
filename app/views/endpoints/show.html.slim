@@ -39,8 +39,12 @@ h1.page-header = @endpoint.name
           td
             .yummydata-tooltip
               | Last Updated
-              span
-                | TBD
+              span.medium
+                | The last updated date. We decide the date as follows:
+                | Firstly, we try to find the date in Service Description and VoID.
+                | If explicit modifed date can not be found, we compare the number of statements, the fist statement and the last statement with those of yesterday. We assume some data is updated today if there is any differences.
+                br
+                | NOTE: Virtuoso could not count the statement correctly. So this mechanism does not work well for the endpoint on Virtuoso.
           td
             = @evaluation.last_updated.nil? ? "N/A" : @evaluation.last_updated
         tr
@@ -226,8 +230,9 @@ h1.page-header = @endpoint.name
             .yummydata-tooltip
               | Data Entry
               span
-                | TBD
-          td -
+                | Number of statements in the endpoint.
+          td
+            = @evaluation.number_of_statements.nil? ? 'N/A' : @evaluation.number_of_statements
         tr
           td
             .yummydata-tooltip
