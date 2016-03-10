@@ -1,4 +1,6 @@
 require 'sparql/client'
+require 'yummydata/criteria/service_description'
+require 'yummydata/criteria/void'
 
 module Yummydata
   module Criteria
@@ -13,35 +15,35 @@ module Yummydata
       end
 
       def last_modified
-          sd = service_description(@uri)
-          return sd.modified unless sd.modified.nil?
+        sd = service_description
+        return sd.modified unless sd.modified.nil?
 
-          void = void_on_well_known_uri(@uri)
-          return void.modified unless void.modified.nil?
+        void = void_on_well_known_uri
+        return void.modified unless void.modified.nil?
 
-          return nil
+        return nil
       end
 
-      def count_statements(uri)
-        self.prepare(uri)
-        result = self.query(count_query)
-        return nil if result.nil?
-        return result
+      def count_statements
+        self.prepare(@uri)
+        results = self.query(count_query)
+        return nil if results.nil?
+        return results[0][:c]
       end
 
-      def first_statement(uri)
-        self.prepare(uri)
-        result = self.query(first_statement_query)
-        return nil if result.nil?
-        return result
+      def first_statement
+        self.prepare(@uri)
+        results = self.query(first_statement_query)
+        return nil if results.nil?
+        return results[0]
       end
 
-      def last_statement(uri, count)
-        self.prepare(uri)
+      def last_statement(count)
+        self.prepare(@uri)
         offset = count - 1
-        result = self.query(last_statement_query(offset))
-        return nil if result.nil?
-        return result
+        results = self.query(offset_statement_query(offset))
+        return nil if results.nil?
+        return results[0]
       end
 
       def count_query

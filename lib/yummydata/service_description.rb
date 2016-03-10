@@ -34,6 +34,8 @@ module Yummydata
       @type = UNKNOWN
       @text = nil
       @modified = ''
+      @response_header = ''
+      return if http_response.nil?
 
       body = http_response.body
       data = triples(body, TURTLE)
@@ -50,18 +52,13 @@ module Yummydata
         end
       end
 
-      data.each do |subject, predicate_objects|
-        predicate_objects.each do |predicate_object|
-          predicate_object.each do |predicate, object|
-            if predicate == RDF::URI("http://purl.org/dc/terms/modified")
-              @modified = object.to_s
-              break
-            end
-          end
+      data.each do |subject, predicate, object|
+        if predicate == RDF::URI("http://purl.org/dc/terms/modified")
+          @modified = object.to_s
+          break
         end
       end
 
-      @response_header = ''
       http_response.each_key do |key|
         @response_header << key << ": " << http_response[key] << "\n"
       end

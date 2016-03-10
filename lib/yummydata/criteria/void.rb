@@ -1,12 +1,14 @@
 require 'yummydata/data_format'
 require 'yummydata/http_helper'
 require 'yummydata/void'
+require 'uri/http'
 
 module Yummydata
   module Criteria
     module VoID
 
       include Yummydata::DataFormat
+      include Yummydata::HTTPHelper
 
       WELL_KNOWN_VOID_PATH = "/.well-known/void".freeze
 

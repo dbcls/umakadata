@@ -6,6 +6,7 @@ require "yummydata/criteria/execution_time"
 require "yummydata/criteria/cool_uri"
 require "yummydata/criteria/content_negotiation"
 require "yummydata/criteria/metadata"
+require "yummydata/criteria/last_update"
 
 module Yummydata
   class Retriever
@@ -64,6 +65,20 @@ module Yummydata
     include Yummydata::Criteria::Metadata
     def metadata
       super(@uri)
+    end
+
+    include Yummydata::Criteria::LastUpdate
+    def last_modified
+      super
+    end
+
+    def count_first_last
+      count = count_statements
+      return {count: nil, first: nil, last: nil } if count.nil?
+
+      first = first_statement
+      last = last_statement(count)
+      return {count: count, first: first, last: last}
     end
 
   end
