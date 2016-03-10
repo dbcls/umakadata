@@ -34,7 +34,7 @@ class Evaluation < ActiveRecord::Base
       metadata = retriever.metadata
       eval.metadata_score = retriever.score_metadata(metadata)
       eval.ontology_score = retriever.score_ontologies(metadata)
-      eval.ontology_score = retriever.score_vocabularies(metadata)
+      eval.vocabulary_score = retriever.score_vocabularies(metadata)
     end
 
     eval.alive_rate = Evaluation.calc_alive_rate(eval)
