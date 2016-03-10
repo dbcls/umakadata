@@ -29,7 +29,7 @@ module Yummydata
     # return the last_modified of some VoID data
     #
     # @return [String]
-    attr_reader :last_modified
+    attr_reader :modified
 
     def initialize(http_response)
       @text = http_response.body
@@ -40,11 +40,13 @@ module Yummydata
       @license = []
       @publisher = []
       @modified = []
-      data.each do |subject, predicate_object|
-        predicate_object.each do |predicate, object|
-          @license.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/license')
-          @publisher.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/publisher')
-          @modified.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/modified')
+      data.each do |subject, subject_array|
+        subject_array.each do |predicate_object|
+          predicate_object.each do |predicate, object|
+            @license.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/license')
+            @publisher.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/publisher')
+            @modified.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/modified')
+          end
         end
       end
     end
