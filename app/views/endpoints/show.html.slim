@@ -56,12 +56,14 @@ h1.page-header = @endpoint.name
           td
             span [data-toggle="tooltip" title="Not Implemented Yet"]
               | Vocabulary
-          td -
+          td
+            = @evaluation.vocabulary_score.nil? ? '-' : sprintf("%.2f", @evaluation.vocabulary_score) + '%'
         tr
           td
             span [data-toggle="tooltip" title="Not Implemented Yet"]
               |  Ontology
-          td -
+          td
+            = @evaluation.ontology_score.nil? ? '-' : sprintf("%.2f", @evaluation.ontology_score) + '%'
         tr
           td
             span [data-toggle="tooltip"

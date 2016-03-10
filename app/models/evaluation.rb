@@ -20,26 +20,26 @@ class Evaluation < ActiveRecord::Base
       self.retrieve_service_description(retriever, eval)
       self.retrieve_void(retriever, eval)
       self.retrieve_linked_data_rules(retriever, eval)
+
+      eval.execution_time = retriever.execution_time
+      eval.cool_uri_rate = retriever.cool_uri_rate
+
+      eval.support_turtle_format = retriever.check_content_negotiation(Yummydata::DataFormat::TURTLE)
+      eval.support_xml_format    = retriever.check_content_negotiation(Yummydata::DataFormat::RDFXML)
+      eval.support_html_format   = retriever.check_content_negotiation(Yummydata::DataFormat::HTML)
+      eval.support_content_negotiation = eval.support_turtle_format ||
+                                         eval.support_xml_format ||
+                                         eval.support_html_format
+
+      metadata = retriever.metadata
+      eval.metadata_score = retriever.score_metadata(metadata)
+      eval.ontology_score = retriever.score_ontologies(metadata)
+      eval.ontology_score = retriever.score_vocabularies(metadata)
     end
 
     eval.alive_rate = Evaluation.calc_alive_rate(eval)
     eval.score = Evaluation.calc_score(eval)
     eval.rank  = Evaluation.calc_rank(eval.score)
-
-    eval.execution_time = retriever.execution_time
-    eval.cool_uri_rate = retriever.cool_uri_rate
-
-    eval.support_turtle_format = retriever.check_content_negotiation(Yummydata::DataFormat::TURTLE)
-    eval.support_xml_format    = retriever.check_content_negotiation(Yummydata::DataFormat::RDFXML)
-    eval.support_html_format   = retriever.check_content_negotiation(Yummydata::DataFormat::HTML)
-    eval.support_content_negotiation = eval.support_turtle_format ||
-                                       eval.support_xml_format ||
-                                       eval.support_html_format
-
-    metadata = retriever.metadata
-    eval.metadata_score = retriever.score_metadata(metadata)
-    eval.ontology_score = retriever.score_ontologies(metadata)
-    eval.ontology_score = retriever.score_vocabularies(metadata)
 
     eval.save!
   end
@@ -53,7 +53,7 @@ class Evaluation < ActiveRecord::Base
   def self.retrieve_void(retriever, eval)
     eval.void_uri = retriever.well_known_uri
     void = retriever.void_on_well_known_uri
-    eval.void_ttl = void.text
+    eval.void_ttl = void.nil? ? nil : void.text
   end
 
   def self.retrieve_linked_data_rules(retriever, eval)
