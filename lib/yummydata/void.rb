@@ -29,7 +29,7 @@ module Yummydata
     # return the last_modified of some VoID data
     #
     # @return [String]
-    attr_reader :last_modified
+    attr_reader :modified
 
     def initialize(http_response)
       @text = http_response.body
