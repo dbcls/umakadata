@@ -10,7 +10,7 @@ class ApiController < ApplicationController
     self.add_equal_condition('evaluations.rank', params['rank']) if !params['rank'].blank?
     self.add_range_condition('evaluations.cool_uri_rate', params['cool_uri_rate_lower'], params['cool_uri_rate_upper'])
     self.add_range_condition('evaluations.ontology', params['ontology_lower'], params['ontology_upper'])
-    self.add_range_condition('evaluations.metadata_coverage', params['metadata_lower'], params['metadata_upper'])
+    self.add_range_condition('evaluations.metadata_score', params['metadata_lower'], params['metadata_upper'])
     self.add_range_condition('evaluations.vocabulary', params['vocabulary_lower'], params['vocabulary_upper'])
     self.add_is_not_empty_condition('evaluations.service_description') if !params['service_description'].blank?
     self.add_is_not_empty_condition('evaluations.void_ttl') if !params['void'].blank?

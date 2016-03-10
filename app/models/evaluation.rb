@@ -37,9 +37,9 @@ class Evaluation < ActiveRecord::Base
                                        eval.support_html_format
 
     metadata = retriever.metadata
-    eval.metadata_coverage = self.score_metadata(metadata)
-    puts "METADATA SCORE"
-    puts eval.metadata_coverage
+    eval.metadata_score = retriever.score_metadata(metadata)
+    eval.ontology_score = retriever.score_ontologies(metadata)
+    eval.ontology_score = retriever.score_vocabularies(metadata)
 
     eval.save!
   end
@@ -159,22 +159,6 @@ class Evaluation < ActiveRecord::Base
     rates[5] = 50
 
     return rates
-  end
-
-  def self.score_metadata(metadata)
-    return 0 if metadata.empty?
-
-    score_list = []
-    metadata.each do |graph, data|
-      score = 0
-      score += 25 unless data[:classes].empty?
-      score += 25 unless data[:labels].empty?
-      score += 25 unless data[:datatypes].empty?
-      score += 25 unless data[:properties].empty?
-      score_list.push score
-    end
-
-    return score_list.inject(0.0) { |r, i| r += i } / score_list.size
   end
 
 end

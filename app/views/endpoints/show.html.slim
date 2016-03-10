@@ -106,7 +106,7 @@ h1.page-header = @endpoint.name
             span [data-toggle="tooltip" title="How much data can be retrieved by SPARQL queries defined in http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-builder-metadata/. "]
               |  Metadata
           td
-            = @evaluation.metadata_coverage.nil? ? '-' : sprintf("%.2f", @evaluation.metadata_coverage) + '%'
+            = @evaluation.metadata_score.nil? ? '-' : sprintf("%.2f", @evaluation.metadata_score) + '%'
         tr
           td
             span [data-toggle="tooltip" title="Not Implemented Yet"]
