@@ -38,6 +38,8 @@
     </sd:defaultDataset>
     <dcterms:license rdf:resource="http://creativecommons.org/licenses/by/2.1/jp/"/>
     <dcterms:publisher rdf:resource="http://www.example.org/Publisher"/>
+    <dcterms:modified>2014-01-01 10:00:00</dcterms:modified>
     <dcterms:modified>2016-01-01 10:00:00</dcterms:modified>
+    <dcterms:modified>2015-01-01 10:00:00</dcterms:modified>
   </sd:Service>
 </rdf:RDF>
