@@ -4,11 +4,12 @@ javascript:
   });
 
 h1.page-header = @endpoint.name
+
 .row
   .col-xs-12.col-sm-6
     h2
-      = "Rank " + show_rank(@evaluation.rank) + " ( " + @evaluation.score.to_s + " ) "
-    table.table.table-striped
+      | Basic Information
+    table.table.table-bordered
       thead
         tr
           th Name
@@ -16,41 +17,11 @@ h1.page-header = @endpoint.name
       tbody
         tr
           td
-            .yummydata-tooltip
-              | Alive (Alive Rate)
-              span.medium
-                | The enpoint was alive or not when we cheked the endpoint last time. <br/>
-                  Alive rate shows how much the endpoint was alive in these 30 days.
+            | Endpoint URI
           td
-            = @evaluation.alive.to_s + " (" + @evaluation.alive_rate.to_s + "%)"
-        tr
-          td
-            .yummydata-tooltip
-              | Service Description
-              span.medium
-                | true if Service Description can be retrieved as turtle or rdf+xml, otherwise false.
-          td
-            = !@evaluation.service_description.blank?
-        tr
-          td
-            .yummydata-tooltip
-              | Last Updated
-              span.medium
-                | The last updated date. We decide the date as follows:
-                | Firstly, we try to find the date in Service Description and VoID.
-                | If explicit modifed date can not be found, we compare the number of statements, the fist statement and the last statement with those of yesterday. We assume some data is updated today if there is any differences.
-                br
-                | NOTE: Virtuoso could not count the statement correctly. So this mechanism does not work well for the endpoint on Virtuoso.
-          td
-            = @evaluation.last_updated.nil? ? "N/A" : @evaluation.last_updated
-        tr
-          td
-            .yummydata-tooltip
-              | VoID
-              span.small
-                | true if VoID can be found on well known URI, otherwise false.
-          td
-            = !@void.blank?
+            a href=@endpoint.url
+              = @endpoint.url
+
         tr
           td
             .yummydata-tooltip
@@ -70,6 +41,81 @@ h1.page-header = @endpoint.name
         tr
           td
             .yummydata-tooltip
+              | Rank
+              span
+                |
+          td
+            = "Rank " + show_rank(@evaluation.rank) + " ( " + @evaluation.score.to_s + " ) "
+
+  .col-xs-12.col-sm-6
+    canvas#radar[width="400" height="400"]
+
+
+.row
+  .col-xs-24.col-sm-12
+    table.table.table-bordered
+      thead
+        tr
+          th Area
+          th Name
+          th Value
+      tbody
+        tr
+          td.availability
+            | Availability
+            br
+            #availability_score.feature_score
+          td.availability
+            .yummydata-tooltip
+              | Alive (Alive Rate)
+              span.medium
+                | The enpoint was alive or not when we cheked the endpoint last time. <br/>
+                  Alive rate shows how much the endpoint was alive in these 30 days.
+          td.availability
+            = @evaluation.alive.to_s + " (" + @evaluation.alive_rate.to_s + "%)"
+        tr
+          td.freshness
+            | Freshness
+            br
+            #freshness_score.feature_score
+          td.freshness
+            .yummydata-tooltip
+              | Last Updated
+              span.medium
+                | The last updated date. We decide the date as follows:
+                | Firstly, we try to find the date in Service Description and VoID.
+                | If explicit modifed date can not be found, we compare the number of statements, the fist statement and the last statement with those of yesterday. We assume some data is updated today if there is any differences.
+                br
+                | NOTE: Virtuoso could not count the statement correctly. So this mechanism does not work well for the endpoint on Virtuoso.
+          td.freshness
+            = @evaluation.last_updated.nil? ? "N/A" : @evaluation.last_updated
+        tr
+          td.operation rowspan=2
+            | Operation
+            br
+            #operation_score.feature_score
+          td.operation
+            .yummydata-tooltip
+              | Service Description
+              span.medium
+                | true if Service Description can be retrieved as turtle or rdf+xml, otherwise false.
+          td.operation
+            = !@evaluation.service_description.blank?
+        tr
+          td.operation
+            .yummydata-tooltip
+              | VoID
+              span.small
+                | true if VoID can be found on well known URI, otherwise false.
+          td.operation
+            = !@void.blank?
+        tr
+          td.usefulness rowspan=8
+            | Usefulness
+            br
+            #usefulness_score.feature_score
+          td.usefulness
+            .yummydata-tooltip
               | Vocabulary
               span.medium
                 | This value shows the how many vocabularies are used in the endpoint.
@@ -82,10 +128,10 @@ h1.page-header = @endpoint.name
                 br
                 a href="http://stats.lod2.eu/vocabularies"
                   | http://stats.lod2.eu/vocabularies
-          td
+          td.usefulness
             = @evaluation.vocabulary_score.nil? ? '-' : sprintf("%.2f", @evaluation.vocabulary_score)
         tr
-          td
+          td.usefulness
             .yummydata-tooltip
               |  Ontology
               span.medium
@@ -99,10 +145,74 @@ h1.page-header = @endpoint.name
                 br
                 a href="http://stats.lod2.eu/vocabularies"
                   | http://stats.lod2.eu/vocabularies
-          td
+          td.usefulness
             = @evaluation.ontology_score.nil? ? '-' : sprintf("%.2f", @evaluation.ontology_score)
         tr
-          td
+          td.usefulness
+            .yummydata-tooltip
+              |  Metadata
+              span.medium
+                | This value shows how much metadata can be retrieved using the specified SPARQL query.
+                br
+                | 0 if any graph information can be retrieved.
+                br
+                | For each graph, we score the status by retrieving classes, labels, properties and datatypes.
+                | The average of the scores are shown.
+                br
+                | Please see the following pages for more details:
+                br
+                a href="http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-builder-metadata/"
+                  | http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-builder-metadata/
+          td.usefulness
+            = @evaluation.metadata_score.nil? ? '-' : sprintf("%.2f", @evaluation.metadata_score)
+        tr
+          td.usefulness
+            .yummydata-tooltip
+              |  Links to Other Dataset
+              span.medium
+                | List of datasets specified by void:Linkset in VoID
+          td.usefulness
+            - @linksets.each do |linkset|
+              = linkset
+              br
+        tr
+          td.usefulness
+            .yummydata-tooltip
+              | Data Entry
+              span
+                | Number of statements in the endpoint.
+          td.usefulness
+            = @evaluation.number_of_statements.nil? ? 'N/A' : @evaluation.number_of_statements
+        tr
+          td.usefulness
+            .yummydata-tooltip
+              |  Support for Content Negotiation
+              span.medium
+                | true if the endpoint returns a response in one of data formats(Turtle, RDF/XML, HTML), otherwise false.
+          td.usefulness
+            = @evaluation.support_content_negotiation
+        tr
+          td.usefulness
+            .yummydata-tooltip
+              |  Support for HTML Data Format
+              span.medium
+                | true if the endpoint returns a response in HTML format, otherwise false.
+          td.usefulness
+            = @evaluation.support_html_format
+        tr
+          td.usefulness
+            .yummydata-tooltip
+              |  Support for Turtle Data Format
+              span.medium
+                | true if the endpoint returns a response in Turtle format, otherwise false.
+          td.usefulness
+            = @evaluation.support_turtle_format
+        tr
+          td.validity rowspan=2
+            | Validity
+            br
+            #validity_score.feature_score
+          td.validity
             .yummydata-tooltip
               | 4 Principles of Linked Data
               span.medium
@@ -120,8 +230,7 @@ h1.page-header = @endpoint.name
                 br
                 a href="https://www.w3.org/DesignIssues/LinkedData.html"
                   | https://www.w3.org/DesignIssues/LinkedData.html
-
-          td
+          td.validity
             .item
               .yummydata-tooltip
                 | URIs are used as names?:
@@ -147,7 +256,7 @@ h1.page-header = @endpoint.name
                   | true if the endpoint contains owl:sameAs or rdf:seeAlso dataset, otherwise false.
               | #{@evaluation.contains_links}
         tr
-          td
+          td.validity
             .yummydata-tooltip
               | Cool URI
               span.medium
@@ -168,77 +277,23 @@ h1.page-header = @endpoint.name
                 br
                 a href="http://patterns.dataincubator.org/book/identifier-patterns.html"
                   | http://patterns.dataincubator.org/book/identifier-patterns.html
-          td =@evaluation.cool_uri_rate.to_i
+          td.validity
+            = @evaluation.cool_uri_rate.to_i
         tr
-          td
-            .yummydata-tooltip
-              |  Support for Content Negotiation
-              span.medium
-                | true if the endpoint returns a response in one of data formats(Turtle, RDF/XML, HTML), otherwise false.
-          td
-            = @evaluation.support_content_negotiation
-        tr
-          td
-            .yummydata-tooltip
-              |  Support for HTML Data Format
-              span.medium
-                | true if the endpoint returns a response in HTML format, otherwise false.
-          td
-            = @evaluation.support_html_format
-        tr
-          td
-            .yummydata-tooltip
-              |  Support for Turtle Data Format
-              span.medium
-                | true if the endpoint returns a response in Turtle format, otherwise false.
-          td
-            = @evaluation.support_turtle_format
-        tr
-          td
-            .yummydata-tooltip
-              |  Links to Other Dataset
-              span.medium
-                | List of datasets specified by void:Linkset in VoID
-          td
-            - @linksets.each do |linkset|
-              = linkset
-              br
-        tr
-          td
-            .yummydata-tooltip
-              |  Metadata
-              span.medium
-                | This value shows how much metadata can be retrieved using the specified SPARQL query.
-                br
-                | 0 if any graph information can be retrieved.
-                br
-                | For each graph, we score the status by retrieving classes, labels, properties and datatypes.
-                | The average of the scores are shown.
-                br
-                | Please see the following pages for more details:
-                br
-                a href="http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-builder-metadata/"
-                  | http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-builder-metadata/
-          td
-            = @evaluation.metadata_score.nil? ? '-' : sprintf("%.2f", @evaluation.metadata_score)
-        tr
-          td
-            .yummydata-tooltip
-              | Data Entry
-              span
-                | Number of statements in the endpoint.
-          td
-            = @evaluation.number_of_statements.nil? ? 'N/A' : @evaluation.number_of_statements
-        tr
-          td
+          td.performance
+            | Performance
+            br
+            #performance_score.feature_score
+          td.performance
             .yummydata-tooltip
               | Execution Time
               span.medium
                 | This value represents the calculation performance.
                 | It is calculated as a difference of the response time of ASK{} query and listing graph query.
-          td  = @evaluation.execution_time.nil? ? 'N/A' : @evaluation.execution_time
-  .col-xs-12.col-sm-6
-    canvas#radar[width="400" height="400"]
+          td.performance
+            = @evaluation.execution_time.nil? ? 'N/A' : @evaluation.execution_time
+
+.row
   .col-sm-12
     details
       summary Response Header

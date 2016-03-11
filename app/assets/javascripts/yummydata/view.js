@@ -3,11 +3,12 @@ function showRader(id) {
     var data = json['data']
     var avg = json['avg']
     var context = $("#radar")[0].getContext("2d");
+    var labels = ["availability", "freshness", "operation", "usefulness", "validity", "performance"]
     new Chart(context).Radar({
-      labels: ["availability", "freshness", "operation", "usefulness", "validity", "performance"],
+      labels: labels,
       datasets: [
         {
-            label: "Pathway Commons @Malaga",
+            label: "Target",
             fillColor: "rgba(151,187,205,0.2)",
             strokeColor: "rgba(151,187,205,1)",
             pointColor: "rgba(151,187,205,1)",
@@ -33,5 +34,21 @@ function showRader(id) {
       scaleStepWidth: 10,
       scaleStartValue: 0,
     });
+
+    for (var i = 0; i < 6; ++i) {
+      $('#' + labels[i] + '_score').text('(' + data[i] + ')');
+      if (data[i] < 20) {
+        status = 'danger';
+      } else if (data[i] < 40) {
+        status = 'warning'
+      } else if (data[i] < 60) {
+        status = 'info'
+      } else if (data[i] < 80) {
+        status = 'success'
+      } else {
+        status = 'active';
+      }
+      $('.' + labels[i]).addClass(status)
+    }
   });
 };
