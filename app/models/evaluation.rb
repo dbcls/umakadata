@@ -44,6 +44,7 @@ class Evaluation < ActiveRecord::Base
     eval.alive_rate = Evaluation.calc_alive_rate(eval)
     eval.score = Evaluation.calc_score(eval)
     eval.rank  = Evaluation.calc_rank(eval.score)
+    eval.update_interval = Evaluation.calc_update_interval(eval.endpoint_id)
 
     return eval if eval.save!
   end
@@ -94,6 +95,14 @@ class Evaluation < ActiveRecord::Base
     when (80..100) then 5
     else 1
     end
+  end
+
+  def self.calc_update_interval(endpoint_id)
+    intervals = self.where(endpoint_id: endpoint_id).group(:last_updated).count
+    return 1 if intervals.empty?
+
+    sum = intervals.values.inject(:+)
+    sum / intervals.size
   end
 
   def self.rates(id)
