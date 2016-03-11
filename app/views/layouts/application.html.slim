@@ -9,7 +9,10 @@ html[lang="en"]
     link[rel="icon" href="./favicon.ico"]
     title Yummy Data
     = stylesheet_link_tag 'application', media: 'all'
+    = stylesheet_link_tag 'yummydata-tooltip'
     = javascript_include_tag 'application'
+    = javascript_include_tag 'Chart.min'
+    = javascript_include_tag 'yummydata/view'
     = csrf_meta_tags
   body
     nav.navbar.navbar-inverse.navbar-fixed-top
