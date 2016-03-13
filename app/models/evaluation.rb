@@ -99,7 +99,9 @@ class Evaluation < ActiveRecord::Base
 
   def self.calc_update_interval(eval)
     intervals = self.where(endpoint_id: eval.endpoint_id).group(:last_updated).count
-    return 1 if intervals.empty?
+    if intervals.empty?
+      return eval.last_updated.nil? ? 0 : 1
+    end
 
     last_updated = eval.last_updated
     if intervals[last_updated].nil?
@@ -107,7 +109,11 @@ class Evaluation < ActiveRecord::Base
     else
       intervals[last_updated] += 1
     end
-    intervals.values.inject(:+) / intervals.size
+
+    number_of_update_time = intervals.has_key?(nil) ? intervals.size - 1 : intervals.size
+    return 0 if number_of_update_time == 0
+
+    intervals.values.inject(:+) / number_of_update_time.to_f
   end
 
   def self.rates(id)
