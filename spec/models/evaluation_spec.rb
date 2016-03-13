@@ -72,10 +72,89 @@ RSpec.describe Evaluation, type: :model do
     create_list(:evaluation, 14, :endpoint_id => endpoint_id, :latest => false, :alive => true)
     create_list(:evaluation, 15, :endpoint_id => endpoint_id, :latest => false, :alive => false)
     eval = Evaluation.new(:endpoint_id => endpoint_id, :latest => true, :alive => true)
-    
+
     alive_rate = Evaluation.calc_alive_rate(eval)
 
-    expect(alive_rate).to eq 50.0 # 15 / 30 
+    expect(alive_rate).to eq 50.0 # 15 / 30
   end
-  
+
+  it 'should return 0 when evaluation dose not exist and last_updated is nil' do
+    endpoint_id = 10000
+    eval = Evaluation.new(:endpoint_id => endpoint_id, :last_updated => nil)
+
+    update_interval = Evaluation.calc_update_interval(eval)
+
+    expect(update_interval).to eq 0
+  end
+
+  it 'should return 1 when evaluation dose not exist and last_updated is not nil' do
+    endpoint_id = 10000
+    eval = Evaluation.new(:endpoint_id => endpoint_id, :last_updated => Time.now.strftime('%Y-%m-%d %H:%M:%s'))
+
+    update_interval = Evaluation.calc_update_interval(eval)
+
+    expect(update_interval).to eq 1
+  end
+
+  it 'should return 1 when the last updated fields are not same' do
+    endpoint_id = 10000
+    create(:evaluation, :endpoint_id => endpoint_id, :last_updated => 2.days.ago(Time.zone.now))
+    create(:evaluation, :endpoint_id => endpoint_id, :last_updated => 1.days.ago(Time.zone.now))
+    eval = Evaluation.new(:endpoint_id => endpoint_id, :last_updated => Time.zone.now)
+
+    update_interval = Evaluation.calc_update_interval(eval)
+
+    expect(update_interval).to eq 1
+  end
+
+  it 'should return 1 when the last updated fields are all same' do
+    endpoint_id = 10000
+    two_days_ago = 2.days.ago(Time.zone.now)
+    create(:evaluation, :endpoint_id => endpoint_id, :last_updated => two_days_ago)
+    create(:evaluation, :endpoint_id => endpoint_id, :last_updated => two_days_ago)
+    eval = Evaluation.new(:endpoint_id => endpoint_id, :last_updated => two_days_ago)
+
+    update_interval = Evaluation.calc_update_interval(eval)
+
+    expect(update_interval).to eq 3
+  end
+
+  it 'should return 2.3333333333333335 when endpoints is 3 times updated for 7 days' do
+    endpoint_id = 10000
+    six_days_ago = 6.days.ago(Time.zone.now)
+    four_days_ago = 4.days.ago(Time.zone.now)
+    one_days_ago = 1.days.ago(Time.zone.now)
+    (4..6).each{create(:evaluation, :endpoint_id => endpoint_id, :last_updated => six_days_ago)}
+    (2..3).each{create(:evaluation, :endpoint_id => endpoint_id, :last_updated => four_days_ago)}
+    create(:evaluation, :endpoint_id => endpoint_id, :last_updated => one_days_ago)
+    eval = Evaluation.new(:endpoint_id => endpoint_id, :last_updated => one_days_ago)
+
+    update_interval = Evaluation.calc_update_interval(eval)
+
+    expect(update_interval).to eq 2.3333333333333335 # 7/3
+  end
+
+  it 'should return 3.5 when endpoint is 2 times updated and 2 times dead for 7 days' do
+    endpoint_id = 10000
+    four_days_ago = 4.days.ago(Time.zone.now)
+    (4..6).each{create(:evaluation, :endpoint_id => endpoint_id, :last_updated => nil)}
+    (2..3).each{create(:evaluation, :endpoint_id => endpoint_id, :last_updated => four_days_ago)}
+    create(:evaluation, :endpoint_id => endpoint_id, :last_updated => nil)
+    eval = Evaluation.new(:endpoint_id => endpoint_id, :last_updated => Time.zone.now)
+
+    update_interval = Evaluation.calc_update_interval(eval)
+
+    expect(update_interval).to eq 3.5
+  end
+
+  it 'should return 0 when endpoint is dead for 7 days' do
+    endpoint_id = 10000
+    (1..6).each{create(:evaluation, :endpoint_id => endpoint_id, :last_updated => nil)}
+    eval = Evaluation.new(:endpoint_id => endpoint_id, :last_updated => nil)
+
+    update_interval = Evaluation.calc_update_interval(eval)
+
+    expect(update_interval).to eq 0
+  end
+
 end
