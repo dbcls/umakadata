@@ -73,6 +73,15 @@ class EndpointsController < ApplicationController
       @endpoint = @endpoints.find(params[:id])
       @evaluation = @endpoint.evaluation
 
+      @cors = false
+      @evaluation.response_header.split(/\n/).each do |line|
+        items = line.split(/\s*:\s*/)
+        if items[0].downcase == 'access-control-allow-origin'
+          @cors = true if items[1] == '*'
+          break
+        end
+      end
+
       @void = @evaluation.void_ttl
       void = triples(@void)
       @linksets = self.linksets(void)

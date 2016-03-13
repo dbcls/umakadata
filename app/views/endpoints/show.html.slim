@@ -21,7 +21,6 @@ h1.page-header = @endpoint.name
           td
             a href=@endpoint.url
               = @endpoint.url
-
         tr
           td
             .yummydata-tooltip
@@ -46,6 +45,14 @@ h1.page-header = @endpoint.name
                 |
           td
             = "Rank " + show_rank(@evaluation.rank) + " ( " + @evaluation.score.to_s + " ) "
+        tr
+          td
+            .yummydata-tooltip
+              | CORS
+              span
+                |
+          td
+            = @cors
 
   .col-xs-12.col-sm-6
     canvas#radar[width="400" height="400"]
