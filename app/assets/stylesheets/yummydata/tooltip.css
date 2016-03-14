@@ -1,0 +1,54 @@
+div.yummydata-tooltip {
+    color: #555;
+    display: inline-block;                        /* インライン要素化 */
+}
+
+div.yummydata-tooltip span {
+    display: none;
+}
+
+div.yummydata-tooltip:hover {
+    position: relative;
+    color: #333;
+}
+
+div.yummydata-tooltip:hover span {
+    display: block;
+    position: absolute;
+    top: 25px;
+    font-size: 90%;
+    color: #fff;
+    background-color: #51A2C1;
+    padding: 5px;
+    border-radius:3px;
+    z-index:100;
+}
+
+div.yummydata-tooltip span.large {
+  width: 600px
+}
+
+div.yummydata-tooltip span.medium {
+  width: 400px
+}
+
+div.yummydata-tooltip span.small {
+  width: 200px
+}
+
+div.yummydata-tooltip span:before {
+  content:'';
+  display:block;
+  position:absolute;
+  height:0;
+  width:0;
+  top:-13px;
+  left:15px;
+  border:13px transparent solid;
+  border-right-width:0;
+  border-left-color:#51A2C1;
+  transform:rotate(270deg);
+  -webkit-transform:rotate(270deg);
+  -o-transform:rotate(270deg);
+  z-index:100;
+}
