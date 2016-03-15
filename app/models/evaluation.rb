@@ -168,15 +168,9 @@ class Evaluation < ActiveRecord::Base
 
     prevStatus = UpdateStatus.where(:endpoint_id => eval.endpoint_id).order('created_at DESC').first
     currentStatus = UpdateStatus.record(eval.endpoint_id, current)
-
-    if  UpdateStatus.different?(prevStatus, currentStatus)
-      eval.last_updated = Time.now.strftime('%F')
-      eval.last_updated_source = 'Adhoc'
-      return
-    end
-
     previous = self.where(:endpoint_id => eval.endpoint_id).order('created_at DESC').first
-    if previous.nil?
+
+    if  UpdateStatus.different?(prevStatus, currentStatus) || previous.nil?
       eval.last_updated = Time.now.strftime('%F')
       eval.last_updated_source = 'Adhoc'
       return
