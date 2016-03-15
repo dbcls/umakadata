@@ -109,7 +109,7 @@ class Evaluation < ActiveRecord::Base
     end
 
     number_of_update_time = intervals.has_key?(nil) ? intervals.size - 1 : intervals.size
-    return 0 if number_of_update_time == 0
+    return nil unless number_of_update_time >= 2
 
     intervals.values.inject(:+) / number_of_update_time.to_f
   end
