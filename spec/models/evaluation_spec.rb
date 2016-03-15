@@ -78,22 +78,13 @@ RSpec.describe Evaluation, type: :model do
     expect(alive_rate).to eq 50.0 # 15 / 30
   end
 
-  it 'should return 0 when evaluation dose not exist and last_updated is nil' do
+  it 'should return nil when evaluation dose not exist' do
     endpoint_id = 10000
     eval = Evaluation.new(:endpoint_id => endpoint_id, :last_updated => nil)
 
     update_interval = Evaluation.calc_update_interval(eval)
 
-    expect(update_interval).to eq 0
-  end
-
-  it 'should return 1 when evaluation dose not exist and last_updated is not nil' do
-    endpoint_id = 10000
-    eval = Evaluation.new(:endpoint_id => endpoint_id, :last_updated => Time.now.strftime('%Y-%m-%d %H:%M:%s'))
-
-    update_interval = Evaluation.calc_update_interval(eval)
-
-    expect(update_interval).to eq 1
+    expect(update_interval).to eq nil
   end
 
   it 'should return 1 when the last updated fields are not same' do

@@ -99,9 +99,7 @@ class Evaluation < ActiveRecord::Base
 
   def self.calc_update_interval(eval)
     intervals = self.where(endpoint_id: eval.endpoint_id).group(:last_updated).count
-    if intervals.empty?
-      return eval.last_updated.nil? ? 0 : 1
-    end
+    return nil if intervals.empty?
 
     last_updated = eval.last_updated
     if intervals[last_updated].nil?
