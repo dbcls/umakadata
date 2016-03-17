@@ -24,14 +24,17 @@ describe 'Yummydata' do
           valid_ttl = read_file('good_turtle_01.ttl')
           response = double(Net::HTTPResponse)
           allow(target).to receive(:http_get).with(@uri, anything, 10).and_return(response)
-          allow(response).to receive(:each_key)
+          allow(response).to receive(:each_key).and_yield("@prefix rdf").and_yield("@prefix ns1")
           allow(response).to receive(:body).and_return(valid_ttl)
+          allow(response).to receive(:[]).with("@prefix rdf").and_return("<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .")
+          allow(response).to receive(:[]).with("@prefix ns1").and_return("<http://data.allie.dbcls.jp/> .")
 
           service_description = target.service_description(@uri, 10)
 
           expect(service_description.type).to eq Yummydata::DataFormat::TURTLE
           expect(service_description.text).to eq valid_ttl
           expect(service_description.modified).to eq "2016-01-01 10:00:00"
+          expect(!service_description.response_header.empty?).to be true
           expect(service_description.get_error("service_description_text")).to eq nil
         end
 
@@ -39,7 +42,10 @@ describe 'Yummydata' do
           valid_ttl = read_file('good_xml_01.xml')
           response = double(Net::HTTPResponse)
           allow(target).to receive(:http_get).with(@uri, anything, 10).and_return(response)
-          allow(response).to receive(:each_key)
+          allow(response).to receive(:each_key).and_yield("@prefix rdf").and_yield("@prefix ns1")
+          allow(response).to receive(:body).and_return(valid_ttl)
+          allow(response).to receive(:[]).with("@prefix rdf").and_return("<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .")
+          allow(response).to receive(:[]).with("@prefix ns1").and_return("<http://data.allie.dbcls.jp/> .")
           allow(response).to receive(:body).and_return(valid_ttl)
 
           service_description = target.service_description(@uri, 10)
@@ -47,6 +53,7 @@ describe 'Yummydata' do
           expect(service_description.type).to eq Yummydata::DataFormat::RDFXML
           expect(service_description.text).to eq valid_ttl
           expect(service_description.modified).to eq "2016-01-01 10:00:00"
+          expect(!service_description.response_header.empty?).to be true
           expect(service_description.get_error("service_description_text")).to eq nil
         end
 
@@ -54,13 +61,13 @@ describe 'Yummydata' do
           invalid_ttl = read_file('bad_turtle_01.ttl')
           response = double(Net::HTTPResponse)
           allow(target).to receive(:http_get).with(@uri, anything, 10).and_return(response)
-          allow(response).to receive(:each_key)
           allow(response).to receive(:body).and_return(invalid_ttl)
 
           service_description = target.service_description(@uri, 10)
 
           expect(service_description.type).to eq Yummydata::DataFormat::UNKNOWN
           expect(service_description.text).to eq nil
+          expect(service_description.response_header).to eq ''
           expect(service_description.get_error("service_description_text")).to eq "Neither turtle nor rdfxml"
         end
 
@@ -73,7 +80,6 @@ describe 'Yummydata' do
           expect(service_description.type).to eq Yummydata::DataFormat::UNKNOWN
           expect(service_description.text).to eq nil
           expect(service_description.modified).to eq nil
-          expect(service_description.response_header).to eq ''
           expect(service_description.response_header).to eq ''
           expect(service_description.get_error("service_description_text")).to eq '404 Not Found'
           expect(service_description.get_error("service_description_response_header")).to eq '404 Not Found'
@@ -88,7 +94,6 @@ describe 'Yummydata' do
           expect(service_description.type).to eq Yummydata::DataFormat::UNKNOWN
           expect(service_description.text).to eq nil
           expect(service_description.modified).to eq nil
-          expect(service_description.response_header).to eq ''
           expect(service_description.response_header).to eq ''
           expect(service_description.get_error("service_description_text")).to eq '500 Server Error'
           expect(service_description.get_error("service_description_response_header")).to eq '500 Server Error'

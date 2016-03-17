@@ -27,9 +27,11 @@ module Yummydata
         resource = uri.path
         resource += "?" + uri.query unless uri.query.nil?
         response = http.get(resource, headers)
+        response.value
+        return response
       rescue => e
         puts e
-        return nil
+        return e.data.code + "\s" + e.data.message
       end
 
       case response

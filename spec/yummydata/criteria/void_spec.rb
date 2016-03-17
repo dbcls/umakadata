@@ -40,7 +40,6 @@ describe 'Yummydata' do
           response = double(Net::HTTPResponse)
           allow(target).to receive(:http_get_recursive).with(@uri, anything, 10).and_return(response)
           allow(target).to receive(:well_known_uri).and_return(@uri)
-          allow(response).to receive(:each_key)
           allow(response).to receive(:body).and_return(valid_ttl)
 
           void = target.void_on_well_known_uri(@uri)
