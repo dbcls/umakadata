@@ -9,9 +9,11 @@ module Yummydata
       path = uri.path.empty? ? '/' : uri.path
 
       begin
-        return http.get(path, headers)
+        response = http.get(path, headers)
+        response.value
+        return response
       rescue => e
-        return nil
+        return e.data.code + "\s" + e.data.message
       end
     end
 

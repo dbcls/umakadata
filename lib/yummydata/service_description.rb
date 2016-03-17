@@ -1,11 +1,12 @@
 require 'yummydata/data_format'
+require 'yummydata/error_helper'
 
 module Yummydata
 
   class ServiceDescription
 
     include Yummydata::DataFormat
-
+    include Yummydata::ErrorHelper
     ##
     # return the type of service description
     #
@@ -35,8 +36,11 @@ module Yummydata
       @text = nil
       @modified = nil
       @response_header = ''
-      return if http_response.nil?
-
+      if http_response.is_a?(String)
+        set_error("service_description_text", http_response)
+        set_error("service_description_response_header", http_response)
+        return
+      end
       body = http_response.body
       data = triples(body, TURTLE)
       if (!data.nil?)
@@ -48,6 +52,7 @@ module Yummydata
           @text = body
           @type = RDFXML
         else
+          set_error("service_description_text", "Neither turtle nor rdfxml")
           return
         end
       end
@@ -62,6 +67,7 @@ module Yummydata
       http_response.each_key do |key|
         @response_header << key << ": " << http_response[key] << "\n"
       end
+      set_error("service_description_response_header", "response_header is empty.") if @response_header.empty?
     end
 
   end

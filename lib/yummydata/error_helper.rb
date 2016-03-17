@@ -2,7 +2,7 @@ module Yummydata
   module ErrorHelper
 
     def prepare
-      @errors = [] if @errors == nil
+      @errors = {} if @errors == nil
     end
 
     def set_error(key, value)
