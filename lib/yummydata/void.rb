@@ -1,11 +1,13 @@
 require 'rdf/turtle'
 require 'yummydata/data_format'
+require 'yummydata/error_helper'
 
 module Yummydata
 
   class VoID
 
     include Yummydata::DataFormat
+    include Yummydata::ErrorHelper
 
     ##
     # return the VoID as string
@@ -32,6 +34,10 @@ module Yummydata
     attr_reader :modified
 
     def initialize(http_response)
+      if http_response.is_a?(String)
+        set_error(http_response)
+        return
+      end
       @text = http_response.body
       data = triples(@text, TURTLE)
       data = triples(@text, RDFXML) if data.nil?
@@ -48,6 +54,7 @@ module Yummydata
 
       if @modified.empty?
         @modified = nil
+        set_error("dcterms:modified is empty")
       else
         @modified = @modified[0]
       end
