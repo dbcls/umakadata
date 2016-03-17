@@ -64,6 +64,35 @@ describe 'Yummydata' do
           expect(service_description.get_error("service_description_text")).to eq "Neither turtle nor rdfxml"
         end
 
+        it 'should return false description object when client error response is retrieved' do
+          invalid_ttl = read_file('good_turtle_01.ttl')
+          allow(target).to receive(:http_get).with(@uri, anything, 10).and_return("404 Not Found")
+
+          service_description = target.service_description(@uri, 10)
+
+          expect(service_description.type).to eq Yummydata::DataFormat::UNKNOWN
+          expect(service_description.text).to eq nil
+          expect(service_description.modified).to eq nil
+          expect(service_description.response_header).to eq ''
+          expect(service_description.response_header).to eq ''
+          expect(service_description.get_error("service_description_text")).to eq '404 Not Found'
+          expect(service_description.get_error("service_description_response_header")).to eq '404 Not Found'
+        end
+
+        it 'should return false description object when server error response is retrieved' do
+          invalid_ttl = read_file('good_turtle_01.ttl')
+          allow(target).to receive(:http_get).with(@uri, anything, 10).and_return("500 Server Error")
+
+          service_description = target.service_description(@uri, 10)
+
+          expect(service_description.type).to eq Yummydata::DataFormat::UNKNOWN
+          expect(service_description.text).to eq nil
+          expect(service_description.modified).to eq nil
+          expect(service_description.response_header).to eq ''
+          expect(service_description.response_header).to eq ''
+          expect(service_description.get_error("service_description_text")).to eq '500 Server Error'
+          expect(service_description.get_error("service_description_response_header")).to eq '500 Server Error'
+        end
 
       end
     end
