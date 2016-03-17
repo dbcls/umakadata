@@ -2,16 +2,19 @@ module Yummydata
   module ErrorHelper
 
     def prepare
-      @errors = {} if @errors == nil
+      @error = nil
     end
 
-    def set_error(key, value)
+    def set_error(value)
+      @error = value
+    end
+
+    def get_error
+      return nil if @error.nil?
+
+      error = @error.dup
       self.prepare
-      @errors[key] = value
-    end
-
-    def get_error(key)
-      @errors[key]
+      return error
     end
 
   end

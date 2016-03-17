@@ -37,8 +37,7 @@ module Yummydata
       @modified = nil
       @response_header = ''
       if http_response.is_a?(String)
-        set_error("service_description_text", http_response)
-        set_error("service_description_response_header", http_response)
+        set_error(http_response)
         return
       end
       body = http_response.body
@@ -52,7 +51,7 @@ module Yummydata
           @text = body
           @type = RDFXML
         else
-          set_error("service_description_text", "Neither turtle nor rdfxml")
+          set_error("Neither turtle nor rdfxml")
           return
         end
       end
@@ -67,7 +66,7 @@ module Yummydata
       http_response.each_key do |key|
         @response_header << key << ": " << http_response[key] << "\n"
       end
-      set_error("service_description_response_header", "response_header is empty.") if @response_header.empty?
+      set_error("response_header is empty") if @response_header.empty?
     end
 
   end
