@@ -1,9 +1,12 @@
 require "yummydata/http_helper"
 require "sparql/client"
+require 'yummydata/error_helper'
 
 module Yummydata
   module Criteria
     module Metadata
+
+      include Yummydata::ErrorHelper
 
       SKIP_GRAPH_LIST = [
         'http://www.openlinksw.com/schemas/virtrdf#'
@@ -419,6 +422,7 @@ SPARQL
         begin
           results = client.query(query)
         rescue => e
+          set_error(e.to_s)
           return false
         end
         return results

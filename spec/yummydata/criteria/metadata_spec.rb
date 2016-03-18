@@ -62,6 +62,15 @@ describe 'Yummydata' do
           expect(metadata['GRAPH2'][:properties]).to be_empty
         end
 
+        it 'should return error message when sparql query is malformed' do
+          allow_any_instance_of(SPARQL::Client).to receive(:query).and_raise(SPARQL::Client::MalformedQuery, 'Occured MalformedQuery')
+
+          metadata = target.metadata(@uri)
+
+          expect(metadata).to eq Hash.new
+          expect(target.get_error).to eq 'Occured MalformedQuery'
+        end
+
       end
 
       describe '#score_metadata?' do
