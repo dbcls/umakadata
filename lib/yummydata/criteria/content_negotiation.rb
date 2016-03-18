@@ -1,10 +1,12 @@
 require 'yummydata/http_helper'
+require 'yummydata/error_helper'
 
 module Yummydata
   module Criteria
     module ContentNegotiation
 
       include Yummydata::HTTPHelper
+      include Yummydata::ErrorHelper
 
       def check_content_negotiation(uri, content_type)
         query = <<-'SPARQL'
@@ -21,9 +23,18 @@ SPARQL
         request =  URI(uri.to_s + "?query=" + query)
 
         response = http_get_recursive(request, headers)
-        return false if response.nil?
+        if !response.is_a?(Net::HTTPSuccess)
+          set_error(response)
+          return false
+        end
 
-        return response.content_type == content_type
+        if response.content_type == content_type
+          return true
+        else
+          set_error('Content-Type is unexpected')
+          return false
+        end
+
       end
     end
   end
