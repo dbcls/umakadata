@@ -6,6 +6,8 @@ module Yummydata
   module Criteria
     module ExecutionTime
 
+      include Yummydata::ErrorHelper
+
       BASE_QUERY = <<-'SPARQL'
 ASK{}
 SPARQL
@@ -33,13 +35,24 @@ SPARQL
         self.prepare(uri)
 
         base_response_time = self.response_time(BASE_QUERY)
+        if base_response_time.nil?
+          set_error("failure in ask query")
+          return nil
+        end
+
         target_response_time = self.response_time(TARGET_QUERY)
-        if base_response_time.nil? || target_response_time.nil?
+        if target_response_time.nil?
+          set_error("failure in select query")
           return nil
         end
 
         execution_time = target_response_time - base_response_time
-        execution_time >= 0.0 ? execution_time : nil
+        if execution_time < 0.0
+          set_error("execution time is invalid")
+          return nil
+        end
+
+        execution_time
       end
 
       def response_time(sparql_query)
@@ -51,6 +64,7 @@ SPARQL
 
           end_time = Time.now
         rescue => e
+          set_error(e)
           return nil
         end
 
