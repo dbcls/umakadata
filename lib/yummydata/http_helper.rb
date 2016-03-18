@@ -18,7 +18,7 @@ module Yummydata
       when Net::HTTPSuccess
         return response
       else
-        return response.data.code + "\s" + response.data.message
+        return response.code + "\s" + response.message
       end
     end
 
@@ -43,7 +43,7 @@ module Yummydata
       when Net::HTTPRedirection
         return http_get_recursive(URI(response['location']), headers, time_out, limit - 1)
       else
-        return response.data.code + "\s" + response.data.message
+        return response.code + "\s" + response.message
       end
     end
 
