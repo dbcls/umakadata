@@ -35,14 +35,8 @@ SPARQL
         self.prepare(uri)
 
         base_response_time = self.response_time(BASE_QUERY)
-        if base_response_time.nil?
-          set_error('failure in ask query')
-          return nil
-        end
-
         target_response_time = self.response_time(TARGET_QUERY)
-        if target_response_time.nil?
-          set_error('failure in select query')
+        if base_response_time.nil? || target_response_time.nil?
           return nil
         end
 
@@ -55,11 +49,15 @@ SPARQL
           start_time = Time.now
 
           result = @client.query(sparql_query)
-          return nil if result.nil?
+          if result.nil?
+            @client.response(sparql_query)
+            set_error('Endpoint URI is different from actual URI in executing query')
+            return nil
+          end
 
           end_time = Time.now
         rescue => e
-          set_error(e.to_s)
+          set_error("Query: #{sparql_query}, Error: #{e.to_s}")
           return nil
         end
 

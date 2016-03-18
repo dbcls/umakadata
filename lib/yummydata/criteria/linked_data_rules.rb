@@ -30,6 +30,9 @@ SPARQL
 
         begin
           results = @client.query(sparql_query)
+        rescue SPARQL::Client::MalformedQuery
+          set_error('sparql query is malformed in this endpoint')
+          return false
         rescue => e
           set_error(e.to_s)
           return false
@@ -55,6 +58,9 @@ SPARQL
 
         begin
           results = @client.query(sparql_query)
+        rescue SPARQL::Client::MalformedQuery
+          set_error('sparql query is malformed in this endpoint')
+          return false
         rescue => e
           set_error(e.to_s)
           return false
@@ -76,8 +82,8 @@ SPARQL
           return false
         end
 
-        if !response.is_a?(Net::HTTPSucces)
-          set_error(http_response)
+        if !response.is_a?(Net::HTTPSuccess)
+          set_error(response)
           return false
         end
         return response.body.empty?
@@ -98,9 +104,12 @@ OFFSET 100
 SPARQL
         begin
           results = @client.query(sparql_query)
+        rescue SPARQL::Client::MalformedQuery
+          set_error('sparql query is malformed in this endpoint')
+          return false
         rescue => e
           set_error(e.to_s)
-          return nil
+          return false
         end
         if results != nil && results[0] != nil
           results[0][:s]
@@ -127,6 +136,9 @@ LIMIT 1
 SPARQL
         begin
           results = @client.query(sparql_query)
+        rescue SPARQL::Client::MalformedQuery
+          set_error('sparql query is malformed in this endpoint')
+          return false
         rescue => e
           set_error(e.to_s)
           return false
@@ -147,6 +159,9 @@ LIMIT 1
 SPARQL
         begin
           results = @client.query(sparql_query)
+        rescue SPARQL::Client::MalformedQuery
+          set_error('sparql query is malformed in this endpoint')
+          return false
         rescue => e
           set_error(e.to_s)
           return false
