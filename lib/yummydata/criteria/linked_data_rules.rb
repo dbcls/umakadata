@@ -31,7 +31,7 @@ SPARQL
         begin
           results = @client.query(sparql_query)
         rescue => e
-          set_error(e)
+          set_error(e.to_s)
           return false
         end
 
@@ -56,7 +56,7 @@ SPARQL
         begin
           results = @client.query(sparql_query)
         rescue => e
-          set_error(e)
+          set_error(e.to_s)
           return false
         end
         self.has_no_count?(results)
@@ -104,7 +104,7 @@ SPARQL
         begin
           results = @client.query(sparql_query)
         rescue => e
-          set_error(e)
+          set_error(e.to_s)
           return nil
         end
         if results != nil && results[0] != nil
@@ -134,7 +134,7 @@ SPARQL
         begin
           results = @client.query(sparql_query)
         rescue => e
-          set_error(e)
+          set_error(e.to_s)
           return false
         end
 
@@ -154,7 +154,7 @@ SPARQL
         begin
           results = @client.query(sparql_query)
         rescue => e
-          set_error(e)
+          set_error(e.to_s)
           return false
         end
 
