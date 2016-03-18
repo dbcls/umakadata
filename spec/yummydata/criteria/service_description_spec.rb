@@ -24,6 +24,7 @@ describe 'Yummydata' do
           valid_ttl = read_file('good_turtle_01.ttl')
           response = double(Net::HTTPResponse)
           allow(target).to receive(:http_get).with(@uri, anything, 10).and_return(response)
+          allow(response).to receive(:is_a?).and_return(true)
           allow(response).to receive(:body).and_return(valid_ttl)
           allow(response).to receive(:each_key).and_yield("@prefix rdf").and_yield("@prefix ns1")
           allow(response).to receive(:[]).with("@prefix rdf").and_return("<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .")
@@ -42,6 +43,7 @@ describe 'Yummydata' do
           valid_ttl = read_file('good_xml_01.xml')
           response = double(Net::HTTPResponse)
           allow(target).to receive(:http_get).with(@uri, anything, 10).and_return(response)
+          allow(response).to receive(:is_a?).and_return(true)
           allow(response).to receive(:body).and_return(valid_ttl)
           allow(response).to receive(:each_key).and_yield("@prefix rdf").and_yield("@prefix ns1")
           allow(response).to receive(:[]).with("@prefix rdf").and_return("<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .")
@@ -60,6 +62,7 @@ describe 'Yummydata' do
           valid_ttl = read_file('good_xml_01.xml')
           response = double(Net::HTTPResponse)
           allow(target).to receive(:http_get).with(@uri, anything, 10).and_return(response)
+          allow(response).to receive(:is_a?).and_return(true)
           allow(response).to receive(:body).and_return(valid_ttl)
           allow(response).to receive(:each_key)
 
@@ -76,6 +79,7 @@ describe 'Yummydata' do
           invalid_ttl = read_file('bad_turtle_01.ttl')
           response = double(Net::HTTPResponse)
           allow(target).to receive(:http_get).with(@uri, anything, 10).and_return(response)
+          allow(response).to receive(:is_a?).and_return(true)
           allow(response).to receive(:body).and_return(invalid_ttl)
 
           service_description = target.service_description(@uri, 10)

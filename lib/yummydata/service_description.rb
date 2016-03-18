@@ -36,7 +36,7 @@ module Yummydata
       @text = nil
       @modified = nil
       @response_header = ''
-      if http_response.is_a?(String)
+      if !http_response.is_a?(Net::HTTPSuccess)
         set_error(http_response)
         return
       end

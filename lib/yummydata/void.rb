@@ -34,7 +34,7 @@ module Yummydata
     attr_reader :modified
 
     def initialize(http_response)
-      if http_response.is_a?(String)
+      if !http_response.is_a?(Net::HTTPSuccess)
         set_error(http_response)
         return
       end

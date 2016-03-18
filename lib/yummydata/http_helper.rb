@@ -10,10 +10,15 @@ module Yummydata
 
       begin
         response = http.get(path, headers)
-        response.value
-        return response
       rescue => e
-        return e.data.code + "\s" + e.data.message
+        return nil
+      end
+
+      case response
+      when Net::HTTPSuccess
+        return response
+      else
+        return response.data.code + "\s" + response.data.message
       end
     end
 
@@ -27,11 +32,9 @@ module Yummydata
         resource = uri.path
         resource += "?" + uri.query unless uri.query.nil?
         response = http.get(resource, headers)
-        response.value
-        return response
       rescue => e
         puts e
-        return e.data.code + "\s" + e.data.message
+        return nil
       end
 
       case response
@@ -40,7 +43,7 @@ module Yummydata
       when Net::HTTPRedirection
         return http_get_recursive(URI(response['location']), headers, time_out, limit - 1)
       else
-        nil
+        return response.data.code + "\s" + response.data.message
       end
     end
 
