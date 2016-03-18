@@ -35,7 +35,7 @@ SPARQL
           return false
         end
 
-        self.has_no_count?(results)
+        results != nil && results.count == 0
       end
 
       def http_subject?(uri)
@@ -59,7 +59,7 @@ SPARQL
           set_error(e.to_s)
           return false
         end
-        self.has_no_count?(results)
+        results != nil && results.count == 0
       end
 
       def uri_provides_info?(uri)
@@ -72,20 +72,15 @@ SPARQL
         begin
           response = http_get_recursive(URI(uri), {}, 10)
         rescue => e
-          set_error("INVALID URI: #{uri}")
           puts "INVALID URI: #{uri}"
           return false
         end
 
         if !response.is_a?(Net::HTTPSucces)
           set_error(http_response)
-        else
-          if !response.body.empty?
-            return true
-          end
-          set_error("html body is empty")
+          return false
         end
-        return false
+        return response.body.empty?
       end
 
       def get_subject_randomly
@@ -110,7 +105,6 @@ SPARQL
         if results != nil && results[0] != nil
           results[0][:s]
         else
-          set_error("sparql query has no result")
           nil
         end
       end
@@ -137,8 +131,8 @@ SPARQL
           set_error(e.to_s)
           return false
         end
+        results != nil && results.count > 0
 
-        self.has_count?(results)
       end
 
       def contains_see_also?
@@ -158,25 +152,7 @@ SPARQL
           return false
         end
 
-        self.has_count?(results)
-      end
-
-      def has_no_count?(results)
-          if results == nil
-            set_error("sparql query has no result")
-          else
-            return true if results.count == 0
-            set_error("the count of result is not 0")
-          end
-          return false
-      end
-
-      def has_count?(results)
-        if results != nil && results.count > 0
-          return true
-        end
-        set_error("sparql query has no result")
-        return false
+        results != nil && results.count > 0
       end
 
     end

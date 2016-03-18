@@ -36,23 +36,18 @@ SPARQL
 
         base_response_time = self.response_time(BASE_QUERY)
         if base_response_time.nil?
-          set_error("failure in ask query")
+          set_error('failure in ask query')
           return nil
         end
 
         target_response_time = self.response_time(TARGET_QUERY)
         if target_response_time.nil?
-          set_error("failure in select query")
+          set_error('failure in select query')
           return nil
         end
 
         execution_time = target_response_time - base_response_time
-        if execution_time < 0.0
-          set_error("execution time is invalid")
-          return nil
-        end
-
-        execution_time
+        return execution_time < 0.0 ? nil : execution_time
       end
 
       def response_time(sparql_query)

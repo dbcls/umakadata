@@ -51,7 +51,6 @@ module Yummydata
           @text = body
           @type = RDFXML
         else
-          set_error("Neither turtle nor rdfxml")
           return
         end
       end

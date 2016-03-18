@@ -86,7 +86,6 @@ describe 'Yummydata' do
           expect(service_description.type).to eq Yummydata::DataFormat::UNKNOWN
           expect(service_description.text).to eq nil
           expect(service_description.response_header).to eq ''
-          expect(service_description.get_error).to eq "Neither turtle nor rdfxml"
         end
 
         it 'should return false description object when client error response is retrieved' do

@@ -21,7 +21,6 @@ describe 'Yummydata' do
 
           result = target.check_content_negotiation(@uri, Yummydata::DataFormat::TURTLE)
           expect(result).to eq(true)
-          expect(target.get_error).to eq nil
         end
 
         it 'detect_not_ttl_support_if_response_is_not_ttl' do
@@ -32,7 +31,6 @@ describe 'Yummydata' do
 
           result = target.check_content_negotiation(@uri, Yummydata::DataFormat::TURTLE)
           expect(result).to eq(false)
-          expect(target.get_error).to eq 'Content-Type is unexpected'
         end
 
         it 'detect_rdfxml_support_if_response_is_rdfxml' do
@@ -43,7 +41,6 @@ describe 'Yummydata' do
 
           result = target.check_content_negotiation(@uri, Yummydata::DataFormat::RDFXML)
           expect(result).to eq(true)
-          expect(target.get_error).to eq nil
         end
 
         it 'detect_not_rdfxml_support_if_response_is_rdfxml' do
@@ -54,7 +51,6 @@ describe 'Yummydata' do
 
           result = target.check_content_negotiation(@uri, Yummydata::DataFormat::RDFXML)
           expect(result).to eq(false)
-          expect(target.get_error).to eq 'Content-Type is unexpected'
         end
 
         it 'detect_html_support_if_response_is_html' do
@@ -65,7 +61,6 @@ describe 'Yummydata' do
 
           result = target.check_content_negotiation(@uri, Yummydata::DataFormat::HTML)
           expect(result).to eq(true)
-          expect(target.get_error).to eq nil
         end
 
         it 'detect_not_html_support_if_response_is_turtle' do
@@ -76,7 +71,6 @@ describe 'Yummydata' do
 
           result = target.check_content_negotiation(@uri, Yummydata::DataFormat::HTML)
           expect(result).to eq(false)
-          expect(target.get_error).to eq 'Content-Type is unexpected'
         end
 
       end

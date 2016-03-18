@@ -28,12 +28,7 @@ SPARQL
           return false
         end
 
-        if response.content_type == content_type
-          return true
-        else
-          set_error('Content-Type is unexpected')
-          return false
-        end
+        return response.content_type == content_type
 
       end
     end

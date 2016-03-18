@@ -49,7 +49,6 @@ SPARQL
           allow(target).to receive(:response_time).with(Yummydata::Criteria::ExecutionTime::TARGET_QUERY)
             .and_return(1000)
           expect(target.execution_time(@uri)).to be_nil
-          expect(target.get_error).to eq "execution time is invalid"
         end
 
         it 'should return 9000 when the response time of ask query is 1000 and the one of target query is 10000' do
