@@ -72,7 +72,6 @@ describe 'Yummydata' do
           expect(service_description.text).to eq valid_ttl
           expect(service_description.modified).to eq "2016-01-01 10:00:00"
           expect(service_description.response_header.empty?).to be true
-          expect(service_description.get_error).to eq "response_header is empty"
         end
 
         it 'should return false description object when invalid response is retrieved' do

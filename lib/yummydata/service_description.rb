@@ -66,7 +66,6 @@ module Yummydata
       http_response.each_key do |key|
         @response_header << key << ": " << http_response[key] << "\n"
       end
-      set_error("response_header is empty") if @response_header.empty?
     end
 
   end

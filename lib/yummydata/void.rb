@@ -52,13 +52,7 @@ module Yummydata
         @modified.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/modified')
       end
 
-      if @modified.empty?
-        @modified = nil
-        set_error("dcterms:modified is empty")
-      else
-        @modified = @modified[0]
-      end
-
+      @modified = @modified[0] unless @modified.empty?
     end
   end
 end
