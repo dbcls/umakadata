@@ -64,7 +64,7 @@ SPARQL
 
           end_time = Time.now
         rescue => e
-          set_error(e)
+          set_error(e.to_s)
           return nil
         end
 

@@ -75,11 +75,12 @@ SPARQL
             target.instance_variable_set(:@uri, @uri)
             target.prepare(@uri)
 
-            client = double('client', :query => nil)
+            client = double('client')
+            allow(client).to receive(:query).and_raise(SPARQL::Client::MalformedQuery, 'Occured MalformedQuery')
             target.set_client(client)
 
             expect(target.response_time(MALFORMED_QUERY)).to eq nil
-#            expect(target.get_error).to eq ""
+            expect(target.get_error).to eq 'Occured MalformedQuery'
           end
 
           it 'should return time when query is correctly' do
