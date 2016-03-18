@@ -15,6 +15,7 @@ class Evaluation < ActiveRecord::Base
 
     eval.latest = true
     eval.alive = retriever.alive?
+    eval.alive_error_reason = retriever.get_error if !eval.alive
 
     if eval.alive
       self.retrieve_service_description(retriever, eval)
@@ -22,6 +23,7 @@ class Evaluation < ActiveRecord::Base
       self.retrieve_linked_data_rules(retriever, eval)
 
       eval.execution_time = retriever.execution_time
+      eval.execution_time_error_reason = retriever.get_error if eval.execution_time.nil?
       eval.cool_uri_rate = retriever.cool_uri_rate
 
       eval.support_turtle_format = retriever.check_content_negotiation(Yummydata::DataFormat::TURTLE)
@@ -31,7 +33,11 @@ class Evaluation < ActiveRecord::Base
                                          eval.support_xml_format ||
                                          eval.support_html_format
 
+      eval.support_content_negotiation_error_reason = retriever.get_error if !eval.support_content_negotiation
+
+
       metadata = retriever.metadata
+      eval.metadata_error_reason = retriever.get_error if metadata.empty?
       eval.metadata_score = retriever.score_metadata(metadata)
       eval.ontology_score = retriever.score_ontologies(metadata)
       eval.vocabulary_score = retriever.score_vocabularies(metadata)
@@ -39,6 +45,7 @@ class Evaluation < ActiveRecord::Base
       self.check_update(retriever, eval)
 
       eval.number_of_statements = retriever.number_of_statements
+      eval.number_of_statements_error_reason = retriever.get_error if eval.number_of_statements.nil?
     end
 
     eval.alive_rate = Evaluation.calc_alive_rate(eval)
@@ -51,6 +58,7 @@ class Evaluation < ActiveRecord::Base
 
   def self.retrieve_service_description(retriever, eval)
     service_description = retriever.service_description
+    eval.service_description_error_reason = retriever.get_error if service_description.text.nil?
     eval.response_header     = service_description.response_header
     eval.service_description = service_description.text
   end
@@ -58,14 +66,23 @@ class Evaluation < ActiveRecord::Base
   def self.retrieve_void(retriever, eval)
     eval.void_uri = retriever.well_known_uri
     void = retriever.void_on_well_known_uri
-    eval.void_ttl = void.nil? ? nil : void.text
+    if void.nil?
+      eval.void_ttl = nil
+      eval.void_ttl_error_reason = retriver.get_error
+    else
+      eval.void_ttl = void.text
+    end
   end
 
   def self.retrieve_linked_data_rules(retriever, eval)
-    eval.subject_is_uri      = retriever.uri_subject?
+    eval.subject_is_uri = retriever.uri_subject?
+    eval.subject_is_uri_error_reason = retriever.get_error if !eval.subject_is_uri
     eval.subject_is_http_uri = retriever.http_subject?
-    eval.uri_provides_info   = retriever.uri_provides_info?
-    eval.contains_links      = retriever.contains_links?
+    eval.subject_is_http_uri_error_reason = retriever.get_error if !eval.subject_is_http_uri
+    eval.uri_provides_info = retriever.uri_provides_info?
+    eval.uri_provides_info_error_reason = retriever.get_error if !eval.uri_provides_info
+    eval.contains_links = retriever.contains_links?
+    eval.contains_links_error_reason = retriever.get_error if !eval.contains_links
   end
 
   def self.calc_alive_rate(eval)
