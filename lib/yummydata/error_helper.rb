@@ -1,10 +1,6 @@
 module Yummydata
   module ErrorHelper
 
-    def prepare
-      @error = nil
-    end
-
     def set_error(value)
       @error = value
     end
@@ -13,9 +9,14 @@ module Yummydata
       return nil if @error.nil?
 
       error = @error.dup
-      self.prepare
+      clear
       return error
     end
+
+    private
+      def clear
+        @error = nil
+      end
 
   end
 end
