@@ -1,8 +1,11 @@
 require 'sparql/client'
+require 'yummydata/error_helper'
 
 module Yummydata
   module Criteria
     class BasicSPARQL
+
+      include Yummydata::ErrorHelper
 
       def initialize(uri)
         @client = SPARQL::Client.new(uri)
@@ -23,7 +26,8 @@ module Yummydata
       def query(query)
         begin
           return @client.query(query)
-        rescue
+        rescue => e
+          set_error(e.to_s)
           return nil
         end
       end
