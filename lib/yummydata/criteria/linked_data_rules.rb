@@ -8,6 +8,8 @@ module Yummydata
       include Yummydata::HTTPHelper
       include Yummydata::ErrorHelper
 
+      REGEXP = /<title>(.*)<\/title>/
+
       def prepare(uri)
         @client = SPARQL::Client.new(uri, {'read_timeout': 5 * 60}) if @uri == uri && @client == nil
         @uri = uri
@@ -28,17 +30,8 @@ GRAPH ?g { ?s ?p ?o } .
 LIMIT 1
 SPARQL
 
-        begin
-          results = @client.query(sparql_query)
-        rescue SPARQL::Client::MalformedQuery
-          set_error('sparql query is malformed in this endpoint')
-          return false
-        rescue => e
-          set_error(e.to_s)
-          return false
-        end
-
-        results != nil && results.count == 0
+        results = query(sparql_query)
+        return results != nil && results == 0
       end
 
       def http_subject?(uri)
@@ -56,16 +49,8 @@ WHERE {
 LIMIT 1
 SPARQL
 
-        begin
-          results = @client.query(sparql_query)
-        rescue SPARQL::Client::MalformedQuery
-          set_error('sparql query is malformed in this endpoint')
-          return false
-        rescue => e
-          set_error(e.to_s)
-          return false
-        end
-        results != nil && results.count == 0
+        results = query(sparql_query)
+        return results != nil && results == 0
       end
 
       def uri_provides_info?(uri)
@@ -102,15 +87,8 @@ WHERE {
 LIMIT 1
 OFFSET 100
 SPARQL
-        begin
-          results = @client.query(sparql_query)
-        rescue SPARQL::Client::MalformedQuery
-          set_error('sparql query is malformed in this endpoint')
-          return false
-        rescue => e
-          set_error(e.to_s)
-          return false
-        end
+
+        results = query(sparql_query)
         if results != nil && results[0] != nil
           results[0][:s]
         else
@@ -134,17 +112,8 @@ WHERE {
 }
 LIMIT 1
 SPARQL
-        begin
-          results = @client.query(sparql_query)
-        rescue SPARQL::Client::MalformedQuery
-          set_error('sparql query is malformed in this endpoint')
-          return false
-        rescue => e
-          set_error(e.to_s)
-          return false
-        end
-        results != nil && results.count > 0
-
+        results = query(sparql_query)
+        return results != nil && results.count > 0
       end
 
       def contains_see_also?
@@ -157,17 +126,31 @@ WHERE {
 }
 LIMIT 1
 SPARQL
+        results = query(sparql_query)
+        return results != nil && results.count > 0
+      end
+
+      def query(sparql_query)
         begin
           results = @client.query(sparql_query)
-        rescue SPARQL::Client::MalformedQuery
-          set_error('sparql query is malformed in this endpoint')
-          return false
+          if results.nil?
+            @client.response(sparql_query)
+            set_error('Endpoint URI is different from actual URI in executing query')
+            return nil
+          end
+        rescue SPARQL::Client::MalformedQuery => e
+          set_error("Query: #{sparql_query}, Error: #{e.message}")
+          return nil
+        rescue SPARQL::Client::ClientError, SPARQL::Client::ServerError => e
+          message = e.message.scan(REGEXP)[0]
+          set_error("Query: #{sparql_query}, Error: #{message.nil? ? '' : message[0]}")
+          return nil
         rescue => e
-          set_error(e.to_s)
-          return false
+          set_error("Query: #{sparql_query}, Error: #{e.to_s}")
+          return nil
         end
 
-        results != nil && results.count > 0
+        return results
       end
 
     end

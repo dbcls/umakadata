@@ -1,10 +1,12 @@
 require "yummydata/http_helper"
+require "yummydata/error_helper"
 
 module Yummydata
   module Criteria
     module Liveness
 
       include Yummydata::HTTPHelper
+      include Yummydata::ErrorHelper
 
       ##
       # A boolan value whether if the SPARQL endpoint is alive.
@@ -14,7 +16,12 @@ module Yummydata
       # @return [Boolean]
       def alive?(uri, time_out)
         response = http_get(uri, nil, time_out)
-        response.is_a? Net::HTTPOK
+        if response.is_a? Net::HTTPOK
+          return true
+        else
+          set_error(response)
+          return false
+        end
       end
     end
   end

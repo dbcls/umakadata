@@ -11,7 +11,7 @@ module Yummydata
       begin
         response = http.get(path, headers)
       rescue => e
-        return nil
+        return e.message
       end
 
       case response
@@ -34,7 +34,7 @@ module Yummydata
         response = http.get(resource, headers)
       rescue => e
         puts e
-        return nil
+        return e.message
       end
 
       case response

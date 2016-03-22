@@ -6,6 +6,8 @@ module Yummydata
   module Criteria
     module ExecutionTime
 
+      REGEXP = /<title>(.*)<\/title>/
+
       include Yummydata::ErrorHelper
 
       BASE_QUERY = <<-'SPARQL'
@@ -45,22 +47,29 @@ SPARQL
       end
 
       def response_time(sparql_query)
-        begin
-          start_time = Time.now
+        start_time = Time.now
 
+        begin
           result = @client.query(sparql_query)
           if result.nil?
             @client.response(sparql_query)
             set_error('Endpoint URI is different from actual URI in executing query')
             return nil
           end
+        rescue SPARQL::Client::MalformedQuery => e
+          set_error("Query: #{sparql_query}, Error: #{e.message}")
+          return nil
+        rescue SPARQL::Client::ClientError, SPARQL::Client::ServerError => e
+          message = e.message.scan(REGEXP)[0]
+          set_error("Query: #{sparql_query}, Error: #{message.nil? ? '' : message[0]}")
+          return nil
 
-          end_time = Time.now
         rescue => e
           set_error("Query: #{sparql_query}, Error: #{e.to_s}")
           return nil
         end
-
+        end_time = Time.now
+        
         end_time - start_time
       end
 
