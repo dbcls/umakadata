@@ -53,6 +53,11 @@ h1.page-header = @endpoint.name
                 | true if response header of endpoint contains 'access-control-allow-origin: *', otherwise false.
           td
             = @cors
+        tr
+          td
+            | Last Checked
+          td
+            = @evaluation.created_at.strftime("%Y/%m/%d %H:%M:%S")
 
   .col-xs-12.col-sm-6
     canvas#radar[width="400" height="400"]
