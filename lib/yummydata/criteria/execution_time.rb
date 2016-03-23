@@ -1,4 +1,5 @@
 require 'yummydata/http_helper'
+require 'yummydata/error_helper'
 require 'sparql/client'
 require 'rdf/turtle'
 
@@ -41,9 +42,11 @@ SPARQL
         if base_response_time.nil? || target_response_time.nil?
           return nil
         end
-
         execution_time = target_response_time - base_response_time
-        return execution_time < 0.0 ? nil : execution_time
+        if execution_time < 0.0
+          set_error('The response time of listing graph query was faster than the response time of ASK{} query')
+        end
+        return execution_time
       end
 
       def response_time(sparql_query)
