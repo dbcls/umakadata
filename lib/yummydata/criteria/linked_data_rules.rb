@@ -31,7 +31,7 @@ LIMIT 1
 SPARQL
 
         results = query(sparql_query)
-        return results != nil && results == 0
+        return results != nil && results.count == 0
       end
 
       def http_subject?(uri)
@@ -50,7 +50,7 @@ LIMIT 1
 SPARQL
 
         results = query(sparql_query)
-        return results != nil && results == 0
+        return results != nil && results.count == 0
       end
 
       def uri_provides_info?(uri)
@@ -75,7 +75,7 @@ SPARQL
           end
           return false
         end
-        return response.body.empty?
+        return !response.body.empty?
       end
 
       def get_subject_randomly
