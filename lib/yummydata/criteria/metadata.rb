@@ -433,7 +433,15 @@ SPARQL
           return nil
         rescue SPARQL::Client::ClientError, SPARQL::Client::ServerError => e
           message = e.message.scan(REGEXP)[0]
-          set_error("Query: #{query}, Error: #{message.nil? ? '' : message[0]}")
+          if message.nil?
+            result = e.message.scan(/"datatype":\s"(.*\n)/)[0]
+            if result.nil?
+              message = ''
+            else
+              message = result[0].chomp
+            end
+          end
+          set_error("Query: #{query}, Error: #{message}")
           return nil
         rescue => e
           set_error("Query: #{query}, Error: #{e.to_s}")
