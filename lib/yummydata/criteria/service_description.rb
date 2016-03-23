@@ -23,7 +23,20 @@ module Yummydata
 
         response = http_get(uri, headers, time_out)
 
-        return Yummydata::ServiceDescription.new(response)
+        if !response.is_a?(Net::HTTPSuccess)
+          if response.is_a? Net::HTTPResponse
+            set_error(response.code + "\s" + response.message)
+          else
+            set_error(response)
+          end
+        end
+
+        sd = Yummydata::ServiceDescription.new(response)
+
+        if sd.text.nil?
+          set_error("data format is not accepted")
+        end
+        return sd
       end
     end
   end

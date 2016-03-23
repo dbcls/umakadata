@@ -16,12 +16,15 @@ module Yummydata
       # @return [Boolean]
       def alive?(uri, time_out)
         response = http_get(uri, nil, time_out)
-        if response.is_a? Net::HTTPOK
-          return true
-        else
-          set_error(response)
+        if !response.is_a? Net::HTTPOK
+          if response.is_a? Net::HTTPResponse
+            set_error(response.code + "\s" + response.message)
+          else
+            set_error(response)
+          end
           return false
         end
+        return true
       end
     end
   end

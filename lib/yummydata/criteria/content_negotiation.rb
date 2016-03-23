@@ -24,7 +24,11 @@ SPARQL
 
         response = http_get_recursive(request, headers)
         if !response.is_a?(Net::HTTPSuccess)
-          set_error(response)
+          if response.is_a? Net::HTTPResponse
+            set_error(response.code + "\s" + response.message)
+          else
+            set_error(response)
+          end
           return false
         end
 

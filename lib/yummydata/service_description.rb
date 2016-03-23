@@ -36,10 +36,6 @@ module Yummydata
       @text = nil
       @modified = nil
       @response_header = ''
-      if !http_response.is_a?(Net::HTTPSuccess)
-        set_error(http_response)
-        return
-      end
       body = http_response.body
       data = triples(body, TURTLE)
       if (!data.nil?)

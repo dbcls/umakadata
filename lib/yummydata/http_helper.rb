@@ -14,12 +14,7 @@ module Yummydata
         return e.message
       end
 
-      case response
-      when Net::HTTPSuccess
-        return response
-      else
-        return response.code + "\s" + response.message
-      end
+      return response
     end
 
     def http_get_recursive(uri, headers = {}, time_out = 10, limit = 10)
@@ -43,7 +38,7 @@ module Yummydata
       when Net::HTTPRedirection
         return http_get_recursive(URI(response['location']), headers, time_out, limit - 1)
       else
-        return response.code + "\s" + response.message
+        return response
       end
     end
 
