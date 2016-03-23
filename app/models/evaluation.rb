@@ -23,7 +23,7 @@ class Evaluation < ActiveRecord::Base
       self.retrieve_linked_data_rules(retriever, eval)
 
       eval.execution_time = retriever.execution_time
-      eval.execution_time_error_reason = retriever.get_error if eval.execution_time.nil?
+      eval.execution_time_error_reason = retriever.get_error if eval.execution_time.nil? || eval.execution_time < 0.0
       eval.cool_uri_rate = retriever.cool_uri_rate
 
       eval.support_turtle_format = retriever.check_content_negotiation(Yummydata::DataFormat::TURTLE)
@@ -191,7 +191,7 @@ class Evaluation < ActiveRecord::Base
 
     #performance
     rates[5] = 100.0 * (1.0 - eval.execution_time) unless eval.execution_time.blank?
-    rates[5] = 0.0 if rates[5] < 0.0
+    rates[5] = 0.0 if rates[5] < 0.0 || 100.0 < rates[5]
 
     return rates.map{ |v| v.to_i }
   end
