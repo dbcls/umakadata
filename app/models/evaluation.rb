@@ -58,6 +58,10 @@ class Evaluation < ActiveRecord::Base
 
   def self.retrieve_service_description(retriever, eval)
     service_description = retriever.service_description
+    if service_description.nil?
+      eval.service_description_error_reason = retriever.get_error
+      return
+    end
     eval.service_description_error_reason = retriever.get_error if service_description.text.nil?
     eval.response_header     = service_description.response_header
     eval.service_description = service_description.text
@@ -68,10 +72,11 @@ class Evaluation < ActiveRecord::Base
     void = retriever.void_on_well_known_uri
     if void.nil?
       eval.void_ttl = nil
-      eval.void_ttl_error_reason = retriver.get_error
-    else
-      eval.void_ttl = void.text
+      eval.void_ttl_error_reason = retriever.get_error
+      return
     end
+    eval.void_ttl_error_reason = retriever.get_error if void.text.nil?
+    eval.void_ttl = void.text
   end
 
   def self.retrieve_linked_data_rules(retriever, eval)
