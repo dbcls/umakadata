@@ -177,7 +177,7 @@ class Evaluation < ActiveRecord::Base
   def self.check_update(retriever, eval)
     last_updated = retriever.last_updated
     if !last_updated.nil?
-      eval.last_updated = last_updated[:date]
+      eval.last_updated = last_updated[:date].strftime('%F')
       eval.last_updated_source = last_updated[:source]
       return
     end
@@ -187,16 +187,10 @@ class Evaluation < ActiveRecord::Base
 
     prevStatus = UpdateStatus.where(:endpoint_id => eval.endpoint_id).order('created_at DESC').first
     currentStatus = UpdateStatus.record(eval.endpoint_id, current)
-
-    if  UpdateStatus.different?(prevStatus, currentStatus)
-      eval.last_updated = Time.now.strftime('%Y-%m-%d %H:%M:%s')
-      eval.last_updated_source = 'Adhoc'
-      return
-    end
-
     previous = self.where(:endpoint_id => eval.endpoint_id).order('created_at DESC').first
-    if previous.nil?
-      eval.last_updated = Time.now.strftime('%Y-%m-%d %H:%M:%s')
+
+    if UpdateStatus.different?(prevStatus, currentStatus) || previous.nil?
+      eval.last_updated = Time.now.strftime('%F')
       eval.last_updated_source = 'Adhoc'
       return
     end
