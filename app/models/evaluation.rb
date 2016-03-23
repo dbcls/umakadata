@@ -44,6 +44,7 @@ class Evaluation < ActiveRecord::Base
     eval.alive_rate = Evaluation.calc_alive_rate(eval)
     eval.score = Evaluation.calc_score(eval)
     eval.rank  = Evaluation.calc_rank(eval.score)
+    eval.update_interval = Evaluation.calc_update_interval(eval)
 
     return eval if eval.save!
   end
@@ -94,6 +95,24 @@ class Evaluation < ActiveRecord::Base
     when (80..100) then 5
     else 1
     end
+  end
+
+  def self.calc_update_interval(eval)
+    intervals = self.where(endpoint_id: eval.endpoint_id).group(:last_updated).pluck(:last_updated)
+    return nil if intervals.empty?
+
+    last_updated = eval.last_updated
+    intervals.push(last_updated) unless intervals.include?(last_updated)
+    intervals.delete(nil) if intervals.include?(nil)
+    return nil unless intervals.size >= 2
+
+    intervals.sort!
+    sum = 0
+    for i in 0..intervals.size - 2
+      diff = intervals[i + 1] - intervals[i]
+      sum += diff.to_i
+    end
+    sum.to_f / (intervals.size - 1)
   end
 
   def self.rates(id)
@@ -158,7 +177,7 @@ class Evaluation < ActiveRecord::Base
   def self.check_update(retriever, eval)
     last_updated = retriever.last_updated
     if !last_updated.nil?
-      eval.last_updated = last_updated[:date]
+      eval.last_updated = last_updated[:date].strftime('%F')
       eval.last_updated_source = last_updated[:source]
       return
     end
@@ -168,16 +187,10 @@ class Evaluation < ActiveRecord::Base
 
     prevStatus = UpdateStatus.where(:endpoint_id => eval.endpoint_id).order('created_at DESC').first
     currentStatus = UpdateStatus.record(eval.endpoint_id, current)
-
-    if  UpdateStatus.different?(prevStatus, currentStatus)
-      eval.last_updated = Time.now.strftime('%Y-%m-%d %H:%M:%s')
-      eval.last_updated_source = 'Adhoc'
-      return
-    end
-
     previous = self.where(:endpoint_id => eval.endpoint_id).order('created_at DESC').first
-    if previous.nil?
-      eval.last_updated = Time.now.strftime('%Y-%m-%d %H:%M:%s')
+
+    if UpdateStatus.different?(prevStatus, currentStatus) || previous.nil?
+      eval.last_updated = Time.now.strftime('%F')
       eval.last_updated_source = 'Adhoc'
       return
     end
