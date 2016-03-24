@@ -9,10 +9,12 @@ module Yummydata
       path = uri.path.empty? ? '/' : uri.path
 
       begin
-        return http.get(path, headers)
+        response = http.get(path, headers)
       rescue => e
-        return nil
+        return e.message
       end
+
+      return response
     end
 
     def http_get_recursive(uri, headers = {}, time_out = 10, limit = 10)
@@ -27,7 +29,7 @@ module Yummydata
         response = http.get(resource, headers)
       rescue => e
         puts e
-        return nil
+        return e.message
       end
 
       case response
@@ -36,7 +38,7 @@ module Yummydata
       when Net::HTTPRedirection
         return http_get_recursive(URI(response['location']), headers, time_out, limit - 1)
       else
-        nil
+        return response
       end
     end
 

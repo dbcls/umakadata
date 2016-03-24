@@ -1,8 +1,13 @@
 require 'sparql/client'
+require 'yummydata/error_helper'
 
 module Yummydata
   module Criteria
     class BasicSPARQL
+
+      REGEXP = /<title>(.*)<\/title>/
+
+      include Yummydata::ErrorHelper
 
       def initialize(uri)
         @client = SPARQL::Client.new(uri)
@@ -22,10 +27,32 @@ module Yummydata
 
       def query(query)
         begin
-          return @client.query(query)
-        rescue
+          results = @client.query(query)
+          if results.nil?
+            @client.response(query)
+            set_error('Endpoint URI is different from actual URI in executing query')
+            return nil
+          end
+        rescue SPARQL::Client::MalformedQuery => e
+          set_error("Query: #{query}, Error: #{e.message}")
+          return nil
+        rescue SPARQL::Client::ClientError, SPARQL::Client::ServerError => e
+          message = e.message.scan(REGEXP)[0]
+          if message.nil?
+            result = e.message.scan(/"datatype":\s"(.*\n)/)[0]
+            if result.nil?
+              message = ''
+            else
+              message = result[0].chomp
+            end
+          end
+          set_error("Query: #{query}, Error: #{message}")
+        rescue => e
+          set_error("Query: #{query}, Error: #{e.to_s}")
           return nil
         end
+
+        return results
       end
 
     end

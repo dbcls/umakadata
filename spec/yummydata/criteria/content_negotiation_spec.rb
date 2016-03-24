@@ -17,6 +17,7 @@ describe 'Yummydata' do
           response = double(Net::HTTPResponse)
           allow(response).to receive(:content_type).and_return(Yummydata::DataFormat::TURTLE)
           allow(target).to receive(:http_get_recursive).and_return(response)
+          allow(response).to receive(:is_a?).and_return(true)
 
           result = target.check_content_negotiation(@uri, Yummydata::DataFormat::TURTLE)
           expect(result).to eq(true)
@@ -26,6 +27,7 @@ describe 'Yummydata' do
           response = double(Net::HTTPResponse)
           allow(response).to receive(:content_type).and_return(Yummydata::DataFormat::RDFXML)
           allow(target).to receive(:http_get_recursive).and_return(response)
+          allow(response).to receive(:is_a?).and_return(true)
 
           result = target.check_content_negotiation(@uri, Yummydata::DataFormat::TURTLE)
           expect(result).to eq(false)
@@ -35,6 +37,7 @@ describe 'Yummydata' do
           response = double(Net::HTTPResponse)
           allow(response).to receive(:content_type).and_return(Yummydata::DataFormat::RDFXML)
           allow(target).to receive(:http_get_recursive).and_return(response)
+          allow(response).to receive(:is_a?).and_return(true)
 
           result = target.check_content_negotiation(@uri, Yummydata::DataFormat::RDFXML)
           expect(result).to eq(true)
@@ -44,6 +47,7 @@ describe 'Yummydata' do
           response = double(Net::HTTPResponse)
           allow(response).to receive(:content_type).and_return(Yummydata::DataFormat::TURTLE)
           allow(target).to receive(:http_get_recursive).and_return(response)
+          allow(response).to receive(:is_a?).and_return(true)
 
           result = target.check_content_negotiation(@uri, Yummydata::DataFormat::RDFXML)
           expect(result).to eq(false)
@@ -53,6 +57,7 @@ describe 'Yummydata' do
           response = double(Net::HTTPResponse)
           allow(response).to receive(:content_type).and_return(Yummydata::DataFormat::HTML)
           allow(target).to receive(:http_get_recursive).and_return(response)
+          allow(response).to receive(:is_a?).and_return(true)
 
           result = target.check_content_negotiation(@uri, Yummydata::DataFormat::HTML)
           expect(result).to eq(true)
@@ -62,6 +67,7 @@ describe 'Yummydata' do
           response = double(Net::HTTPResponse)
           allow(response).to receive(:content_type).and_return(Yummydata::DataFormat::TURTLE)
           allow(target).to receive(:http_get_recursive).and_return(response)
+          allow(response).to receive(:is_a?).and_return(true)
 
           result = target.check_content_negotiation(@uri, Yummydata::DataFormat::HTML)
           expect(result).to eq(false)

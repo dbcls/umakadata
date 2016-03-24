@@ -1,4 +1,5 @@
 require 'yummydata/http_helper'
+require 'yummydata/error_helper'
 require 'yummydata/data_format'
 require "yummydata/service_description"
 
@@ -7,6 +8,7 @@ module Yummydata
     module ServiceDescription
 
       include Yummydata::HTTPHelper
+      include Yummydata::ErrorHelper
 
       SERVICE_DESC_CONTEXT_TYPE = [Yummydata::DataFormat::TURTLE, Yummydata::DataFormat::RDFXML].freeze
 
@@ -23,7 +25,21 @@ module Yummydata
 
         response = http_get(uri, headers, time_out)
 
-        return Yummydata::ServiceDescription.new(response)
+        if !response.is_a?(Net::HTTPSuccess)
+          if response.is_a? Net::HTTPResponse
+            set_error(response.code + "\s" + response.message)
+          else
+            set_error(response)
+          end
+          return nil
+        end
+
+        sd = Yummydata::ServiceDescription.new(response)
+
+        if sd.text.nil?
+          set_error("Neither turtle nor rdfxml format")
+        end
+        return sd
       end
     end
   end

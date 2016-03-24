@@ -1,11 +1,13 @@
 require 'rdf/turtle'
 require 'yummydata/data_format'
+require 'yummydata/error_helper'
 
 module Yummydata
 
   class VoID
 
     include Yummydata::DataFormat
+    include Yummydata::ErrorHelper
 
     ##
     # return the VoID as string
@@ -32,11 +34,12 @@ module Yummydata
     attr_reader :modified
 
     def initialize(http_response)
-      @text = http_response.body
-      data = triples(@text, TURTLE)
-      data = triples(@text, RDFXML) if data.nil?
+      body = http_response.body
+      data = triples(body, TURTLE)
+      data = triples(body, RDFXML) if data.nil?
       return if data.nil?
 
+      @text = body
       @license = []
       @publisher = []
       @modified = []
@@ -46,12 +49,7 @@ module Yummydata
         @modified.push object.to_s if predicate == RDF::URI('http://purl.org/dc/terms/modified')
       end
 
-      if @modified.empty?
-        @modified = nil
-      else
-        @modified = @modified[0]
-      end
-
+      @modified =  @modified.empty? ? nil : @modified[0]
     end
   end
 end

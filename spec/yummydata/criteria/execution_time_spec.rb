@@ -22,6 +22,7 @@ SPARQL
           allow(target).to receive(:response_time).with(Yummydata::Criteria::ExecutionTime::TARGET_QUERY)
             .and_return(10000)
           expect(target.execution_time(@uri)).not_to be_nil
+          expect(target.get_error).to eq nil
         end
 
         it 'should return nil when the response time of ask query is nil' do
@@ -45,7 +46,7 @@ SPARQL
             .and_return(10000)
           allow(target).to receive(:response_time).with(Yummydata::Criteria::ExecutionTime::TARGET_QUERY)
             .and_return(1000)
-          expect(target.execution_time(@uri)).to be_nil
+          expect(target.execution_time(@uri)).to eq (-9000)
         end
 
         it 'should return 9000 when the response time of ask query is 1000 and the one of target query is 10000' do
@@ -69,10 +70,12 @@ SPARQL
             target.instance_variable_set(:@uri, @uri)
             target.prepare(@uri)
 
-            client = double('client', :query => nil)
+            client = double('client')
+            allow(client).to receive(:query).and_raise(SPARQL::Client::MalformedQuery, 'Occured MalformedQuery')
             target.set_client(client)
 
             expect(target.response_time(MALFORMED_QUERY)).to eq nil
+            expect(target.get_error).to eq "Query: ASK{\n, Error: Occured MalformedQuery"
           end
 
           it 'should return time when query is correctly' do
@@ -84,6 +87,7 @@ SPARQL
 
            expect(target.response_time(Yummydata::Criteria::ExecutionTime::BASE_QUERY).instance_of?(Float)).to be true
            expect(target.response_time(Yummydata::Criteria::ExecutionTime::TARGET_QUERY).instance_of?(Float)).to be true
+           expect(target.get_error).to eq nil
          end
        end
 

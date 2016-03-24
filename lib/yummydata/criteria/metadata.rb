@@ -1,9 +1,14 @@
 require "yummydata/http_helper"
 require "sparql/client"
+require 'yummydata/error_helper'
 
 module Yummydata
   module Criteria
     module Metadata
+
+      REGEXP = /<title>(.*)<\/title>/
+
+      include Yummydata::ErrorHelper
 
       SKIP_GRAPH_LIST = [
         'http://www.openlinksw.com/schemas/virtrdf#'
@@ -27,9 +32,7 @@ module Yummydata
       def metadata(uri)
         client = SPARQL::Client.new(uri)
         graphs = self.list_of_graph_uris(client)
-        return nil if !graphs
 
-        index = 0
         metadata = {}
         graphs.each do |graph|
           classes = self.classes_on_graph(client, graph)
@@ -111,7 +114,7 @@ WHERE {
 }
 SPARQL
         results = self.query_metadata(client, query)
-        return [] if !results
+        return [] if results.nil?
         results.map { |solution| solution[:g] }
       end
 
@@ -145,7 +148,7 @@ WHERE {
 LIMIT 100
 SPARQL
         results = self.query_metadata(client, query)
-        return [] if !results
+        return [] if results.nil?
         results.map { |solution| solution[:c] }
       end
 
@@ -157,7 +160,7 @@ FROM <#{graph}>
 WHERE { [] rdf:type ?c. }
 SPARQL
         results = self.query_metadata(client, query)
-        return [] if !results
+        return [] if results.nil?
         results.map { |solution| solution[:c] }
       end
 
@@ -169,7 +172,7 @@ FROM <#{graph}>
 WHERE{ <#{cls}> rdfs:label ?label. }
 SPARQL
         results = self.query_metadata(client, query)
-        return [] if !results
+        return [] if results.nil?
         results.map { |solution| solution[:label] }
       end
 
@@ -187,7 +190,7 @@ WHERE {
 }
 SPARQL
         results = self.query_metadata(client, query)
-        return [] if !results
+        return [] if results.nil?
         results.map { |solution| solution[:label] }
       end
 
@@ -206,7 +209,7 @@ WHERE{
 }
 SPARQL
         results = self.query_metadata(client, query)
-        return 0 if !results
+        return 0 if results.nil?
         return results[0][:num]
       end
 
@@ -219,7 +222,7 @@ WHERE{
 }
 SPARQL
         results = self.query_metadata(client, query)
-        return [] if !results
+        return [] if results.nil?
         results.map { |solution| solution[:p] }
       end
 
@@ -233,7 +236,7 @@ WHERE {
 }
 SPARQL
         results = self.query_metadata(client, query)
-        return [] if !results
+        return [] if results.nil?
         results.map { |solution| solution[:d] }
       end
 
@@ -247,7 +250,7 @@ WHERE{
 }
 SPARQL
         results = self.query_metadata(client, query)
-        return [] if !results
+        return [] if results.nil?
         results.map { |solution| solution[:d] }
       end
 
@@ -264,7 +267,7 @@ WHERE{
 }
 SPARQL
         results = self.query_metadata(client, query)
-        return [] if !results
+        return [] if results.nil?
         results.map { |solution| [ solution[:d], solution[:r] ] }
       end
 
@@ -280,7 +283,7 @@ WHERE{
 }
 SPARQL
         results = self.query_metadata(client, query)
-        return [] if !results
+        return [] if results.nil?
         results.map { |solution| [ solution[:d], solution[:ldt] ] }
       end
 
@@ -298,7 +301,7 @@ WHERE {
 }
 SPARQL
         results = self.query_metadata(client, query)
-        return nil if !results
+        return nil if results.nil?
         return [ results[0][:numTriples], results[0][:numDomIns], results[0][:numRanIns] ]
       end
 
@@ -316,7 +319,7 @@ WHERE{
 }
 SPARQL
         results = self.query_metadata(client, query)
-        return nil if !results
+        return nil if results.nil?
         return [ results[0][:numTriples], results[0][:numDomIns], results[0][:numRanIns] ]
       end
 
@@ -329,7 +332,7 @@ WHERE{
 }
 SPARQL
         results = self.query_metadata(client, query)
-        return nil if !results
+        return nil if results.nil?
         return [ results[0][:numTriples], results[0][:numDomIns], results[0][:numRanIns] ]
       end
 
@@ -347,7 +350,7 @@ WHERE {
 }
 SPARQL
         results = self.query_metadata(client, query)
-        return nil if !results
+        return nil if results.nil?
         return [ results[0][:numDomIns], results[0][:numTriplesWithDom] ]
       end
 
@@ -365,7 +368,7 @@ WHERE {
 }
 SPARQL
         results = self.query_metadata(client, query)
-        return nil if !results
+        return nil if results.nil?
         return [ results[0][:numRanIns], results[0][:numTriplesWithRan] ]
       end
 
@@ -382,7 +385,7 @@ WHERE {
 }
 SPARQL
         results = self.query_metadata(client, query)
-        return nil if !results
+        return nil if results.nil?
         return [ results[0][:numRanIns], results[0][:numTriplesWithRan] ]
       end
 
@@ -397,7 +400,7 @@ WHERE{
 }
 SPARQL
         results = self.query_metadata(client, query)
-        return [] if !results
+        return [] if results.nil?
         results.map { |solution| [ solution[:p], solution[:d], solution[:r] ] }
       end
 
@@ -411,16 +414,38 @@ WHERE{
 }
 SPARQL
         results = self.query_metadata(client, query)
-        return [] if !results
+        return [] if results.nil?
         results.map { |solution| solution[:ldt] }
       end
 
       def query_metadata(client, query)
         begin
           results = client.query(query)
+          if results.nil?
+            client.response(query)
+            set_error('Endpoint URI is different from actual URI in executing query')
+            return nil
+          end
+        rescue SPARQL::Client::MalformedQuery => e
+          set_error("Query: #{query}, Error: #{e.message}")
+          return nil
+        rescue SPARQL::Client::ClientError, SPARQL::Client::ServerError => e
+          message = e.message.scan(REGEXP)[0]
+          if message.nil?
+            result = e.message.scan(/"datatype":\s"(.*\n)/)[0]
+            if result.nil?
+              message = ''
+            else
+              message = result[0].chomp
+            end
+          end
+          set_error("Query: #{query}, Error: #{message}")
+          return nil
         rescue => e
-          return false
+          set_error("Query: #{query}, Error: #{e.to_s}")
+          return nil
         end
+
         return results
       end
 

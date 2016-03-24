@@ -1,10 +1,14 @@
 require 'yummydata/http_helper'
+require 'yummydata/error_helper'
 
 module Yummydata
   module Criteria
     module LinkedDataRules
 
       include Yummydata::HTTPHelper
+      include Yummydata::ErrorHelper
+
+      REGEXP = /<title>(.*)<\/title>/
 
       def prepare(uri)
         @client = SPARQL::Client.new(uri, {'read_timeout': 5 * 60}) if @uri == uri && @client == nil
@@ -26,13 +30,8 @@ GRAPH ?g { ?s ?p ?o } .
 LIMIT 1
 SPARQL
 
-        begin
-          results = @client.query(sparql_query)
-        rescue => e
-          return false
-        end
-
-        results != nil && results.count == 0
+        results = query(sparql_query)
+        return results != nil && results.count == 0
       end
 
       def http_subject?(uri)
@@ -43,19 +42,15 @@ SELECT
   *
 WHERE {
   GRAPH ?g { ?s ?p ?o } .
-  filter (!regex(?s, "http://", "i")  !isBLANK(?s) && ?g NOT IN (
+  filter (!regex(?s, "http://", "i") && !isBLANK(?s) && ?g NOT IN (
     <http://www.openlinksw.com/schemas/virtrdf#>
   ))
 }
 LIMIT 1
 SPARQL
 
-        begin
-          results = @client.query(sparql_query)
-        rescue => e
-          return false
-        end
-        results != nil && results.count == 0
+        results = query(sparql_query)
+        return results != nil && results.count == 0
       end
 
       def uri_provides_info?(uri)
@@ -71,7 +66,16 @@ SPARQL
           puts "INVALID URI: #{uri}"
           return false
         end
-        response.is_a?(Net::HTTPSuccess) && !response.body.empty?
+
+        if !response.is_a?(Net::HTTPSuccess)
+          if response.is_a? Net::HTTPResponse
+            set_error(response.code + "\s" + response.message)
+          else
+            set_error(response)
+          end
+          return false
+        end
+        return !response.body.empty?
       end
 
       def get_subject_randomly
@@ -87,11 +91,8 @@ WHERE {
 LIMIT 1
 OFFSET 100
 SPARQL
-        begin
-          results = @client.query(sparql_query)
-        rescue => e
-          return nil
-        end
+
+        results = query(sparql_query)
         if results != nil && results[0] != nil
           results[0][:s]
         else
@@ -115,12 +116,8 @@ WHERE {
 }
 LIMIT 1
 SPARQL
-        begin
-          results = @client.query(sparql_query)
-        rescue => e
-          return false
-        end
-        results != nil && results.count > 0
+        results = query(sparql_query)
+        return results != nil && results.count > 0
       end
 
       def contains_see_also?
@@ -133,12 +130,38 @@ WHERE {
 }
 LIMIT 1
 SPARQL
+        results = query(sparql_query)
+        return results != nil && results.count > 0
+      end
+
+      def query(sparql_query)
         begin
           results = @client.query(sparql_query)
+          if results.nil?
+            @client.response(sparql_query)
+            set_error('Endpoint URI is different from actual URI in executing query')
+            return nil
+          end
+        rescue SPARQL::Client::MalformedQuery => e
+          set_error("Query: #{sparql_query}, Error: #{e.message}")
+          return nil
+        rescue SPARQL::Client::ClientError, SPARQL::Client::ServerError => e
+          message = e.message.scan(REGEXP)[0]
+          if message.nil?
+            result = e.message.scan(/"datatype":\s"(.*\n)/)[0]
+            if result.nil?
+              message = ''
+            else
+              message = result[0].chomp
+            end
+          end
+          set_error("Query: #{sparql_query}, Error: #{message}")
         rescue => e
-          return false
+          set_error("Query: #{sparql_query}, Error: #{e.to_s}")
+          return nil
         end
-        results != nil && results.count > 0
+
+        return results
       end
 
     end
