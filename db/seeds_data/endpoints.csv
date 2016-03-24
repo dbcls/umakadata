@@ -92,3 +92,6 @@ Washington University NIMH Genetics,https://eaglei.nimhgenetics.org/sparqler/spa
 Xavier University of Louisiana,https://xula.eagle-i.net/sparqler/sparql
 Medical Subject Headings (MeSH) RDF Linked Data,https://id.nlm.nih.gov/mesh/sparql
 Ensembl,https://www.ebi.ac.uk/rdf/services/ensembl/sparql
+Microbial Genome Database for Comparative Analysis (MBGD),http://sparql.nibb.ac.jp/sparql
+Identifiers.org,http://identifiers.org/services/servlet/query
+MIcrobeDB.jp,http://genome.microbedb.jp/sparql
