@@ -95,3 +95,4 @@ Ensembl,https://www.ebi.ac.uk/rdf/services/ensembl/sparql
 Microbial Genome Database for Comparative Analysis (MBGD),http://sparql.nibb.ac.jp/sparql
 Identifiers.org,http://identifiers.org/services/servlet/query
 MIcrobeDB.jp,http://genome.microbedb.jp/sparql
+LinkDB,http://www.genome.jp/sparql/linkdb
