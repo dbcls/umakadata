@@ -85,6 +85,7 @@ h1.page-header = @endpoint.name
                   Alive rate shows how much the endpoint was alive in these 30 days.
           td.availability
             = @evaluation.alive.to_s + " (" + @evaluation.alive_rate.to_s + "%)"
+            = render partial: "error_icon", locals: { message: @evaluation.alive_error_reason } unless @evaluation.alive_error_reason.nil?
         tr
           td.freshness
             | Freshness
@@ -112,7 +113,8 @@ h1.page-header = @endpoint.name
               span.medium
                 | true if Service Description can be retrieved as turtle or rdf+xml, otherwise false.
           td.operation
-            = !@evaluation.service_description.blank?
+            = !@evaluation.service_description.blank?.to_s
+            = render partial: "error_icon", locals: { message: @evaluation.service_description_error_reason } unless @evaluation.service_description_error_reason.nil?
         tr
           td.operation
             .yummydata-tooltip
@@ -120,7 +122,8 @@ h1.page-header = @endpoint.name
               span.small
                 | true if VoID can be found on well known URI, otherwise false.
           td.operation
-            = !@void.blank?
+            = !@void.blank?.to_s
+            = render partial: "error_icon", locals: { message: @evaluation.void_ttl_error_reason } unless @evaluation.void_ttl_error_reason.nil?
         tr
           td.usefulness rowspan=8
             | Usefulness
@@ -176,7 +179,8 @@ h1.page-header = @endpoint.name
                 a href="http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-builder-metadata/"
                   | http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-builder-metadata/
           td.usefulness
-            = @evaluation.metadata_score.nil? ? '-' : sprintf("%.2f", @evaluation.metadata_score)
+            = ( @evaluation.metadata_score.nil? ? '-' : sprintf("%.2f", @evaluation.metadata_score) )
+            = render partial: "error_icon", locals: { message: @evaluation.metadata_error_reason } unless @evaluation.metadata_error_reason.nil?
         tr
           td.usefulness
             .yummydata-tooltip
@@ -194,7 +198,8 @@ h1.page-header = @endpoint.name
               span
                 | Number of statements in the endpoint.
           td.usefulness
-            = @evaluation.number_of_statements.nil? ? 'N/A' : @evaluation.number_of_statements
+            = (@evaluation.number_of_statements.nil? ? 'N/A' : @evaluation.number_of_statements).to_s
+            = render partial: "error_icon", locals: { message: @evaluation.number_of_statements_error_reason } unless @evaluation.number_of_statements_error_reason.nil?
         tr
           td.usefulness
             .yummydata-tooltip
@@ -202,7 +207,8 @@ h1.page-header = @endpoint.name
               span.medium
                 | true if the endpoint returns a response in one of data formats(Turtle, RDF/XML, HTML), otherwise false.
           td.usefulness
-            = @evaluation.support_content_negotiation
+            = @evaluation.support_content_negotiation.to_s
+            = render partial: "error_icon", locals: { message: @evaluation.support_content_negotiation_error_reason } unless @evaluation.support_content_negotiation_error_reason.nil?
         tr
           td.usefulness
             .yummydata-tooltip
@@ -248,25 +254,29 @@ h1.page-header = @endpoint.name
                 | URIs are used as names?:
                 span
                   | true if all subjects are URI or blank node, otherwise false.
-              | #{@evaluation.subject_is_uri}
+              = @evaluation.subject_is_uri.to_s
+              = render partial: "error_icon", locals: { message: @evaluation.subject_is_uri_error_reason } unless @evaluation.subject_is_uri_error_reason.nil?
             .item
               .yummydata-tooltip
                 | HTTP URIs are used?:
                 span
                   | true if all subjects are HTTP URI or blank node, otherwise false.
-              | #{@evaluation.subject_is_http_uri}
+              = @evaluation.subject_is_http_uri.to_s
+              = render partial: "error_icon", locals: { message: @evaluation.subject_is_http_uri_error_reason } unless @evaluation.subject_is_http_uri_error_reason.nil?
             .item
               .yummydata-tooltip
                 | URI provides useful information?:
                 span
                   | true if we can get some data from a HTTP URI of a subject, otherwise false.
-              | #{@evaluation.uri_provides_info}
+              = @evaluation.uri_provides_info.to_s
+              = render partial: "error_icon", locals: { message: @evaluation.uri_provides_info_error_reason } unless @evaluation.uri_provides_info_error_reason.nil?
             .item
               .yummydata-tooltip
                 | Include links to other URIs?:
                 span
                   | true if the endpoint contains owl:sameAs or rdf:seeAlso dataset, otherwise false.
-              | #{@evaluation.contains_links}
+              = @evaluation.contains_links.to_s
+              = render partial: "error_icon", locals: { message: @evaluation.contains_links_error_reason } unless @evaluation.contains_links_error_reason.nil?
         tr
           td.validity
             .yummydata-tooltip
@@ -303,7 +313,8 @@ h1.page-header = @endpoint.name
                 | This value represents the calculation performance.
                 | It is calculated as a difference of the response time of ASK{} query and listing graph query.
           td.performance
-            = @evaluation.execution_time.nil? ? 'N/A' : @evaluation.execution_time
+            = (@evaluation.execution_time.nil? ? 'N/A' : @evaluation.execution_time).to_s
+            = render partial: "error_icon", locals: { message: @evaluation.execution_time_error_reason } unless @evaluation.execution_time_error_reason.nil?
 
 .row
   .col-sm-12
