@@ -37,7 +37,7 @@ module Yummydata
         sd = Yummydata::ServiceDescription.new(response)
 
         if sd.text.nil?
-          set_error("data format is not accepted")
+          set_error("Neither turtle nor rdfxml format")
         end
         return sd
       end

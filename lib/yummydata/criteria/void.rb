@@ -33,7 +33,7 @@ module Yummydata
         void = Yummydata::VoID.new(response)
 
         if void.text.nil?
-          set_error("data format is not accepted")
+          set_error("Neither turtle nor rdfxml format")
         end
         return void
       end

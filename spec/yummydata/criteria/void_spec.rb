@@ -66,7 +66,7 @@ describe 'Yummydata' do
           expect(void.license).to be_nil
           expect(void.publisher).to be_nil
           expect(void.modified).to be_nil
-          expect(target.get_error).to eq 'data format is not accepted'
+          expect(target.get_error).to eq 'Neither turtle nor rdfxml format'
         end
 
         it 'should set error message when invalid response is retrieved' do
