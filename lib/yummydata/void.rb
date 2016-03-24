@@ -34,11 +34,12 @@ module Yummydata
     attr_reader :modified
 
     def initialize(http_response)
-      @text = http_response.body
-      data = triples(@text, TURTLE)
-      data = triples(@text, RDFXML) if data.nil?
+      body = http_response.body
+      data = triples(body, TURTLE)
+      data = triples(body, RDFXML) if data.nil?
       return if data.nil?
 
+      @text = body
       @license = []
       @publisher = []
       @modified = []

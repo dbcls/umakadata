@@ -29,6 +29,7 @@ module Yummydata
           else
             set_error(response)
           end
+          return nil
         end
 
         sd = Yummydata::ServiceDescription.new(response)
