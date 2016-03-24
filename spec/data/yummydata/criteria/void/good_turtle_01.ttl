@@ -32,6 +32,6 @@
 
     dcterms:license <http://creativecommons.org/licenses/by/2.1/jp/> ;
     dcterms:publisher <http://www.example.org/Publisher> ;
-    dcterms:modified "2016-01-01 10:00:00" .
+    dcterms:modified "2014-01-01 10:00:00", "2016-01-01 10:00:00", "2015-01-01 10:00:00" .
 
 <http://example.org/Distance> a sd:Function .

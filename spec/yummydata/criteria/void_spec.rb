@@ -34,7 +34,6 @@ describe 'Yummydata' do
           expect(void.license.include?('http://creativecommons.org/licenses/by/2.1/jp/')).to be true
           expect(void.publisher.include?('http://www.example.org/Publisher')).to be true
           expect(void.modified.include?("2016-01-01 10:00:00")).to be true
-
         end
 
         it 'should return void object when valid response is retrieved of xml format' do
@@ -49,7 +48,7 @@ describe 'Yummydata' do
 
           expect(void.license.include?('http://creativecommons.org/licenses/by/2.1/jp/')).to be true
           expect(void.publisher.include?('http://www.example.org/Publisher')).to be true
-          expect(void.modified.include?("2016-01-01 10:00:00")).to be true
+          expect(void.modified).to eq Time.parse("2016-01-01 10:00:00")
         end
 
         it 'should return false description object when invalid response is retrieved' do

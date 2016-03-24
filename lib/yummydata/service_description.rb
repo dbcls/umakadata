@@ -49,12 +49,13 @@ module Yummydata
         end
       end
 
+      time = []
       data.each do |subject, predicate, object|
         if predicate == RDF::URI("http://purl.org/dc/terms/modified")
-          @modified = object.to_s
-          break
+          time.push Time.parse(object.to_s) rescue time.push nil
         end
       end
+      @modified = time.compact.max
 
       http_response.each_key do |key|
         @response_header << key << ": " << http_response[key] << "\n"
