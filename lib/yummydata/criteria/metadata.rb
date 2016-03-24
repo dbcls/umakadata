@@ -32,9 +32,7 @@ module Yummydata
       def metadata(uri)
         client = SPARQL::Client.new(uri)
         graphs = self.list_of_graph_uris(client)
-        return nil if !graphs
 
-        index = 0
         metadata = {}
         graphs.each do |graph|
           classes = self.classes_on_graph(client, graph)
