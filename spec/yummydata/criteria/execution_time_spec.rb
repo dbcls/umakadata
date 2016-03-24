@@ -31,7 +31,6 @@ SPARQL
           allow(target).to receive(:response_time).with(Yummydata::Criteria::ExecutionTime::TARGET_QUERY)
             .and_return(10000)
           expect(target.execution_time(@uri)).to be_nil
-          expect(target.get_error).to eq "failure in ask query"
         end
 
         it 'should return nil when the response time of target query is nil' do
@@ -40,7 +39,6 @@ SPARQL
           allow(target).to receive(:response_time).with(Yummydata::Criteria::ExecutionTime::TARGET_QUERY)
           .and_return(nil)
           expect(target.execution_time(@uri)).to be_nil
-          expect(target.get_error).to eq "failure in select query"
         end
 
         it 'should return nil when the response time of ask query is greater than the one of target query' do
@@ -48,7 +46,7 @@ SPARQL
             .and_return(10000)
           allow(target).to receive(:response_time).with(Yummydata::Criteria::ExecutionTime::TARGET_QUERY)
             .and_return(1000)
-          expect(target.execution_time(@uri)).to be_nil
+          expect(target.execution_time(@uri)).to eq (-9000)
         end
 
         it 'should return 9000 when the response time of ask query is 1000 and the one of target query is 10000' do
@@ -57,7 +55,6 @@ SPARQL
           allow(target).to receive(:response_time).with(Yummydata::Criteria::ExecutionTime::TARGET_QUERY)
             .and_return(10000)
           expect(target.execution_time(@uri)).to eq 9000
-          expect(target.get_error).to eq nil
         end
 
         it 'should return 0 when the response time of ask query is 10000 and the one of target query is 10000' do
@@ -66,7 +63,6 @@ SPARQL
           allow(target).to receive(:response_time).with(Yummydata::Criteria::ExecutionTime::TARGET_QUERY)
             .and_return(10000)
           expect(target.execution_time(@uri)).to eq 0
-          expect(target.get_error).to eq nil
         end
 
         describe '#response_time' do
@@ -79,7 +75,7 @@ SPARQL
             target.set_client(client)
 
             expect(target.response_time(MALFORMED_QUERY)).to eq nil
-            expect(target.get_error).to eq 'Occured MalformedQuery'
+            expect(target.get_error).to eq "Query: ASK{\n, Error: Occured MalformedQuery"
           end
 
           it 'should return time when query is correctly' do

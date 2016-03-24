@@ -68,7 +68,7 @@ describe 'Yummydata' do
           metadata = target.metadata(@uri)
 
           expect(metadata).to eq Hash.new
-          expect(target.get_error).to eq 'Occured MalformedQuery'
+          expect(target.get_error).to eq "Query: SELECT DISTINCT ?g\nWHERE {\n  GRAPH ?g\n  { ?s ?p ?o. }\n}\n, Error: Occured MalformedQuery"
         end
 
       end

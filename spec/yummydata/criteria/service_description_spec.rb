@@ -36,7 +36,7 @@ describe 'Yummydata' do
           expect(service_description.text).to eq valid_ttl
           expect(service_description.modified).to eq "2016-01-01 10:00:00"
           expect(!service_description.response_header.empty?).to be true
-          expect(service_description.get_error).to eq nil
+          expect(target.get_error).to eq nil
         end
 
         it 'should return service description object when response is retrieved of xml format' do
@@ -55,7 +55,7 @@ describe 'Yummydata' do
           expect(service_description.text).to eq valid_ttl
           expect(service_description.modified).to eq "2016-01-01 10:00:00"
           expect(!service_description.response_header.empty?).to be true
-          expect(service_description.get_error).to eq nil
+          expect(target.get_error).to eq nil
         end
 
         it 'should return service description object when response is retrieved of xml format' do
@@ -89,27 +89,32 @@ describe 'Yummydata' do
         end
 
         it 'should return false description object when client error response is retrieved' do
-          allow(target).to receive(:http_get).with(@uri, anything, 10).and_return("404 Not Found")
+          response = double(Net::HTTPNotFound)
+          allow(target).to receive(:http_get).with(@uri, anything, 10).and_return(response)
+          allow(response).to receive(:body)
+          allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(false)
+          allow(response).to receive(:is_a?).with(Net::HTTPResponse).and_return(true)
+          allow(response).to receive(:code).and_return('404')
+          allow(response).to receive(:message).and_return('Not Found')
 
           service_description = target.service_description(@uri, 10)
-
-          expect(service_description.type).to eq Yummydata::DataFormat::UNKNOWN
-          expect(service_description.text).to eq nil
-          expect(service_description.modified).to eq nil
-          expect(service_description.response_header).to eq ''
-          expect(service_description.get_error).to eq '404 Not Found'
+          expect(service_description).to be_nil
+          expect(target.get_error).to eq '404 Not Found'
         end
 
         it 'should return false description object when server error response is retrieved' do
-          allow(target).to receive(:http_get).with(@uri, anything, 10).and_return("500 Server Error")
+          response = double(Net::HTTPInternalServerError)
+          allow(target).to receive(:http_get).with(@uri, anything, 10).and_return(response)
+          allow(response).to receive(:body)
+          allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(false)
+          allow(response).to receive(:is_a?).with(Net::HTTPResponse).and_return(true)
+          allow(response).to receive(:code).and_return('500')
+          allow(response).to receive(:message).and_return('Internal Server Error')
 
           service_description = target.service_description(@uri, 10)
 
-          expect(service_description.type).to eq Yummydata::DataFormat::UNKNOWN
-          expect(service_description.text).to eq nil
-          expect(service_description.modified).to eq nil
-          expect(service_description.response_header).to eq ''
-          expect(service_description.get_error).to eq '500 Server Error'
+          expect(service_description).to be_nil
+          expect(target.get_error).to eq '500 Internal Server Error'
         end
 
       end

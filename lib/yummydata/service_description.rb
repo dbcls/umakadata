@@ -1,12 +1,10 @@
 require 'yummydata/data_format'
-require 'yummydata/error_helper'
 
 module Yummydata
 
   class ServiceDescription
 
     include Yummydata::DataFormat
-    include Yummydata::ErrorHelper
     ##
     # return the type of service description
     #

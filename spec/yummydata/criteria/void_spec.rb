@@ -57,28 +57,31 @@ describe 'Yummydata' do
           response = double(Net::HTTPResponse)
           allow(target).to receive(:http_get_recursive).with(@uri, anything, 10).and_return(response)
           allow(target).to receive(:well_known_uri).and_return(@uri)
-          allow(response).to receive(:is_a?).and_return(false)
-          allow(response).to receive(:each_key)
+          allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
           allow(response).to receive(:body).and_return(invalid_ttl)
 
           void = target.void_on_well_known_uri(@uri)
 
-          expect(void.license).to eq nil
-          expect(void.publisher).to eq nil
-          expect(void.modified).to eq nil
+          expect(void.text).to be_nil
+          expect(void.license).to be_nil
+          expect(void.publisher).to be_nil
+          expect(void.modified).to be_nil
+          expect(target.get_error).to eq 'data format is not accepted'
         end
 
         it 'should set error message when invalid response is retrieved' do
-          response = double(Net::HTTPResponse)
-          allow(target).to receive(:http_get_recursive).with(@uri, anything, 10).and_return("500 Server Error")
+          response = double(Net::HTTPInternalServerError)
+          allow(target).to receive(:http_get_recursive).with(@uri, anything, 10).and_return(response)
           allow(target).to receive(:well_known_uri).and_return(@uri)
+          allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(false)
+          allow(response).to receive(:is_a?).with(Net::HTTPResponse).and_return(true)
+          allow(response).to receive(:code).and_return('500')
+          allow(response).to receive(:message).and_return('Internal Server Error')
 
           void = target.void_on_well_known_uri(@uri)
 
-          expect(void.get_error).to eq "500 Server Error"
-          expect(void.license).to eq nil
-          expect(void.publisher).to eq nil
-          expect(void.modified).to eq nil
+          expect(void).to be_nil
+          expect(target.get_error).to eq "500 Internal Server Error"
         end
 
       end

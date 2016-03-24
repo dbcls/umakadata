@@ -1,4 +1,5 @@
 require 'yummydata/http_helper'
+require 'yummydata/error_helper'
 require 'yummydata/data_format'
 require "yummydata/service_description"
 
@@ -7,6 +8,7 @@ module Yummydata
     module ServiceDescription
 
       include Yummydata::HTTPHelper
+      include Yummydata::ErrorHelper
 
       SERVICE_DESC_CONTEXT_TYPE = [Yummydata::DataFormat::TURTLE, Yummydata::DataFormat::RDFXML].freeze
 
