@@ -112,7 +112,13 @@ h1.page-header = @endpoint.name
               span.medium
                 | true if Service Description can be retrieved as turtle or rdf+xml, otherwise false.
           td.operation
-            = (!@evaluation.service_description.blank?).to_s + "\s(" + (@evaluation.service_description_error_reason ||= '') + ")"
+            = (!@evaluation.service_description.blank?).to_s
+            - if !@evaluation.service_description_error_reason.nil?
+              '
+              .yummydata-tooltip
+                .glyphicon.glyphicon-exclamation-sign.text-danger
+                span.medium
+                  | #{@evaluation.service_description_error_reason}
         tr
           td.operation
             .yummydata-tooltip
