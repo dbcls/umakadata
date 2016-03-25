@@ -113,7 +113,7 @@ h1.page-header = @endpoint.name
               span.medium
                 | true if Service Description can be retrieved as turtle or rdf+xml, otherwise false.
           td.operation
-            = !@evaluation.service_description.blank?.to_s
+            = (!@evaluation.service_description.blank?).to_s
             = render partial: "error_icon", locals: { message: @evaluation.service_description_error_reason } unless @evaluation.service_description_error_reason.nil?
         tr
           td.operation
@@ -122,7 +122,7 @@ h1.page-header = @endpoint.name
               span.small
                 | true if VoID can be found on well known URI, otherwise false.
           td.operation
-            = !@void.blank?.to_s
+            = (!@void.blank?).to_s
             = render partial: "error_icon", locals: { message: @evaluation.void_ttl_error_reason } unless @evaluation.void_ttl_error_reason.nil?
         tr
           td.usefulness rowspan=8
