@@ -34,7 +34,7 @@ describe 'Yummydata' do
 
           expect(service_description.type).to eq Yummydata::DataFormat::TURTLE
           expect(service_description.text).to eq valid_ttl
-          expect(service_description.modified).to eq "2016-01-01 10:00:00"
+          expect(service_description.modified).to eq Time.parse('2016-01-01 10:00:00')
           expect(!service_description.response_header.empty?).to be true
           expect(target.get_error).to eq nil
         end
@@ -53,7 +53,7 @@ describe 'Yummydata' do
 
           expect(service_description.type).to eq Yummydata::DataFormat::RDFXML
           expect(service_description.text).to eq valid_ttl
-          expect(service_description.modified).to eq "2016-01-01 10:00:00"
+          expect(service_description.modified).to eq Time.parse("2016-01-01 10:00:00")
           expect(!service_description.response_header.empty?).to be true
           expect(target.get_error).to eq nil
         end
@@ -70,7 +70,7 @@ describe 'Yummydata' do
 
           expect(service_description.type).to eq Yummydata::DataFormat::RDFXML
           expect(service_description.text).to eq valid_ttl
-          expect(service_description.modified).to eq "2016-01-01 10:00:00"
+          expect(service_description.modified).to eq Time.parse("2016-01-01 10:00:00")
           expect(service_description.response_header.empty?).to be true
         end
 
