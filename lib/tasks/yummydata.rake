@@ -9,8 +9,9 @@ namespace :yummydata do
     end
   end
 
-  task :test => :environment do
-    endpoint = Endpoint.find(5)
+  desc "test for checking endpoint liveness"
+  task :test_crawl, ['name'] => :environment do |task, args|
+    endpoint = Endpoint.where("name LIKE ?", "%#{args[:name]}%").first
     puts endpoint.name
     retriever = Yummydata::Retriever.new endpoint.url
     Evaluation.record(endpoint, retriever)
