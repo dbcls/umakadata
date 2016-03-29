@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160318121943) do
+ActiveRecord::Schema.define(version: 20160329064548) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -71,8 +71,8 @@ ActiveRecord::Schema.define(version: 20160318121943) do
     t.boolean  "contains_links"
     t.integer  "score"
     t.integer  "rank"
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
+    t.datetime "created_at",                                         null: false
+    t.datetime "updated_at",                                         null: false
     t.integer  "cool_uri_rate"
     t.boolean  "support_content_negotiation"
     t.boolean  "support_turtle_format"
@@ -85,7 +85,7 @@ ActiveRecord::Schema.define(version: 20160318121943) do
     t.date     "last_updated"
     t.text     "last_updated_source"
     t.integer  "update_interval"
-    t.integer  "number_of_statements"
+    t.integer  "number_of_statements",                     limit: 8
     t.text     "alive_error_reason"
     t.text     "service_description_error_reason"
     t.text     "uri_subject_error_reason"
@@ -102,11 +102,11 @@ ActiveRecord::Schema.define(version: 20160318121943) do
 
   create_table "update_statuses", force: :cascade do |t|
     t.integer  "endpoint_id"
-    t.integer  "count"
+    t.integer  "count",       limit: 8
     t.text     "first"
     t.text     "last"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
   end
 
 end
