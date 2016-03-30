@@ -56,7 +56,7 @@ class EndpointsController < ApplicationController
 
   def service_descriptions
     count = { :true => 0, :false => 0 }
-    conditions = {'evaluations.latest': true}
+    conditions = {'evaluations.latest': true, 'evaluations.alive': true}
     @endpoints = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions)
     @endpoints.each do |endpoint|
       sd = endpoint.evaluation.service_description
