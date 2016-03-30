@@ -55,14 +55,14 @@ class EndpointsController < ApplicationController
   end
 
   def service_descriptions
-    count = Hash.new(0)
+    count = { :true => 0, :false => 0 }
     conditions = {'evaluations.latest': true}
     @endpoints = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions)
     @endpoints.each do |endpoint|
       sd = endpoint.evaluation.service_description
       sd.present? ? count[:true] += 1 : count[:false] += 1
     end
-    render :json => service_descriptions_json(count)
+    render :json => count
   end
 
   private
@@ -113,23 +113,6 @@ class EndpointsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def endpoint_params
       params.require(:endpoint).permit(:name, :url)
-    end
-
-    def service_descriptions_json(count)
-      [
-        {
-          value: count[:true],
-          color: "#00A0E9",
-          highlight: "#00B9EF",
-          label: "Have"
-        },
-        {
-          value: count[:false],
-          color: "#E60012",
-          highlight: "#FF5A5E",
-          label: "Do not have"
-        }
-      ]
     end
 
 end

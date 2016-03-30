@@ -8,7 +8,8 @@ $(function() {
     showPie($("#alive")[0].getContext("2d"), data);
   });
   var drawSd = $.getJSON("endpoints/service_descriptions", function(json) {
-    showPie($("#sd")[0].getContext("2d"), json);
+    data = make_sd_data(json)
+    showPie($("#sd")[0].getContext("2d"), data);
   });
 
   setTimeout(function(){ drawScores.abort(); }, 10000);
@@ -68,6 +69,22 @@ function make_alive_data(count) {
   ]
 }
 
+function make_sd_data(count) {
+  return [
+      {
+        value: count['true'],
+        color: "#00A0E9",
+        highlight: "#00B9EF",
+        label: "Have"
+      },
+      {
+        value: count['false'],
+        color: "#E60012",
+        highlight: "#FF5A5E",
+        label: "Do not have"
+      }
+    ]
+}
 function showPie(context, data) {
   new Chart(context).Pie(data);
 }
