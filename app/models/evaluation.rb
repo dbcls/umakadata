@@ -2,6 +2,25 @@ class Evaluation < ActiveRecord::Base
 
   belongs_to :endpoint
 
+  def self.lookup(endpoint_id, evaluation_id)
+    if evaluation_id.nil?
+      evaluation = Evaluation.where({endpoint_id: endpoint_id, latest: true}).first
+    else
+      evaluation = Evaluation.find(evaluation_id)
+      return nil if evaluation.nil?
+      return nil if evaluation[:endpoint_id].to_i != endpoint_id.to_i
+    end
+    return evaluation
+  end
+
+  def self.previous(endpoint_id, evaluation_id)
+    self.where('id < ?', evaluation_id).where(endpoint_id: endpoint_id).order('id DESC').first
+  end
+
+  def self.next(endpoint_id, evaluation_id)
+    self.where('id > ?', evaluation_id).where(endpoint_id: endpoint_id).order('id ASC').first
+  end
+
   def self.record(endpoint, retriever)
     self.transaction do
       self.where(endpoint_id: endpoint.id).update_all("latest = false")
@@ -137,8 +156,10 @@ class Evaluation < ActiveRecord::Base
     sum.to_f / (intervals.size - 1)
   end
 
-  def self.rates(id)
-    conditions = {'evaluations.endpoint_id': id, 'evaluations.latest': true}
+  def self.rates(id, evaluation_id)
+    conditions = {'evaluations.endpoint_id': id}
+    conditions['evaluations.latest'] = true if evaluation_id.nil?
+    conditions['evaluations.id'] = evaluation_id unless evaluation_id.nil?
     endpoint = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions).first
     evaluation = endpoint.evaluation
     return self.calc_rates(evaluation)
