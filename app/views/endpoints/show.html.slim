@@ -1,9 +1,24 @@
 javascript:
   $(function(){
-    showRader(#{@endpoint.id});
+    showRader(#{@endpoint.id}, #{@evaluation.id});
   });
 
 h1.page-header = @endpoint.name
+
+- if !@prev_evaluation.nil?
+  a href="/endpoints/#{@endpoint.id}/#{@prev_evaluation[:id]}"
+    | (
+    = @prev_evaluation[:created_at]
+    | ) <<
+
+- if !@prev_evaluation.nil? && !@next_evaluation.nil?
+  span &nbsp;&nbsp;&nbsp;
+
+- if !@next_evaluation.nil?
+  a href="/endpoints/#{@endpoint.id}/#{@next_evaluation[:id]}"
+    | >> (
+    = @next_evaluation[:created_at]
+    | )
 
 .row
   .col-xs-12.col-sm-6

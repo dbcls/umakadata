@@ -8,10 +8,10 @@ Rails.application.routes.draw do
   get  'api/endpoints/search'  => 'api#endpoints_search'
   get  'endpoints/graph'
   get  'endpoints/scores'
-  get  'endpoints/:id/rader' => 'endpoints#rader'
+  get  'endpoints/:id(/:evaluation_id)/rader' => 'endpoints#rader'
   get  'endpoints/alive'
   get  'endpoints/service_descriptions'
-  get  'endpoints/:id' => 'endpoints#show',  as: 'endpoint'
+  get  'endpoints/:id(/:evaluation_id)' => 'endpoints#show',  as: 'endpoint'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

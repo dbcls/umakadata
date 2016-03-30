@@ -34,7 +34,7 @@ class EndpointsController < ApplicationController
 
   def rader
     data = {
-      data: Evaluation.rates(params[:id]),
+      data: Evaluation.rates(params[:id], params[:evaluation_id]),
       avg: Evaluation.avg_rates
     }
     respond_to do |format|
@@ -66,12 +66,20 @@ class EndpointsController < ApplicationController
   end
 
   private
+    def render_404
+      render :file=>"/public/404.html", :status=>'404 Not Found'
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_endpoint
-      conditions = {'evaluations.latest': true}
-      @endpoints = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions)
-      @endpoint = @endpoints.find(params[:id])
-      @evaluation = @endpoint.evaluation
+      @endpoint = Endpoint.find(params[:id])
+      @evaluation = Evaluation.lookup(params[:id], params[:evaluation_id])
+      if @evaluation.nil?
+         render_404
+         return
+      end
+      @prev_evaluation = Evaluation.previous(@endpoint[:id], @evaluation[:id])
+      @next_evaluation = Evaluation.next(@endpoint[:id], @evaluation[:id])
 
       @cors = false
       if !@evaluation.response_header.blank?
