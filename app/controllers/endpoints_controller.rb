@@ -44,14 +44,14 @@ class EndpointsController < ApplicationController
   end
 
   def alive
-    count = Hash.new(0)
+    count = { :alive => 0, :dead => 0 }
     conditions = {'evaluations.latest': true}
     @endpoints = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions)
     @endpoints.each do |endpoint|
       alive = endpoint.evaluation.alive
       alive ? count[:alive] += 1 : count[:dead] += 1
     end
-    render :json => alive_json(count)
+    render :json => count
   end
 
   def service_descriptions
@@ -113,23 +113,6 @@ class EndpointsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def endpoint_params
       params.require(:endpoint).permit(:name, :url)
-    end
-
-    def alive_json(count)
-      [
-        {
-          value: count[:alive],
-          color: "#00A0E9",
-          highlight: "#00B9EF",
-          label: "Alive"
-        },
-        {
-          value: count[:dead],
-          color: "#E60012",
-          highlight: "#FF5A5E",
-          label: "Dead"
-        }
-      ]
     end
 
     def service_descriptions_json(count)

@@ -4,7 +4,8 @@ $(function() {
     showPie($("#score")[0].getContext("2d"), data);
   });
   var drawAlive = $.getJSON("endpoints/alive", function(json) {
-    showPie($("#alive")[0].getContext("2d"), json);
+    data = make_alive_data(json)
+    showPie($("#alive")[0].getContext("2d"), data);
   });
   var drawSd = $.getJSON("endpoints/service_descriptions", function(json) {
     showPie($("#sd")[0].getContext("2d"), json);
@@ -48,6 +49,23 @@ function make_score_data(count) {
         label: "Rank E"
       }
     ]
+}
+
+function make_alive_data(count) {
+  return [
+    {
+      value: count['alive'],
+      color: "#00A0E9",
+      highlight: "#00B9EF",
+      label: "Alive"
+    },
+    {
+      value: count['dead'],
+      color: "#E60012",
+      highlight: "#FF5A5E",
+      label: "Dead"
+    }
+  ]
 }
 
 function showPie(context, data) {
