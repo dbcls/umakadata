@@ -22,14 +22,14 @@ class EndpointsController < ApplicationController
   end
 
   def scores
-    count = Hash.new(0)
+    count = {1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0}
     conditions = {'evaluations.latest': true}
     @endpoints = Endpoint.includes(:evaluation).where(conditions).order('evaluations.score DESC')
     @endpoints.each do |endpoint|
       rank = endpoint.evaluation.rank
       count[rank] += 1
     end
-    render :json => scores_json(count)
+    render :json => count
   end
 
   def rader
@@ -113,41 +113,6 @@ class EndpointsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def endpoint_params
       params.require(:endpoint).permit(:name, :url)
-    end
-
-    def scores_json(count)
-      [
-        {
-          value: count[5],
-          color: "#1D2088",
-          highlight: "#6356A3",
-          label: "Rank A"
-        },
-        {
-          value: count[4],
-          color: "#00A0E9",
-          highlight: "#00B9EF",
-          label: "Rank B"
-        },
-        {
-          value: count[3],
-          color: "#009944",
-          highlight: "#03EB37",
-          label: "Rank C"
-        },
-        {
-          value: count[2],
-          color: "#FFF100",
-          highlight: "#FFF462",
-          label: "Rank D"
-        },
-        {
-          value: count[1],
-          color: "#E60012",
-          highlight: "#FF5A5E",
-          label: "Rank E"
-        }
-      ]
     end
 
     def alive_json(count)
