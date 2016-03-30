@@ -5,7 +5,6 @@ class Evaluation < ActiveRecord::Base
   def self.lookup(endpoint_id, evaluation_id)
     if evaluation_id.nil?
       evaluation = Evaluation.where({endpoint_id: endpoint_id, latest: true}).first
-      puts evaluation.inspect
     else
       evaluation = Evaluation.find(evaluation_id)
       return nil if evaluation.nil?
