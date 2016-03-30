@@ -7,18 +7,20 @@ h1.page-header = @endpoint.name
 
 - if !@prev_evaluation.nil?
   a href="/endpoints/#{@endpoint.id}/#{@prev_evaluation[:id]}"
-    | (
-    = @prev_evaluation[:created_at]
-    | ) <<
+    = @prev_evaluation[:created_at].getutc
+    | &nbsp;
+    = @prev_evaluation[:created_at].getutc.zone
+    | &nbsp; <<
 
 - if !@prev_evaluation.nil? && !@next_evaluation.nil?
   span &nbsp;&nbsp;&nbsp;
 
 - if !@next_evaluation.nil?
   a href="/endpoints/#{@endpoint.id}/#{@next_evaluation[:id]}"
-    | >> (
-    = @next_evaluation[:created_at]
-    | )
+    | >> &nbsp;
+    = @next_evaluation[:created_at].getutc
+    | &nbsp;
+    = @next_evaluation[:created_at].getutc.zone
 
 .row
   .col-xs-12.col-sm-6
@@ -72,7 +74,9 @@ h1.page-header = @endpoint.name
           td
             | Last Checked
           td
-            = @evaluation.created_at.strftime("%Y/%m/%d %H:%M:%S")
+            = @evaluation.created_at.getutc
+            | &nbsp;
+            = @evaluation.created_at.getutc.zone
 
   .col-xs-12.col-sm-6
     canvas#radar[width="400" height="400"]
