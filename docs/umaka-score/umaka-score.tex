@@ -155,10 +155,20 @@ We measure the two metrics:
   \item Service Description
 
   true if Service Description can be retrieved in Turtle format or RDF/XML format, otherwise false.
+  We access the endpoint URI wit the following HTTP Request Header:
+
+  \begin{mdframed}
+    Accept: text/turtle,application/rdf+xml
+  \end{mdframed}
 
   \item VoID
 
   true if VoID can be retrieved from well-known URI\cite{Alexandar:11:VoID} in Turtle format or RDFXML format, otherwise false.
+  We access the endpoint URI with the following HTTP Request Header:
+
+  \begin{mdframed}
+    Accept: text/turtle,application/rdf+xml
+  \end{mdframed}
 
 \end{itemize}
 
