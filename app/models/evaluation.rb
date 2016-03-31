@@ -56,7 +56,7 @@ class Evaluation < ActiveRecord::Base
 
 
       metadata = retriever.metadata
-      eval.metadata_error_reason = retriever.get_error if metadata.empty?
+      eval.metadata_error_reason = retriever.get_error
       eval.metadata_score = retriever.score_metadata(metadata)
       eval.ontology_score = retriever.score_ontologies(metadata)
       eval.vocabulary_score = retriever.score_vocabularies(metadata)
