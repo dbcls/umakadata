@@ -7,4 +7,4 @@ all:
 	pdflatex ${TARGET}
 
 clean:
-	rm *.aux *.bbl *.blg *.log *.pdf
+	rm *.aux *.bbl *.blg *.log *.pdf *.html *.lg *.dvi *.idv
