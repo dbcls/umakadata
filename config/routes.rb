@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   get  'endpoints/service_descriptions'
   get  'endpoints/:id(/:evaluation_id)' => 'endpoints#show',  as: 'endpoint'
 
+  get  'api/specifications' => 'api#specifications'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
