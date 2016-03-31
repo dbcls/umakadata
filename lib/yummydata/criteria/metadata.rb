@@ -1,6 +1,8 @@
-require "yummydata/http_helper"
-require "sparql/client"
+require 'json'
+require 'sparql/client'
 require 'yummydata/error_helper'
+require 'yummydata/http_helper'
+
 
 module Yummydata
   module Criteria
@@ -30,15 +32,36 @@ module Yummydata
       ]
 
       def metadata(uri)
+        metadata_error = {error: nil}
+        errors = nil
         client = SPARQL::Client.new(uri)
         graphs = self.list_of_graph_uris(client)
-
         metadata = {}
+        if graphs.empty?
+          metadata_error[:error] = 'graph'
+          metadata_error[:reason] = get_error
+          set_error(metadata_error.to_json)
+          return metadata
+        end
+
+        errors = {classes: {}, labels: {}, datatypes: {}, properties: {}}
+
         graphs.each do |graph|
           classes = self.classes_on_graph(client, graph)
+          error = get_error
+          errors[:classes][graph] = error unless error.nil?
+
           labels = list_of_labels_of_classes(client, graph, classes)
+          error = get_error
+          errors[:labels][graph] = error unless error.nil?
+
           datatypes = self.list_of_datatypes(client, graph)
+          error = get_error
+          errors[:datatypes][graph] = error unless error.nil?
+
           properties = self.list_of_properties_on_graph(client, graph)
+          error = get_error
+          errors[:properties][graph] = error unless error.nil?
           metadata[graph] = {
             classes: classes,
             labels: labels,
@@ -47,6 +70,11 @@ module Yummydata
           }
         end
 
+        if errors.values.inject(0) {|count, error| count + error.size} > 0
+          metadata_error[:error] = 'elements'
+          metadata_error[:reason] = errors
+        end
+        set_error(metadata_error.to_json)
         return metadata
       end
 
