@@ -71,10 +71,12 @@ h1.page-header = @endpoint.name
             | Last Checked
           td
             = @evaluation.created_at.getutc
+    | Please see&nbsp;
+    a href="/umaka-score.pdf" this document
+    | &nbsp;for more details about Umaka Score.
 
   .col-xs-12.col-sm-6
     canvas#radar[width="400" height="400"]
-
 
 .row
   .col-xs-24.col-sm-12
