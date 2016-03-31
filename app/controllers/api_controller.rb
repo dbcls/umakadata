@@ -1,4 +1,9 @@
+require 'json'
+
 class ApiController < ApplicationController
+
+  def specifications
+  end
 
   def endpoints_search
     @conditions = params
@@ -7,7 +12,7 @@ class ApiController < ApplicationController
     self.add_like_condition('name', params['name']) if !params['name'].blank?
     self.add_range_condition('evaluations.score', params['score_lower'], params['score_upper'])
     self.add_range_condition('evaluations.alive_rate', params['alive_rate_lower'], params['alive_rate_upper'])
-    self.add_equal_condition('evaluations.rank', params['rank']) if !params['rank'].blank?
+    self.add_rank_condition('evaluations.rank', params['rank']) if !params['rank'].blank?
     self.add_range_condition('evaluations.cool_uri_rate', params['cool_uri_rate_lower'], params['cool_uri_rate_upper'])
     self.add_range_condition('evaluations.ontology', params['ontology_lower'], params['ontology_upper'])
     self.add_range_condition('evaluations.metadata_score', params['metadata_lower'], params['metadata_upper'])
@@ -18,7 +23,7 @@ class ApiController < ApplicationController
     self.add_is_not_empty_condition('evaluations.support_html_format') if !params['html'].blank?
     self.add_is_not_empty_condition('evaluations.support_turtle_format') if !params['turtle'].blank?
     self.add_is_not_empty_condition('evaluations.support_xml_format') if !params['xml'].blank?
-    render :json => @endpoints.to_json(:include => [:evaluation])
+    render :json => JSON.pretty_generate(JSON.parse(@endpoints.to_json(:include => [:evaluation])))
   end
 
   def add_like_condition(column, value)
@@ -31,6 +36,11 @@ class ApiController < ApplicationController
 
   def add_equal_condition(column, value)
     @endpoints = @endpoints.where(column => value)
+  end
+
+  def add_rank_condition(column, value)
+    rank_values = { 'A' => 5, 'B' => 4, 'C' => 3, 'D' => 2, 'E' => 1 }
+    add_equal_condition(column, rank_values[value]) unless rank_values[value].nil?
   end
 
   def add_range_condition(column, lower, upper)
