@@ -6,7 +6,7 @@ module Yummydata
 
     UNKNOWN = 'unknown'
     TURTLE = 'text/turtle'.freeze
-    RDFXML = 'rdf+xml'.freeze
+    RDFXML = 'application/rdf+xml'.freeze
     HTML   = 'text/html'.freeze
 
     def xml?(str)
