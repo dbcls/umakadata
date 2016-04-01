@@ -110,9 +110,12 @@ class EndpointsController < ApplicationController
       @license = @license.join('<br/>')
       @publisher = @publisher.join('<br/>')
 
-      metadata_error_reason = JSON.parse(@evaluation.metadata_error_reason, {:symbolize_names => true})
+      error = nil
+      if !@evaluation.metadata_error_reason.nil?
+        metadata_error_reason = JSON.parse(@evaluation.metadata_error_reason, {:symbolize_names => true})
+        error = metadata_error_reason[:error]
+      end
 
-      error = metadata_error_reason[:error]
       if error.nil?
         @metadata_error_reason = nil
         return
@@ -136,10 +139,7 @@ class EndpointsController < ApplicationController
             "rdf:Property: #{properties.size}"
           ]
         }
-
       end
-
-      @metadata_error_reason
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
