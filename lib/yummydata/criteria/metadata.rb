@@ -49,19 +49,19 @@ module Yummydata
         graphs.each do |graph|
           classes = self.classes_on_graph(client, graph)
           error = get_error
-          errors[:classes][graph] = error unless error.nil?
+          errors[:classes][graph] = error.force_encoding('UTF-8') unless error.nil?
 
           labels = list_of_labels_of_classes(client, graph, classes)
           error = get_error
-          errors[:labels][graph] = error unless error.nil?
+          errors[:labels][graph] = error.force_encoding('UTF-8') unless error.nil?
 
           datatypes = self.list_of_datatypes(client, graph)
           error = get_error
-          errors[:datatypes][graph] = error unless error.nil?
+          errors[:datatypes][graph] = error.force_encoding('UTF-8') unless error.nil?
 
           properties = self.list_of_properties_on_graph(client, graph)
           error = get_error
-          errors[:properties][graph] = error unless error.nil?
+          errors[:properties][graph] = error.force_encoding('UTF-8') unless error.nil?
           metadata[graph] = {
             classes: classes,
             labels: labels,
