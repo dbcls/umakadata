@@ -41,13 +41,40 @@ module Yummydata
       return nil if str.nil? || str.empty?
 
       reader = nil
-      reader = make_reader_for_ttl(str) if type == TURTLE || (type.nil? && ttl?(str))
-      reader = make_reader_for_xml(str) if type == RDFXML || (type.nil? && xml?(str))
+      if type == TURTLE || (type.nil? && ttl?(str))
+        reader = make_reader_for_ttl(str)
+      elsif type == RDFXML || (type.nil? && xml?(str))
+        reader = make_reader_for_xml(str)
+        if !reader.nil?
+          class <<reader
+            def uri(value, append = nil)
+              append = RDF::URI(append)
+              value = RDF::URI(value)
+              value = if append.absolute?
+                        value = append
+                      elsif append
+                        value = value.join(append)
+                      else
+                        value
+                      end
+              # comment out since validate? does not consider blank nodes
+              # value.validate! if validate?
+              value.canonicalize! if canonicalize?
+              value = RDF::URI.intern(value) if intern?
+              value
+            end
+          end
+        end
+      end
       return nil if reader.nil?
 
       data = []
-      reader.each_triple do |subject, predicate, object|
-        data.push [subject, predicate, object]
+      begin
+        reader.each_triple do |subject, predicate, object|
+          data.push [subject, predicate, object]
+        end
+      rescue
+         puts $!
       end
       return data
     end
