@@ -195,7 +195,16 @@ h1.page-header = @endpoint.name
                   | http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-builder-metadata/
           td.usefulness
             = ( @evaluation.metadata_score.nil? ? '-' : sprintf("%.2f", @evaluation.metadata_score) )
-            = render partial: "error_icon", locals: { message: @evaluation.metadata_error_reason } unless @evaluation.metadata_error_reason.nil?
+            - unless @metadata_error_reason.nil?
+              '
+              .yummydata-tooltip
+                .glyphicon.glyphicon-exclamation-sign.text-danger
+                span.medium
+                  | #{@metadata_error_reason[:type]}
+                  br
+                  - for element in @metadata_error_reason[:elements]
+                    li
+                      | #{element}
         tr
           td.usefulness
             .yummydata-tooltip
