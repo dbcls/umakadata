@@ -1,7 +1,7 @@
 require 'rdf/turtle'
 require 'rdf/rdfxml'
 
-module Yummydata
+module Umakadata
   module DataFormat
 
     UNKNOWN = 'unknown'

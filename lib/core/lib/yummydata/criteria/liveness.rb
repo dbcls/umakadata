@@ -1,12 +1,12 @@
-require "yummydata/http_helper"
-require "yummydata/error_helper"
+require "umakadata/http_helper"
+require "umakadata/error_helper"
 
-module Yummydata
+module Umakadata
   module Criteria
     module Liveness
 
-      include Yummydata::HTTPHelper
-      include Yummydata::ErrorHelper
+      include Umakadata::HTTPHelper
+      include Umakadata::ErrorHelper
 
       ##
       # A boolan value whether if the SPARQL endpoint is alive.

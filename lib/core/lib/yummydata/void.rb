@@ -1,13 +1,13 @@
 require 'rdf/turtle'
-require 'yummydata/data_format'
-require 'yummydata/error_helper'
+require 'umakadata/data_format'
+require 'umakadata/error_helper'
 
-module Yummydata
+module Umakadata
 
   class VoID
 
-    include Yummydata::DataFormat
-    include Yummydata::ErrorHelper
+    include Umakadata::DataFormat
+    include Umakadata::ErrorHelper
 
     ##
     # return the VoID as string

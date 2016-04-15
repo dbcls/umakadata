@@ -1,5 +1,5 @@
-require "yummydata/retriever"
-require "yummydata/version"
+require "umakadata/retriever"
+require "umakadata/version"
 
-module Yummydata
+module Umakadata
 end

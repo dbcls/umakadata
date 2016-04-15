@@ -1,15 +1,15 @@
-require "yummydata/criteria/liveness"
-require "yummydata/criteria/service_description"
-require "yummydata/criteria/linked_data_rules"
-require "yummydata/criteria/void"
-require "yummydata/criteria/execution_time"
-require "yummydata/criteria/cool_uri"
-require "yummydata/criteria/content_negotiation"
-require "yummydata/criteria/metadata"
-require "yummydata/criteria/basic_sparql"
-require "yummydata/error_helper"
+require "umakadata/criteria/liveness"
+require "umakadata/criteria/service_description"
+require "umakadata/criteria/linked_data_rules"
+require "umakadata/criteria/void"
+require "umakadata/criteria/execution_time"
+require "umakadata/criteria/cool_uri"
+require "umakadata/criteria/content_negotiation"
+require "umakadata/criteria/metadata"
+require "umakadata/criteria/basic_sparql"
+require "umakadata/error_helper"
 
-module Yummydata
+module Umakadata
   class Retriever
 
     include ErrorHelper
@@ -18,17 +18,17 @@ module Yummydata
       @uri = URI(uri)
     end
 
-    include Yummydata::Criteria::Liveness
+    include Umakadata::Criteria::Liveness
     def alive?(time_out = 30)
       super(@uri, time_out)
     end
 
-    include Yummydata::Criteria::ServiceDescription
+    include Umakadata::Criteria::ServiceDescription
     def service_description(time_out = 30)
       super(@uri, time_out)
     end
 
-    include Yummydata::Criteria::LinkedDataRules
+    include Umakadata::Criteria::LinkedDataRules
     def uri_subject?
       super(@uri)
     end
@@ -42,7 +42,7 @@ module Yummydata
       super(@uri)
     end
 
-    include Yummydata::Criteria::VoID
+    include Umakadata::Criteria::VoID
     def well_known_uri
       super(@uri)
     end
@@ -50,22 +50,22 @@ module Yummydata
       super(@uri, time_out)
     end
 
-    include Yummydata::Criteria::ExecutionTime
+    include Umakadata::Criteria::ExecutionTime
     def execution_time
       super(@uri)
     end
 
-    include Yummydata::Criteria::CoolURI
+    include Umakadata::Criteria::CoolURI
     def cool_uri_rate
       super(@uri)
     end
 
-    include Yummydata::Criteria::ContentNegotiation
+    include Umakadata::Criteria::ContentNegotiation
     def check_content_negotiation(content_type)
       super(@uri, content_type)
     end
 
-    include Yummydata::Criteria::Metadata
+    include Umakadata::Criteria::Metadata
     def metadata
       super(@uri)
     end
@@ -81,7 +81,7 @@ module Yummydata
     end
 
     def count_first_last
-      sparql = Yummydata::Criteria::BasicSPARQL.new(@uri)
+      sparql = Umakadata::Criteria::BasicSPARQL.new(@uri)
       count = sparql.count_statements
       set_error(sparql.get_error) if count.nil?
 
@@ -97,7 +97,7 @@ module Yummydata
     end
 
     def number_of_statements
-      sparql = Yummydata::Criteria::BasicSPARQL.new(@uri)
+      sparql = Umakadata::Criteria::BasicSPARQL.new(@uri)
       v = sparql.count_statements
       set_error(sparql.get_error) if v.nil?
       return v

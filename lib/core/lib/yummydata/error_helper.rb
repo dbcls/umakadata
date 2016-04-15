@@ -1,4 +1,4 @@
-module Yummydata
+module Umakadata
   module ErrorHelper
 
     def set_error(value)

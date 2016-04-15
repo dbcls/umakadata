@@ -1,13 +1,13 @@
 require 'sparql/client'
-require 'yummydata/error_helper'
+require 'umakadata/error_helper'
 
-module Yummydata
+module Umakadata
   module Criteria
     class BasicSPARQL
 
       REGEXP = /<title>(.*)<\/title>/
 
-      include Yummydata::ErrorHelper
+      include Umakadata::ErrorHelper
 
       def initialize(uri)
         @client = SPARQL::Client.new(uri)

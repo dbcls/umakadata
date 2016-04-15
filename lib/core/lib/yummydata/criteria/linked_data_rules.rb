@@ -1,12 +1,12 @@
-require 'yummydata/http_helper'
-require 'yummydata/error_helper'
+require 'umakadata/http_helper'
+require 'umakadata/error_helper'
 
-module Yummydata
+module Umakadata
   module Criteria
     module LinkedDataRules
 
-      include Yummydata::HTTPHelper
-      include Yummydata::ErrorHelper
+      include Umakadata::HTTPHelper
+      include Umakadata::ErrorHelper
 
       REGEXP = /<title>(.*)<\/title>/
 

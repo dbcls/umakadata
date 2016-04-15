@@ -1,10 +1,10 @@
-require 'yummydata/data_format'
+require 'umakadata/data_format'
 
-module Yummydata
+module Umakadata
 
   class ServiceDescription
 
-    include Yummydata::DataFormat
+    include Umakadata::DataFormat
     ##
     # return the type of service description
     #

@@ -1,16 +1,16 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'yummydata/version'
+require 'umakadata/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "yummydata"
-  spec.version       = Yummydata::VERSION
+  spec.name          = "umakadata"
+  spec.version       = Umakadata::VERSION
   spec.authors       = ["Level Five Co., Ltd."]
   spec.email         = ["dev@level-five.jp"]
 
-  spec.summary       = "Yummy Data Tools"
-  spec.description   = "Yummy Data Tools"
+  spec.summary       = "Umaka Data Tools"
+  spec.description   = "Umaka Data Tools"
   spec.homepage      = "TODO: Put your gem's website or public repo URL here."
   spec.license       = "MIT"
 

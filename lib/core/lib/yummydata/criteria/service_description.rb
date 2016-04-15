@@ -1,23 +1,23 @@
-require 'yummydata/http_helper'
-require 'yummydata/error_helper'
-require 'yummydata/data_format'
-require "yummydata/service_description"
+require 'umakadata/http_helper'
+require 'umakadata/error_helper'
+require 'umakadata/data_format'
+require "umakadata/service_description"
 
-module Yummydata
+module Umakadata
   module Criteria
     module ServiceDescription
 
-      include Yummydata::HTTPHelper
-      include Yummydata::ErrorHelper
+      include Umakadata::HTTPHelper
+      include Umakadata::ErrorHelper
 
-      SERVICE_DESC_CONTEXT_TYPE = [Yummydata::DataFormat::TURTLE, Yummydata::DataFormat::RDFXML].freeze
+      SERVICE_DESC_CONTEXT_TYPE = [Umakadata::DataFormat::TURTLE, Umakadata::DataFormat::RDFXML].freeze
 
       ##
       # A string value that describes what services are provided at the SPARQL endpoint.
       #
       # @param       [Hash] opts
       # @option opts [Integer] :time_out Seconds to wait until connection is opened.
-      # @return      [Yummydata::ServiceDescription|nil]
+      # @return      [Umakadata::ServiceDescription|nil]
       def service_description(uri, time_out, content_type = nil)
         headers = {}
         headers['Accept'] = content_type
@@ -34,7 +34,7 @@ module Yummydata
           return nil
         end
 
-        sd = Yummydata::ServiceDescription.new(response)
+        sd = Umakadata::ServiceDescription.new(response)
 
         if sd.text.nil?
           set_error("Neither turtle nor rdfxml format")

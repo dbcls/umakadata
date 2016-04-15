@@ -1,15 +1,15 @@
-require 'yummydata/http_helper'
-require 'yummydata/error_helper'
+require 'umakadata/http_helper'
+require 'umakadata/error_helper'
 require 'sparql/client'
 require 'rdf/turtle'
 
-module Yummydata
+module Umakadata
   module Criteria
     module ExecutionTime
 
       REGEXP = /<title>(.*)<\/title>/
 
-      include Yummydata::ErrorHelper
+      include Umakadata::ErrorHelper
 
       BASE_QUERY = <<-'SPARQL'
 ASK{}

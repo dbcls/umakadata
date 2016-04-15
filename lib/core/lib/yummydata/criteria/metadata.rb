@@ -1,16 +1,16 @@
 require 'json'
 require 'sparql/client'
-require 'yummydata/error_helper'
-require 'yummydata/http_helper'
+require 'umakadata/error_helper'
+require 'umakadata/http_helper'
 
 
-module Yummydata
+module Umakadata
   module Criteria
     module Metadata
 
       REGEXP = /<title>(.*)<\/title>/
 
-      include Yummydata::ErrorHelper
+      include Umakadata::ErrorHelper
 
       SKIP_GRAPH_LIST = [
         'http://www.openlinksw.com/schemas/virtrdf#'

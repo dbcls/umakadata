@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe 'Yummydata' do
+describe 'Umakadata' do
   describe 'Linkset' do
     describe '#linksets' do
 
-      include Yummydata::DataFormat
+      include Umakadata::DataFormat
 
-      let(:test_class) { Struct.new(:target) { include Yummydata::Linkset } }
+      let(:test_class) { Struct.new(:target) { include Umakadata::Linkset } }
       let(:target) { test_class.new }
 
       it 'returns empty list if triples is empty' do

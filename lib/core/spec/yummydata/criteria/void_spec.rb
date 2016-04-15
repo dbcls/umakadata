@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe 'Yummydata' do
+describe 'Umakadata' do
   describe 'Criteria' do
     describe 'VoID' do
 
       describe '#void_on_well_known_uri' do
 
-        let(:test_class) { Struct.new(:target) { include Yummydata::Criteria::VoID } }
+        let(:test_class) { Struct.new(:target) { include Umakadata::Criteria::VoID } }
         let(:target) { test_class.new }
 
         before do
@@ -14,7 +14,7 @@ describe 'Yummydata' do
         end
 
         def read_file(file_name)
-          cwd = File.expand_path('../../../data/yummydata/criteria/void', __FILE__)
+          cwd = File.expand_path('../../../data/umakadata/criteria/void', __FILE__)
           File.open(File.join(cwd, file_name)) do |file|
             file.read
           end

@@ -1,13 +1,13 @@
 require 'spec_helper'
-require 'yummydata/criteria/metadata'
+require 'umakadata/criteria/metadata'
 
-describe 'Yummydata' do
+describe 'Umakadata' do
   describe 'Criteria' do
     describe 'Metadata' do
 
       describe '#metadata?' do
 
-        let(:test_class) { Struct.new(:target) { include Yummydata::Criteria::Metadata } }
+        let(:test_class) { Struct.new(:target) { include Umakadata::Criteria::Metadata } }
         let(:target) { test_class.new }
 
         before do
@@ -75,7 +75,7 @@ describe 'Yummydata' do
 
       describe '#score_metadata?' do
 
-        let(:test_class) { Struct.new(:target) { include Yummydata::Criteria::Metadata } }
+        let(:test_class) { Struct.new(:target) { include Umakadata::Criteria::Metadata } }
         let(:target) { test_class.new }
 
         it 'should return 0 if metadata is empty' do

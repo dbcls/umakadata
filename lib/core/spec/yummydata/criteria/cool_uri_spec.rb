@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe 'Yummydata' do
+describe 'Umakadata' do
   describe 'Criteria' do
     describe 'CoolURI' do
 
       describe '#cool_uri_rate' do
 
-        let(:test_class) { Struct.new(:target) { include Yummydata::Criteria::CoolURI } }
+        let(:test_class) { Struct.new(:target) { include Umakadata::Criteria::CoolURI } }
         let(:target) { test_class.new }
 
         it 'cool_uri_rate_should_be_100' do

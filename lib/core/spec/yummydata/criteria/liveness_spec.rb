@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe 'Yummydata' do
+describe 'Umakadata' do
   describe 'Criteria' do
     describe 'Liveness' do
 
       describe '#alive?' do
 
-        let(:test_class) { Struct.new(:target) { include Yummydata::Criteria::Liveness } }
+        let(:test_class) { Struct.new(:target) { include Umakadata::Criteria::Liveness } }
         let(:target) { test_class.new }
 
         before do

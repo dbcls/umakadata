@@ -1,6 +1,6 @@
 require 'net/http'
 
-module Yummydata
+module Umakadata
   module HTTPHelper
 
     def http_get(uri, headers, time_out = 10)

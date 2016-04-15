@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe 'Yummydata' do
+describe 'Umakadata' do
   describe 'Criteria' do
     describe 'ServiceDescription' do
 
       describe '#service_description' do
 
-        let(:test_class) { Struct.new(:target) { include Yummydata::Criteria::ServiceDescription } }
+        let(:test_class) { Struct.new(:target) { include Umakadata::Criteria::ServiceDescription } }
         let(:target) { test_class.new }
 
         before do
@@ -14,7 +14,7 @@ describe 'Yummydata' do
         end
 
         def read_file(file_name)
-          cwd = File.expand_path('../../../data/yummydata/criteria/service_description', __FILE__)
+          cwd = File.expand_path('../../../data/umakadata/criteria/service_description', __FILE__)
           File.open(File.join(cwd, file_name)) do |file|
             file.read
           end
@@ -32,7 +32,7 @@ describe 'Yummydata' do
 
           service_description = target.service_description(@uri, 10)
 
-          expect(service_description.type).to eq Yummydata::DataFormat::TURTLE
+          expect(service_description.type).to eq Umakadata::DataFormat::TURTLE
           expect(service_description.text).to eq valid_ttl
           expect(service_description.modified).to eq Time.parse('2016-01-01 10:00:00')
           expect(!service_description.response_header.empty?).to be true
@@ -51,7 +51,7 @@ describe 'Yummydata' do
 
           service_description = target.service_description(@uri, 10)
 
-          expect(service_description.type).to eq Yummydata::DataFormat::RDFXML
+          expect(service_description.type).to eq Umakadata::DataFormat::RDFXML
           expect(service_description.text).to eq valid_ttl
           expect(service_description.modified).to eq Time.parse("2016-01-01 10:00:00")
           expect(!service_description.response_header.empty?).to be true
@@ -68,7 +68,7 @@ describe 'Yummydata' do
 
           service_description = target.service_description(@uri, 10)
 
-          expect(service_description.type).to eq Yummydata::DataFormat::RDFXML
+          expect(service_description.type).to eq Umakadata::DataFormat::RDFXML
           expect(service_description.text).to eq valid_ttl
           expect(service_description.modified).to eq Time.parse("2016-01-01 10:00:00")
           expect(service_description.response_header.empty?).to be true
@@ -83,7 +83,7 @@ describe 'Yummydata' do
 
           service_description = target.service_description(@uri, 10)
 
-          expect(service_description.type).to eq Yummydata::DataFormat::UNKNOWN
+          expect(service_description.type).to eq Umakadata::DataFormat::UNKNOWN
           expect(service_description.text).to eq nil
           expect(service_description.response_header).to eq ''
         end

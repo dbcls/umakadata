@@ -1,16 +1,16 @@
-require 'yummydata/data_format'
-require 'yummydata/http_helper'
-require 'yummydata/void'
-require 'yummydata/error_helper'
+require 'umakadata/data_format'
+require 'umakadata/http_helper'
+require 'umakadata/void'
+require 'umakadata/error_helper'
 require 'uri/http'
 
-module Yummydata
+module Umakadata
   module Criteria
     module VoID
 
-      include Yummydata::DataFormat
-      include Yummydata::HTTPHelper
-      include Yummydata::ErrorHelper
+      include Umakadata::DataFormat
+      include Umakadata::HTTPHelper
+      include Umakadata::ErrorHelper
 
       WELL_KNOWN_VOID_PATH = "/.well-known/void".freeze
 
@@ -30,7 +30,7 @@ module Yummydata
           return nil
         end
 
-        void = Yummydata::VoID.new(response)
+        void = Umakadata::VoID.new(response)
 
         if void.text.nil?
           set_error("Neither turtle nor rdfxml format")

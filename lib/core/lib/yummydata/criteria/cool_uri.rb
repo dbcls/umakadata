@@ -1,10 +1,10 @@
-require 'yummydata/error_helper'
+require 'umakadata/error_helper'
 
-module Yummydata
+module Umakadata
   module Criteria
     module CoolURI
 
-      include Yummydata::ErrorHelper
+      include Umakadata::ErrorHelper
 
       def cool_uri_rate(uri)
         rate = 0

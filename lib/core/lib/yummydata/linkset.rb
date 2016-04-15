@@ -1,4 +1,4 @@
-module Yummydata
+module Umakadata
   module Linkset
 
     def linksets(triples)
