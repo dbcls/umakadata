@@ -5,17 +5,17 @@
 #   git config --global core.excludesfile '~/.gitignore_global'
 
 # Ignore bundler config.
-/.bundle
+/web/.bundle
 
 # Ignore the default SQLite database.
-/db/*.sqlite3
-/db/*.sqlite3-journal
+/web/db/*.sqlite3
+/web/db/*.sqlite3-journal
 
 # Ignore all logfiles and tempfiles.
-/log/*
-!/log/.keep
-/tmp
-/vendor/bundle
+/web/log/*
+!/web/log/.keep
+/web/tmp
+/web/vendor/bundle
 
 #
 # For core library
@@ -23,23 +23,23 @@
 
 *.gem
 *.rbc
-/lib/core/.config
-/lib/core/coverage/
-/lib/core/InstalledFiles
-/lib/core/pkg/
-/lib/core/spec/reports/
-/lib/core/spec/examples.txt
-/lib/core/test/tmp/
-/lib/core/test/version_tmp/
-/lib/core/tmp/
+/web/lib/core/.config
+/web/lib/core/coverage/
+/web/lib/core/InstalledFiles
+/web/lib/core/pkg/
+/web/lib/core/spec/reports/
+/web/lib/core/spec/examples.txt
+/web/lib/core/test/tmp/
+/web/lib/core/test/version_tmp/
+/web/lib/core/tmp/
 
 ## Documentation cache and generated files:
-/lib/core/.yardoc/
-/lib/core/_yardoc/
-/lib/core/doc/
-/lib/core/rdoc/
+/web/lib/core/.yardoc/
+/web/lib/core/_yardoc/
+/web/lib/core/doc/
+/web/lib/core/rdoc/
 
 ## Environment normalisation:
-/lib/core/.bundle/
-/lib/core/vendor/bundle
-/lib/core/lib/bundler/man/
+/web/lib/core/.bundle/
+/web/lib/core/vendor/bundle
+/web/lib/core/lib/bundler/man/
