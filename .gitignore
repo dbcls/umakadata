@@ -16,3 +16,30 @@
 !/log/.keep
 /tmp
 /vendor/bundle
+
+#
+# For core library
+#
+
+*.gem
+*.rbc
+/lib/core/.config
+/lib/core/coverage/
+/lib/core/InstalledFiles
+/lib/core/pkg/
+/lib/core/spec/reports/
+/lib/core/spec/examples.txt
+/lib/core/test/tmp/
+/lib/core/test/version_tmp/
+/lib/core/tmp/
+
+## Documentation cache and generated files:
+/lib/core/.yardoc/
+/lib/core/_yardoc/
+/lib/core/doc/
+/lib/core/rdoc/
+
+## Environment normalisation:
+/lib/core/.bundle/
+/lib/core/vendor/bundle
+/lib/core/lib/bundler/man/
