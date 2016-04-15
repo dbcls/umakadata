@@ -62,4 +62,4 @@ gem 'pundit'
 
 gem 'pg'
 
-gem 'yummydata', :path => './lib/core'
+gem 'umakadata', :path => './lib/core'

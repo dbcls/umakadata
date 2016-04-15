@@ -45,9 +45,9 @@ class Evaluation < ActiveRecord::Base
       eval.execution_time_error_reason = retriever.get_error if eval.execution_time.nil? || eval.execution_time < 0.0
       eval.cool_uri_rate = retriever.cool_uri_rate
 
-      eval.support_turtle_format = retriever.check_content_negotiation(Yummydata::DataFormat::TURTLE)
-      eval.support_xml_format    = retriever.check_content_negotiation(Yummydata::DataFormat::RDFXML)
-      eval.support_html_format   = retriever.check_content_negotiation(Yummydata::DataFormat::HTML)
+      eval.support_turtle_format = retriever.check_content_negotiation(Umakadata::DataFormat::TURTLE)
+      eval.support_xml_format    = retriever.check_content_negotiation(Umakadata::DataFormat::RDFXML)
+      eval.support_html_format   = retriever.check_content_negotiation(Umakadata::DataFormat::HTML)
       eval.support_content_negotiation = eval.support_turtle_format ||
                                          eval.support_xml_format ||
                                          eval.support_html_format

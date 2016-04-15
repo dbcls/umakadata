@@ -1,18 +1,18 @@
-div.yummydata-tooltip {
+div.umakadata-tooltip {
     color: #555;
     display: inline-block;                        /* インライン要素化 */
 }
 
-div.yummydata-tooltip span {
+div.umakadata-tooltip span {
     display: none;
 }
 
-div.yummydata-tooltip:hover {
+div.umakadata-tooltip:hover {
     position: relative;
     color: #333;
 }
 
-div.yummydata-tooltip:hover span {
+div.umakadata-tooltip:hover span {
     display: block;
     position: absolute;
     top: 25px;
@@ -24,19 +24,19 @@ div.yummydata-tooltip:hover span {
     z-index:100;
 }
 
-div.yummydata-tooltip span.large {
+div.umakadata-tooltip span.large {
   width: 600px
 }
 
-div.yummydata-tooltip span.medium {
+div.umakadata-tooltip span.medium {
   width: 400px
 }
 
-div.yummydata-tooltip span.small {
+div.umakadata-tooltip span.small {
   width: 200px
 }
 
-div.yummydata-tooltip span:before {
+div.umakadata-tooltip span:before {
   content:'';
   display:block;
   position:absolute;

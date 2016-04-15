@@ -19,7 +19,7 @@ GIT
 PATH
   remote: ./lib/core
   specs:
-    yummydata (0.9.0)
+    umakadata (0.9.0)
       rdf-rdfxml (~> 1.99)
       rdf-turtle (~> 1.99)
       sparql (~> 1.99)
@@ -325,7 +325,7 @@ DEPENDENCIES
   turbolinks
   uglifier (>= 1.3.0)
   web-console (~> 2.0)
-  yummydata!
+  umakadata!
 
 BUNDLED WITH
    1.11.2

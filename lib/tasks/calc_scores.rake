@@ -1,5 +1,5 @@
-namespace :yummydata do
-  desc "Calculate Yummydata score."
+namespace :umakadata do
+  desc "Calculate Umakadata score."
   task :calc_scores => :environment do
     Endpoint.all.each do |endpoint|
       puts endpoint.name

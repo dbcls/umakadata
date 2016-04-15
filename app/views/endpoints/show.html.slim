@@ -36,7 +36,7 @@ h1.page-header = @endpoint.name
               = @endpoint.url
         tr
           td
-            .yummydata-tooltip
+            .umakadata-tooltip
               | Organization Information
               span.small
                 | data specified by dcterms:publisher in VoID
@@ -44,7 +44,7 @@ h1.page-header = @endpoint.name
             = @publisher
         tr
           td
-            .yummydata-tooltip
+            .umakadata-tooltip
               | License Information
               span.small
                 | data specified by dcterms:license in VoID
@@ -52,7 +52,7 @@ h1.page-header = @endpoint.name
             = @license
         tr
           td
-            .yummydata-tooltip
+            .umakadata-tooltip
               | Rank
               span
                 |
@@ -60,7 +60,7 @@ h1.page-header = @endpoint.name
             = "Rank " + show_rank(@evaluation.rank) + " ( " + @evaluation.score.to_s + " ) "
         tr
           td
-            .yummydata-tooltip
+            .umakadata-tooltip
               | CORS
               span
                 | true if response header of endpoint contains 'access-control-allow-origin: *', otherwise false.
@@ -93,7 +93,7 @@ h1.page-header = @endpoint.name
             br
             #availability_score.feature_score
           td.availability
-            .yummydata-tooltip
+            .umakadata-tooltip
               | Alive (Alive Rate)
               span.medium
                 | The enpoint was alive or not when we cheked the endpoint last time. <br/>
@@ -107,7 +107,7 @@ h1.page-header = @endpoint.name
             br
             #freshness_score.feature_score
           td.freshness
-            .yummydata-tooltip
+            .umakadata-tooltip
               | Last Updated
               span.medium
                 | The last updated date. We decide the date as follows:
@@ -123,7 +123,7 @@ h1.page-header = @endpoint.name
             br
             #operation_score.feature_score
           td.operation
-            .yummydata-tooltip
+            .umakadata-tooltip
               | Service Description
               span.medium
                 | true if Service Description can be retrieved as turtle or rdf+xml, otherwise false.
@@ -132,7 +132,7 @@ h1.page-header = @endpoint.name
             = render partial: "error_icon", locals: { message: @evaluation.service_description_error_reason } unless @evaluation.service_description_error_reason.nil?
         tr
           td.operation
-            .yummydata-tooltip
+            .umakadata-tooltip
               | VoID
               span.small
                 | true if VoID can be found on well known URI, otherwise false.
@@ -145,7 +145,7 @@ h1.page-header = @endpoint.name
             br
             #usefulness_score.feature_score
           td.usefulness
-            .yummydata-tooltip
+            .umakadata-tooltip
               | Vocabulary
               span.medium
                 | This value shows the how many vocabularies are used in the endpoint.
@@ -162,7 +162,7 @@ h1.page-header = @endpoint.name
             = @evaluation.vocabulary_score.nil? ? '-' : sprintf("%.2f", @evaluation.vocabulary_score)
         tr
           td.usefulness
-            .yummydata-tooltip
+            .umakadata-tooltip
               |  Ontology
               span.medium
                 | This value show the how the endpoint use common ontologies.
@@ -179,7 +179,7 @@ h1.page-header = @endpoint.name
             = @evaluation.ontology_score.nil? ? '-' : sprintf("%.2f", @evaluation.ontology_score)
         tr
           td.usefulness
-            .yummydata-tooltip
+            .umakadata-tooltip
               |  Metadata
               span.medium
                 | This value shows how much metadata can be retrieved using the specified SPARQL query.
@@ -197,7 +197,7 @@ h1.page-header = @endpoint.name
             = ( @evaluation.metadata_score.nil? ? '-' : sprintf("%.2f", @evaluation.metadata_score) )
             - unless @metadata_error_reason.nil?
               '
-              .yummydata-tooltip
+              .umakadata-tooltip
                 .glyphicon.glyphicon-exclamation-sign.text-danger
                 span.medium
                   | #{@metadata_error_reason[:type]}
@@ -207,7 +207,7 @@ h1.page-header = @endpoint.name
                       | #{element}
         tr
           td.usefulness
-            .yummydata-tooltip
+            .umakadata-tooltip
               |  Links to Other Dataset
               span.medium
                 | List of datasets specified by void:Linkset in VoID
@@ -217,7 +217,7 @@ h1.page-header = @endpoint.name
               br
         tr
           td.usefulness
-            .yummydata-tooltip
+            .umakadata-tooltip
               | Data Entry
               span
                 | Number of statements in the endpoint.
@@ -226,7 +226,7 @@ h1.page-header = @endpoint.name
             = render partial: "error_icon", locals: { message: @evaluation.number_of_statements_error_reason } unless @evaluation.number_of_statements_error_reason.nil?
         tr
           td.usefulness
-            .yummydata-tooltip
+            .umakadata-tooltip
               |  Support for Content Negotiation
               span.medium
                 | true if the endpoint returns a response in one of data formats(Turtle, RDF/XML, HTML), otherwise false.
@@ -235,7 +235,7 @@ h1.page-header = @endpoint.name
             = render partial: "error_icon", locals: { message: @evaluation.support_content_negotiation_error_reason } unless @evaluation.support_content_negotiation_error_reason.nil?
         tr
           td.usefulness
-            .yummydata-tooltip
+            .umakadata-tooltip
               |  Support for HTML Data Format
               span.medium
                 | true if the endpoint returns a response in HTML format, otherwise false.
@@ -243,7 +243,7 @@ h1.page-header = @endpoint.name
             = @evaluation.support_html_format
         tr
           td.usefulness
-            .yummydata-tooltip
+            .umakadata-tooltip
               |  Support for Turtle Data Format
               span.medium
                 | true if the endpoint returns a response in Turtle format, otherwise false.
@@ -255,7 +255,7 @@ h1.page-header = @endpoint.name
             br
             #validity_score.feature_score
           td.validity
-            .yummydata-tooltip
+            .umakadata-tooltip
               | 4 Principles of Linked Data
               span.medium
                 | This shows how much the endpoint obey the following 4 principles of Linked Data:
@@ -274,28 +274,28 @@ h1.page-header = @endpoint.name
                   | https://www.w3.org/DesignIssues/LinkedData.html
           td.validity
             .item
-              .yummydata-tooltip
+              .umakadata-tooltip
                 | URIs are used as names?:
                 span
                   | true if all subjects are URI or blank node, otherwise false.
               = @evaluation.subject_is_uri.to_s
               = render partial: "error_icon", locals: { message: @evaluation.subject_is_uri_error_reason } unless @evaluation.subject_is_uri_error_reason.nil?
             .item
-              .yummydata-tooltip
+              .umakadata-tooltip
                 | HTTP URIs are used?:
                 span
                   | true if all subjects are HTTP URI or blank node, otherwise false.
               = @evaluation.subject_is_http_uri.to_s
               = render partial: "error_icon", locals: { message: @evaluation.subject_is_http_uri_error_reason } unless @evaluation.subject_is_http_uri_error_reason.nil?
             .item
-              .yummydata-tooltip
+              .umakadata-tooltip
                 | URI provides useful information?:
                 span
                   | true if we can get some data from a HTTP URI of a subject, otherwise false.
               = @evaluation.uri_provides_info.to_s
               = render partial: "error_icon", locals: { message: @evaluation.uri_provides_info_error_reason } unless @evaluation.uri_provides_info_error_reason.nil?
             .item
-              .yummydata-tooltip
+              .umakadata-tooltip
                 | Include links to other URIs?:
                 span
                   | true if the endpoint contains owl:sameAs or rdf:seeAlso dataset, otherwise false.
@@ -303,7 +303,7 @@ h1.page-header = @endpoint.name
               = render partial: "error_icon", locals: { message: @evaluation.contains_links_error_reason } unless @evaluation.contains_links_error_reason.nil?
         tr
           td.validity
-            .yummydata-tooltip
+            .umakadata-tooltip
               | Cool URI
               span.medium
                 | We score the cool URI according 4 criteria:
@@ -331,7 +331,7 @@ h1.page-header = @endpoint.name
             br
             #performance_score.feature_score
           td.performance
-            .yummydata-tooltip
+            .umakadata-tooltip
               | Execution Time
               span.medium
                 | This value represents the calculation performance.

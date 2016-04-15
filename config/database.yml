@@ -15,15 +15,15 @@ default: &default
 
 development:
   <<: *default
-  database: yummydata_development
+  database: umakadata_development
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: yummydata_test
+  database: umakadata_test
 
 production:
   <<: *default
-  database: yummydata_production
+  database: umakadata_production

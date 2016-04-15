@@ -1,13 +1,13 @@
 require 'json'
 require 'sparql/client'
 require 'rdf/turtle'
-require 'yummydata/data_format'
-require 'yummydata/linkset'
+require 'umakadata/data_format'
+require 'umakadata/linkset'
 
 class EndpointsController < ApplicationController
 
-  include Yummydata::DataFormat
-  include Yummydata::Linkset
+  include Umakadata::DataFormat
+  include Umakadata::Linkset
 
   before_action :set_endpoint, only: [:show]
 
