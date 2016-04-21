@@ -17,7 +17,7 @@ GIT
       sass-rails
 
 PATH
-  remote: ./lib/core
+  remote: ./lib/assets/umakadata
   specs:
     umakadata (0.9.0)
       rdf-rdfxml (~> 1.99)

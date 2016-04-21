@@ -62,4 +62,5 @@ gem 'pundit'
 
 gem 'pg'
 
-gem 'umakadata', :path => './lib/core'
+gem 'umakadata', :path => './lib/assets/umakadata'
+
