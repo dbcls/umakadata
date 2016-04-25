@@ -1,5 +1,5 @@
 name,url
-Pathway Commons @Malaga,http://150.214.214.5/pathwaycommons/
+Pathway Commons @Malaga,http://150.214.214.5/virtuoso/sparql/
 Pathway Commmons @BaderLab (Experimental),http://webservice.baderlab.org:3030/pc2/
 Linked Life Data,http://linkedlifedata.com/sparql
 National Center for Biomedical Ontologies,http://sparql.bioontology.org
@@ -54,7 +54,7 @@ BioModels,http://www.ebi.ac.uk/rdf/services/biomodels/sparql
 BioSamples,http://www.ebi.ac.uk/rdf/services/biosamples/sparql
 chEMBL,http://www.ebi.ac.uk/rdf/services/chembl/sparql
 Reactome,http://www.ebi.ac.uk/rdf/services/reactome/sparql
-UniProt,http://sparql.uniprot.org/
+UniProt,http://sparql.uniprot.org/sparql
 Bio2RDF,http://sparql.openlifedata.org/
 NBDC RDF Portal,http://integbio.jp/rdf/sparql
 Centrally Curated Resources,https://global.eagle-i.net/sparqler/sparql
