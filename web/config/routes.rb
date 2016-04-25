@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   get  'api/endpoints/search'  => 'api#endpoints_search'
   get  'endpoints/graph'
   get  'endpoints/scores'
-  get  'endpoints/:id(/:evaluation_id)/rader' => 'endpoints#rader'
+  get  'endpoints/:id(/:evaluation_id)/radar' => 'endpoints#radar'
   get  'endpoints/alive'
   get  'endpoints/service_descriptions'
   get  'endpoints/:id(/:evaluation_id)' => 'endpoints#show',  as: 'endpoint'

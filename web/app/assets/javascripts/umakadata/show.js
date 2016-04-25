@@ -1,5 +1,5 @@
-function showRader(endpoint_id, evaluation_id) {
-  $.getJSON("/endpoints/" + endpoint_id + "/rader", function(json) {
+function showRadar(endpoint_id, evaluation_id) {
+  $.getJSON("/endpoints/" + endpoint_id + "/radar", function(json) {
     var data = json['data']
     var avg = json['avg']
     var context = $("#radar")[0].getContext("2d");

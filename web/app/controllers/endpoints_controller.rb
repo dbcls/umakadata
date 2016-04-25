@@ -33,7 +33,7 @@ class EndpointsController < ApplicationController
     render :json => count
   end
 
-  def rader
+  def radar
     data = {
       data: Evaluation.rates(params[:id], params[:evaluation_id]),
       avg: Evaluation.avg_rates
