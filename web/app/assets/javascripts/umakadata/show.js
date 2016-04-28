@@ -52,3 +52,11 @@ function showRadar(endpoint_id, evaluation_id) {
     }
   });
 };
+function showScoreHistory(endpoint_id) {
+  $.getJSON("/endpoints/" + endpoint_id + "/score_history", function(json) {
+    var context = $("#score_history")[0].getContext("2d");
+    new Chart(context).Line(json, {
+      bezierCurve: false,
+    });
+  });
+}
