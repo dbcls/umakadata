@@ -52,11 +52,16 @@ function showRadar(endpoint_id, evaluation_id) {
     }
   });
 };
+
+
 function showScoreHistory(endpoint_id) {
   $.getJSON("/endpoints/" + endpoint_id + "/score_history", function(json) {
-    var context = $("#score_history")[0].getContext("2d");
-    new Chart(context).Line(json, {
-      bezierCurve: false,
+    var context = document.querySelector("#score_history").getContext("2d");
+    var lineChart = new Chart(context).Line(json, {
+      datasetFill: false,
+      multiTooltipTemplate: '<%= datasetLabel %> - <%= value %>',
+      legendTemplate: '<% for (var i=0; i<datasets.length; i++){%><div class="col-xs-2"><span style=\"color:<%=datasets[i].strokeColor%>\">■</span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></div><%}%>',
     });
+    $("#line-chart-legend").append(lineChart.generateLegend());
   });
 }

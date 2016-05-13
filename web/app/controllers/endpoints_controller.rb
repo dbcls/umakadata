@@ -44,6 +44,99 @@ class EndpointsController < ApplicationController
     end
   end
 
+  def score_history
+    evaluations = Evaluation.where(:endpoint_id => params[:id]).limit(30).order('evaluations.created_at ASC')
+    labels = []
+    availability = []
+    freshness = []
+    operation = []
+    usefulness = []
+    validity = []
+    performance = []
+    evaluations.each do |evaluation|
+      labels.push(evaluation.created_at.strftime('%m/%d'))
+      rates = Evaluation.calc_rates(evaluation)
+      availability.push(rates[0])
+      freshness.push(rates[1])
+      operation.push(rates[2])
+      usefulness.push(rates[3])
+      validity.push(rates[4])
+      performance.push(rates[5])
+    end
+
+    render :json => {
+      :labels => labels,
+      :datasets => [
+        {
+          label: 'Availability',
+          fill: false,
+          fillColor: "rgba(220,220,220,0.2)",
+          strokeColor: "rgba(220,220,220,1)",
+          pointColor: "rgba(220,220,220,1)",
+          pointStrokeColor: "#fff",
+          pointHighlightFill: "#fff",
+          pointHighlightStroke: "rgba(220,220,220,1)",
+          data: availability
+        },
+        {
+          label: 'Freshness',
+          fill: false,
+          fillColor: "rgba(54,162,235,0.2)",
+          strokeColor: "rgba(54,162,235,1)",
+          pointColor: "rgba(54,162,235,1)",
+          pointStrokeColor: "#fff",
+          pointHighlightFill: "#fff",
+          pointHighlightStroke: "rgba(54,162,235,1)",
+          data: freshness
+        },
+        {
+          label: 'Operation',
+          fill: false,
+          fillColor: "rgba(255,99,132,0.2)",
+          strokeColor: "rgba(255,99,132,1)",
+          pointColor: "rgba(255,99,132,1)",
+          pointStrokeColor: "#fff",
+          pointHighlightFill: "#fff",
+          pointHighlightStroke: "rgba(255,99,132,1)",
+          data: operation
+        },
+        {
+          label: 'Usefulness',
+          fill: false,
+          fillColor: "rgba(255,206,86,0.2)",
+          strokeColor: "rgba(255,206,86,1)",
+          pointColor: "rgba(255,206,86,1)",
+          pointStrokeColor: "#fff",
+          pointHighlightFill: "#fff",
+          pointHighlightStroke: "rgba(255,206,86,1)",
+          data: usefulness
+        },
+        {
+          label: 'Validity',
+          fill: false,
+          fillColor: "rgba(75,192,192,0.2)",
+          strokeColor: "rgba(75,192,192,1)",
+          pointColor: "rgba(75,192,192,1)",
+          pointStrokeColor: "#fff",
+          pointHighlightFill: "#fff",
+          pointHighlightStroke: "rgba(75,192,192,1)",
+          data: validity
+        },
+        {
+          label: 'Performance',
+          fill: false,
+          fillColor: "rgba(231,233,237,0.2)",
+          strokeColor: "rgba(231,233,237,1)",
+          pointColor: "rgba(231,233,237,1)",
+          pointStrokeColor: "#fff",
+          pointHighlightFill: "#fff",
+          pointHighlightStroke: "rgba(231,233,237,1)",
+          data: performance
+        }
+      ]
+    }
+  end
+
   def alive
     count = { :alive => 0, :dead => 0 }
     conditions = {'evaluations.latest': true}

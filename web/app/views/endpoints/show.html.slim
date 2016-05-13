@@ -1,6 +1,7 @@
 javascript:
   $(function(){
     showRadar(#{@endpoint.id}, #{@evaluation.id});
+    showScoreHistory(#{@endpoint.id});
   });
 
 h1.page-header = @endpoint.name
@@ -78,8 +79,9 @@ h1.page-header = @endpoint.name
   .col-xs-12.col-sm-6
     canvas#radar[width="400" height="400"]
 
-  .col-xs-12
-    canvas#score_history
+  .row#line-chart-legend
+  .col-xs-12.col-sm-6
+    canvas#score_history[width="900" height="400"]
 
 .row
   .col-xs-24.col-sm-12
