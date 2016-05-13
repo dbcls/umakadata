@@ -2,38 +2,35 @@ function showRadar(endpoint_id, evaluation_id) {
   $.getJSON("/endpoints/" + endpoint_id + "/radar", function(json) {
     var data = json['data']
     var avg = json['avg']
-    var context = $("#radar")[0].getContext("2d");
+    var context = $("#radar")[0].getContext('2d');
     var labels = ["availability", "freshness", "operation", "usefulness", "validity", "performance"]
-    new Chart(context).Radar({
-      labels: labels,
-      datasets: [
-        {
-            label: "Target",
-            fillColor: "rgba(151,187,205,0.2)",
-            strokeColor: "rgba(151,187,205,1)",
-            pointColor: "rgba(151,187,205,1)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(220,220,220,1)",
-            data: data
-        },
-        {
-            label: "Average",
-            fillColor: "rgba(220,220,220,0.5)",
-            strokeColor: "rgba(220,220,220,1)",
-            pointColor: "rgba(220,220,220,1)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(151,187,205,1)",
-            data: avg
-        }
-      ]
-    }, {
-      scaleOverride: true,
-      scaleSteps: 11,
-      scaleStepWidth: 10,
-      scaleStartValue: 0,
-    });
+    new Chart(context, {
+      type: 'radar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+              label: "Target",
+              backgroundColor: "rgba(151,187,205,0.2)",
+              borderColor: "rgba(151,187,205,1)",
+              pointBorderColor: "rgba(151,187,205,1)",
+              pointBackgroundColor: "#fff",
+              data: data
+          },
+          {
+              label: "Average",
+              backgroundColor: "rgba(220,220,220,0.5)",
+              borderColor: "rgba(220,220,220,1)",
+              pointBorderColor: "rgba(220,220,220,1)",
+              pointBackgroundColor: "#fff",
+              data: avg
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+      }
+  });
 
     for (var i = 0; i < 6; ++i) {
       $('#' + labels[i] + '_score').text('(' + data[i] + ')');
@@ -53,15 +50,15 @@ function showRadar(endpoint_id, evaluation_id) {
   });
 };
 
-
 function showScoreHistory(endpoint_id) {
   $.getJSON("/endpoints/" + endpoint_id + "/score_history", function(json) {
-    var context = document.querySelector("#score_history").getContext("2d");
-    var lineChart = new Chart(context).Line(json, {
-      datasetFill: false,
-      multiTooltipTemplate: '<%= datasetLabel %> - <%= value %>',
-      legendTemplate: '<% for (var i=0; i<datasets.length; i++){%><div class="col-xs-2"><span style=\"color:<%=datasets[i].strokeColor%>\">■</span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></div><%}%>',
+    var context = $("#score_history");
+    var lineChart = new Chart(context, {
+      type: 'line',
+      data: json,
+      options: {
+        datasetFill: false
+      }
     });
-    $("#line-chart-legend").append(lineChart.generateLegend());
   });
 }
