@@ -2,7 +2,7 @@ function showRadar(endpoint_id, evaluation_id) {
   $.getJSON("/endpoints/" + endpoint_id + "/radar", function(json) {
     var data = json['data']
     var avg = json['avg']
-    var context = $("#radar")[0].getContext('2d');
+    var context = $("#radar")
     var labels = ["availability", "freshness", "operation", "usefulness", "validity", "performance"]
     new Chart(context, {
       type: 'radar',
