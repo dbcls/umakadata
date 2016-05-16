@@ -97,18 +97,27 @@ function make_sd_data(count) {
     ]
   };
 }
-function make_score_statistics_data(labels, data) {
+function make_score_statistics_data(labels, datasets) {
   return {
     labels: labels,
     datasets: [
       {
         label: datasets[0]['label'],
         fill: false,
-        backgroundColor: 'rgba(220,220,220,0.2)',
-        borderColor: 'rgba(220,220,220,1)',
-        pointBorderColor: 'rgba(220,220,220,1)',
+        backgroundColor: 'rgba(0,160,233,0.2)',
+        borderColor: 'rgba(0,160,233,1)',
+        pointBorderColor: 'rgba(0,160,233,1)',
         pointBackgroundColor: '#fff',
         data: datasets[0]['data']
+      },
+      {
+        label: datasets[1]['label'],
+        fill: false,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132,1)',
+        pointBorderColor: 'rgba(255, 99, 132,1)',
+        pointBackgroundColor: '#fff',
+        data: datasets[1]['data']
       }
     ]
   }

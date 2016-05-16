@@ -125,7 +125,42 @@ class EndpointsController < ApplicationController
 
 
   def score_statistics
-    render :json => {}
+    today = Time.zone.now
+    from = 9.days.ago(Time.zone.local(today.year, today.month, today.day, 0, 0, 0))
+    grouped_evaluations = Evaluation.where(created_at: from..today).group('date(created_at)').order('date(created_at)')
+    labels = grouped_evaluations.count.keys.map{|date| date.strftime('%m/%d')}
+    evaluations = Evaluation.where(created_at: from..today).all
+    score_hash = {}
+    scores = []
+    evaluations.each do |evaluation|
+      date = evaluation.created_at.strftime('%m/%d')
+      if score_hash[date].nil?
+        scores = []
+        score_hash[date] = scores
+      else
+        scores = score_hash[date]
+      end
+      scores.push(evaluation.score)
+    end
+    medians = score_hash.map{|k, v|
+      scores = v.sort
+      scores.size % 2 == 0 ? scores[scores.size / 2 - 1, 2].inject(:+) / 2.0 : scores[scores.size / 2]
+    }
+
+    render :json => {
+      :labels => labels,
+      :datasets => [
+        {
+          :label => 'Average',
+          :data => grouped_evaluations.average(:score).map{|k, v| v.to_i}
+        },
+        {
+          :label => 'Median',
+          :data => medians
+        }
+      ]
+    }
+
   end
 
   def alive_statistics
