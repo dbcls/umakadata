@@ -1,15 +1,15 @@
 $(function() {
   var drawScores = $.getJSON("endpoints/scores", function(json) {
     data = make_score_data(json)
-    showPie($("#score")[0].getContext("2d"), data);
+    showPie("#score", data);
   });
   var drawAlive = $.getJSON("endpoints/alive", function(json) {
     data = make_alive_data(json)
-    showPie($("#alive")[0].getContext("2d"), data);
+    showPie("#alive", data);
   });
   var drawSd = $.getJSON("endpoints/service_descriptions", function(json) {
     data = make_sd_data(json)
-    showPie($("#sd")[0].getContext("2d"), data);
+    showPie("#sd", data);
   });
 
   setTimeout(function(){ drawScores.abort(); }, 10000);
@@ -18,75 +18,72 @@ $(function() {
 });
 
 function make_score_data(count) {
-  return [
+  return {
+    labels: ['Rank A', 'Rank B', 'Rank C', 'Rank D', 'Rank E'],
+    datasets: [
       {
-        value: count[5],
-        color: "#1D2088",
-        highlight: "#6356A3",
-        label: "Rank A"
-      },
-      {
-        value: count[4],
-        color: "#00A0E9",
-        highlight: "#00B9EF",
-        label: "Rank B"
-      },
-      {
-        value: count[3],
-        color: "#009944",
-        highlight: "#03EB37",
-        label: "Rank C"
-      },
-      {
-        value: count[2],
-        color: "#FFF100",
-        highlight: "#FFF462",
-        label: "Rank D"
-      },
-      {
-        value: count[1],
-        color: "#E60012",
-        highlight: "#FF5A5E",
-        label: "Rank E"
+        data: [count[5], count[4], count[3], count[2], count[1]],
+        backgroundColor: ['#1D2088', '#00A0E9', '#009944', '#FFF100', '#E60012'],
+        hoverBackgroundColor: ['#6356A3', '#00B9EF', '#03EB37', 'FFF462', '#FF5A5E']
       }
-    ]
-}
-
-function make_alive_data(count) {
-  return [
-    {
-      value: count['alive'],
-      color: "#00A0E9",
-      highlight: "#00B9EF",
-      label: "Alive"
-    },
-    {
-      value: count['dead'],
-      color: "#E60012",
-      highlight: "#FF5A5E",
-      label: "Dead"
+    ],
+    options: {
+      legend: false
     }
-  ]
+  };
 }
-
-function make_sd_data(count) {
-  return [
+function make_alive_data(count) {
+  return {
+    labels: ['Alive', 'Dead'],
+    datasets: [
       {
-        value: count['true'],
-        color: "#00A0E9",
-        highlight: "#00B9EF",
-        label: "Have"
-      },
-      {
-        value: count['false'],
-        color: "#E60012",
-        highlight: "#FF5A5E",
-        label: "Do not have"
+        data: [
+          count['alive'],
+          count['dead']
+        ],
+        backgroundColor: [
+          '#00A0E9',
+          '#E60012'
+        ],
+        hoverBackgroundColor: [
+          '#00B9EF',
+          '#FF5A5E'
+        ]
       }
     ]
+  };
 }
-function showPie(context, data) {
-  new Chart(context).Pie(data);
+function make_sd_data(count) {
+  return {
+    labels: ['Have', 'Do not have'],
+    datasets: [
+      {
+        data: [
+          count['true'],
+          count['false']
+        ],
+        backgroundColor: [
+          '#00A0E9',
+          '#E60012'
+        ],
+        hoverBackgroundColor: [
+          '#00B9EF',
+          '#FF5A5E'
+        ]
+      }
+    ]
+  };
+}
+function showPie(id, data) {
+  new Chart($(id), {
+    type: 'pie',
+    data: data,
+    options: {
+      animation: {
+        animateScale: true
+      }
+    }
+  });
 }
 function showLine(context, data) {
   new Chart(context).Line(data, {
