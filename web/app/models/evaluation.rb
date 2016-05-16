@@ -43,8 +43,10 @@ class Evaluation < ActiveRecord::Base
       self.retrieve_void(retriever, eval)
       self.retrieve_linked_data_rules(retriever, eval)
 
-      eval.execution_time = retriever.execution_time
-      eval.execution_time_error_reason = retriever.get_error if eval.execution_time.nil? || eval.execution_time < 0.0
+      log = Umakadata::Logging::Log.new
+      eval.execution_time = retriever.execution_time({:logger => log})
+      eval.execution_time_error_reason = log.as_json
+
       eval.cool_uri_rate = retriever.cool_uri_rate
 
       eval.support_turtle_format = retriever.check_content_negotiation(Umakadata::DataFormat::TURTLE)

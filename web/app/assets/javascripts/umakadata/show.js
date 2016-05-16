@@ -51,11 +51,12 @@ function showRadar(endpoint_id, evaluation_id) {
   });
 }
 
-function appendColors(datasets) {
+function appendOptions(datasets) {
   datasets['datasets'].forEach(function (element) {
     var label = element['label'];
 
     if (label) {
+      element['lineTension'] = 0;
       // set all 'pointBackgroundColor' to white
       element['pointBackgroundColor'] = 'rgba(255, 255, 255, 1)';
       // set the area under the line not to fill
@@ -100,7 +101,7 @@ function appendColors(datasets) {
 function showScoreHistory(endpoint_id) {
   $.getJSON("/endpoints/" + endpoint_id + "/score_history", function(json) {
     var context = $("#score_history");
-    appendColors(json);
+    appendOptions(json);
 
     new Chart(context, {
       type: 'line',
