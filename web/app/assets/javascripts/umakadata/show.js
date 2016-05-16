@@ -56,6 +56,7 @@ function appendOptions(datasets) {
     var label = element['label'];
 
     if (label) {
+      element['lineTension'] = 0;
       // set all 'pointBackgroundColor' to white
       element['pointBackgroundColor'] = 'rgba(255, 255, 255, 1)';
       // set the area under the line not to fill
