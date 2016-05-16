@@ -123,6 +123,88 @@ class EndpointsController < ApplicationController
     render :json => count
   end
 
+
+  def score_statistics
+    today = DateTime.now
+    from = 9.days.ago(today)
+
+    labels = Array.new
+    averages = Array.new
+    medians = Array.new
+
+    (from..today).each {|date|
+      tmp = Array.new
+
+      day_begin = DateTime.new(date.year, date.mon, date.day, 0, 0, 0, date.offset)
+      day_end = DateTime.new(date.year, date.mon, date.day, 23, 59, 59, date.offset)
+      Evaluation.where(created_at: day_begin..day_end).each do |evaluation|
+        tmp.push(evaluation.score)
+      end
+      tmp.sort!
+
+      labels.push date.strftime('%m/%d')
+      if tmp.empty?
+        averages.push 0
+        medians.push 0
+        next
+      end
+
+      averages.push tmp.reduce(0, :+) / tmp.length
+      medians.push tmp.size % 2 == 0 ? tmp[tmp.length / 2 - 1, 2].reduce(0, :+) / 2.0 : tmp[tmp.length / 2]
+    }
+
+    render :json => {
+      :labels => labels,
+      :datasets => [
+        {
+          :label => 'Average',
+          :data => averages
+        },
+        {
+          :label => 'Median',
+          :data => medians
+        }
+      ]
+    }
+
+  end
+
+  def alive_statistics
+    today = Time.zone.now
+    from = 9.days.ago(Time.zone.local(today.year, today.month, today.day, 0, 0, 0))
+    grouped_evaluations = Evaluation.where(created_at: from..today).group('date(created_at)').order('date(created_at)')
+    labels = grouped_evaluations.count.keys.map{|date| date.strftime('%m/%d')}
+    alive_data = grouped_evaluations.where(alive: true).count.values
+
+    render :json => {
+      :labels => labels,
+      :datasets => [
+        {
+          label: 'Avlie',
+          data: alive_data
+        }
+      ]
+    }
+  end
+
+  def service_description_statistics
+    today = Time.zone.now
+    from = 9.days.ago(Time.zone.local(today.year, today.month, today.day, 0, 0, 0))
+    grouped_evaluations = Evaluation.where(created_at: from..today).group('date(created_at)').order('date(created_at)')
+    labels = grouped_evaluations.count.keys.map{|date| date.strftime('%m/%d')}
+    have_data = grouped_evaluations.where.not(service_description: nil).count.values
+
+    render :json => {
+      :labels => labels,
+      :datasets => [
+        {
+          label: 'Have',
+          data: have_data
+        }
+      ]
+    }
+  end
+
   private
     def render_404
       render :file=>"/public/404.html", :status=>'404 Not Found'
