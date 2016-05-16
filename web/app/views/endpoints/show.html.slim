@@ -104,8 +104,6 @@ h1.page-header = @endpoint.name
                   Alive rate shows how much the endpoint was alive in these 30 days.
           td.availability
             = @evaluation.alive.to_s + " (" + @evaluation.alive_rate.to_s + "%)"
-            '
-            = link_to 'Detail', "/endpoints/#{@evaluation.id}/alive" unless @evaluation.alive_error_reason.nil?
         tr
           td.freshness
             | Freshness
