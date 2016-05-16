@@ -129,9 +129,20 @@ class EndpointsController < ApplicationController
   end
 
   def alive_statistics
-    evaluations_each_day = Evaluation.group(:created_at).group(:alive_rate).count()
+    today = Time.zone.now
+    from = 9.days.ago(Time.zone.local(today.year, today.month, today.day, 0, 0, 0))
+    labels = Evaluation.where(created_at: from..today).group('date(created_at)').count.sort.map{|key_value| key_value[0].strftime('%m/%d')}
+    avlie_data = Evaluation.where(created_at: from..today).group('date(created_at)').where(alive: true).count.sort.map{|key_value| key_value[1]}
 
-    render :json => {}
+    render :json => {
+      :labels => labels,
+      :datasets => [
+        {
+          label: 'Avlie',
+          data: avlie_data
+        }
+      ]
+    }
   end
 
   def service_description_statistics
