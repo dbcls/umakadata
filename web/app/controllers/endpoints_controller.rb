@@ -22,6 +22,35 @@ class EndpointsController < ApplicationController
   def show
   end
 
+  def detail
+    evaluation = Evaluation.where(:id => params[:evaluation_id]).where(:latest => true).first
+    @endpoint_id = evaluation.endpoint_id
+    case(params[:name])
+    when 'alive' then
+        @details = [
+          {
+            'uri' => "http://data.allie.dbcls.jp/sparql?query=SELECT%20*%20WHERE%20%7B?s%20?p%20?o%7D%20LIMIT%201",
+            'request' => {
+              'method' => 'GET',
+              'header' => {
+                'Accept' => 'text/turtle,application/rdf+xml'
+              }
+            },
+            'response' => {
+              'code' => 200,
+              'header' => {
+
+              },
+              'body' => ''
+            },
+          'error' => {
+            'message' => "@prefix rdf:\t<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix ns1:\t<http://data.allie.dbcls.jp/> .\n@prefix sd:\t<http://www.w3.org/ns/sparql-service-description#> .\nns1:sparql\trdf:type\tsd:Service ;\n\tsd:endpoint\tns1:sparql ;\n\tsd:feature\tsd:DereferencesURIs ,\n\t\tsd:UnionDefaultGraph .\n@prefix ns3:\t<http://www.w3.org/ns/formats/> .\nns1:sparql\tsd:resultFormat\tns3:SPARQL_Results_CSV ,\n\t\tns3:SPARQL_Results_JSON ,\n\t\tns3:N3 ,\n\t\tns3:RDF_XML ,\n\t\tns3:SPARQL_Results_XML ,\n\t\tns3:Turtle ,\n\t\tns3:N-Triples ,\n\t\tns3:RDFa ;\n\tsd:supportedLanguage\tsd:SPARQL11Query ;\n\tsd:url\tns1:sparql ;\n\tsd:defaultDataset\t_:b10011 .\n_:b10009\trdf:type\tsd:Graph .\n@prefix void:\t<http://rdfs.org/ns/void#> .\n_:b10009\trdf:type\tvoid:Dataset .\n@prefix dcterms:\t<http://purl.org/dc/terms/> .\n_:b10009\tdcterms:license\t<http://creativecommons.org/licenses/by/2.1/jp/> ;\n\tvoid:dataDump\t<http://purl.org/allie/cgi-bin/getfile.cgi?file=allieRDF> ;\n\tvoid:exampleResource\t<http://purl.org/allie/id/longform/531855> ;\n\tvoid:sparqlEndpoint\tns1:sparql ;\n\tvoid:uriLookupEndpoint\t<http://data.allie.dbcls.jp/fct/> .\n@prefix foaf:\t<http://xmlns.com/foaf/0.1/> .\n_:b10009\tfoaf:homepage\t<http://purl.org/allie/> ;\n\tdcterms:title\t\"Allie Abbreviation And Long Form Database in Life Science\" ;\n\tvoid:vocabulary\t<http://purl.org/allie/ontology/201108#> ,\n\t\t<http://www.w3.org/2002/07/owl#> ;\n\tdcterms:description\t\"A database of abbreviations and long forms utilized in Lifesciences.\" ;\n\tdcterms:publisher\t<http://dbcls.jp/> .\n_:b10010\trdf:type\tsd:NamedGraph .\n@prefix ns7:\t<http://purl.org/> .\n_:b10010\tsd:name\tns7:allie ;\n\tsd:graph\t_:b10009 .\n_:b10011\trdf:type\tsd:Dataset ;\n\tsd:namedGraph\t_:b10010 ."
+          }
+        }
+      ]
+    end
+  end
+
   def scores
     count = {1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0}
     conditions = {'evaluations.latest': true}
