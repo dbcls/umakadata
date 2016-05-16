@@ -44,6 +44,63 @@ class EndpointsController < ApplicationController
     end
   end
 
+  def score_history
+    evaluations = Evaluation.where(:endpoint_id => params[:id]).limit(30).order('evaluations.created_at ASC')
+    labels = []
+    availability = []
+    freshness = []
+    operation = []
+    usefulness = []
+    validity = []
+    performance = []
+    rank = []
+    evaluations.each do |evaluation|
+      labels.push(evaluation.created_at.strftime('%m/%d'))
+      rates = Evaluation.calc_rates(evaluation)
+      availability.push(rates[0])
+      freshness.push(rates[1])
+      operation.push(rates[2])
+      usefulness.push(rates[3])
+      validity.push(rates[4])
+      performance.push(rates[5])
+      rank.push(evaluation.score)
+    end
+
+    render :json => {
+      :labels => labels,
+      :datasets => [
+        {
+          label: 'Availability',
+          data: availability
+        },
+        {
+          label: 'Freshness',
+          data: freshness
+        },
+        {
+          label: 'Operation',
+          data: operation
+        },
+        {
+          label: 'Usefulness',
+          data: usefulness
+        },
+        {
+          label: 'Validity',
+          data: validity
+        },
+        {
+          label: 'Performance',
+          data: performance
+        },
+        {
+          label: 'Rank',
+          data: rank
+        }
+      ]
+    }
+  end
+
   def alive
     count = { :alive => 0, :dead => 0 }
     conditions = {'evaluations.latest': true}

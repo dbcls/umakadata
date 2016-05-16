@@ -1,6 +1,7 @@
 javascript:
   $(function(){
     showRadar(#{@endpoint.id}, #{@evaluation.id});
+    showScoreHistory(#{@endpoint.id});
   });
 
 h1.page-header = @endpoint.name
@@ -76,7 +77,10 @@ h1.page-header = @endpoint.name
     | &nbsp;for more details about Umaka Score.
 
   .col-xs-12.col-sm-6
-    canvas#radar[width="400" height="400"]
+    canvas#radar[width="400" height="300"]
+
+  .col-xs-12.col-sm-12
+    canvas#score_history[width="800" height="300"]
 
 .row
   .col-xs-24.col-sm-12
