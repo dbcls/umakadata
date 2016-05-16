@@ -1,0 +1,13 @@
+.row
+  .col-xs-12.col-sm-12
+  h2.page-header
+    | Detail
+  '
+  - if @details.is_a?(Array)
+    - @details.each do | detail |
+      = render partial: 'endpoints/detail_table', locals: {contents: detail}
+
+  - else
+    p.h3
+      | Error
+    p.h4 = @details
