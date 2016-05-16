@@ -146,7 +146,20 @@ class EndpointsController < ApplicationController
   end
 
   def service_description_statistics
-    render :json => {}
+    today = Time.zone.now
+    from = 9.days.ago(Time.zone.local(today.year, today.month, today.day, 0, 0, 0))
+    labels = Evaluation.where(created_at: from..today).group('date(created_at)').count.sort.map{|key_value| key_value[0].strftime('%m/%d')}
+    have_data = Evaluation.where(created_at: from..today).group('date(created_at)').where.not(service_description: nil).count.sort.map{|key_value| key_value[1]}
+
+    render :json => {
+      :labels => labels,
+      :datasets => [
+        {
+          label: 'Have',
+          data: have_data
+        }
+      ]
+    }
   end
 
   private

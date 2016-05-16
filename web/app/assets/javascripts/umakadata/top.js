@@ -130,16 +130,16 @@ function make_alive_statistics_data(labels, datasets) {
   }
 }
 
-function make_sd_statistics_data(labels, data) {
+function make_sd_statistics_data(labels, datasets) {
   return {
     labels: labels,
     datasets: [
       {
         label: datasets[0]['label'],
-        fill: false,
-        backgroundColor: 'rgba(220,220,220,0.2)',
-        borderColor: 'rgba(220,220,220,1)',
-        pointBorderColor: 'rgba(220,220,220,1)',
+        lineTension: 0,
+        backgroundColor: 'rgba(0,160,233,0.2)',
+        borderColor: 'rgba(0,160,233,1)',
+        pointBorderColor: 'rgba(0,160,233,1)',
         pointBackgroundColor: '#fff',
         data: datasets[0]['data']
       }
