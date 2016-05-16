@@ -33,8 +33,10 @@ class Evaluation < ActiveRecord::Base
     eval.endpoint_id = endpoint.id
 
     eval.latest = true
-    eval.alive = retriever.alive?
-    eval.alive_error_reason = retriever.get_error if !eval.alive
+
+    log = Umakadata::Logging::Log.new
+    eval.alive = retriever.alive?({:time_out => 30, :logger => log})
+    eval.alive_error_reason = log.as_json
 
     if eval.alive
       self.retrieve_service_description(retriever, eval)
