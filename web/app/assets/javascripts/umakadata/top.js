@@ -15,6 +15,29 @@ $(function() {
   setTimeout(function(){ drawScores.abort(); }, 10000);
   setTimeout(function(){ drawAlive.abort(); }, 10000);
   setTimeout(function(){ drawSd.abort(); }, 10000);
+
+  var drawScoreStatistics = $.getJSON("endpoints/score_statistics", function(json) {
+    var labels = json['labels'];
+    var datasets = json['datasets'];
+    data = make_score_statistics_data(labels, datasets)
+    showLine("#score_statistics", data);
+  });
+  var drawAliveStatistics = $.getJSON("endpoints/alive_statistics", function(json) {
+    var labels = json['labels'];
+    var datasets = json['datasets'];
+    data = make_alive_statistics_data(labels, datasets)
+    showLine("#alive_statistics", data);
+  });
+  var drawSdStatistics = $.getJSON("endpoints/service_description_statistics", function(json) {
+    var labels = json['labels'];
+    var datasets = json['datasets'];
+    data = make_sd_statistics_data(labels, datasets)
+    showLine("#sd_statistics", data);
+  });
+
+  setTimeout(function(){ drawScoreStatistics.abort(); }, 10000);
+  setTimeout(function(){ drawAliveStatistics.abort(); }, 10000);
+  setTimeout(function(){ drawSdStatistics.abort(); }, 10000);
 });
 
 function make_score_data(count) {
@@ -74,6 +97,55 @@ function make_sd_data(count) {
     ]
   };
 }
+function make_score_statistics_data(labels, data) {
+  return {
+    labels: labels,
+    datasets: [
+      {
+        label: datasets[0]['label'],
+        fill: false,
+        backgroundColor: 'rgba(220,220,220,0.2)',
+        borderColor: 'rgba(220,220,220,1)',
+        pointBorderColor: 'rgba(220,220,220,1)',
+        pointBackgroundColor: '#fff',
+        data: datasets[0]['data']
+      }
+    ]
+  }
+}
+function make_alive_statistics_data(labels, data) {
+  return {
+    labels: labels,
+    datasets: [
+      {
+        label: datasets[0]['label'],
+        fill: false,
+        backgroundColor: 'rgba(220,220,220,0.2)',
+        borderColor: 'rgba(220,220,220,1)',
+        pointBorderColor: 'rgba(220,220,220,1)',
+        pointBackgroundColor: '#fff',
+        data: datasets[0]['data']
+      }
+    ]
+  }
+}
+
+function make_sd_statistics_data(labels, data) {
+  return {
+    labels: labels,
+    datasets: [
+      {
+        label: datasets[0]['label'],
+        fill: false,
+        backgroundColor: 'rgba(220,220,220,0.2)',
+        borderColor: 'rgba(220,220,220,1)',
+        pointBorderColor: 'rgba(220,220,220,1)',
+        pointBackgroundColor: '#fff',
+        data: datasets[0]['data']
+      }
+    ]
+  }
+}
 function showPie(id, data) {
   new Chart($(id), {
     type: 'pie',
@@ -86,7 +158,9 @@ function showPie(id, data) {
   });
 }
 function showLine(context, data) {
-  new Chart(context).Line(data, {
-    bezierCurve: false,
+  new Chart($(context), {
+    type: 'line',
+    data: data
   });
+
 }

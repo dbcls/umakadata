@@ -123,6 +123,21 @@ class EndpointsController < ApplicationController
     render :json => count
   end
 
+
+  def score_statistics
+    render :json => {}
+  end
+
+  def alive_statistics
+    evaluations_each_day = Evaluation.group(:created_at).group(:alive_rate).count()
+
+    render :json => {}
+  end
+
+  def service_description_statistics
+    render :json => {}
+  end
+
   private
     def render_404
       render :file=>"/public/404.html", :status=>'404 Not Found'

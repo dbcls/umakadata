@@ -11,6 +11,9 @@ Rails.application.routes.draw do
   get  'endpoints/:id(/:evaluation_id)/radar' => 'endpoints#radar'
   get  'endpoints/alive'
   get  'endpoints/service_descriptions'
+  get  'endpoints/score_statistics'
+  get  'endpoints/alive_statistics'
+  get  'endpoints/service_description_statistics'
   get  'endpoints/:id(/:endpoint_id)/score_history' => 'endpoints#score_history'
   get  'endpoints/:id(/:evaluation_id)' => 'endpoints#show',  as: 'endpoint'
 
