@@ -103,7 +103,7 @@ function make_score_statistics_data(labels, datasets) {
     datasets: [
       {
         label: datasets[0]['label'],
-        fill: false,
+        lineTension: 0,
         backgroundColor: 'rgba(0,160,233,0.2)',
         borderColor: 'rgba(0,160,233,1)',
         pointBorderColor: 'rgba(0,160,233,1)',
@@ -112,7 +112,7 @@ function make_score_statistics_data(labels, datasets) {
       },
       {
         label: datasets[1]['label'],
-        fill: false,
+        lineTension: 0,
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
         borderColor: 'rgba(255, 99, 132,1)',
         pointBorderColor: 'rgba(255, 99, 132,1)',
