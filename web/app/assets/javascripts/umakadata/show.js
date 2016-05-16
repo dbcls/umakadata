@@ -1,9 +1,9 @@
 function showRadar(endpoint_id, evaluation_id) {
   $.getJSON("/endpoints/" + endpoint_id + "/radar", function(json) {
-    var data = json['data']
-    var avg = json['avg']
-    var context = $("#radar")
-    var labels = ["availability", "freshness", "operation", "usefulness", "validity", "performance"]
+    var data = json['data'];
+    var avg = json['avg'];
+    var context = $("#radar");
+    var labels = ["availability", "freshness", "operation", "usefulness", "validity", "performance"];
     new Chart(context, {
       type: 'radar',
       data: {
@@ -28,10 +28,11 @@ function showRadar(endpoint_id, evaluation_id) {
         ]
       },
       options: {
-        responsive: true,
+        responsive: true
       }
   });
 
+    var status;
     for (var i = 0; i < 6; ++i) {
       $('#' + labels[i] + '_score').text('(' + data[i] + ')');
       if (data[i] < 20) {
@@ -48,10 +49,10 @@ function showRadar(endpoint_id, evaluation_id) {
       $('.' + labels[i]).addClass(status)
     }
   });
-};
+}
 
 function appendColors(datasets) {
-  datasets['datasets'].forEach(function (element, index, array) {
+  datasets['datasets'].forEach(function (element) {
     var label = element['label'];
 
     if (label) {
@@ -101,7 +102,7 @@ function showScoreHistory(endpoint_id) {
     var context = $("#score_history");
     appendColors(json);
 
-    var lineChart = new Chart(context, {
+    new Chart(context, {
       type: 'line',
       data: json,
       options: {
