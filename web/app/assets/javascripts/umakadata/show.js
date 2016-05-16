@@ -50,89 +50,67 @@ function showRadar(endpoint_id, evaluation_id) {
   });
 };
 
+function appendColors(datasets) {
+  datasets['datasets'].forEach(function (element, index, array) {
+    var label = element['label'];
+
+    if (label) {
+      // set all 'pointBackgroundColor' to white
+      element['pointBackgroundColor'] = 'rgba(255, 255, 255, 1)';
+      // set the area under the line not to fill
+      element['fill'] = false;
+    }
+
+    switch (label.toLowerCase()) {
+      case 'availability':
+        element['backgroundColor'] = 'rgba(220, 220, 220, 0.2)';
+        element['borderColor'] = element['pointBorderColor'] = 'rgba(220, 220, 220, 1)';
+        break;
+      case 'freshness':
+        element['backgroundColor'] = 'rgba(54, 162, 235, 0.2)';
+        element['borderColor'] = element['pointBorderColor'] = 'rgba(54, 162, 235, 1)';
+        break;
+      case 'operation':
+        element['backgroundColor'] = 'rgba(255, 99, 132, 0.2)';
+        element['borderColor'] = element['pointBorderColor'] = 'rgba(255, 99, 132, 1)';
+        break;
+      case 'usefulness':
+        element['backgroundColor'] = 'rgba(255, 206, 86, 0.2)';
+        element['borderColor'] = element['pointBorderColor'] = 'rgba(255, 206, 86, 1)';
+        break;
+      case 'validity':
+        element['backgroundColor'] = 'rgba(75, 192, 192, 0.2)';
+        element['borderColor'] = element['pointBorderColor'] = 'rgba(75, 192, 192, 1)';
+        break;
+      case 'performance':
+        element['backgroundColor'] = 'rgba(21, 7, 119, 0.2)';
+        element['borderColor'] = element['pointBorderColor'] = 'rgba(21, 7, 119, 1)';
+        break;
+      case 'rank':
+        element['backgroundColor'] = 'rgba(151, 187, 205, 0.2)';
+        element['borderColor'] = element['pointBorderColor'] = 'rgba(151, 187, 205, 1)';
+        break;
+      default:
+        break;
+    }
+  });
+}
+
 function showScoreHistory(endpoint_id) {
   $.getJSON("/endpoints/" + endpoint_id + "/score_history", function(json) {
     var context = $("#score_history");
-    var labels = json['labels'];
-    var datasets = json['datasets'];
-    var data = {
-      labels: labels,
-      datasets: [
-        {
-          label: datasets[0]['label'],
-          fill: false,
-          backgroundColor: 'rgba(220,220,220,0.2)',
-          borderColor: 'rgba(220,220,220,1)',
-          pointBorderColor: 'rgba(220,220,220,1)',
-          pointBackgroundColor: '#fff',
-          data: datasets[0]['data']
-        },
-        {
-          label: datasets[1]['label'],
-          fill: false,
-          backgroundColor: "rgba(54,162,235,0.2)",
-          borderColor: "rgba(54,162,235,1)",
-          pointBorderColor: "rgba(54,162,235,1)",
-          pointBackgroundColor: "#fff",
-          data: datasets[1]['data']
-        },
-        {
-          label: datasets[2]['label'],
-          fill: false,
-          backgroundColor: "rgba(255,99,132,0.2)",
-          borderColor: "rgba(255,99,132,1)",
-          pointBorderColor: "rgba(255,99,132,1)",
-          pointBackgroundColor: "#fff",
-          data: datasets[2]['data']
-        },
-        {
-          label: datasets[3]['label'],
-          fill: false,
-          backgroundColor: "rgba(255,206,86,0.2)",
-          borderColor: "rgba(255,206,86,1)",
-          pointBorderColor: "rgba(255,206,86,1)",
-          pointBackgroundColor: "#fff",
-          data: datasets[3]['data']
-        },
-        {
-          label: datasets[4]['label'],
-          fill: false,
-          backgroundColor: "rgba(75,192,192,0.2)",
-          borderColor: "rgba(75,192,192,1)",
-          pointBorderColor: "rgba(75,192,192,1)",
-          pointBackgroundColor: "#fff",
-          data: datasets[4]['data']
-        },
-        {
-          label: datasets[5]['label'],
-          fill: false,
-          backgroundColor: "rgba(21,7,119,0.2)",
-          borderColor: "rgba(21,7,119,1)",
-          pointBorderColor: "rgba(21,7,119,1)",
-          pointBackgroundColor: "#fff",
-          data: datasets[5]['data']
-        },
-        {
-          label: datasets[6]['label'],
-          fill: true,
-          backgroundColor: "rgba(151,187,205,0.2)",
-          borderColor: "rgba(151,187,205,1)",
-          pointBorderColor: "rgba(151,187,205,1)",
-          pointBackgroundColor: "#fff",
-          data: datasets[6]['data']
-        }
-      ]
-    }
+    appendColors(json);
+
     var lineChart = new Chart(context, {
       type: 'line',
-      data: data,
+      data: json,
       options: {
         scales: {
           yAxes: [
             {
               ticks: {
                 max: 110,
-                min: 0,
+                min: 0
               }
             }
           ]
