@@ -118,6 +118,16 @@ function showScoreHistory(endpoint_id) {
       type: 'line',
       data: data,
       options: {
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                max: 110,
+                min: 0,
+              }
+            }
+          ]
+        },
         datasetFill: false
       }
     });
