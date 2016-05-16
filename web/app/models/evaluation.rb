@@ -36,7 +36,7 @@ class Evaluation < ActiveRecord::Base
 
     log = Umakadata::Logging::Log.new
     eval.alive = retriever.alive?({:time_out => 30, :logger => log})
-    eval.alive_log = log.as_json
+    eval.alive_error_reason = log.as_json
 
     if eval.alive
       self.retrieve_service_description(retriever, eval)
