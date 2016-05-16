@@ -1,0 +1,17 @@
+table.table.table-bordered
+  thead
+    tr
+      th
+        | Name
+      th
+        | Value
+  tbody
+  - contents.each do | key, value |
+    - if (key == 'request' && !value.has_key?('header') ) or (key == 'error' && value['message'].blank?)
+    - else
+      tr
+        td = key
+        - if value.is_a?(Hash)
+          td = render partial: 'detail_table', locals: {contents: value}
+        - else
+          td = value
