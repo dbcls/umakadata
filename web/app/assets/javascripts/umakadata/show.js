@@ -51,7 +51,7 @@ function showRadar(endpoint_id, evaluation_id) {
   });
 }
 
-function appendColors(datasets) {
+function appendOptions(datasets) {
   datasets['datasets'].forEach(function (element) {
     var label = element['label'];
 
@@ -100,7 +100,7 @@ function appendColors(datasets) {
 function showScoreHistory(endpoint_id) {
   $.getJSON("/endpoints/" + endpoint_id + "/score_history", function(json) {
     var context = $("#score_history");
-    appendColors(json);
+    appendOptions(json);
 
     new Chart(context, {
       type: 'line',
