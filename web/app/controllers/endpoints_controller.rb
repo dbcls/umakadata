@@ -69,56 +69,26 @@ class EndpointsController < ApplicationController
       :datasets => [
         {
           label: 'Availability',
-          fill: false,
-          backgroundColor: 'rgba(220,220,220,0.2)',
-          borderColor: 'rgba(220,220,220,1)',
-          pointBorderColor: 'rgba(220,220,220,1)',
-          pointBackgroundColor: '#fff',
           data: availability
         },
         {
           label: 'Freshness',
-          fill: false,
-          backgroundColor: "rgba(54,162,235,0.2)",
-          borderColor: "rgba(54,162,235,1)",
-          pointBorderColor: "rgba(54,162,235,1)",
-          pointBackgroundColor: "#fff",
           data: freshness
         },
         {
           label: 'Operation',
-          fill: false,
-          backgroundColor: "rgba(255,99,132,0.2)",
-          borderColor: "rgba(255,99,132,1)",
-          pointBorderColor: "rgba(255,99,132,1)",
-          pointBackgroundColor: "#fff",
           data: operation
         },
         {
           label: 'Usefulness',
-          fill: false,
-          backgroundColor: "rgba(255,206,86,0.2)",
-          borderColor: "rgba(255,206,86,1)",
-          pointBorderColor: "rgba(255,206,86,1)",
-          pointBackgroundColor: "#fff",
           data: usefulness
         },
         {
           label: 'Validity',
-          fill: false,
-          backgroundColor: "rgba(75,192,192,0.2)",
-          borderColor: "rgba(75,192,192,1)",
-          pointBorderColor: "rgba(75,192,192,1)",
-          pointBackgroundColor: "#fff",
           data: validity
         },
         {
           label: 'Performance',
-          fill: false,
-          backgroundColor: "rgba(231,233,237,0.2)",
-          borderColor: "rgba(231,233,237,1)",
-          pointBorderColor: "rgba(231,233,237,1)",
-          pointBackgroundColor: "#fff",
           data: performance
         }
       ]
