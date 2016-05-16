@@ -22,6 +22,27 @@ class EndpointsController < ApplicationController
   def show
   end
 
+  def detail
+    evaluation = Evaluation.where(:id => params[:evaluation_id]).where(:latest => true).first
+    @endpoint_id = evaluation.endpoint_id
+    json = nil
+    case(params[:name])
+    when 'alive' then
+      json = evaluation.alive_error_reason
+    when 'execution_time' then
+      json = evaluation.execution_time_error_reason
+    else
+      json = nil
+    end
+
+    begin
+      @details = JSON.parse(json)
+    rescue
+      @details = json
+    end
+
+  end
+
   def scores
     count = {1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0}
     conditions = {'evaluations.latest': true}
