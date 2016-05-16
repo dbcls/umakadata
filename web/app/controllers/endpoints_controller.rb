@@ -125,26 +125,32 @@ class EndpointsController < ApplicationController
 
 
   def score_statistics
-    today = Time.zone.now
-    from = 9.days.ago(Time.zone.local(today.year, today.month, today.day, 0, 0, 0))
-    grouped_evaluations = Evaluation.where(created_at: from..today).group('date(created_at)').order('date(created_at)')
-    labels = grouped_evaluations.count.keys.map{|date| date.strftime('%m/%d')}
-    evaluations = Evaluation.where(created_at: from..today).all
-    score_hash = {}
-    scores = []
-    evaluations.each do |evaluation|
-      date = evaluation.created_at.strftime('%m/%d')
-      if score_hash[date].nil?
-        scores = []
-        score_hash[date] = scores
-      else
-        scores = score_hash[date]
+    today = DateTime.now
+    from = 9.days.ago(today)
+
+    labels = Array.new
+    averages = Array.new
+    medians = Array.new
+
+    (from..today).each {|date|
+      tmp = Array.new
+
+      day_begin = DateTime.new(date.year, date.mon, date.day, 0, 0, 0, date.offset)
+      day_end = DateTime.new(date.year, date.mon, date.day, 23, 59, 59, date.offset)
+      Evaluation.where(created_at: day_begin..day_end).each do |evaluation|
+        tmp.push(evaluation.score)
       end
-      scores.push(evaluation.score)
-    end
-    medians = score_hash.map{|k, v|
-      scores = v.sort
-      scores.size % 2 == 0 ? scores[scores.size / 2 - 1, 2].inject(:+) / 2.0 : scores[scores.size / 2]
+      tmp.sort!
+
+      labels.push date.strftime('%m/%d')
+      if tmp.empty?
+        averages.push 0
+        medians.push 0
+        next
+      end
+
+      averages.push tmp.reduce(0, :+) / tmp.length
+      medians.push tmp.size % 2 == 0 ? tmp[tmp.length / 2 - 1, 2].reduce(0, :+) / 2.0 : tmp[tmp.length / 2]
     }
 
     render :json => {
@@ -152,7 +158,7 @@ class EndpointsController < ApplicationController
       :datasets => [
         {
           :label => 'Average',
-          :data => grouped_evaluations.average(:score).map{|k, v| v.to_i}
+          :data => averages
         },
         {
           :label => 'Median',
