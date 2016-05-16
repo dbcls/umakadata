@@ -53,6 +53,7 @@ class EndpointsController < ApplicationController
     usefulness = []
     validity = []
     performance = []
+    rank = []
     evaluations.each do |evaluation|
       labels.push(evaluation.created_at.strftime('%m/%d'))
       rates = Evaluation.calc_rates(evaluation)
@@ -62,6 +63,7 @@ class EndpointsController < ApplicationController
       usefulness.push(rates[3])
       validity.push(rates[4])
       performance.push(rates[5])
+      rank.push(evaluation.score)
     end
 
     render :json => {
@@ -90,6 +92,10 @@ class EndpointsController < ApplicationController
         {
           label: 'Performance',
           data: performance
+        },
+        {
+          label: 'Rank',
+          data: rank
         }
       ]
     }

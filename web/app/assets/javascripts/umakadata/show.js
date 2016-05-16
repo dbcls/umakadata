@@ -106,11 +106,20 @@ function showScoreHistory(endpoint_id) {
         {
           label: datasets[5]['label'],
           fill: false,
-          backgroundColor: "rgba(231,233,237,0.2)",
-          borderColor: "rgba(231,233,237,1)",
-          pointBorderColor: "rgba(231,233,237,1)",
+          backgroundColor: "rgba(21,7,119,0.2)",
+          borderColor: "rgba(21,7,119,1)",
+          pointBorderColor: "rgba(21,7,119,1)",
           pointBackgroundColor: "#fff",
           data: datasets[5]['data']
+        },
+        {
+          label: datasets[6]['label'],
+          fill: true,
+          backgroundColor: "rgba(151,187,205,0.2)",
+          borderColor: "rgba(151,187,205,1)",
+          pointBorderColor: "rgba(151,187,205,1)",
+          pointBackgroundColor: "#fff",
+          data: datasets[6]['data']
         }
       ]
     }
