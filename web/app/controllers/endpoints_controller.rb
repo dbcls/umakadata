@@ -131,15 +131,16 @@ class EndpointsController < ApplicationController
   def alive_statistics
     today = Time.zone.now
     from = 9.days.ago(Time.zone.local(today.year, today.month, today.day, 0, 0, 0))
-    labels = Evaluation.where(created_at: from..today).group('date(created_at)').count.sort.map{|key_value| key_value[0].strftime('%m/%d')}
-    avlie_data = Evaluation.where(created_at: from..today).group('date(created_at)').where(alive: true).count.sort.map{|key_value| key_value[1]}
+    grouped_evaluations = Evaluation.where(created_at: from..today).group('date(created_at)').order('date(created_at)')
+    labels = grouped_evaluations.count.keys.map{|date| date.strftime('%m/%d')}
+    alive_data = grouped_evaluations.where(alive: true).count.values
 
     render :json => {
       :labels => labels,
       :datasets => [
         {
           label: 'Avlie',
-          data: avlie_data
+          data: alive_data
         }
       ]
     }
@@ -148,8 +149,9 @@ class EndpointsController < ApplicationController
   def service_description_statistics
     today = Time.zone.now
     from = 9.days.ago(Time.zone.local(today.year, today.month, today.day, 0, 0, 0))
-    labels = Evaluation.where(created_at: from..today).group('date(created_at)').count.sort.map{|key_value| key_value[0].strftime('%m/%d')}
-    have_data = Evaluation.where(created_at: from..today).group('date(created_at)').where.not(service_description: nil).count.sort.map{|key_value| key_value[1]}
+    grouped_evaluations = Evaluation.where(created_at: from..today).group('date(created_at)').order('date(created_at)')
+    labels = grouped_evaluations.count.keys.map{|date| date.strftime('%m/%d')}
+    have_data = grouped_evaluations.where.not(service_description: nil).count.values
 
     render :json => {
       :labels => labels,
