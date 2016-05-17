@@ -154,24 +154,19 @@ class EndpointsController < ApplicationController
     medians = Array.new
 
     (from..today).each {|date|
-      tmp = Array.new
-
       day_begin = DateTime.new(date.year, date.mon, date.day, 0, 0, 0, date.offset)
       day_end = DateTime.new(date.year, date.mon, date.day, 23, 59, 59, date.offset)
-      Evaluation.where(created_at: day_begin..day_end).each do |evaluation|
-        tmp.push(evaluation.score)
-      end
-      tmp.sort!
+      scores = Evaluation.where(created_at: day_begin..day_end).pluck(:score).sort
 
       labels.push date.strftime('%m/%d')
-      if tmp.empty?
+      if scores.empty?
         averages.push 0
         medians.push 0
         next
       end
 
-      averages.push tmp.reduce(0, :+) / tmp.length
-      medians.push tmp.size % 2 == 0 ? tmp[tmp.length / 2 - 1, 2].reduce(0, :+) / 2.0 : tmp[tmp.length / 2]
+      averages.push scores.reduce(0, :+) / scores.length
+      medians.push scores.length % 2 == 0 ? scores[scores.length / 2 - 1, 2].reduce(0, :+) / 2.0 : scores[scores.length / 2]
     }
 
     render :json => {
