@@ -98,5 +98,5 @@ MIcrobeDB.jp,http://genome.microbedb.jp/sparql
 LinkDB,http://www.genome.jp/sparql/linkdb
 Colil,http://colil.dbcls.jp/sparql
 FirstAuthor Navigation,http://navi.first.lifesciencedb.jp/fanavi/sparql
-http://rdf.disgenet.org/sparql/
-https://query.wikidata.org/sparql
+DisGeNET,http://rdf.disgenet.org/sparql/
+Wikidata,https://query.wikidata.org/sparql
