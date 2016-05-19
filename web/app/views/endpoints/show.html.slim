@@ -1,7 +1,7 @@
 javascript:
   $(function(){
     showRadar(#{@endpoint.id}, #{@evaluation.id});
-    showScoreHistory(#{@endpoint.id});
+    showScoreHistory(#{@endpoint.id}, #{@evaluation.id});
   });
 
 h1.page-header = @endpoint.name

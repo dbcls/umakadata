@@ -66,12 +66,7 @@ class EndpointsController < ApplicationController
   end
 
   def score_history
-    today = DateTime.now
-    from = 29.days.ago(today)
-
     labels = Array.new
-    averages = Array.new
-    medians = Array.new
     availability = Array.new
     freshness = Array.new
     operation = Array.new
@@ -80,7 +75,9 @@ class EndpointsController < ApplicationController
     performance = Array.new
     rank = Array.new
 
-    (from..today).each {|date|
+    to =  Evaluation.lookup(params[:id], params[:evaluation_id]).created_at.to_datetime()
+    from = 29.days.ago(to)
+    (from..to).each {|date|
       labels.push(date.strftime('%m/%d'))
       day_begin = DateTime.new(date.year, date.mon, date.day, 0, 0, 0, date.offset)
       day_end = DateTime.new(date.year, date.mon, date.day, 23, 59, 59, date.offset)
