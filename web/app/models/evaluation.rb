@@ -34,18 +34,18 @@ class Evaluation < ActiveRecord::Base
 
     eval.latest = true
 
-    log = Umakadata::Logging::Log.new
-    eval.alive = retriever.alive?({:time_out => 30, :logger => log})
-    eval.alive_error_reason = log.as_json
+    logger = Umakadata::Logging::Log.new
+    eval.alive = retriever.alive?(logger: logger)
+    eval.alive_error_reason = logger.as_json
 
     if eval.alive
       self.retrieve_service_description(retriever, eval)
       self.retrieve_void(retriever, eval)
       self.retrieve_linked_data_rules(retriever, eval)
 
-      log = Umakadata::Logging::Log.new
-      eval.execution_time = retriever.execution_time({:logger => log})
-      eval.execution_time_error_reason = log.as_json
+      logger = Umakadata::Logging::Log.new
+      eval.execution_time = retriever.execution_time(logger: logger)
+      eval.execution_time_error_reason = logger.as_json
 
       eval.cool_uri_rate = retriever.cool_uri_rate
 
