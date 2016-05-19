@@ -23,7 +23,7 @@ class EndpointsController < ApplicationController
   end
 
   def detail
-    evaluation = Evaluation.where(:id => params[:evaluation_id]).where(:latest => true).first
+    evaluation = Evaluation.where(:id => params[:evaluation_id]).first
     @endpoint_id = evaluation.endpoint_id
     json = nil
     case(params[:name])
