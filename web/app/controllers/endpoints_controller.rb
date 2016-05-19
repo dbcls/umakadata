@@ -22,7 +22,7 @@ class EndpointsController < ApplicationController
   def show
   end
 
-  def detail
+  def log
     evaluation = Evaluation.where(:id => params[:evaluation_id]).first
     @endpoint_id = evaluation.endpoint_id
     json = nil
@@ -36,9 +36,9 @@ class EndpointsController < ApplicationController
     end
 
     begin
-      @details = JSON.parse(json)
+      @logs = JSON.parse(json)
     rescue
-      @details = json
+      @logs = json
     end
 
   end
