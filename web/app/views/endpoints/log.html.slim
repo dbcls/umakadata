@@ -1,13 +1,13 @@
 .row
   .col-xs-12.col-sm-12
   h2.page-header
-    | Details
+    | Logs
   '
-  - if @details.is_a?(Array)
-    - @details.each do | detail |
-      = render partial: 'endpoints/detail_table', locals: {contents: detail}
+  - if @logs.is_a?(Array)
+    - @logs.each do | log |
+      = render partial: 'endpoints/log_table', locals: {contents: log}
 
   - else
     p.h3
       | Error
-    p.h4 = @details
+    p.h4 = @logs
