@@ -66,17 +66,25 @@ class EndpointsController < ApplicationController
   end
 
   def score_history
-    evaluations = Evaluation.where(:endpoint_id => params[:id]).limit(30).order('evaluations.created_at ASC')
-    labels = []
-    availability = []
-    freshness = []
-    operation = []
-    usefulness = []
-    validity = []
-    performance = []
-    rank = []
-    evaluations.each do |evaluation|
-      labels.push(evaluation.created_at.strftime('%m/%d'))
+    today = DateTime.now
+    from = 29.days.ago(today)
+
+    labels = Array.new
+    averages = Array.new
+    medians = Array.new
+    availability = Array.new
+    freshness = Array.new
+    operation = Array.new
+    usefulness = Array.new
+    validity = Array.new
+    performance = Array.new
+    rank = Array.new
+
+    (from..today).each {|date|
+      labels.push(date.strftime('%m/%d'))
+      day_begin = DateTime.new(date.year, date.mon, date.day, 0, 0, 0, date.offset)
+      day_end = DateTime.new(date.year, date.mon, date.day, 23, 59, 59, date.offset)
+      evaluation = Evaluation.where(created_at: day_begin..day_end, endpoint_id: params[:id]).first || Evaluation.new
       rates = Evaluation.calc_rates(evaluation)
       availability.push(rates[0])
       freshness.push(rates[1])
@@ -84,8 +92,8 @@ class EndpointsController < ApplicationController
       usefulness.push(rates[3])
       validity.push(rates[4])
       performance.push(rates[5])
-      rank.push(evaluation.score)
-    end
+      rank.push(evaluation.score.presence || 0)
+    }
 
     render :json => {
       :labels => labels,
