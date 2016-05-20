@@ -45,17 +45,12 @@ module UmakadataUi
     config.time_zone = 'UTC'
     config.active_record.default_timezone = :utc
 
-    config.assets.precompile = ['*.js','*.css']
+    config.assets.precompile += [/^[a-z0-9]\w+.(css|js)$/]
 
     config.assets.paths << "#{Rails}/vendor/assets/fonts"
 
     config.autoload_paths += %W(#{config.root}/lib)
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
-
-    # Enable Hirb automatically on running rails consle
-    console do
-      Hirb.enable
-    end
 
   end
 end
