@@ -75,8 +75,9 @@ class EndpointsController < ApplicationController
     performance = Array.new
     rank = Array.new
 
-    to =  Evaluation.lookup(params[:id], params[:evaluation_id]).created_at.to_datetime()
-    from = 29.days.ago(to)
+    target_evaluation = Evaluation.lookup(params[:id], params[:evaluation_id])
+    to =  1.days.ago(target_evaluation.created_at.to_datetime())
+    from = 28.days.ago(to)
     (from..to).each {|date|
       labels.push(date.strftime('%m/%d'))
       day_begin = DateTime.new(date.year, date.mon, date.day, 0, 0, 0, date.offset)
@@ -91,6 +92,16 @@ class EndpointsController < ApplicationController
       performance.push(rates[5])
       rank.push(evaluation.score.presence || 0)
     }
+
+    labels.push(target_evaluation.created_at.strftime('%m/%d'))
+    rates = Evaluation.calc_rates(target_evaluation)
+    availability.push(rates[0])
+    freshness.push(rates[1])
+    operation.push(rates[2])
+    usefulness.push(rates[3])
+    validity.push(rates[4])
+    performance.push(rates[5])
+    rank.push(target_evaluation.score.presence || 0)
 
     render :json => {
       :labels => labels,
