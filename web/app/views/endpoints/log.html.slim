@@ -1,0 +1,13 @@
+.row
+  .col-xs-12.col-sm-12
+  h2.page-header
+    | Logs
+  '
+  - if @logs.is_a?(Array)
+    - @logs.each do | log |
+      = render partial: 'endpoints/log_table', locals: {contents: log}
+
+  - else
+    p.h3
+      | Error
+    p.h4 = @logs
