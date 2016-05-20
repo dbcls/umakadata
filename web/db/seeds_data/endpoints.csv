@@ -54,7 +54,7 @@ BioModels,http://www.ebi.ac.uk/rdf/services/biomodels/sparql
 BioSamples,http://www.ebi.ac.uk/rdf/services/biosamples/sparql
 chEMBL,http://www.ebi.ac.uk/rdf/services/chembl/sparql
 Reactome,http://www.ebi.ac.uk/rdf/services/reactome/sparql
-UniProt,http://sparql.uniprot.org/sparql
+UniProt,http://sparql.uniprot.org/sparql/
 Bio2RDF,http://sparql.openlifedata.org/
 NBDC RDF Portal,http://integbio.jp/rdf/sparql
 Centrally Curated Resources,https://global.eagle-i.net/sparqler/sparql
