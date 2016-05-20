@@ -342,7 +342,7 @@ h1.page-header = @endpoint.name
           td.performance
             = (@evaluation.execution_time.nil? ? 'N/A' : @evaluation.execution_time).to_s
             '
-            = link_to '(Details)', "/endpoints/#{@evaluation.id}/execution_time" unless @evaluation.execution_time_error_reason.nil?
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :execution_time unless @evaluation.execution_time_error_reason.nil?
 
 .row
   .col-sm-12
