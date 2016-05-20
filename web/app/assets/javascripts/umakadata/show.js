@@ -98,8 +98,8 @@ function appendOptions(datasets) {
   });
 }
 
-function showScoreHistory(endpoint_id) {
-  $.getJSON("/endpoints/" + endpoint_id + "/score_history", function(json) {
+function showScoreHistory(endpoint_id, evaluation_id) {
+  $.getJSON("/endpoints/" + endpoint_id + "/" + evaluation_id + "/score_history", function(json) {
     var context = $("#score_history");
     appendOptions(json);
 
