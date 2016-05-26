@@ -31,6 +31,8 @@ class EndpointsController < ApplicationController
       json = evaluation.alive_error_reason
     when 'execution_time' then
       json = evaluation.execution_time_error_reason
+    when 'service_description'
+      json = evaluation.service_description_error_reason
     else
       json = nil
     end

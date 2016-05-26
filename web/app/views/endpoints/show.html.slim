@@ -132,7 +132,8 @@ h1.page-header = @endpoint.name
                 | true if Service Description can be retrieved as turtle or rdf+xml, otherwise false.
           td.operation
             = (!@evaluation.service_description.blank?).to_s
-            = render partial: "error_icon", locals: { message: @evaluation.service_description_error_reason } unless @evaluation.service_description_error_reason.nil?
+            '
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :service_description unless @evaluation.service_description_error_reason.nil?
         tr
           td.operation
             .umakadata-tooltip
