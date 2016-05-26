@@ -47,6 +47,8 @@ class EndpointsController < ApplicationController
       json = evaluation.metadata_error_reason
     when 'ontology_score' then
       json = evaluation.ontology_log
+    when 'vocabulary_score' then
+      json = evaluation.vocabulary_log
     else
       json = nil
     end
