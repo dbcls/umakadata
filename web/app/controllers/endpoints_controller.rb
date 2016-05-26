@@ -37,12 +37,7 @@ class EndpointsController < ApplicationController
 
     begin
       log = JSON.parse(json)
-
-      if log.is_a?(Hash)
-        @log = log['logs']
-      elsif log.is_a?(Array)
-        @log = log
-      end
+      @log = log
     rescue
       @log = json
     end
