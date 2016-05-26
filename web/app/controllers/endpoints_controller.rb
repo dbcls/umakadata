@@ -45,6 +45,8 @@ class EndpointsController < ApplicationController
       json = evaluation.contains_links_error_reason
     when 'metadata_score' then
       json = evaluation.metadata_error_reason
+    when 'ontology_score' then
+      json = evaluation.ontology_log
     else
       json = nil
     end
