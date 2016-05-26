@@ -144,7 +144,8 @@ h1.page-header = @endpoint.name
                 | true if VoID can be found on well known URI, otherwise false.
           td.operation
             = (!@void.blank?).to_s
-            = render partial: "error_icon", locals: { message: @evaluation.void_ttl_error_reason } unless @evaluation.void_ttl_error_reason.nil?
+            '
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :void_ttl unless @evaluation.void_ttl_error_reason.nil?
         tr
           td.usefulness rowspan=8
             | Usefulness

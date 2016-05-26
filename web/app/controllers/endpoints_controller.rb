@@ -33,6 +33,8 @@ class EndpointsController < ApplicationController
       json = evaluation.execution_time_error_reason
     when 'service_description'
       json = evaluation.service_description_error_reason
+    when 'void_ttl' then
+      json = evaluation.void_ttl_error_reason
     else
       json = nil
     end
