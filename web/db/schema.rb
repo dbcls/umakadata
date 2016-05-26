@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160405060343) do
+ActiveRecord::Schema.define(version: 20160526094421) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -98,6 +98,13 @@ ActiveRecord::Schema.define(version: 20160405060343) do
     t.text     "support_content_negotiation_error_reason"
     t.text     "metadata_error_reason"
     t.text     "number_of_statements_error_reason"
+    t.text     "cool_uri_rate_log"
+    t.text     "last_updated_log"
+    t.text     "vocabulary_log"
+    t.text     "ontology_log"
+    t.text     "support_turtle_format_log"
+    t.text     "support_xml_format_log"
+    t.text     "support_html_format_log"
   end
 
   create_table "update_statuses", force: :cascade do |t|
