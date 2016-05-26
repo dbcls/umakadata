@@ -12,6 +12,7 @@ javascript:
   - if @logs.is_a?(Array)
     - id = 0
     - @logs.each do |log|
+      h3 = log['criterion']
       table.table.table-bordered
         thead
           tr
@@ -20,9 +21,14 @@ javascript:
             th
               | Value
         tbody
-        - log.each do |key, value|
-          = render partial: 'endpoints/row', locals: {key: key, content: value, id: id, parent_id: nil}
-          - id += 1
+        - i = 0
+        - if log.has_key?('logs')
+          - log['logs'].each do |value|
+            = render partial: 'endpoints/row', locals: {key: "log [#{i += 1}]", content: value, id: id += 1, parent_id: nil}
+        - else
+          - log.each do |key, value|
+            = render partial: 'endpoints/row', locals: {key: key, content: value, id: id += 1, parent_id: nil}
+
 
   - else
     p.h3

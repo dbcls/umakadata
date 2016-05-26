@@ -104,6 +104,8 @@ h1.page-header = @endpoint.name
                   Alive rate shows how much the endpoint was alive in these 30 days.
           td.availability
             = @evaluation.alive.to_s + " (" + @evaluation.alive_rate.to_s + "%)"
+            '
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :alive unless @evaluation.alive_error_reason.nil?
         tr
           td.freshness
             | Freshness
