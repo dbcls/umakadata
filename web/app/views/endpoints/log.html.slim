@@ -9,10 +9,10 @@ javascript:
     | Logs
   '
 
-  - if @logs.is_a?(Array)
+  - if @log.is_a?(Array)
     - id = 0
-    - @logs.each do |log|
-      h3 = log['criterion']
+    - @log.each do |contents|
+      h3 = contents['criterion']
       table.table.table-bordered
         thead
           tr
@@ -22,15 +22,14 @@ javascript:
               | Value
         tbody
         - i = 0
-        - if log.has_key?('logs')
-          - log['logs'].each do |value|
-            = render partial: 'endpoints/row', locals: {key: "log [#{i += 1}]", content: value, id: id += 1, parent_id: nil}
+        - if contents.has_key?('logs')
+          - contents['logs'].each do |log|
+            = render partial: 'endpoints/row', locals: {key: "log [#{i += 1}]", content: log, id: id += 1, parent_id: nil}
         - else
-          - log.each do |key, value|
+          - contents.each do |key, value|
             = render partial: 'endpoints/row', locals: {key: key, content: value, id: id += 1, parent_id: nil}
-
 
   - else
     p.h3
       | Error
-    p.h4 = @logs
+    p.h4 = @log
