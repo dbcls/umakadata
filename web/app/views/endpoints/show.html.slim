@@ -202,16 +202,6 @@ h1.page-header = @endpoint.name
                   | http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-builder-metadata/
           td.usefulness
             = ( @evaluation.metadata_score.nil? ? '-' : sprintf("%.2f", @evaluation.metadata_score) )
-            - unless @metadata_error_reason.nil?
-              '
-              .umakadata-tooltip
-                .glyphicon.glyphicon-exclamation-sign.text-danger
-                span.medium
-                  | #{@metadata_error_reason[:type]}
-                  br
-                  - for element in @metadata_error_reason[:elements]
-                    li
-                      | #{element}
         tr
           td.usefulness
             .umakadata-tooltip

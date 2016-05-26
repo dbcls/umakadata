@@ -59,10 +59,10 @@ class Evaluation < ActiveRecord::Base
 
       eval.support_content_negotiation_error_reason = retriever.get_error if !eval.support_content_negotiation
 
-
-      metadata = retriever.metadata
-      eval.metadata_error_reason = retriever.get_error
-      eval.metadata_score = retriever.score_metadata(metadata)
+      logger = Umakadata::Logging::Log.new
+      metadata = retriever.metadata(logger: logger)
+      eval.metadata_score = retriever.score_metadata(metadata, logger: logger)
+      eval.metadata_error_reason = logger.as_json
       eval.ontology_score = retriever.score_ontologies(metadata)
       eval.vocabulary_score = retriever.score_vocabularies(metadata)
 

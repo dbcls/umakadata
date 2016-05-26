@@ -43,6 +43,8 @@ class EndpointsController < ApplicationController
       json = evaluation.uri_provides_info_error_reason
     when 'contains_links'
       json = evaluation.contains_links_error_reason
+    when 'metadata_score' then
+      json = evaluation.metadata_error_reason
     else
       json = nil
     end
@@ -292,37 +294,6 @@ class EndpointsController < ApplicationController
       end
       @license = @license.join('<br/>')
       @publisher = @publisher.join('<br/>')
-
-      error = nil
-      if !@evaluation.metadata_error_reason.nil?
-        metadata_error_reason = JSON.parse(@evaluation.metadata_error_reason, {:symbolize_names => true})
-        error = metadata_error_reason[:error]
-      end
-
-      if error.nil?
-        @metadata_error_reason = nil
-        return
-      elsif error === 'graph'
-        @metadata_error_reason = {
-          type: 'Failed to retrieve graph',
-          elements: [metadata_error_reason[:reason]]
-        }
-      elsif error === 'elements'
-        reasons = metadata_error_reason[:reason]
-        classes    = reasons[:classes]
-        labels     = reasons[:labels]
-        datatypes  = reasons[:datatypes]
-        properties = reasons[:properties]
-        @metadata_error_reason = {
-          type: 'Errors occurs in the following RDF schema',
-          elements: [
-            "rdfs:Class: #{classes.size}",
-            "rdfs:label: #{labels.size}",
-            "rdfs:Datatype: #{datatypes.size}",
-            "rdf:Property: #{properties.size}"
-          ]
-        }
-      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
