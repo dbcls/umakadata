@@ -55,6 +55,8 @@ class EndpointsController < ApplicationController
       json = evaluation.support_html_format_log
     when 'support_turtle_format' then
       json = evaluation.support_turtle_format_log
+    when 'cool_uri_rate' then
+      json = evaluation.cool_uri_rate_log
     else
       json = nil
     end

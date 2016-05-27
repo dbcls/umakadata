@@ -48,7 +48,9 @@ class Evaluation < ActiveRecord::Base
       eval.execution_time = retriever.execution_time(logger: logger)
       eval.execution_time_error_reason = logger.as_json
 
-      eval.cool_uri_rate = retriever.cool_uri_rate
+      logger = Umakadata::Logging::Log.new
+      eval.cool_uri_rate = retriever.cool_uri_rate(logger: logger)
+      eval.cool_uri_rate_log = logger.as_json
 
       logger = Umakadata::Logging::Log.new
       eval.support_turtle_format = retriever.check_content_negotiation(Umakadata::DataFormat::TURTLE, logger: logger)

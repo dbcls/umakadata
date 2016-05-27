@@ -337,6 +337,8 @@ h1.page-header = @endpoint.name
                   | http://patterns.dataincubator.org/book/identifier-patterns.html
           td.validity
             = @evaluation.cool_uri_rate.to_i
+            '
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :cool_uri_rate
         tr
           td.performance
             | Performance
