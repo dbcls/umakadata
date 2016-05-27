@@ -40,7 +40,8 @@ class Evaluation < ActiveRecord::Base
 
     if eval.alive
       self.retrieve_service_description(retriever, eval)
-      self.retrieve_void(retriever, eval)
+      logger = Umakadata::Logging::Log.new
+      self.retrieve_void(retriever, eval, logger: logger)
       self.retrieve_linked_data_rules(retriever, eval)
 
       logger = Umakadata::Logging::Log.new
@@ -88,15 +89,14 @@ class Evaluation < ActiveRecord::Base
     eval.service_description = service_description.text
   end
 
-  def self.retrieve_void(retriever, eval)
+  def self.retrieve_void(retriever, eval, logger: nil)
     eval.void_uri = retriever.well_known_uri
-    void = retriever.void_on_well_known_uri
+    void = retriever.void_on_well_known_uri(logger: logger)
+    eval.void_ttl_error_reason = logger.as_json
     if void.nil?
       eval.void_ttl = nil
-      eval.void_ttl_error_reason = retriever.get_error
       return
     end
-    eval.void_ttl_error_reason = retriever.get_error if void.text.nil?
     eval.void_ttl = void.text
   end
 
