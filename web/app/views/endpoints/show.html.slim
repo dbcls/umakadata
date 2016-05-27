@@ -226,7 +226,8 @@ h1.page-header = @endpoint.name
                 | Number of statements in the endpoint.
           td.usefulness
             = (@evaluation.number_of_statements.nil? ? 'N/A' : @evaluation.number_of_statements).to_s
-            = render partial: "error_icon", locals: { message: @evaluation.number_of_statements_error_reason } unless @evaluation.number_of_statements_error_reason.nil?
+            '
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :number_of_statements
         tr
           td.usefulness
             .umakadata-tooltip

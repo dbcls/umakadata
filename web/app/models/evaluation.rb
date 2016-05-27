@@ -81,8 +81,9 @@ class Evaluation < ActiveRecord::Base
 
       self.check_update(retriever, eval)
 
-      eval.number_of_statements = retriever.number_of_statements
-      eval.number_of_statements_error_reason = retriever.get_error if eval.number_of_statements.nil?
+      logger = Umakadata::Logging::Log.new
+      eval.number_of_statements = retriever.number_of_statements(logger: logger)
+      eval.number_of_statements_error_reason = logger.as_json
     end
 
     eval.alive_rate = Evaluation.calc_alive_rate(eval)

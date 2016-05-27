@@ -57,6 +57,8 @@ class EndpointsController < ApplicationController
       json = evaluation.support_turtle_format_log
     when 'cool_uri_rate' then
       json = evaluation.cool_uri_rate_log
+    when 'number_of_statements' then
+      json = evaluation.number_of_statements_error_reason
     else
       json = nil
     end
