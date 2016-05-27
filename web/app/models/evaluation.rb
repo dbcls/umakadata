@@ -50,14 +50,19 @@ class Evaluation < ActiveRecord::Base
 
       eval.cool_uri_rate = retriever.cool_uri_rate
 
-      eval.support_turtle_format = retriever.check_content_negotiation(Umakadata::DataFormat::TURTLE)
-      eval.support_xml_format    = retriever.check_content_negotiation(Umakadata::DataFormat::RDFXML)
-      eval.support_html_format   = retriever.check_content_negotiation(Umakadata::DataFormat::HTML)
+      logger = Umakadata::Logging::Log.new
+      eval.support_turtle_format = retriever.check_content_negotiation(Umakadata::DataFormat::TURTLE, logger: logger)
+      eval.support_turtle_format_log = logger.as_json
+      logger = Umakadata::Logging::Log.new
+      eval.support_xml_format    = retriever.check_content_negotiation(Umakadata::DataFormat::RDFXML, logger: logger)
+      eval.support_content_negotiation_error_reason = logger.as_json
+      logger = Umakadata::Logging::Log.new
+      eval.support_html_format   = retriever.check_content_negotiation(Umakadata::DataFormat::HTML, logger: logger)
+      eval.support_html_format_log = logger.as_json
+
       eval.support_content_negotiation = eval.support_turtle_format ||
                                          eval.support_xml_format ||
                                          eval.support_html_format
-
-      eval.support_content_negotiation_error_reason = retriever.get_error if !eval.support_content_negotiation
 
       logger = Umakadata::Logging::Log.new
       metadata = retriever.metadata(logger: logger)

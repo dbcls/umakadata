@@ -49,6 +49,12 @@ class EndpointsController < ApplicationController
       json = evaluation.ontology_log
     when 'vocabulary_score' then
       json = evaluation.vocabulary_log
+    when 'support_xml_format' then
+      json = evaluation.support_content_negotiation_error_reason
+    when 'support_html_format' then
+      json = evaluation.support_html_format_log
+    when 'support_turtle_format' then
+      json = evaluation.support_turtle_format_log
     else
       json = nil
     end

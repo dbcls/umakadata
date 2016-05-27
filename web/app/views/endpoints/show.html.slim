@@ -234,8 +234,9 @@ h1.page-header = @endpoint.name
               span.medium
                 | true if the endpoint returns a response in one of data formats(Turtle, RDF/XML, HTML), otherwise false.
           td.usefulness
-            = @evaluation.support_content_negotiation.to_s
-            = render partial: "error_icon", locals: { message: @evaluation.support_content_negotiation_error_reason } unless @evaluation.support_content_negotiation_error_reason.nil?
+            = @evaluation.support_content_negotiation
+            '
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :support_xml_format
         tr
           td.usefulness
             .umakadata-tooltip
@@ -244,6 +245,8 @@ h1.page-header = @endpoint.name
                 | true if the endpoint returns a response in HTML format, otherwise false.
           td.usefulness
             = @evaluation.support_html_format
+            '
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :support_html_format
         tr
           td.usefulness
             .umakadata-tooltip
@@ -252,6 +255,8 @@ h1.page-header = @endpoint.name
                 | true if the endpoint returns a response in Turtle format, otherwise false.
           td.usefulness
             = @evaluation.support_turtle_format
+            '
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :support_turtle_format
         tr
           td.validity rowspan=2
             | Validity
