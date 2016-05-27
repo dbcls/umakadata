@@ -35,6 +35,14 @@ class EndpointsController < ApplicationController
       json = evaluation.service_description_error_reason
     when 'void_ttl' then
       json = evaluation.void_ttl_error_reason
+    when 'subject_is_uri'
+      json = evaluation.subject_is_uri_error_reason
+    when 'subject_is_http_uri'
+      json = evaluation.subject_is_http_uri_error_reason
+    when 'uri_provides_info'
+      json = evaluation.uri_provides_info_error_reason
+    when 'contains_links'
+      json = evaluation.contains_links_error_reason
     else
       json = nil
     end

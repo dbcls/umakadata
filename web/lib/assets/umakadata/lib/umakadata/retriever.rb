@@ -29,17 +29,17 @@ module Umakadata
     end
 
     include Umakadata::Criteria::LinkedDataRules
-    def uri_subject?
-      super(@uri)
+    def uri_subject?(logger: nil)
+      super(@uri, logger: logger)
     end
-    def http_subject?
-      super(@uri)
+    def http_subject?(logger: nil)
+      super(@uri, logger: logger)
     end
-    def uri_provides_info?
-      super(@uri)
+    def uri_provides_info?(logger: nil)
+      super(@uri, logger: logger)
     end
-    def contains_links?
-      super(@uri)
+    def contains_links?(logger: nil)
+      super(@uri, logger: logger)
     end
 
     include Umakadata::Criteria::VoID

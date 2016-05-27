@@ -101,14 +101,18 @@ class Evaluation < ActiveRecord::Base
   end
 
   def self.retrieve_linked_data_rules(retriever, eval)
-    eval.subject_is_uri = retriever.uri_subject?
-    eval.subject_is_uri_error_reason = retriever.get_error if !eval.subject_is_uri
-    eval.subject_is_http_uri = retriever.http_subject?
-    eval.subject_is_http_uri_error_reason = retriever.get_error if !eval.subject_is_http_uri
-    eval.uri_provides_info = retriever.uri_provides_info?
-    eval.uri_provides_info_error_reason = retriever.get_error if !eval.uri_provides_info
-    eval.contains_links = retriever.contains_links?
-    eval.contains_links_error_reason = retriever.get_error if !eval.contains_links
+    logger = Umakadata::Logging::Log.new
+    eval.subject_is_uri = retriever.uri_subject?(logger: logger)
+    eval.subject_is_uri_error_reason = logger.as_json
+    logger = Umakadata::Logging::Log.new
+    eval.subject_is_http_uri = retriever.http_subject?(logger: logger)
+    eval.subject_is_http_uri_error_reason = logger.as_json
+    logger = Umakadata::Logging::Log.new
+    eval.uri_provides_info = retriever.uri_provides_info?(logger: logger)
+    eval.uri_provides_info_error_reason = logger.as_json
+    logger = Umakadata::Logging::Log.new
+    eval.contains_links = retriever.contains_links?(logger: logger)
+    eval.contains_links_error_reason = logger.as_json
   end
 
   def self.calc_alive_rate(eval)
