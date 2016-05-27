@@ -238,7 +238,7 @@ class EndpointsController < ApplicationController
       :labels => labels,
       :datasets => [
         {
-          label: 'Alvie',
+          label: 'Alive',
           data: alive_data
         }
       ]
