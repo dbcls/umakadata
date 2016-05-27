@@ -80,12 +80,10 @@ class Evaluation < ActiveRecord::Base
   end
 
   def self.retrieve_service_description(retriever, eval)
-    service_description = retriever.service_description
-    if service_description.nil?
-      eval.service_description_error_reason = retriever.get_error
-      return
-    end
-    eval.service_description_error_reason = retriever.get_error if service_description.text.nil?
+    logger = Umakadata::Logging::Log.new
+    service_description = retriever.service_description(logger: logger)
+    eval.service_description_error_reason = logger.as_json
+    return if service_description.nil?
     eval.response_header     = service_description.response_header
     eval.service_description = service_description.text
   end
