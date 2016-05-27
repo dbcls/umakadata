@@ -9,22 +9,27 @@ javascript:
     | Logs
   '
 
-  - if @logs.is_a?(Array)
+  - if @log.is_a?(Array)
     - id = 0
-    - @logs.each do |log|
+    - @log.each do |contents|
+      h3 = contents['result']
       table.table.table-bordered
         thead
           tr
-            th.col-md-4
+            th.col-xs-5.col-sm-4.col-md-3
               | Name
             th
               | Value
         tbody
-        - log.each do |key, value|
-          = render partial: 'endpoints/row', locals: {key: key, content: value, id: id, parent_id: nil}
-          - id += 1
+        - i = 0
+        - if contents.has_key?('logs')
+          - contents['logs'].each do |log|
+            = render partial: 'endpoints/row', locals: {key: "log [#{i += 1}]", content: log, id: id += 1, parent_id: nil}
+        - else
+          - contents.each do |key, value|
+            = render partial: 'endpoints/row', locals: {key: key, content: value, id: id += 1, parent_id: nil}
 
   - else
     p.h3
       | Error
-    p.h4 = @logs
+    p.h4 = @log

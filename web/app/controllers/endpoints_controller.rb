@@ -38,9 +38,9 @@ class EndpointsController < ApplicationController
     end
 
     begin
-      @logs = JSON.parse(json)
+      @log = JSON.parse(json)
     rescue
-      @logs = json
+      @log = json
     end
 
   end

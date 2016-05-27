@@ -1,7 +1,7 @@
 - if content.is_a?(Hash)
   tr.active data-tt-id="#{id}" data-tt-parent-id="#{parent_id}"
     td = key
-    td
+    td = (content.has_key?('error') ? content['error']['message'] : '')
   - parent_id = id
   - id = 0
   - content.each do |key, value|
