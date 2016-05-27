@@ -167,6 +167,8 @@ h1.page-header = @endpoint.name
                   | http://stats.lod2.eu/vocabularies
           td.usefulness
             = @evaluation.vocabulary_score.nil? ? '-' : sprintf("%.2f", @evaluation.vocabulary_score)
+            '
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :vocabulary_score unless @evaluation.vocabulary_log.nil?
         tr
           td.usefulness
             .umakadata-tooltip
@@ -184,6 +186,8 @@ h1.page-header = @endpoint.name
                   | http://stats.lod2.eu/vocabularies
           td.usefulness
             = @evaluation.ontology_score.nil? ? '-' : sprintf("%.2f", @evaluation.ontology_score)
+            '
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :ontology_score unless @evaluation.ontology_log.nil?
         tr
           td.usefulness
             .umakadata-tooltip
@@ -202,16 +206,8 @@ h1.page-header = @endpoint.name
                   | http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-builder-metadata/
           td.usefulness
             = ( @evaluation.metadata_score.nil? ? '-' : sprintf("%.2f", @evaluation.metadata_score) )
-            - unless @metadata_error_reason.nil?
-              '
-              .umakadata-tooltip
-                .glyphicon.glyphicon-exclamation-sign.text-danger
-                span.medium
-                  | #{@metadata_error_reason[:type]}
-                  br
-                  - for element in @metadata_error_reason[:elements]
-                    li
-                      | #{element}
+            '
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :metadata_score unless @evaluation.metadata_error_reason.nil?
         tr
           td.usefulness
             .umakadata-tooltip
