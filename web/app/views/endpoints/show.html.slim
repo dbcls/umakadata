@@ -105,7 +105,7 @@ h1.page-header = @endpoint.name
           td.availability
             = @evaluation.alive.to_s + " (" + @evaluation.alive_rate.to_s + "%)"
             '
-            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :alive unless @evaluation.alive_error_reason.nil?
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :alive
         tr
           td.freshness
             | Freshness
@@ -135,7 +135,7 @@ h1.page-header = @endpoint.name
           td.operation
             = (!@evaluation.service_description.blank?).to_s
             '
-            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :service_description unless @evaluation.service_description_error_reason.nil?
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :service_description
         tr
           td.operation
             .umakadata-tooltip
@@ -145,7 +145,7 @@ h1.page-header = @endpoint.name
           td.operation
             = (!@void.blank?).to_s
             '
-            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :void_ttl unless @evaluation.void_ttl_error_reason.nil?
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :void_ttl
         tr
           td.usefulness rowspan=8
             | Usefulness
@@ -168,7 +168,7 @@ h1.page-header = @endpoint.name
           td.usefulness
             = @evaluation.vocabulary_score.nil? ? '-' : sprintf("%.2f", @evaluation.vocabulary_score)
             '
-            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :vocabulary_score unless @evaluation.vocabulary_log.nil?
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :vocabulary_score
         tr
           td.usefulness
             .umakadata-tooltip
@@ -187,7 +187,7 @@ h1.page-header = @endpoint.name
           td.usefulness
             = @evaluation.ontology_score.nil? ? '-' : sprintf("%.2f", @evaluation.ontology_score)
             '
-            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :ontology_score unless @evaluation.ontology_log.nil?
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :ontology_score
         tr
           td.usefulness
             .umakadata-tooltip
@@ -207,7 +207,7 @@ h1.page-header = @endpoint.name
           td.usefulness
             = ( @evaluation.metadata_score.nil? ? '-' : sprintf("%.2f", @evaluation.metadata_score) )
             '
-            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :metadata_score unless @evaluation.metadata_error_reason.nil?
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :metadata_score
         tr
           td.usefulness
             .umakadata-tooltip
@@ -354,7 +354,7 @@ h1.page-header = @endpoint.name
           td.performance
             = (@evaluation.execution_time.nil? ? 'N/A' : @evaluation.execution_time).to_s
             '
-            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :execution_time unless @evaluation.execution_time_error_reason.nil?
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :execution_time
 
 .row
   .col-sm-12
