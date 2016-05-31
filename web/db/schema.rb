@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160526094421) do
+ActiveRecord::Schema.define(version: 20160530042236) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,18 +86,18 @@ ActiveRecord::Schema.define(version: 20160526094421) do
     t.text     "last_updated_source"
     t.integer  "update_interval"
     t.integer  "number_of_statements",                     limit: 8
-    t.text     "alive_error_reason"
-    t.text     "service_description_error_reason"
-    t.text     "uri_subject_error_reason"
-    t.text     "subject_is_uri_error_reason"
-    t.text     "subject_is_http_uri_error_reason"
-    t.text     "uri_provides_info_error_reason"
-    t.text     "contains_links_error_reason"
-    t.text     "void_ttl_error_reason"
-    t.text     "execution_time_error_reason"
-    t.text     "support_content_negotiation_error_reason"
-    t.text     "metadata_error_reason"
-    t.text     "number_of_statements_error_reason"
+    t.text     "alive_log"
+    t.text     "service_description_log"
+    t.text     "uri_subject_log"
+    t.text     "subject_is_uri_log"
+    t.text     "subject_is_http_uri_log"
+    t.text     "uri_provides_info_log"
+    t.text     "contains_links_log"
+    t.text     "void_ttl_log"
+    t.text     "execution_time_log"
+    t.text     "support_content_negotiation_log"
+    t.text     "metadata_log"
+    t.text     "number_of_statements_log"
     t.text     "cool_uri_rate_log"
     t.text     "last_updated_log"
     t.text     "vocabulary_log"

@@ -28,29 +28,29 @@ class EndpointsController < ApplicationController
     json = nil
     case(params[:name])
     when 'alive' then
-      json = evaluation.alive_error_reason
+      json = evaluation.alive_log
     when 'execution_time' then
-      json = evaluation.execution_time_error_reason
+      json = evaluation.execution_time_log
     when 'service_description'
-      json = evaluation.service_description_error_reason
+      json = evaluation.service_description_log
     when 'void_ttl' then
-      json = evaluation.void_ttl_error_reason
+      json = evaluation.void_ttl_log
     when 'subject_is_uri'
-      json = evaluation.subject_is_uri_error_reason
+      json = evaluation.subject_is_uri_log
     when 'subject_is_http_uri'
-      json = evaluation.subject_is_http_uri_error_reason
+      json = evaluation.subject_is_http_uri_log
     when 'uri_provides_info'
-      json = evaluation.uri_provides_info_error_reason
+      json = evaluation.uri_provides_info_log
     when 'contains_links'
-      json = evaluation.contains_links_error_reason
+      json = evaluation.contains_links_log
     when 'metadata_score' then
-      json = evaluation.metadata_error_reason
+      json = evaluation.metadata_log
     when 'ontology_score' then
       json = evaluation.ontology_log
     when 'vocabulary_score' then
       json = evaluation.vocabulary_log
     when 'support_xml_format' then
-      json = evaluation.support_content_negotiation_error_reason
+      json = evaluation.support_content_negotiation_log
     when 'support_html_format' then
       json = evaluation.support_html_format_log
     when 'support_turtle_format' then
@@ -58,7 +58,7 @@ class EndpointsController < ApplicationController
     when 'cool_uri_rate' then
       json = evaluation.cool_uri_rate_log
     when 'number_of_statements' then
-      json = evaluation.number_of_statements_error_reason
+      json = evaluation.number_of_statements_log
     else
       json = nil
     end

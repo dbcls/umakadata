@@ -36,7 +36,7 @@ class Evaluation < ActiveRecord::Base
 
     logger = Umakadata::Logging::Log.new
     eval.alive = retriever.alive?(logger: logger)
-    eval.alive_error_reason = logger.as_json
+    eval.alive_log = logger.as_json
 
     if eval.alive
       self.retrieve_service_description(retriever, eval)
@@ -46,7 +46,7 @@ class Evaluation < ActiveRecord::Base
 
       logger = Umakadata::Logging::Log.new
       eval.execution_time = retriever.execution_time(logger: logger)
-      eval.execution_time_error_reason = logger.as_json
+      eval.execution_time_log = logger.as_json
 
       logger = Umakadata::Logging::Log.new
       eval.cool_uri_rate = retriever.cool_uri_rate(logger: logger)
@@ -57,7 +57,7 @@ class Evaluation < ActiveRecord::Base
       eval.support_turtle_format_log = logger.as_json
       logger = Umakadata::Logging::Log.new
       eval.support_xml_format    = retriever.check_content_negotiation(Umakadata::DataFormat::RDFXML, logger: logger)
-      eval.support_content_negotiation_error_reason = logger.as_json
+      eval.support_content_negotiation_log = logger.as_json
       logger = Umakadata::Logging::Log.new
       eval.support_html_format   = retriever.check_content_negotiation(Umakadata::DataFormat::HTML, logger: logger)
       eval.support_html_format_log = logger.as_json
@@ -69,7 +69,7 @@ class Evaluation < ActiveRecord::Base
       logger = Umakadata::Logging::Log.new
       metadata = retriever.metadata(logger: logger)
       eval.metadata_score = retriever.score_metadata(metadata, logger: logger)
-      eval.metadata_error_reason = logger.as_json
+      eval.metadata_log = logger.as_json
 
       logger = Umakadata::Logging::Log.new
       eval.ontology_score = retriever.score_ontologies(metadata, logger: logger)
@@ -83,7 +83,7 @@ class Evaluation < ActiveRecord::Base
 
       logger = Umakadata::Logging::Log.new
       eval.number_of_statements = retriever.number_of_statements(logger: logger)
-      eval.number_of_statements_error_reason = logger.as_json
+      eval.number_of_statements_log = logger.as_json
     end
 
     eval.alive_rate = Evaluation.calc_alive_rate(eval)
@@ -97,7 +97,7 @@ class Evaluation < ActiveRecord::Base
   def self.retrieve_service_description(retriever, eval)
     logger = Umakadata::Logging::Log.new
     service_description = retriever.service_description(logger: logger)
-    eval.service_description_error_reason = logger.as_json
+    eval.service_description_log = logger.as_json
     return if service_description.nil?
     eval.response_header     = service_description.response_header
     eval.service_description = service_description.text
@@ -106,7 +106,7 @@ class Evaluation < ActiveRecord::Base
   def self.retrieve_void(retriever, eval, logger: nil)
     eval.void_uri = retriever.well_known_uri
     void = retriever.void_on_well_known_uri(logger: logger)
-    eval.void_ttl_error_reason = logger.as_json
+    eval.void_ttl_log = logger.as_json
     if void.nil?
       eval.void_ttl = nil
       return
@@ -117,16 +117,16 @@ class Evaluation < ActiveRecord::Base
   def self.retrieve_linked_data_rules(retriever, eval)
     logger = Umakadata::Logging::Log.new
     eval.subject_is_uri = retriever.uri_subject?(logger: logger)
-    eval.subject_is_uri_error_reason = logger.as_json
+    eval.subject_is_uri_log = logger.as_json
     logger = Umakadata::Logging::Log.new
     eval.subject_is_http_uri = retriever.http_subject?(logger: logger)
-    eval.subject_is_http_uri_error_reason = logger.as_json
+    eval.subject_is_http_uri_log = logger.as_json
     logger = Umakadata::Logging::Log.new
     eval.uri_provides_info = retriever.uri_provides_info?(logger: logger)
-    eval.uri_provides_info_error_reason = logger.as_json
+    eval.uri_provides_info_log = logger.as_json
     logger = Umakadata::Logging::Log.new
     eval.contains_links = retriever.contains_links?(logger: logger)
-    eval.contains_links_error_reason = logger.as_json
+    eval.contains_links_log = logger.as_json
   end
 
   def self.calc_alive_rate(eval)
