@@ -17,8 +17,8 @@
               | Value
         tbody
         - i = 0
-        - if contents.has_key?('logs')
-          - contents['logs'].each do |log|
+        - if contents.has_key?('context')
+          - contents['context'].each do |log|
             = render partial: 'endpoints/row', locals: {key: "log [#{i += 1}]", content: log, id: id += 1, parent_id: nil}
         - else
           - contents.each do |key, value|
