@@ -78,7 +78,9 @@ class Evaluation < ActiveRecord::Base
       eval.vocabulary_score = retriever.score_vocabularies(metadata, logger: logger)
       eval.vocabulary_log = logger.as_json
 
-      self.check_update(retriever, eval)
+      logger = Umakadata::Logging::Log.new
+      self.check_update(retriever, eval, logger: logger)
+      eval.last_updated_log = logger.as_json
 
       logger = Umakadata::Logging::Log.new
       eval.number_of_statements = retriever.number_of_statements(logger: logger)
@@ -237,29 +239,33 @@ class Evaluation < ActiveRecord::Base
     return rates.map{ |v| v.to_i }
   end
 
-  def self.check_update(retriever, eval)
-    last_updated = retriever.last_updated
+  def self.check_update(retriever, eval, logger: nil)
+    last_updated = retriever.last_updated(logger: logger)
     if !last_updated.nil?
       eval.last_updated = last_updated[:date].strftime('%F')
       eval.last_updated_source = last_updated[:source]
+      logger.result = "The endpoint was updated on #{eval.last_updated}"
       return
     end
 
-    current = retriever.count_first_last
-    return if current.nil?
-
+    log = Umakadata::Logging::Log.new
+    logger.push log unless logger.nil?
+    latest = retriever.count_first_last(logger: log)
     prevStatus = UpdateStatus.where(:endpoint_id => eval.endpoint_id).order('created_at DESC').first
-    currentStatus = UpdateStatus.record(eval.endpoint_id, current)
+    latestStatus = UpdateStatus.record(eval.endpoint_id, latest)
     previous = self.where(:endpoint_id => eval.endpoint_id).order('created_at DESC').first
-
-    if UpdateStatus.different?(prevStatus, currentStatus) || previous.nil?
+    if UpdateStatus.different?(prevStatus, latestStatus, logger: log) || previous.nil?
       eval.last_updated = Time.now.strftime('%F')
       eval.last_updated_source = 'Adhoc'
+      log.result = 'The latest update status is different from previous one'
+      logger.result = "The endpoint was updated on today"
       return
     end
 
     eval.last_updated = previous[:last_updated]
     eval.last_updated_source = previous[:last_updated_source]
+    log.result = 'The latest update status is same from previous one'
+    logger.result = "The endpoint was updated on #{eval.last_updated}"
   end
 
 end
