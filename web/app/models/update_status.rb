@@ -12,24 +12,24 @@ class UpdateStatus < ActiveRecord::Base
     return status
   end
 
-  def self.different?(lhs, rhs, logger: nil)
+  def self.different?(previous, latest, logger: nil)
     log = Umakadata::Logging::Log.new
     logger.push log unless logger.nil?
 
-    if lhs.nil?
+    if previous.nil?
       log.result = 'The previous status is nothing'
       return true
-    elsif rhs.nil?
+    elsif latest.nil?
       log.result = 'The previous status and latest one are nothing'
       return true
     end
 
-    if lhs[:count] != rhs[:count]
-      log.result = "The previous statements count #{lhs[:count]}, latest statements count #{rhs[:count]}"
-    elsif lhs[:first] != rhs[:first]
-      log.result = "The previous first statement #{lhs[:first]}, latest last statement #{rhs[:first]}"
-    elsif lhs[:last] != rhs[:last]
-      log.result = "The previous last statement #{lhs[:last]}, latest last statement  #{rhs[:last]}"
+    if previous[:count] != latest[:count]
+      log.result = "The previous statements count #{previous[:count]}, latest statements count #{latest[:count]}"
+    elsif previous[:first] != latest[:first]
+      log.result = "The previous first statement #{previous[:first]}, latest last statement #{latest[:first]}"
+    elsif previous[:last] != latest[:last]
+      log.result = "The previous last statement #{previous[:last]}, latest last statement  #{latest[:last]}"
     else
       log.result = 'Difference is nothing both of previous statements and latest statements'
       return false

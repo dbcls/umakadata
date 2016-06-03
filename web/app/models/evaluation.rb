@@ -244,7 +244,7 @@ class Evaluation < ActiveRecord::Base
     if !last_updated.nil?
       eval.last_updated = last_updated[:date].strftime('%F')
       eval.last_updated_source = last_updated[:source]
-      logger.result = "The endpoint was updated on #{eval.last_updated}"
+      logger.result = "The endpoint seems to be updated on #{eval.last_updated}"
       return
     end
 
@@ -258,14 +258,14 @@ class Evaluation < ActiveRecord::Base
       eval.last_updated = Time.now.strftime('%F')
       eval.last_updated_source = 'Adhoc'
       log.result = 'The latest update status is different from previous one'
-      logger.result = "The endpoint was updated on today"
+      logger.result = "The endpoint seems to be updated on #{eval.last_updated}"
       return
     end
 
     eval.last_updated = previous[:last_updated]
     eval.last_updated_source = previous[:last_updated_source]
-    log.result = 'The latest update status is same from previous one'
-    logger.result = "The endpoint was updated on #{eval.last_updated}"
+    log.result = 'The latest update status and previous one are the same'
+    logger.result = "The endpoint seems to be updated on #{eval.last_updated}"
   end
 
 end
