@@ -3,20 +3,20 @@
     td = key
     td = (content.has_key?('result') ? content['result'] : '')
   - parent_id = id
-  - id = 0
+  - i = 0
   - content.each do |key, value|
     - next if key == "result"
-    = render partial: 'endpoints/row', locals: {key: key, content: value, id: "#{parent_id}_#{id += 1}", parent_id: parent_id}
+    = render partial: 'endpoints/row', locals: {key: key, content: value, id: "#{parent_id}_#{i += 1}", parent_id: parent_id}
 - elsif content.is_a?(Array)
-  - id = 0
-  - if content.size == 1
+  - i = 0
+  - if content.size == 1 && !content[0].has_key?('result')
     - content[0].each do |key, value|
-      - next if key == "result"
-      = render partial: 'endpoints/row', locals: {key: key, content: value, id: "#{parent_id}_#{id += 1}", parent_id: parent_id}
+      - i += 1
+      = render partial: 'endpoints/row', locals: {key: key, content: value, id: "#{parent_id}_#{i}", parent_id: parent_id}
   - else
-    - i = 0
     - content.each do |log|
-      = render partial: 'endpoints/row', locals: {key: "log [#{i += 1}]", content: log, id: "#{parent_id}_#{id += 1}", parent_id: parent_id}
+      - i += 1
+      = render partial: 'endpoints/row', locals: {key: "log [#{i}]", content: log, id: "#{parent_id}_#{i}", parent_id: parent_id}
 - else
   tr data-tt-id="#{id}" data-tt-parent-id="#{parent_id}"
     td = key
