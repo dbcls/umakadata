@@ -4,10 +4,7 @@
     | Logs
   '
 
-  - if @log.is_a?(Array)
-    - id = 0
-    - @log.each do |contents|
-      h3 = contents['result']
+  - if @log.is_a?(Hash)
       table.table.table-bordered
         thead
           tr
@@ -16,14 +13,7 @@
             th
               | Value
         tbody
-        - i = 0
-        - if contents.has_key?('context')
-          - contents['context'].each do |log|
-            = render partial: 'endpoints/row', locals: {key: "log [#{i += 1}]", content: log, id: id += 1, parent_id: nil}
-        - else
-          - contents.each do |key, value|
-            = render partial: 'endpoints/row', locals: {key: key, content: value, id: id += 1, parent_id: nil}
-
+         = render partial: 'endpoints/row', locals: {key: nil, content: @log, id: 1, parent_id: nil}
   - else
     p.h3
       | Error
