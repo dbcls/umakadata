@@ -6,15 +6,12 @@
   - id = 0
   - content.each do |key, value|
     - next if key == "result"
-    = render partial: 'endpoints/row', locals: {key: key, content: value, id: "#{parent_id}_#{id}", parent_id: parent_id}
-    - id += 1
+    = render partial: 'endpoints/row', locals: {key: key, content: value, id: "#{parent_id}_#{id += 1}", parent_id: parent_id}
 - elsif content.is_a?(Array)
-  tr.active data-tt-id="#{id}" data-tt-parent-id="#{parent_id}"
   - i = 0
   - id = 0
   - content.each do |log|
-    = render partial: 'endpoints/row', locals: {key: "log [#{i += 1}]", content: log, id: "#{parent_id}_#{id}", parent_id: parent_id}
-    - id += 1
+    = render partial: 'endpoints/row', locals: {key: "log [#{i += 1}]", content: log, id: "#{parent_id}_#{id += 1}", parent_id: parent_id}
 - else
   tr data-tt-id="#{id}" data-tt-parent-id="#{parent_id}"
     td = key
