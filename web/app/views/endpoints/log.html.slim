@@ -13,8 +13,7 @@
             th
               | Value
         tbody
-         - i = 0
-         = render partial: 'endpoints/row', locals: {key: nil, content: @log, id: i += 1, parent_id: nil}
+         = render partial: 'endpoints/row', locals: {key: nil, content: @log, id: 1, parent_id: nil}
   - else
     p.h3
       | Error
