@@ -1,7 +1,10 @@
 - if content.is_a?(Hash)
   tr.active data-tt-id="#{id}" data-tt-parent-id="#{parent_id}"
-    td = key
-    td = (content.has_key?('result') ? content['result'] : '')
+    - if key.nil?
+      td colspan="2" = (content.has_key?('result') ? content['result'] : '')
+    - else
+      td = key
+      td
   - parent_id = id
   - i = 0
   - content.each do |key, value|
@@ -16,7 +19,7 @@
   - else
     - content.each do |log|
       - i += 1
-      = render partial: 'endpoints/row', locals: {key: "log [#{i}]", content: log, id: "#{parent_id}_#{i}", parent_id: parent_id}
+      = render partial: 'endpoints/row', locals: {key: nil, content: log, id: "#{parent_id}_#{i}", parent_id: parent_id}
 - else
   tr data-tt-id="#{id}" data-tt-parent-id="#{parent_id}"
     td = key
