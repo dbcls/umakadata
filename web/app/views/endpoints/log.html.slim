@@ -31,4 +31,19 @@ javascript:
         }
       }
     });
+
+    $("tr").each(function(i, element) {
+      var tds = $(element).children('td');
+      if (tds.length == 1) {
+        return;
+      }
+      try {
+        var json = JSON.stringify(JSON.parse(tds.eq(1).text()), null, "    ");
+        if (json.match(/\{/)) {
+          tds.eq(1).text('');
+          tds.eq(1).append('<textarea class="form-control" rows="10" readonly>' + json + '</textarea>');
+        }
+      } catch (e) {
+      }
+    });
   });
