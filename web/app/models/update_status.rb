@@ -2,19 +2,40 @@ class UpdateStatus < ActiveRecord::Base
 
   belongs_to :endpoint
 
-  def self.record(endpoint_id, current)
+  def self.record(endpoint_id, latest)
     status = UpdateStatus.new
     status[:endpoint_id] = endpoint_id
-    status[:count] = current[:count]
-    status[:first] = current[:first].nil? ? '' : current[:first].map{ |k, v| v }.join('$')
-    status[:last]  = current[:last].nil?  ? '' : current[:last].map{ |k, v| v }.join('$')
+    status[:count] = latest[:count]
+    status[:first] = latest[:first].nil? ? '' : latest[:first].map{ |k, v| v }.join('$')
+    status[:last]  = latest[:last].nil?  ? '' : latest[:last].map{ |k, v| v }.join('$')
     status.save
     return status
   end
 
-  def self.different?(lhs, rhs)
-    return true if lhs.nil? || rhs.nil?
-    return lhs[:count] != rhs[:count] || lhs[:first] != rhs[:first] || lhs[:last] != rhs[:last]
+  def self.different?(previous, latest, logger: nil)
+    log = Umakadata::Logging::Log.new
+    logger.push log unless logger.nil?
+
+    if previous.nil?
+      log.result = 'The previous status is nothing'
+      return true
+    elsif latest.nil?
+      log.result = 'The previous status and latest one are nothing'
+      return true
+    end
+
+    if previous[:count] != latest[:count]
+      log.result = "The previous statements count #{previous[:count]}, latest statements count #{latest[:count]}"
+    elsif previous[:first] != latest[:first]
+      log.result = "The previous first statement #{previous[:first]}, latest last statement #{latest[:first]}"
+    elsif previous[:last] != latest[:last]
+      log.result = "The previous last statement #{previous[:last]}, latest last statement  #{latest[:last]}"
+    else
+      log.result = 'Difference is nothing both of previous statements and latest statements'
+      return false
+    end
+
+    return true
   end
 
 end

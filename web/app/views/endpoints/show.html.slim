@@ -122,6 +122,8 @@ h1.page-header = @endpoint.name
                 | NOTE: Virtuoso could not count the statement correctly. So this mechanism does not work well for the endpoint on Virtuoso.
           td.freshness
             = @evaluation.last_updated.nil? ? "N/A" : @evaluation.last_updated
+            '
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :last_updated
         tr
           td.operation rowspan=2
             | Operation
