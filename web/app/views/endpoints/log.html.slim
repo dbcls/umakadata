@@ -38,31 +38,35 @@ javascript:
       if (!$(bodyKey).text().match(/body/)) {
         return;
       }
-      var formatText = "";
+      var formattedText = "";
       try {
         var bodyValue = $(bodyKey).next();
         var text = bodyValue.text().trim();
         if (text.match(JSON_REGEXP)) {
           var json = JSON.stringify(JSON.parse(text), null, "    ");
-          formatText = sanitize(json).replace(/[\n\r|\n|\r]/g, "<br/>").replace(/\t/, "&nbsp;&nbsp;&nbsp;&nbsp;").replace(/\s/g, "&nbsp;");
+          formattedText = formatText(json);
         } else if (text.match(XML_REGEXP)) {
           var parser = new DOMParser();
           var xmlDocument = parser.parseFromString(text, "text/xml");
           var serializer = new XMLSerializer();
           var xml = serializer.serializeToString(xmlDocument);
-          formatText = sanitize(xml).replace(/[\n\r|\n|\r]/g, "<br/>").replace(/\t/, "&nbsp;&nbsp;&nbsp;&nbsp;").replace(/\s/g, "&nbsp;");
+          formattedText = formatText(xml);
         } else {
-          formatText = sanitize(text).replace(/[\n\r|\n|\r]/g, "<br/>").replace(/\t/, "&nbsp;&nbsp;&nbsp;&nbsp;");
+          formattedText = formatText(text);
         }
-        bodyValue.empty().append('<p>' + formatText + '</p>');
+        bodyValue.empty().append('<p>' + formattedText + '</p>');
       } catch (e) {
-        formatText = sanitize(text).replace(/[\n\r|\n|\r]/g, "<br/>").replace(/\t/, "&nbsp;&nbsp;&nbsp;&nbsp;").replace(/\s/g, "&nbsp;");
-        bodyValue.empty().append('<p>' + formatText + '</p>');
+        formattedText = formatText(text);
+        bodyValue.empty().append('<p>' + formattedText + '</p>');
       }
     });
 
     function sanitize(text) {
       return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function formatText(text) {
+      return sanitize(text).replace(/[\n\r|\n|\r]/g, "<br/>").replace(/\t/, "&nbsp;&nbsp;&nbsp;&nbsp;").replace(/\s/g, "&nbsp;")
     }
 
   });
