@@ -54,10 +54,10 @@ javascript:
         } else {
           formattedText = formatText(text);
         }
-        bodyValue.empty().append('<p>' + formattedText + '</p>');
+        bodyValue.empty().append(formattedText);
       } catch (e) {
         formattedText = formatText(text);
-        bodyValue.empty().append('<p>' + formattedText + '</p>');
+        bodyValue.empty().append(formattedText);
       }
     });
 
