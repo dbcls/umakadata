@@ -20,13 +20,13 @@ module Umakadata
           logger.push request_log unless logger.nil?
           response = Umakadata::SparqlHelper.query(uri, sparql_query, logger: request_log, options: {method: method})
           unless response.nil?
-            request_log.result = "#{method.to_s.capitalize}: 200 HTTP response"
-            logger.result = "Alive is true" unless logger.nil?
+            request_log.result = "200 HTTP response"
+            logger.result = "The endpoint is alive" unless logger.nil?
             return true
           end
-          request_log.result = "#{method.to_s.capitalize}: HTTP response error"
+          request_log.result = "An error occurred in checking liveness for the endpoint"
         end
-        logger.result = "Alive is false" unless logger.nil?
+        logger.result = "The endpoint is not alive" unless logger.nil?
         false
       end
 
