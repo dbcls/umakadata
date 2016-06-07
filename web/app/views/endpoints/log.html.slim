@@ -22,4 +22,13 @@
 javascript:
   $(function(){
     $(".table").treetable({ expandable: true });
+    elements = $("tbody").children();
+    elements.each(function () {
+      if ($(this).attr('class').match(/branch/)) {
+        id = $(this).attr('data-tt-id');
+        if (id.match(/^\d+(_\d+){0,1}$/)) {
+          $(".table").treetable('expandNode', id);
+        }
+      }
+    });
   });
