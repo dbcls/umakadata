@@ -52,9 +52,10 @@ javascript:
 
           var parser = new DOMParser();
           var xmlDocument = parser.parseFromString(text, "text/xml");
-          var serializer = new XMLSerializer();
-          var xml = serializer.serializeToString(xmlDocument);
-          formattedText = formatText(xml);
+          if (xmlDocument.getElementsByTagName("parsererror").length == 0) {
+            text = new XMLSerializer().serializeToString(xmlDocument);
+          }
+          formattedText = formatText(text);
         } else {
           text = trimSpacesOfBeginingOfLine(text);
           formattedText = formatText(text);
