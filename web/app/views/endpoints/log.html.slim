@@ -32,8 +32,8 @@ javascript:
       }
     });
 
-    let JSON_REGEXP = /^[\{|\[](.*)\{|\[$/;
-    let XML_REGEXP = /^<\?xml(.*)>/;
+    let JSON_REGEXP = /.*[\{|\[](.*)\{|\[$/;
+    let XML_REGEXP = /.*<\?xml(.*)>/;
     $("tr td:first-child").each(function(i, bodyKey) {
       if (!$(bodyKey).text().match(/body/)) {
         return;
@@ -41,25 +41,37 @@ javascript:
       var formattedText = "";
       try {
         var bodyValue = $(bodyKey).next();
-        var text = bodyValue.text().trim();
+        var text = bodyValue.text();
+        text = text.replace(/\s*[\n\r|\n|\r]/, "");
         if (text.match(JSON_REGEXP)) {
+          var text = text.replace(/\s*([\{|\[|\"|\'|\}\]].*[\n\r|\n|\r])/g, "$1");
           var json = JSON.stringify(JSON.parse(text), null, "    ");
           formattedText = formatText(json);
         } else if (text.match(XML_REGEXP)) {
+          text = trimSpacesOfBeginingOfLine(text);
+
           var parser = new DOMParser();
           var xmlDocument = parser.parseFromString(text, "text/xml");
           var serializer = new XMLSerializer();
           var xml = serializer.serializeToString(xmlDocument);
           formattedText = formatText(xml);
         } else {
+          text = trimSpacesOfBeginingOfLine(text);
           formattedText = formatText(text);
         }
         bodyValue.empty().append(formattedText);
       } catch (e) {
+        text = trimSpacesOfBeginingOfLine(text);
         formattedText = formatText(text);
         bodyValue.empty().append(formattedText);
       }
     });
+
+    function trimSpacesOfBeginingOfLine(text) {
+      var length = text.split(/\S/)[0].length;
+      var regExp = new RegExp('\\s{' + length + '}(\\S.*[\\n\\r|\\n|\\r])', 'g');
+      return text.replace(regExp, "$1");
+    }
 
     function sanitize(text) {
       return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
