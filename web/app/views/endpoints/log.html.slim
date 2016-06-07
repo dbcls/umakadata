@@ -39,17 +39,17 @@ javascript:
         return;
       }
       var formattedText = "";
+      var text = "";
       try {
         var bodyValue = $(bodyKey).next();
-        var text = bodyValue.text();
-        text = text.replace(/\s*[\n\r|\n|\r]/, "");
+        text = bodyValue.text();
+        text = removeFirstBlankLine(text);
         if (text.match(JSON_REGEXP)) {
-          var text = text.replace(/\s*([\{|\[|\"|\'|\}\]].*[\n\r|\n|\r])/g, "$1");
+          text = text.replace(/\s*([\{|\[|\"|\'|\}\]].*[\n\r|\n|\r])/g, "$1");
           var json = JSON.stringify(JSON.parse(text), null, "    ");
           formattedText = formatText(json);
         } else if (text.match(XML_REGEXP)) {
           text = trimSpacesOfBeginingOfLine(text);
-
           var parser = new DOMParser();
           var xmlDocument = parser.parseFromString(text, "text/xml");
           if (xmlDocument.getElementsByTagName("parsererror").length == 0) {
@@ -67,6 +67,10 @@ javascript:
         bodyValue.empty().append(formattedText);
       }
     });
+
+    function removeFirstBlankLine(text) {
+      return text.replace(/\s*[\n\r|\n|\r]/, "");
+    }
 
     function trimSpacesOfBeginingOfLine(text) {
       var length = text.split(/\S/)[0].length;
