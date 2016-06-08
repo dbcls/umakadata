@@ -25,11 +25,11 @@ class UpdateStatus < ActiveRecord::Base
     end
 
     if previous[:count] != latest[:count]
-      log.result = "The previous statements count #{previous[:count]}, latest statements count #{latest[:count]}"
+      log.result = "The previous statements count: #{previous[:count]}, latest statements count: #{latest[:count]}"
     elsif previous[:first] != latest[:first]
-      log.result = "The previous first statement #{previous[:first]}, latest last statement #{latest[:first]}"
+      log.result = "The previous first statement: #{previous[:first]}, latest last statement: #{latest[:first]}"
     elsif previous[:last] != latest[:last]
-      log.result = "The previous last statement #{previous[:last]}, latest last statement  #{latest[:last]}"
+      log.result = "The previous last statement: #{previous[:last]}, latest last statement: #{latest[:last]}"
     else
       log.result = 'There are no differences between previous statements and latest ones'
       return false
