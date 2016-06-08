@@ -31,7 +31,7 @@ class UpdateStatus < ActiveRecord::Base
     elsif previous[:last] != latest[:last]
       log.result = "The previous last statement #{previous[:last]}, latest last statement  #{latest[:last]}"
     else
-      log.result = 'Difference is nothing both of previous statements and latest statements'
+      log.result = 'There are no differences between previous statements and latest ones'
       return false
     end
 
