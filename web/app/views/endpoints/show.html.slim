@@ -105,7 +105,7 @@ h1.page-header = @endpoint.name
           td.availability
             = @evaluation.alive.to_s + " (" + @evaluation.alive_rate.to_s + "%)"
             '
-            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :alive
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :alive unless @evaluation.alive_log.nil?
         tr
           td.freshness
             | Freshness
@@ -123,7 +123,7 @@ h1.page-header = @endpoint.name
           td.freshness
             = @evaluation.last_updated.nil? ? "N/A" : @evaluation.last_updated
             '
-            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :last_updated
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :last_updated unless @evaluation.last_updated_log.nil?
         tr
           td.operation rowspan=2
             | Operation
@@ -137,7 +137,7 @@ h1.page-header = @endpoint.name
           td.operation
             = (!@evaluation.service_description.blank?).to_s
             '
-            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :service_description
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :service_description unless @evaluation.service_description_log.nil?
         tr
           td.operation
             .umakadata-tooltip
@@ -147,7 +147,7 @@ h1.page-header = @endpoint.name
           td.operation
             = (!@void.blank?).to_s
             '
-            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :void_ttl
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :void_ttl unless @evaluation.void_ttl_log.nil?
         tr
           td.usefulness rowspan=8
             | Usefulness
@@ -170,7 +170,7 @@ h1.page-header = @endpoint.name
           td.usefulness
             = @evaluation.vocabulary_score.nil? ? '-' : sprintf("%.2f", @evaluation.vocabulary_score)
             '
-            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :vocabulary_score
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :vocabulary_score unless @evaluation.vocabulary_log.nil?
         tr
           td.usefulness
             .umakadata-tooltip
@@ -189,7 +189,7 @@ h1.page-header = @endpoint.name
           td.usefulness
             = @evaluation.ontology_score.nil? ? '-' : sprintf("%.2f", @evaluation.ontology_score)
             '
-            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :ontology_score
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :ontology_score unless @evaluation.ontology_log.nil?
         tr
           td.usefulness
             .umakadata-tooltip
@@ -209,7 +209,7 @@ h1.page-header = @endpoint.name
           td.usefulness
             = ( @evaluation.metadata_score.nil? ? '-' : sprintf("%.2f", @evaluation.metadata_score) )
             '
-            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :metadata_score
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :metadata_score unless @evaluation.metadata_log.nil?
         tr
           td.usefulness
             .umakadata-tooltip
@@ -229,7 +229,7 @@ h1.page-header = @endpoint.name
           td.usefulness
             = (@evaluation.number_of_statements.nil? ? 'N/A' : @evaluation.number_of_statements).to_s
             '
-            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :number_of_statements
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :number_of_statements unless @evaluation.number_of_statements_log.nil?
         tr
           td.usefulness
             .umakadata-tooltip
@@ -239,7 +239,7 @@ h1.page-header = @endpoint.name
           td.usefulness
             = @evaluation.support_content_negotiation.nil? ? 'false' : @evaluation.support_content_negotiation
             '
-            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :support_xml_format
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :support_xml_format unless @evaluation.support_content_negotiation_log.nil?
         tr
           td.usefulness
             .umakadata-tooltip
@@ -249,7 +249,7 @@ h1.page-header = @endpoint.name
           td.usefulness
             = @evaluation.support_html_format.nil? ? 'false' : @evaluation.support_html_format
             '
-            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :support_html_format
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :support_html_format unless @evaluation.support_html_format_log.nil?
         tr
           td.usefulness
             .umakadata-tooltip
@@ -259,7 +259,7 @@ h1.page-header = @endpoint.name
           td.usefulness
             = @evaluation.support_turtle_format.nil? ? 'false' : @evaluation.support_turtle_format
             '
-            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :support_turtle_format
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :support_turtle_format unless @evaluation.support_turtle_format_log.nil?
         tr
           td.validity rowspan=2
             | Validity
@@ -291,7 +291,7 @@ h1.page-header = @endpoint.name
                   | true if all subjects are URI or blank node, otherwise false.
               = @evaluation.subject_is_uri.to_s
               '
-              = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :subject_is_uri
+              = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :subject_is_uri unless @evaluation.subject_is_uri_log.nil?
             .item
               .umakadata-tooltip
                 | HTTP URIs are used?:
@@ -299,7 +299,7 @@ h1.page-header = @endpoint.name
                   | true if all subjects are HTTP URI or blank node, otherwise false.
               = @evaluation.subject_is_http_uri.to_s
               '
-              = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :subject_is_http_uri
+              = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :subject_is_http_uri unless @evaluation.subject_is_http_uri_log.nil?
             .item
               .umakadata-tooltip
                 | URI provides useful information?:
@@ -307,7 +307,7 @@ h1.page-header = @endpoint.name
                   | true if we can get some data from a HTTP URI of a subject, otherwise false.
               = @evaluation.uri_provides_info.to_s
               '
-              = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :uri_provides_info
+              = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :uri_provides_info unless @evaluation.uri_provides_info_log.nil?
             .item
               .umakadata-tooltip
                 | Include links to other URIs?:
@@ -315,7 +315,7 @@ h1.page-header = @endpoint.name
                   | true if the endpoint contains owl:sameAs or rdf:seeAlso dataset, otherwise false.
               = @evaluation.contains_links.to_s
               '
-              = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :contains_links
+              = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :contains_links unless @evaluation.contains_links_log.nil?
         tr
           td.validity
             .umakadata-tooltip
@@ -341,7 +341,7 @@ h1.page-header = @endpoint.name
           td.validity
             = @evaluation.cool_uri_rate.to_i
             '
-            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :cool_uri_rate
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :cool_uri_rate unless @evaluation.cool_uri_rate_log.nil?
         tr
           td.performance
             | Performance
@@ -356,7 +356,7 @@ h1.page-header = @endpoint.name
           td.performance
             = (@evaluation.execution_time.nil? ? 'N/A' : @evaluation.execution_time).to_s
             '
-            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :execution_time
+            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :execution_time unless @evaluation.execution_time_log.nil?
 
 .row
   .col-sm-12
