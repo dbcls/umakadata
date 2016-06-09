@@ -12,7 +12,8 @@ class GithubHelper
     @client.create_issue(Rails.application.secrets.github_repo, title) if dose_not_exist_issue
   end
 
-  def edit_issue(number)
+  def edit_issue(number, title)
+    @client.update_issue(Rails.application.secrets.github_repo, number, title)
   end
 
   def close_issue(number)

@@ -9,6 +9,8 @@ class Endpoint < ActiveRecord::Base
   end
 
   after_update do
+    ghelper = GithubHelper.new
+    ghelper.edit_issue(self.issue_id, self.name)
   end
 
   after_destroy do
