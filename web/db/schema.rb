@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160530042236) do
+ActiveRecord::Schema.define(version: 20160609094357) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 20160530042236) do
     t.string   "url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "issue_id"
   end
 
   create_table "evaluations", force: :cascade do |t|
@@ -71,8 +72,8 @@ ActiveRecord::Schema.define(version: 20160530042236) do
     t.boolean  "contains_links"
     t.integer  "score"
     t.integer  "rank"
-    t.datetime "created_at",                                         null: false
-    t.datetime "updated_at",                                         null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
     t.integer  "cool_uri_rate"
     t.boolean  "support_content_negotiation"
     t.boolean  "support_turtle_format"
@@ -85,7 +86,7 @@ ActiveRecord::Schema.define(version: 20160530042236) do
     t.date     "last_updated"
     t.text     "last_updated_source"
     t.integer  "update_interval"
-    t.integer  "number_of_statements",                     limit: 8
+    t.integer  "number_of_statements",            limit: 8
     t.text     "alive_log"
     t.text     "service_description_log"
     t.text     "uri_subject_log"
