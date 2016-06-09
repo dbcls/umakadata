@@ -14,6 +14,7 @@ class Endpoint < ActiveRecord::Base
   end
 
   after_destroy do
+    GithubHelper.new.close_issue(self.issue_id)
   end
 
 end

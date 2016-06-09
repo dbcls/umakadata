@@ -17,6 +17,7 @@ class GithubHelper
   end
 
   def close_issue(number)
+    @client.close_issue(Rails.application.secrets.github_repo, number)
   end
 
 end
