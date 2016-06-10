@@ -46,4 +46,11 @@ namespace :umakadata do
     end
   end
 
+  desc "create issue_id to all endpoints"
+  task :create_issue_ids => :environment do
+    Endpoint.all.each do |endpoint|
+      endpoint.save
+    end
+  end
+
 end
