@@ -21,6 +21,11 @@ h1.page-header = @endpoint.name
 
 .row
   .col-xs-12.col-sm-6
+    - unless @endpoint.issue_id.nil?
+      h2
+        | Forum
+      a href="https://github.com/#{Rails.application.secrets.github_repo}/issues/#{@endpoint.issue_id}"
+        = "Discussion About #{@endpoint.name}"
     h2
       | Basic Information
     table.table.table-bordered
