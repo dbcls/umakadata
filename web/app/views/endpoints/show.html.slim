@@ -4,9 +4,7 @@ javascript:
     showScoreHistory(#{@endpoint.id}, #{@evaluation.id});
   });
 
-.page-header
-  .row
-    h2 = @endpoint.name
+h1.page-header = @endpoint.name
 
 - if !@prev_evaluation.nil?
   a href="/endpoints/#{@endpoint.id}/#{@prev_evaluation[:id]}"
