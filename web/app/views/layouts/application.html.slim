@@ -38,5 +38,7 @@ html[lang="en"]
               = link_to 'Endpoint Search',  {:controller => 'endpoints', :action => 'search'}
             li
               = link_to 'Link Graph',  {:controller => 'endpoints', :action => 'graph'}
+            li
+              = link_to 'Forum', "https://github.com/#{Rails.application.secrets.github_repo}/issues"
         .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
           == yield
