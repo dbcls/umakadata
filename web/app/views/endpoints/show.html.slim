@@ -4,7 +4,13 @@ javascript:
     showScoreHistory(#{@endpoint.id}, #{@evaluation.id});
   });
 
-h1.page-header = @endpoint.name
+.page-header
+  .row
+    h2.col-xm-12.col-sm-12.col-md-7= @endpoint.name
+    - unless @endpoint.issue_id.nil?
+      .col-xm-12.col-sm-8.col-md-5
+        a.btn.btn-info href="https://github.com/#{Rails.application.secrets.github_repo}/issues/#{@endpoint.issue_id}"
+          = "Discussion About #{@endpoint.name}"
 
 - if !@prev_evaluation.nil?
   a href="/endpoints/#{@endpoint.id}/#{@prev_evaluation[:id]}"
