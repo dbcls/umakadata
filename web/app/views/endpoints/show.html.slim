@@ -6,11 +6,7 @@ javascript:
 
 .page-header
   .row
-    h2.col-xm-12.col-sm-12.col-md-7= @endpoint.name
-    - unless @endpoint.issue_id.nil?
-      .col-xm-12.col-sm-8.col-md-5
-        a.btn.btn-info href="https://github.com/#{Rails.application.secrets.github_repo}/issues/#{@endpoint.issue_id}"
-          = "Discussion About #{@endpoint.name}"
+    h2 = @endpoint.name
 
 - if !@prev_evaluation.nil?
   a href="/endpoints/#{@endpoint.id}/#{@prev_evaluation[:id]}"
@@ -27,6 +23,10 @@ javascript:
 
 .row
   .col-xs-12.col-sm-6
+    h2
+      | Forum
+    a href="https://github.com/#{Rails.application.secrets.github_repo}/issues/#{@endpoint.issue_id}"
+      = "Discussion About #{@endpoint.name}"
     h2
       | Basic Information
     table.table.table-bordered
