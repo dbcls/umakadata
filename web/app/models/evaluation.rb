@@ -26,6 +26,9 @@ class Evaluation < ActiveRecord::Base
       self.where(endpoint_id: endpoint.id).update_all("latest = false")
       self.retrieve_and_record endpoint, retriever
     end
+    rescue => e
+    puts e.message
+    puts e.backtrace
   end
 
   def self.retrieve_and_record(endpoint, retriever)
