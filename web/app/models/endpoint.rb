@@ -1,7 +1,3 @@
-require 'rdf/turtle'
-require 'rdf/ntriples'
-require 'rdf/rdfxml'
-
 class Endpoint < ActiveRecord::Base
   has_many :evaluations
   has_one :evaluation
