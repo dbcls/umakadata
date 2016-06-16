@@ -33,10 +33,6 @@ class ApiController < ApplicationController
     end
   end
 
-  def add_boolean_condition(column, value)
-    @endpoints = @endpoints.where("#{column} = '#{value}'")
-  end
-
   def add_like_condition(column, value)
     @endpoints = @endpoints.where("#{column} LIKE ?", "%#{value}%")
   end
