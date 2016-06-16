@@ -65,3 +65,5 @@ gem 'pg'
 gem 'umakadata', :path => './lib/assets/umakadata'
 
 gem 'octokit'
+
+gem 'json-ld'

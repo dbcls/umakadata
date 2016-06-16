@@ -143,6 +143,9 @@ GEM
     jquery-ui-rails (5.0.5)
       railties (>= 3.2.16)
     json (1.8.3)
+    json-ld (2.0.0.1)
+      multi_json (~> 1.11)
+      rdf (~> 2.0)
     kaminari (0.16.3)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -326,6 +329,7 @@ DEPENDENCIES
   hirb-unicode
   jbuilder (~> 2.0)
   jquery-rails
+  json-ld
   octokit
   pg
   pundit
