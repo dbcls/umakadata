@@ -23,7 +23,15 @@ class ApiController < ApplicationController
     self.add_is_not_empty_condition('evaluations.support_html_format') if !params['html'].blank?
     self.add_is_not_empty_condition('evaluations.support_turtle_format') if !params['turtle'].blank?
     self.add_is_not_empty_condition('evaluations.support_xml_format') if !params['xml'].blank?
-    render :json => JSON.pretty_generate(JSON.parse(@endpoints.to_json(:include => [:evaluation])))
+
+    respond_to do |format|
+      format.jsonld  { render json: @endpoints.to_jsonld }
+      format.xml     { render xml:  @endpoints.to_xml }
+      format.rdfxml  { render xml:  @endpoints.to_rdfxml }
+      format.ttl     { render text: @endpoints.to_ttl }
+      format.json    { render json: JSON.pretty_generate(JSON.parse(@endpoints.to_json(:include => [:evaluation]))) }
+      format.any     { render json: JSON.pretty_generate(JSON.parse(@endpoints.to_json(:include => [:evaluation]))) }
+    end
   end
 
   def add_like_condition(column, value)
