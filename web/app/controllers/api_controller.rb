@@ -35,7 +35,7 @@ class ApiController < ApplicationController
   end
 
   def add_like_condition(column, value)
-    @endpoints = @endpoints.where("#{column} LIKE ?", "%#{value}%")
+    @endpoints = @endpoints.where("LOWER(#{column}) LIKE ?", "%#{value.downcase}%")
   end
 
   def add_is_not_empty_condition(column)
