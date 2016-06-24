@@ -4,8 +4,13 @@ namespace :umakadata do
   task :crawl => :environment do
     Endpoint.all.each do |endpoint|
       puts endpoint.name
-      retriever = Umakadata::Retriever.new endpoint.url
-      Evaluation.record(endpoint, retriever)
+      begin
+        retriever = Umakadata::Retriever.new endpoint.url
+        Evaluation.record(endpoint, retriever)
+      rescue => e
+        puts e.message
+        puts e.backtrace
+      end
     end
   end
 
