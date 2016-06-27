@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160609094357) do
+ActiveRecord::Schema.define(version: 20160627031323) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -106,6 +106,7 @@ ActiveRecord::Schema.define(version: 20160609094357) do
     t.text     "support_turtle_format_log"
     t.text     "support_xml_format_log"
     t.text     "support_html_format_log"
+    t.text     "supported_language"
   end
 
   create_table "update_statuses", force: :cascade do |t|
