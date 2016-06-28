@@ -268,6 +268,9 @@ class EndpointsController < ApplicationController
   end
 
   private
+
+    SD = 'http://www.w3.org/ns/sparql-service-description'.freeze
+
     def render_404
       render :file=>"/public/404.html", :status=>'404 Not Found'
     end
@@ -290,6 +293,16 @@ class EndpointsController < ApplicationController
           if items[0].downcase == 'access-control-allow-origin'
             @cors = true if items[1] == '*'
             break
+          end
+        end
+      end
+
+      @supported_language = ''
+      sd = triples(@evaluation.service_description)
+      unless sd.nil?
+        sd.each do |subject, predicate, object|
+          if predicate == RDF::URI("#{SD}#supportedLanguage")
+            @supported_language = object.to_s.sub(/#{SD}#/, '') unless object.nil?
           end
         end
       end

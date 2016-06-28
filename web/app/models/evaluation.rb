@@ -105,7 +105,6 @@ class Evaluation < ActiveRecord::Base
     return if service_description.nil?
     eval.response_header     = service_description.response_header
     eval.service_description = service_description.text
-    eval.supported_language  = service_description.supported_language
   end
 
   def self.retrieve_void(retriever, eval)
