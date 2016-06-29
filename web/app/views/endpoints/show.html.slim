@@ -67,6 +67,14 @@ h1.page-header = @endpoint.name
         tr
           td
             .umakadata-tooltip
+              | Support for GraphClause
+              span.small
+                | true if the query using 'GRAPH' clause returns result, otherwise false.
+          td
+            = @evaluation.support_graph_clause.to_s
+        tr
+          td
+            .umakadata-tooltip
               | Rank
               span.small
                 | ranked as shown in the following table
