@@ -22,6 +22,7 @@ PATH
     umakadata (0.9.0)
       rdf-rdfxml (~> 2.0)
       rdf-turtle (~> 2.0)
+      rdf-vocab (~> 2.0)
       sparql (~> 2.0)
       sparql-client (~> 2.0)
 
@@ -223,6 +224,8 @@ GEM
       rdf-xsd (~> 2.0)
     rdf-turtle (2.0.0)
       ebnf (~> 1.0, >= 1.0.1)
+      rdf (~> 2.0)
+    rdf-vocab (2.0.2)
       rdf (~> 2.0)
     rdf-xsd (2.0.0)
       rdf (~> 2.0)

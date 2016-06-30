@@ -1,4 +1,13 @@
+require 'rdf'
+require 'rdf/rdfxml'
+require 'rdf/turtle'
+require 'rdf/ntriples'
+require 'rdf/vocab'
+require 'umakadata/data_format'
+
 class Evaluation < ActiveRecord::Base
+
+  extend Umakadata::DataFormat
 
   belongs_to :endpoint
 
@@ -113,11 +122,11 @@ class Evaluation < ActiveRecord::Base
     eval.void_uri = retriever.well_known_uri
     void = retriever.void_on_well_known_uri(logger: logger)
     eval.void_ttl_log = logger.as_json
-    if void.nil?
-      eval.void_ttl = nil
+    if !void.nil? && !void.text.nil?
+      eval.void_ttl = void.text
       return
     end
-    eval.void_ttl = void.text
+    eval.void_ttl = self.extract_void_from_service_description(eval.service_description)
   end
 
   def self.retrieve_linked_data_rules(retriever, eval)
@@ -270,6 +279,30 @@ class Evaluation < ActiveRecord::Base
     eval.last_updated_source = previous[:last_updated_source]
     log.result = 'The latest update status and previous one are the same'
     logger.result = "The endpoint seems to be updated on #{eval.last_updated}"
+  end
+
+  def self.extract_void_from_service_description(service_description)
+    sd = triples(service_description)
+    return '' if sd.nil?
+    format = if ttl?(service_description)
+               :ttl
+             elsif xml?(service_description)
+               :rdfxml
+             else
+               :ntriples
+             end
+    buffer = StringIO.new
+    prefixes = {:dcterms => RDF::Vocab::DC, :void => RDF::Vocab::VOID}
+    RDF::Writer.for(format).new(buffer, :prefixes => prefixes) do |writer|
+      sd.each do |subject, predicate, object|
+        if predicate =~ %r|void| || predicate =~ %r|isPartOf|
+          statement = RDF::Statement.new(subject, predicate, object)
+          writer << statement
+        end
+      end
+    end
+    buffer.close
+    buffer.string
   end
 
 end
