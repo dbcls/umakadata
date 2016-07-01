@@ -300,11 +300,15 @@ class EndpointsController < ApplicationController
       @supported_language = ''
       sd = triples(@evaluation.service_description)
       unless sd.nil?
+        sl = []
         sd.each do |subject, predicate, object|
-          if predicate == RDF::URI("#{SD}#supportedLanguage")
-            @supported_language = object.to_s.sub(/#{SD}#/, '') unless object.nil?
+          if subject == RDF::URI(@endpoint.url)
+            if predicate == RDF::URI("#{SD}#supportedLanguage")
+              sl.push object.to_s.sub(/#{SD}#/, '') unless object.nil?
+            end
           end
         end
+        @supported_language = sl.uniq.join("\n")
       end
 
       @void = @evaluation.void_ttl
