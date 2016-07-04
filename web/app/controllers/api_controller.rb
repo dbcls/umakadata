@@ -29,8 +29,8 @@ class ApiController < ApplicationController
       format.xml     { render xml:  @endpoints.to_xml }
       format.rdfxml  { render xml:  @endpoints.to_rdfxml }
       format.ttl     { render text: @endpoints.to_ttl }
-      format.json    { render json: JSON.pretty_generate(JSON.parse(@endpoints.to_json(:include => [:evaluation]))) }
-      format.any     { render json: JSON.pretty_generate(JSON.parse(@endpoints.to_json(:include => [:evaluation]))) }
+      format.json    { render json: @endpoints.to_pretty_json }
+      format.any     { render json: @endpoints.to_pretty_json }
     end
   end
 
