@@ -3,13 +3,18 @@ class Endpoint < ActiveRecord::Base
   has_one :evaluation
 
   def self.rdf_graph
+    endpoints = self.thin_out_attributes
+    UmakaRDF.build(endpoints)
+  end
+
+  def self.thin_out_attributes
     endpoints = []
     all.each do |endpoint|
       hash = endpoint.attributes
       hash['evaluation'] = endpoint.evaluations[0].attributes.select {|key, value| /_log$/ !~ key }
       endpoints << hash
     end
-    UmakaRDF.build(endpoints)
+    endpoints
   end
 
   def self.to_jsonld
@@ -22,6 +27,11 @@ class Endpoint < ActiveRecord::Base
 
   def self.to_ttl
     self.rdf_graph.dump(:ttl, prefixes: UmakaRDF.prefixes)
+  end
+
+  def self.to_pretty_json
+    endpoints = self.thin_out_attributes
+    JSON.pretty_generate(JSON.parse(endpoints.to_json))
   end
 
   after_save do
