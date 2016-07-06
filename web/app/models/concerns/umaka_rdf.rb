@@ -54,7 +54,6 @@ module UmakaRDF
   end
 
   def self.add_endpoint(graph, endpoint)
-    uri = RDF::URI(@@base_uri)
     endpoint_id = @@base_uri + '/endpoints/' + endpoint['id'].to_s
 
     evaluation = endpoint['evaluation']
