@@ -4,7 +4,6 @@ module UmakaRDF
   @@base_uri = 'http://d.umaka.dbcls.jp'.freeze
   @@prefixes = {
     'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-    'xsd': 'http://www.w3.org/2001/XMLSchema#',
     'uvo': 'http://d.umaka.dbcls.jp/vocaburaries#',
     'uen': 'http://d.umaka.dbcls.jp/endpoints/',
     'uev': 'http://d.umaka.dbcls.jp/evaluations/',
