@@ -4,13 +4,13 @@ module UmakaRDF
   @@base_uri = 'http://d.umaka.dbcls.jp'.freeze
   @@prefixes = {
     'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-    'xsd': 'http://www.w3.org/2001/XMLSchema#',
+    'foaf': 'http://xmlns.com/foaf/0.1/',
     'uvo': 'http://d.umaka.dbcls.jp/vocaburaries#',
     'uen': 'http://d.umaka.dbcls.jp/endpoints/',
     'uev': 'http://d.umaka.dbcls.jp/evaluations/',
+    'dcterms': 'http://purl.org/dc/terms/'
   }
   @@endpoint_properties = [
-    'name',
     'url'
   ].freeze
   @@evaluation_properties = [
@@ -39,7 +39,6 @@ module UmakaRDF
     'last_updated_source',
     'update_interval',
     'number_of_statements',
-    'created_at'
   ].freeze
 
   def self.build(data)
@@ -55,7 +54,6 @@ module UmakaRDF
   end
 
   def self.add_endpoint(graph, endpoint)
-    uri = RDF::URI(@@base_uri)
     endpoint_id = @@base_uri + '/endpoints/' + endpoint['id'].to_s
 
     evaluation = endpoint['evaluation']
@@ -64,6 +62,10 @@ module UmakaRDF
     graph << make_statement(endpoint_id, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", RDF::URI.new(@@base_uri + '/vocaburaries#Endpoint'))
     endpoint.each do |key, value|
       graph << make_statement(endpoint_id, @@base_uri + '/endpoints/' + key, value) if @@endpoint_properties.include?(key)
+      case key
+      when "name"
+        graph << make_statement(endpoint_id, 'http://xmlns.com/foaf/0.1/name', value)
+      end
     end
 
     graph << make_statement(endpoint_id, @@base_uri + '/vocaburaries#has', RDF::URI.new(evaluation_id))
@@ -71,6 +73,10 @@ module UmakaRDF
     graph << make_statement(evaluation_id, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", RDF::URI.new(@@base_uri + '/vocaburaries#Evaluation'))
     evaluation.each do |key, value|
       graph << make_statement(evaluation_id, @@base_uri + '/evaluations/' + key, value) if @@evaluation_properties.include?(key)
+      case key
+      when "created_at"
+        graph << make_statement(evaluation_id, 'http://purl.org/dc/terms/created', value)
+      end
     end
   end
 
