@@ -51,7 +51,7 @@ class Evaluation < ActiveRecord::Base
     eval.alive_log = logger.as_json
 
     if eval.alive
-      eval.support_graph_clause = retriever.support_graph_clause?
+      eval.support_graph_clause = retriever.support_graph_clause
       self.retrieve_service_description(retriever, eval)
       self.retrieve_void(retriever, eval)
       self.retrieve_linked_data_rules(retriever, eval)
