@@ -126,9 +126,9 @@ class Evaluation < ActiveRecord::Base
     else
       void_in_sd = self.extract_void_from_service_description(eval.service_description)
       if void_in_sd == ''
-        logger.result << ', and Void is not found in Service Description'
+        logger.result << ', and VoID is not found in Service Description'
       else
-        logger.result << ', so Void is extracted from Service Description'
+        logger.result << ', so VoID is extracted from Service Description'
       end
       eval.void_ttl = void_in_sd
     end
