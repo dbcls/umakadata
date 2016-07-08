@@ -259,7 +259,7 @@ class Evaluation < ActiveRecord::Base
   end
 
   def self.check_update(retriever, eval, logger: nil)
-    last_updated = retriever.last_updated(logger: logger)
+    last_updated = retriever.last_updated(eval.service_description, logger: logger)
     if !last_updated.nil?
       eval.last_updated = last_updated[:date].strftime('%F')
       eval.last_updated_source = last_updated[:source]
