@@ -1,5 +1,6 @@
 class Endpoint < ActiveRecord::Base
   has_many :evaluations
+  has_many :prefixes
   has_one :evaluation
 
   def self.rdf_graph
