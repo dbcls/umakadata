@@ -20,7 +20,7 @@ ActiveAdmin.register Endpoint do
   member_action :prefixes, method: [:get, :post] do
     if request.post?
       Prefix::import_csv(params)
-      redirect_to "/admin/endpoints/#{params[:id]}/prefixes"
+      redirect_to "/admin/endpoints/#{params[:id]}/prefixes", notice: "CSV imported successfully!"
     else
       @endpoint_id = params[:id]
       render :prefixes
