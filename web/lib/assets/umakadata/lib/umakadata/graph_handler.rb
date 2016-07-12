@@ -9,11 +9,6 @@ module Umakadata
       @uri = URI(uri)
     end
 
-    include Umakadata::Criteria::ExecutionTime
-    def execution_time(logger: nil)
-      super(@uri, logger: logger)
-    end
-
     include Umakadata::Criteria::ContentNegotiation
     def check_content_negotiation(content_type, logger: nil)
       super(@uri, content_type, logger: logger)
@@ -34,6 +29,20 @@ module Umakadata
 
     def contains_links?(logger: nil)
       super(@uri, logger: logger)
+    end
+
+    include Umakadata::Criteria::Metadata
+    def metadata(logger: nil)
+      super(@uri, logger: logger)
+    end
+    def score_metadata(metadata, logger: nil)
+      super(metadata, logger: logger)
+    end
+    def score_ontologies(metadata, logger: nil)
+      super(metadata, logger: logger)
+    end
+    def score_vocabularies(metadata, logger: nil)
+      super(metadata, logger: logger)
     end
 
   end

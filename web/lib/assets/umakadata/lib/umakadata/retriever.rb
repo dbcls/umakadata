@@ -56,7 +56,7 @@ module Umakadata
 
     include Umakadata::Criteria::ExecutionTime
     def execution_time(logger: nil)
-      @handler.execution_time(logger: logger)
+      super(@uri, logger: logger)
     end
 
     include Umakadata::Criteria::CoolURI
@@ -71,7 +71,16 @@ module Umakadata
 
     include Umakadata::Criteria::Metadata
     def metadata(logger: nil)
-      super(@uri, logger: logger)
+      @handler.metadata(logger: logger)
+    end
+    def score_metadata(metadata, logger: nil)
+      @handler.score_metadata(metadata, logger: logger)
+    end
+    def score_ontologies(metadata, logger: nil)
+      @handler.score_ontologies(metadata, logger: logger)
+    end
+    def score_vocabularies(metadata, logger: nil)
+      @handler.score_vocabularies(metadata, logger: logger)
     end
 
     def last_updated(logger: nil)
