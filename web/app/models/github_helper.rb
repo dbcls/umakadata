@@ -19,4 +19,10 @@ class GithubHelper
     client.close_issue(Rails.application.secrets.github_repo, number)
   end
 
+  def self.list_issues
+    client = Octokit::Client.new(:access_token => Rails.application.secrets.github_token)
+    client.auto_paginate = true
+    client.list_issues(Rails.application.secrets.github_repo, {:state => 'all'})
+  end
+
 end

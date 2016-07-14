@@ -58,4 +58,22 @@ namespace :umakadata do
     end
   end
 
+  desc "Fix difference between endpoint_ids and issue_ids in forum"
+  task :fix_different_issue_id => :environment do
+    ignore_id_min = 103
+    GithubHelper.list_issues.each {|issue|
+      issue_id = issue[:number]
+      next if issue_id >= ignore_id_min
+      endpoint = Endpoint.where(name: issue[:title]).take
+
+      if endpoint.nil?
+        GithubHelper.close_issue(issue_id)
+        next
+      end
+      ActiveRecord::Base.transaction do
+        # do not return callback after update
+        endpoint.update_column(:issue_id, issue_id)
+      end
+    }
+  end
 end
