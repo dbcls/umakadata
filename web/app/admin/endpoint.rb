@@ -17,6 +17,23 @@ ActiveAdmin.register Endpoint do
     permitted = [:name, :url]
   end
 
+  show do
+    panel "Endpoint Details" do
+      attributes_table_for endpoint do
+        row :id
+        row :name
+        row :url
+        row :created_at
+        row :updated_at
+        row :issue_id
+        row :prefixes do
+          link_to 'import prefixes data from CSV file', "/admin/endpoints/#{endpoint.id}/prefixes"
+        end
+      end
+    end
+    active_admin_comments
+  end
+
   member_action :prefixes, method: [:get, :post] do
     if request.post?
       Prefix::import_csv(params)
