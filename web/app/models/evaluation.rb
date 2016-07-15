@@ -83,13 +83,15 @@ class Evaluation < ActiveRecord::Base
       eval.metadata_score = retriever.score_metadata(metadata, logger: logger)
       eval.metadata_log = logger.as_json
 
-      logger = Umakadata::Logging::Log.new
-      eval.ontology_score = retriever.score_ontologies(metadata, logger: logger)
-      eval.ontology_log = logger.as_json
+      unless metadata.empty?
+        logger = Umakadata::Logging::Log.new
+        eval.ontology_score = retriever.score_ontologies(metadata, logger: logger)
+        eval.ontology_log = logger.as_json
 
-      logger = Umakadata::Logging::Log.new
-      eval.vocabulary_score = retriever.score_vocabularies(metadata, logger: logger)
-      eval.vocabulary_log = logger.as_json
+        logger = Umakadata::Logging::Log.new
+        eval.vocabulary_score = retriever.score_vocabularies(metadata, logger: logger)
+        eval.vocabulary_log = logger.as_json
+      end
 
       logger = Umakadata::Logging::Log.new
       self.check_update(retriever, eval, logger: logger)
