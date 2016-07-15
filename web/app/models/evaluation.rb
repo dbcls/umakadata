@@ -271,7 +271,7 @@ class Evaluation < ActiveRecord::Base
 
     log = Umakadata::Logging::Log.new
     logger.push log unless logger.nil?
-    latest = retriever.count_first_last(logger: log)
+    latest = retriever.first_last(logger: log)
     prevStatus = UpdateStatus.where(:endpoint_id => eval.endpoint_id).order('created_at DESC').first
     latestStatus = UpdateStatus.record(eval.endpoint_id, latest)
     previous = self.where(:endpoint_id => eval.endpoint_id).order('created_at DESC').first

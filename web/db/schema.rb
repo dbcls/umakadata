@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160707112827) do
+ActiveRecord::Schema.define(version: 20160715092219) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -119,11 +119,10 @@ ActiveRecord::Schema.define(version: 20160707112827) do
 
   create_table "update_statuses", force: :cascade do |t|
     t.integer  "endpoint_id"
-    t.integer  "count",       limit: 8
     t.text     "first"
     t.text     "last"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
 end
