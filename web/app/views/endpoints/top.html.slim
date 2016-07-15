@@ -36,6 +36,7 @@ h2.sub-header Score Ranking
       tr
         th Name
         th URL
+        th Last Checked
         th Score
     tbody
 
@@ -45,5 +46,7 @@ h2.sub-header Score Ranking
             = link_to endpoint.name, endpoint
           td
             = link_to endpoint.url, endpoint.url
+          td
+            = endpoint.evaluations.where(latest: true).take.created_at.getutc
           td
             = endpoint.evaluation[:score]
