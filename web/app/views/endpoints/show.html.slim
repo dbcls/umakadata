@@ -210,7 +210,7 @@ h1.page-header = @endpoint.name
                 a href="http://stats.lod2.eu/vocabularies"
                   | http://stats.lod2.eu/vocabularies
           td.usefulness
-            = @evaluation.vocabulary_score.nil? ? '-' : sprintf("%.2f", @evaluation.vocabulary_score)
+            = @evaluation.vocabulary_score.nil? ? 'N/A' : sprintf("%.2f", @evaluation.vocabulary_score)
             '
             = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :vocabulary_score unless @evaluation.vocabulary_log.nil?
         tr
@@ -229,7 +229,7 @@ h1.page-header = @endpoint.name
                 a href="http://stats.lod2.eu/vocabularies"
                   | http://stats.lod2.eu/vocabularies
           td.usefulness
-            = @evaluation.ontology_score.nil? ? '-' : sprintf("%.2f", @evaluation.ontology_score)
+            = @evaluation.ontology_score.nil? ? 'N/A' : sprintf("%.2f", @evaluation.ontology_score)
             '
             = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :ontology_score unless @evaluation.ontology_log.nil?
         tr
@@ -249,7 +249,7 @@ h1.page-header = @endpoint.name
                 a href="http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-builder-metadata/"
                   | http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-builder-metadata/
           td.usefulness
-            = ( @evaluation.metadata_score.nil? ? '-' : sprintf("%.2f", @evaluation.metadata_score) )
+            = ( @evaluation.metadata_score.nil? ? 'N/A' : sprintf("%.2f", @evaluation.metadata_score) )
             '
             = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :metadata_score unless @evaluation.metadata_log.nil?
         tr
