@@ -18,4 +18,22 @@ class Prefix < ActiveRecord::Base
     end
   end
 
+  def self.validates_params(params)
+    if params[:endpoint].nil?
+      return 'element_type and CSV file are required'
+    end
+    if params[:endpoint][:element_type].nil?
+      return 'element_type required'
+    end
+    if params[:endpoint][:file].nil?
+      return 'CSV file required'
+    end
+    CSV.parse(params[:endpoint][:file].read, {headers: true}).each do |row|
+      unless NKF::nkf("-w", row[0].to_s) =~ URI::regexp(%w(http https))
+        return 'CSV file contains invalid URI'
+      end
+    end
+    nil
+  end
+
 end

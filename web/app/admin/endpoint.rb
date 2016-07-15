@@ -1,5 +1,3 @@
-require "nkf"
-
 ActiveAdmin.register Endpoint do
 
 # See permitted parameters documentation:
@@ -37,28 +35,14 @@ ActiveAdmin.register Endpoint do
   end
 
   member_action :prefixes, method: [:get, :post] do
-
     if request.post?
-      if params[:endpoint].nil?
-        redirect_to "/admin/endpoints/#{params[:id]}/prefixes", alert: "element_type and CSV file are required"
-        return
+      message = Prefix::validates_params(params)
+      unless message.nil?
+        redirect_to "/admin/endpoints/#{params[:id]}/prefixes", alert: message
+      else
+        Prefix::import_csv(params)
+        redirect_to "/admin/endpoints/#{params[:id]}/prefixes", notice: "CSV imported successfully!"
       end
-      if params[:endpoint][:element_type].nil?
-        redirect_to "/admin/endpoints/#{params[:id]}/prefixes", alert: "element_type required"
-        return
-      end
-      if params[:endpoint][:file].nil?
-        redirect_to "/admin/endpoints/#{params[:id]}/prefixes", alert: "CSV file required"
-        return
-      end
-      CSV.parse(params[:endpoint][:file].read, {headers: true}).each do |row|
-        unless NKF::nkf("-w", row[0].to_s) =~ URI::regexp
-          redirect_to "/admin/endpoints/#{params[:id]}/prefixes", alert: "CSV file contains invalid URI"
-          return
-        end
-      end
-      Prefix::import_csv(params)
-      redirect_to "/admin/endpoints/#{params[:id]}/prefixes", notice: "CSV imported successfully!"
     else
       @endpoint_id = params[:id]
       render :prefixes
