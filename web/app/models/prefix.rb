@@ -1,9 +1,12 @@
 require "csv"
 require "nkf"
+require 'uri'
 
 class Prefix < ActiveRecord::Base
 
   belongs_to :endpoint
+  validates :uri, format: URI::regexp
+  validates :element_type, presence: true
 
   def self.import_csv(params)
     CSV.parse(params[:endpoint][:file].read, {headers: true}).each do |row|
