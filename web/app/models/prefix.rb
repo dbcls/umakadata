@@ -5,7 +5,7 @@ require 'uri'
 class Prefix < ActiveRecord::Base
 
   belongs_to :endpoint
-  validates :uri, format: URI::regexp
+  validates :uri, format: URI::regexp(%w(http https))
   validates :element_type, presence: true
 
   def self.import_csv(params)
