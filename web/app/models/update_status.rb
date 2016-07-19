@@ -5,7 +5,6 @@ class UpdateStatus < ActiveRecord::Base
   def self.record(endpoint_id, latest)
     status = UpdateStatus.new
     status[:endpoint_id] = endpoint_id
-    status[:count] = latest[:count]
     status[:first] = latest[:first].nil? ? '' : latest[:first].map{ |k, v| v }.join('$')
     status[:last]  = latest[:last].nil?  ? '' : latest[:last].map{ |k, v| v }.join('$')
     status.save
@@ -24,9 +23,7 @@ class UpdateStatus < ActiveRecord::Base
       return true
     end
 
-    if previous[:count] != latest[:count]
-      log.result = "The previous statements count: #{previous[:count]}, latest statements count: #{latest[:count]}"
-    elsif previous[:first] != latest[:first]
+    if previous[:first] != latest[:first]
       log.result = "The previous first statement: #{previous[:first]}, latest last statement: #{latest[:first]}"
     elsif previous[:last] != latest[:last]
       log.result = "The previous last statement: #{previous[:last]}, latest last statement: #{latest[:last]}"
