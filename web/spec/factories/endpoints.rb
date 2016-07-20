@@ -1,7 +1,6 @@
 FactoryGirl.define do
   factory :endpoint do
-    name ""
-url "MyString"
+    sequence(:name){|n| "Endpoint #{n}"}
+    sequence(:url){|n| "http://example#{n}.com"}
   end
-
 end
