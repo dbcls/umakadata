@@ -63,4 +63,30 @@ class ApiController < ApplicationController
     end
   end
 
+  def endpoints_graph
+    nodes = Endpoint.all.map do |endpoint|
+      {
+        :group => "nodes",
+        :data => {
+          :id => endpoint.id,
+          :name => endpoint.name
+        }
+      }
+    end
+    edges = Relation.all.map do |relation|
+      next if !Endpoint.exists?(:id => relation.endpoint_id) || !Endpoint.exists?(:id => relation.dst_id)
+      {
+        :group => "edges",
+        :data => {
+          :id => "e#{relation.id}",
+          :source => "n#{relation.endpoint_id}",
+          :target => "n#{relation.dst_id}",
+          :label => relation.name
+        }
+      }
+    end
+    edges.delete(nil)
+    render :json => nodes.concat(edges)
+  end
+
 end
