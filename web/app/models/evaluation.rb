@@ -94,12 +94,13 @@ class Evaluation < ActiveRecord::Base
       end
 
       logger = Umakadata::Logging::Log.new
+      eval.number_of_statements = retriever.number_of_statements(logger: logger)
+      eval.number_of_statements_log = logger.as_json
+
+      logger = Umakadata::Logging::Log.new
       self.check_update(retriever, eval, logger: logger)
       eval.last_updated_log = logger.as_json
 
-      logger = Umakadata::Logging::Log.new
-      eval.number_of_statements = retriever.number_of_statements(logger: logger)
-      eval.number_of_statements_log = logger.as_json
     end
 
     eval.alive_rate = Evaluation.calc_alive_rate(eval)
@@ -271,7 +272,7 @@ class Evaluation < ActiveRecord::Base
 
     log = Umakadata::Logging::Log.new
     logger.push log unless logger.nil?
-    latest = retriever.first_last(logger: log)
+    latest = retriever.first_last(eval.number_of_statements, logger: log)
     prevStatus = UpdateStatus.where(:endpoint_id => eval.endpoint_id).order('created_at DESC').first
     latestStatus = UpdateStatus.record(eval.endpoint_id, latest)
     previous = self.where(:endpoint_id => eval.endpoint_id).order('created_at DESC').first
