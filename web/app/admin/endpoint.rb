@@ -40,8 +40,12 @@ ActiveAdmin.register Endpoint do
       unless message.nil?
         redirect_to "/admin/endpoints/#{params[:id]}/prefixes", alert: message
       else
-        Prefix::import_csv(params)
-        redirect_to "/admin/endpoints/#{params[:id]}/prefixes", notice: "CSV imported successfully!"
+        error = Prefix::import_csv(params)
+        unless error.nil?
+          redirect_to "/admin/endpoints/#{params[:id]}/prefixes", alert: error
+        else
+          redirect_to "/admin/endpoints/#{params[:id]}/prefixes", notice: "CSV imported successfully!"
+        end
       end
     else
       @endpoint_id = params[:id]

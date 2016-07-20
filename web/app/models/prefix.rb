@@ -9,13 +9,19 @@ class Prefix < ActiveRecord::Base
   validates :element_type, presence: true
 
   def self.import_csv(params)
+    prefixes = []
     CSV.parse(params[:endpoint][:file].read, {headers: true}).each do |row|
       prefix = Prefix.new
       prefix.endpoint_id = params[:id]
       prefix.uri = NKF::nkf("-w", row[0].to_s)
       prefix.element_type = params[:endpoint][:element_type]
-      prefix.save!
+      unless prefix.valid?
+        return "Failed to import. #{prefix.uri} is invalid URI. URI must start with 'http://' or 'https://'."
+      end
+      prefixes.push(prefix)
     end
+    prefixes.each{|prefix| prefix.save}
+    nil
   end
 
   def self.validates_params(params)
@@ -27,11 +33,6 @@ class Prefix < ActiveRecord::Base
     end
     if params[:endpoint][:file].nil?
       return 'CSV file required'
-    end
-    CSV.parse(params[:endpoint][:file].read, {headers: true}).each do |row|
-      unless NKF::nkf("-w", row[0].to_s) =~ URI::regexp(%w(http https))
-        return 'CSV file contains invalid URI'
-      end
     end
     nil
   end

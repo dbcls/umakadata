@@ -32,6 +32,23 @@ URI
       expect(Prefix.all.count).to eq 0
     end
 
+    it 'saves no prefix when there is invalid URI in the CSV file' do
+      str = <<-CSV
+URI
+http://example0.com
+http://example1.com
+file://
+      CSV
+      file = double(File)
+      allow(file).to receive(:read).and_return(str)
+      params = {:id => 1, :endpoint => {:file => file, :element_type => "subject"}}
+
+      Prefix.import_csv(params)
+
+      expect(Prefix.where(uri: 'file://').count).to eq 0
+      expect(Prefix.all.count).to eq 0
+    end
+
   end
 
 end
