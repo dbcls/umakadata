@@ -68,7 +68,7 @@ class ApiController < ApplicationController
       {
         :group => "nodes",
         :data => {
-          :id => endpoint.id,
+          :id => "n#{endpoint.id}",
           :name => endpoint.name
         }
       }
