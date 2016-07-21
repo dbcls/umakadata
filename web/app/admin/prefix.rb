@@ -13,4 +13,13 @@ ActiveAdmin.register Prefix do
     actions
   end
 
+  csv do
+    column :id
+    column :endpoint_id
+    column :uri
+    column :element_type
+    column :created_at
+    column :updated_at
+  end
+
 end
