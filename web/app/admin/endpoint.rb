@@ -17,6 +17,11 @@ ActiveAdmin.register Endpoint do
     permitted = [:name, :url]
   end
 
+  filter :name
+  filter :url
+  filter :created_at
+  filter :updated_at
+
   show do
     panel "Endpoint Details" do
       attributes_table_for endpoint do
