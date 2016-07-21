@@ -1,5 +1,5 @@
 $(function() {
-  $("#cy").height('500');
+  $("#cy").height(window.innerHeight - 150);
   var url = "/api/endpoints/graph/"
   $.getJSON(url, function(data) {
     var cy = window.cy = cytoscape({
