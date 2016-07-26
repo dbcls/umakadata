@@ -5,8 +5,8 @@ class GithubHelper
   def self.create_issue(title)
     issues = call_github_api {|client, github_repo| client.issues(github_repo)}
     return if issues.nil?
-    dose_not_exist_issue = issues.select {|issue| issue[:title] == title}.empty?
-    if dose_not_exist_issue
+    does_not_exist_issue = issues.select {|issue| issue[:title] == title}.empty?
+    if does_not_exist_issue
       call_github_api {|client, github_repo| client.create_issue(github_repo, title)}
     end
   end
