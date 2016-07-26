@@ -28,7 +28,7 @@ class GithubHelper
 
   def self.call_github_api
     if Rails.application.secrets.github_token.blank? || Rails.application.secrets.github_repo.blank?
-      p "Does not set github api configuration"
+      p "GitHub API configuration is not enough"
       return
     end
 
