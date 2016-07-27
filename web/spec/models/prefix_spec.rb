@@ -13,7 +13,7 @@ http://example2.com
 
       file = double(File)
       allow(file).to receive(:read).and_return(str)
-      params = {:id => 1, :endpoint => {:file => file, :element_type => "subject"}}
+      params = {:id => 1, :endpoint => {:file => file}}
       Prefix.import_csv(params)
       expect(Prefix.where(uri: 'http://example0.com').count).to eq 0
       expect(Prefix.all.count).to eq 2
@@ -26,7 +26,7 @@ URI
 
       file = double(File)
       allow(file).to receive(:read).and_return(str)
-      params = {:id => 1, :endpoint => {:file => file, :element_type => "subject"}}
+      params = {:id => 1, :endpoint => {:file => file}}
       Prefix.import_csv(params)
       expect(Prefix.where(uri: 'URI').count).to eq 0
       expect(Prefix.all.count).to eq 0
@@ -41,7 +41,7 @@ file://
       CSV
       file = double(File)
       allow(file).to receive(:read).and_return(str)
-      params = {:id => 1, :endpoint => {:file => file, :element_type => "subject"}}
+      params = {:id => 1, :endpoint => {:file => file}}
 
       Prefix.import_csv(params)
 
