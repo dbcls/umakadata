@@ -1,0 +1,552 @@
+[[umaka-score]]
+Umaka Score
+-----------
+
+Umaka Score represents how valuable endpoints are. We believe there are
+six aspects, Availability, Freshness, Operation, Usefulness, Validity
+and Performance, for valuable endpoints. We evaluate and score endpoints
+from these aspects. Then Umaka Score is average of these score:
+
+Umaka Score = latexmath:[$\frac{\displaystyle \sum_{aspects}score}{6}$]
+
+where
+
+latexmath:[$\begin{array}{llll}
+{\rm aspects} = [ & {\rm Availability}, & {\rm Freshness}, & {\rm Operation}, \\
+                  & {\rm Usefulness},   & {\rm Validity},  & {\rm Performance} ]
+\end{array}$]
+
+We rank the endpoint as shown in Table [table:umaka_rank]
+
+.Umaka Rank
+[cols="^,^",options="header",]
+|=======================
+|Umaka Score |Umaka rank
+|81 - 100 |A
+|61 - 80 |B
+|41 - 60 |C
+|21 - 40 |D
+|0 - 20 |E
+|=======================
+
+In Section [metrics], we show how to score endpoints from each aspect.
+
+[[metrics]]
+Metrics of Umaka Score
+----------------------
+
+[[availability]]
+Availability
+~~~~~~~~~~~~
+
+Availability represents the degree of ready for use. High availability
+value means we can access the endpoint most of all the time. Low
+availability value means the endpoint is often down. We measure the
+following metrics for availability:
+
+* Alive
++
+We send HTTP request to the endpoint URI daily. If the endpoint return
+200 HTTP response, alive is true, otherwise false. Note that we assume
+the endpoint as dead when the endpoint returns 302 Found.
+* Alive Rate
++
+Alive rate is the percentage of alive in 30 days.
+
+The Availability score is calculated as:
+
+Availability = Alive Rate
+
+[[freshness]]
+Freshness
+~~~~~~~~~
+
+Freshness represents how often data in the endpoint is updated. We
+measure the following metrics for freshness:
+
+* Last Updated
++
+We retrieve Service Description and VoID and get the literals specified
+by dcterms:modified. Then we assume the last updated as the latest date
+among those literals.
++
+Unfortunately, most of all endpoints provide Service Description and
+VoID without dcterms:modified statement.
++
+Thus, we determine the data modification thought the following adhoc
+procedure:
++
+First, we retrieve a number of statements using a query described in
+Listing [list:query_for_number_of_statements] and compare the number
+with the previous one. If the number of statements has changed, we
+assume the endpoint seems to be updated today.
++
+....
+SELECT COUNT(*) AS ?c
+WHERE {?s ?p ?o}
+  
+....
++
+When the number of statements is not changed, we retrieve the first and
+the last statements using queries described in Listing
+[list:query_for_the_first_statement] and
+[list:query_for_the_last_statement]. Then we compare them with those of
+a previous day. If one of them is different, we assume the endpoint
+seems to be updated today.
++
+....
+SELECT *
+WHERE {?s ?p ?o}
+OFFSET 0 LIMIT 1
+  
+....
++
+....
+SELECT *
+WHERE {?s ?p ?o}
+OFFSET ($COUNT - 1) LIMIT 1
+  
+....
++
+Note that $COUNT represents the number of total statements retrieved by
+Listing [list:query_for_number_of_statements].
++
+Note that Virtuoso has trouble to count the number of statements. So
+this adhoc procedure does not work well for the endpoint based on
+Virtuoso.
+* Update Interval
++
+Update Interval is average of the interval between last updated. Update
+Interval is N/A if there are less than two last updated dates for the
+endpoint.
+
+Even though we would like to score freshness on the basis of the Update
+Interval, we give up to score and set 50 for all endpoints since the
+adhoc approach does not work well for Virtuoso.
+
+Freshness = 50
+
+[[operation]]
+Operation
+~~~~~~~~~
+
+Operation represents the degree of the maintenance. We send HTTP request
+to the endpoint URI with using the accept request-header field to
+specify both Turtle and RDF/XML, and validate the format of its
+response. We measure the two metrics:
+
+* Service Description
++
+true if Service Description can be retrieved in Turtle format or RDF/XML
+format, otherwise false. We access the endpoint URI via HTTP with the
+following HTTP Request Header:
++
+Accept: text/turtle,application/rdf+xml
+* VoID
++
+true if VoID can be retrieved from well-known URI in Turtle format or
+RDF/XML format, otherwise false. We access the endpoint URI via HTTP
+with the following HTTP Request Header:
++
+Accept: text/turtle,application/rdf+xml
+
+We calculate Operation score as follows:
+
+Operation = latexmath:[$\left\{
+    \begin{array}{ll}
+      0   & {\rm if~both~of~them~are~false } \\
+      50  & {\rm if~one~of~them~is~false } \\
+      100 & {\rm if~both~of~them~are~true }
+  \end{array}
+  \right.$]
+
+[[usefulness]]
+Usefulness
+~~~~~~~~~~
+
+Usefulness represents the degree how easily we can link data in the
+endpoint. We measure the three metrics:
+
+* Metadata Score
++
+Metadata Score represents how much the endpoint contains metadata
+defined in .
++
+First we retrieve a list of graphs in the endpoint using a query
+described in Listing [list:query_for_a_list_of_graphs].
++
+....
+SELECT DISTINCT ?g
+WHERE{
+ GRAPH ?g{ ?s ?p ?o.}
+}
+  
+....
++
+Then we try to retrieve the metadata for each graph except for Table
+[table:ignore_graphs] as follows:
++
+.List of Ignore Graphs
+[cols="<",options="header",]
+|==========================================
+|Graph URI
+|http://www.openlinksw.com/schemas/virtrdf#
+|==========================================
+1.  Classes
++
+We retrieve a list of classes using a query described in Listing
+[list:query_for_classes_on_a_graph] and
+[list:query_for_classes_having_instances_on_a_graph].
++
+....
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?c
+FROM <g>
+WHERE {
+  { ?c rdf:type rdfs:Class. }
+  UNION
+  { [] rdf:type ?c. }
+  UNION
+  { [] rdfs:domain ?c. }
+  UNION
+  { [] rdfs:range ?c. }
+  UNION
+  { ?c rdfs:subclassOf []. }
+  UNION
+  { [] rdfs:subclassOf ?c. }
+}
+LIMIT 100
+    
+....
++
+....
+PREFIX rdf:
+SELECT DISTINCT ?c
+        FROM <g>
+WHERE{
+        [] rdf:type ?c.
+}
+    
+....
+2.  Labels
++
+We retrieve a list of labels using a query described in Listing
+[list:query_for_labels_of_classes].
++
+....
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?c ?label
+WHERE {
+    graph <g> {
+      ?c rdfs:label ?label.
+      filter (
+        ?c IN (<c1>, <c2>, ..., <cn>)
+      )
+    }
+}
+    
+....
+3.  Datatypes
++
+We retrieve a list of datatypes using a query described in Listing
+[list:query_for_datatypes_on_a_graph].
++
+....
+SELECT DISTINCT (datatype(?o) AS ?ldt)
+FROM <g>
+WHERE{
+  [] ?p ?o.
+  FILTER(isLiteral(?o))
+}
+    
+....
+4.  Properties
++
+We retrieve a list of properties using a query described in Listing
+[list:query_for_properties_on_a_graph].
++
+....
+SELECT DISTINCT ?p
+        FROM <g>
+WHERE{
+        ?s ?p ?o.
+}
+    
+....
++
+We evaluate Metadata score as follows:
++
+Metadata Score =
+latexmath:[$\frac{\displaystyle \sum_{graphs}^{g}(c(g) + l(g) + p(g) + d(g))}{N}$]
++
+where
++
+latexmath:[$N$] = Number of Graphs
++
+latexmath:[$c(g) = \left\{
+        \begin{array}{ll}
+            0   & {\rm if~g~does~not~contains~any~classes} \\
+            25  & {\rm if~g~contains~more~than~zero~classes}
+        \end{array}
+        \right.$]
++
+latexmath:[$l(g) = \left\{
+        \begin{array}{ll}
+            0   & {\rm if~g~does~not~contains~any~labels} \\
+            25  & {\rm if~g~contains~more~than~zero~labels}
+        \end{array}
+        \right.$]
++
+latexmath:[$p(g) = \left\{
+        \begin{array}{ll}
+            0   & {\rm if~g~does~not~contains~any~properties} \\
+            25  & {\rm if~g~contains~more~than~zero~properties}
+        \end{array}
+        \right.$]
++
+latexmath:[$d(g) = \left\{
+        \begin{array}{ll}
+            0   & {\rm if~g~does~not~contains~any~datatypes} \\
+            25  & {\rm if~g~contains~more~than~zero~datatypes}
+        \end{array}
+        \right.$]
+* Vocabulary Score
++
+Vocabulary Score, which is calculated based on metadata, represents how
+many vocabularies data in the endpoint use.
++
+Vocabulary Score is calculated as follows:
++
+Vocabulary Score =
+latexmath:[$\frac{\displaystyle \sum_{graphs}^{g}v(g)}{N}$]
++
+where
++
+latexmath:[$N$] = Number of Graphs
++
+latexmath:[$v(g)$] = Number of Properties in Graph g
+* Ontology Score
++
+Ontology Score, which is calculated based on metadata, represents how
+much common ontologies data in the endpoint use.
++
+Ontology Score is calculated as follows:
++
+Vocabulary Score =
+latexmath:[$\frac{\displaystyle \sum_{graphs}^{g}o(g)}{N}$]
++
+where
++
+latexmath:[$N$] = Number of Graphs
++
+latexmath:[$o(g)$] = latexmath:[$\frac{NCO}{NO}$]
++
+latexmath:[$NO$] = Number of Ontologies used for Properties
++
+latexmath:[$NCO$] = Number of Ontologies used for Properties in Table
+[table:common_ontologies]
++
+.List of Common Ontologies
+[cols="<",options="header",]
+|=======================================================
+|Ontology URI
+|http://www.w3.org/2000/01/rdf-schema
+|http://www.w3.org/1999/02/22-rdf-syntax-ns
+|http://www.socrata.com/rdf/terms
+|http://www.w3.org/2003/01/geo/wgs84_pos
+|http://xmlns.com/foaf/0.1/
+|http://www.w3.org/2002/07/owl
+|http://purl.org/dc/elements/1.1/
+|http://purl.org/dc/terms/
+|http://www.w3.org/2000/10/swap/pim/usps
+|http://dublincore.org/documents/dcmi-box/
+|http://www.territorio.provincia.tn.it/geodati/ontology/
+|http://www.w3.org/2004/02/skos/core
+|=======================================================
+
+At last, we evaluate Usefulness Score as follows:
+
+latexmath:[$\begin{array}{lll}
+  {\rm Usefulness} & = & 30.0 * {\rm Metadata~Score} \\
+                   & + & 40.0 * f10({\rm Vocabulary~Score}) \\
+                   & + & 30.0 * {\rm Ontology~Score}
+  \end{array}$]
+
+where
+
+latexmath:[$f10(x) = \left\{
+    \begin{array}{ll}
+      10 & {\rm if}~x>10 \\
+      x  & {\rm Otherwise}
+    \end{array}
+  \right.$]
+
+[[validity]]
+Validity
+~~~~~~~~
+
+Validity represents how endpoint and data in it obey the rules. We
+measure the two metrics:
+
+* Cool URI
++
+The URI of endpoints is preferred to be Cool URI, .
++
+We check four criteria:
+1.  A host of URI of endpoints should not be specified by IP address
+2.  A port of URI of endpoints should be 80
+3.  A URI of endpoints should not contain query parameters
+4.  A length of URI of endpoints should be less than 30 characters
++
+Cool URI Score is a percentage of the satisfied rules.
+* Linked Data Rule
++
+The endpoints are preferred to be satisfied with the four rules of
+linked data.
++
+We check four criteria:
+1.  Use URIs as names for things
++
+We assume all subjects of statements are things. We search invalid
+statement using a query described in Listing [list:non_uri_subject], and
+if nothing is found the endpoint satisfied this rule.
++
+Note that we ignore Virtuoso specific graphs since Virtuoso contains a
+graph which contains invalid statements.
++
+....
+SELECT
+  *
+WHERE {
+GRAPH ?g { ?s ?p ?o } .
+  filter (!isURI(?s) && !isBLANK(?s) && ?g NOT IN (
+    <http://www.openlinksw.com/schemas/virtrdf#>
+  ))
+}
+LIMIT 1
+      
+....
+2.  Use HTTP URIs so that people can look up those names
++
+We assume all subjects of statements are things. We search invalid
+statement using a query described in Listing
+[list:non_http_uri_subject], and if nothing is found the endpoint
+satisfied this rule.
++
+Note that we ignore Virtuoso specific graphs since Virtuoso contains a
+graph which contains invalid statements.
++
+....
+SELECT
+  *
+WHERE {
+  GRAPH ?g { ?s ?p ?o } .
+  filter (!regex(?s, "http://", "i") && !isBLANK(?s) && ?g NOT IN (
+    <http://www.openlinksw.com/schemas/virtrdf#>
+  ))
+}
+LIMIT 1
+      
+....
+3.  When someone looks up a URI, provide useful information, using the
+standards (RDF*, SPARQL)
++
+We assess this rule by obtaining a subject (URI) using a query described
+in Listing [list:query_for_a_subject] and accessing the URI via HTTP
+protocol. We assume that the endpoint is satisfied with the rule if the
+URI returns any data.
++
+Note that we ignore Virtuoso specific graphs since Virtuoso contains a
+graph which contains invalid statements.
++
+....
+SELECT
+  ?s
+WHERE {
+  GRAPH ?g { ?s ?p ?o } .
+  filter (isURI(?s) && ?g NOT IN (
+    <http://www.openlinksw.com/schemas/virtrdf#>
+  ))
+}
+LIMIT 1
+OFFSET 100
+      
+....
+4.  Include links to other URIs. so that they can discover more things
++
+We assume the statement representing the link to other URI uses the
+vocabularies owl:sameAs or rdfs:seeAlso. We think if there are any
+statement of which property is owl:sameAs or rdfs:seeAlso, the endpoint
+is satisfied with the rule. Thus we check the feasibility of the rule by
+using queries described in Listing [list:query_for_same_as],
+[list:query_for_see_also].
++
+....
+PREFIX owl:<http://www.w3.org/2002/07/owl#>
+SELECT
+  *
+WHERE {
+  GRAPH ?g { ?s owl:sameAs ?o } .
+}
+LIMIT 1
+      
+....
++
+....
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT
+  *
+WHERE {
+  GRAPH ?g { ?s rdfs:seeAlso ?o } .
+}
+LIMIT 1
+      
+....
++
+Linked Data Score is a percentage of the satisfied rules.
+
+We evaluate Validity as follows:
+
+Validity = 40 * Cool URI Score + 60.0 * Linked Data Rule Score
+
+[[performance]]
+Performance
+~~~~~~~~~~~
+
+Performace suggests how powerful the endpoint is.
+
+We measure the response times of the two queries, Listing
+[list:query_ask], [list:query_for_list_of_graphs]. The former query is a
+most simple query and we use this query to estimate the transfer time.
+The latter query requires a little computations for endpoints. We
+believe the execution cost of this query does not differ very much
+according to the size of data.
+
+....
+ASK {}
+  
+....
+
+....
+SELECT DISTINCT
+  ?g
+WHERE {
+  GRAPH ?g { ?s ?p ?o }
+}
+  
+....
+
+We assume the execution time as:
+
+Execution Time = Differences of the response time for those queries.
+
+After that, we evaluate Performance as:
+
+Performance = latexmath:[$\left\{
+    \begin{array}{ll}
+        \multicolumn{2}{l}{100.0 * (1.0 - {\rm Execution~Time})} \\
+          & {\rm if~Execution~Time~is~less~than~1~second}  \\
+        0 & {\rm Otherwise}
+    \end{array}
+    \right.$]
