@@ -1,5 +1,13 @@
 namespace :umakadata do
 
+  desc "import seeAlso and sameAs data from CSV file"
+  task :seeAlso_sameAs, ['csv'] => :environment do |task, args|
+    Relation.delete_all
+    CSV.foreach(args[:csv]) do |row|
+      Relation.create(:endpoint_id => row[0], :dst_id => row[1], :name => row[2])
+    end
+  end
+
   desc "check endpoint liveness"
   task :crawl => :environment do
     Endpoint.all.each do |endpoint|
