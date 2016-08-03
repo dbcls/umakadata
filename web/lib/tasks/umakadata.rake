@@ -8,6 +8,15 @@ namespace :umakadata do
     end
   end
 
+  desc "export all prefixes to csv file"
+  task :export_prefixes, ['output_path'] => :environment do |task, args|
+    path = %W(#{Dir.pwd} all_prefixes.csv).join('/') unless path = args[:output_path]
+    CSV.open(path, 'w') do |row|
+      row << %w(id endpoint_id uri)
+      Prefix.all.each {|prefix| row << %W(#{prefix.id} #{prefix.endpoint_id} #{prefix.uri})}
+    end
+  end
+
   desc "check endpoint liveness"
   task :crawl => :environment do
     Endpoint.all.each do |endpoint|
