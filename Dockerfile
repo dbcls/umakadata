@@ -11,4 +11,3 @@ ADD . /myapp
 WORKDIR /myapp/web
 
 RUN bundle install
-RUN curl -o `ruby -r openssl -e 'p OpenSSL::X509::DEFAULT_CERT_FILE' | tr -d '"'` https://curl.haxx.se/ca/cacert.pem
