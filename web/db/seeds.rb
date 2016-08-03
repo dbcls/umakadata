@@ -24,8 +24,3 @@ seeds.each do |table|
     Model.create!(data)
   end
 end
-
-Relation.delete_all
-CSV.foreach("db/seeds_data/relations.csv") do |row|
-  Relation.create(:endpoint_id => row[0], :dst_id => row[1], :name => row[2])
-end
