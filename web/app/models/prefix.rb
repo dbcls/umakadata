@@ -5,7 +5,7 @@ require 'uri'
 class Prefix < ActiveRecord::Base
 
   belongs_to :endpoint
-  validates :uri, format: URI::regexp(%w(http https))
+  validates :uri, format: URI::regexp(%w(http https ftp))
 
   def self.import_csv(params)
     prefixes = []
@@ -14,7 +14,7 @@ class Prefix < ActiveRecord::Base
       prefix.endpoint_id = params[:id]
       prefix.uri = NKF::nkf("-w", row[0].to_s)
       unless prefix.valid?
-        return "Failed to import. #{prefix.uri} is invalid URI. URI must start with 'http://' or 'https://'."
+        return "Failed to import. #{prefix.uri} is invalid URI. URI must start with 'http://', 'https://' or 'ftp://'."
       end
       prefixes.push(prefix)
     end
