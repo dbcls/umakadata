@@ -1,4 +1,19 @@
+MYAPP = ""
+SBMETA = "#{MYAPP}/sbMeta"
+OPTIONS = "-it"
+VOLUME = "-v #{SBMETA}:/sbMeta"
+IMAGE = "sbmeta"
+SCRIPT_DIR = "/sbMeta/script"
+DATA_DIR = "/sbMeta/data"
+
 namespace :umakadata do
+
+  desc "Create relations between endpoints"
+  task :create_relations_csv => :environment do |task, args|
+    Rake::Task["umakadata:export_prefixes"].execute(Rake::TaskArguments.new([:output_path], ["#{DATA_DIR}/all_prefixes.csv"]))
+    Rake::Task["sbmeta:find_seeAlso_and_sameAs"].execute(Rake::TaskArguments.new([:name, :prefix_path], ["", "#{DATA_DIR}/all_prefixes.csv"]))
+    Rake::Task["umakadata:seeAlso_sameAs"].execute(Rake::TaskArguments.new([:csv], ["#{DATA_DIR}/bulkdownloads_relation.csv"]))
+  end
 
   desc "import seeAlso and sameAs data from CSV file"
   task :seeAlso_sameAs, ['csv'] => :environment do |task, args|
@@ -93,4 +108,39 @@ namespace :umakadata do
       end
     }
   end
+end
+
+namespace :sbmeta do
+
+  desc "Create prefix list"
+  task :create_prefixes_csv_files, ['name'] => :environment do |task, args|
+    Rake::Task["sbmeta:bulkdownload"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
+    Rake::Task["sbmeta:extract"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
+    Rake::Task["sbmeta:find_prefixes"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
+  end
+
+  desc "Bulkdownload from each endpoint to bulkdownload directory"
+  task :bulkdownload, ['name'] => :environment do |task, args|
+    command = "/bin/bash #{SCRIPT_DIR}/download.sh #{args[:name]}"
+    sh "docker run #{OPTIONS} #{VOLUME} #{IMAGE} #{command}"
+  end
+
+  desc "Extract compressed files in bulkdownload directory"
+  task :extract, ['name'] => :environment do |task, args|
+    command = "/bin/bash #{SCRIPT_DIR}/extract.sh #{args[:name]}"
+    sh "docker run #{OPTIONS} #{VOLUME} #{IMAGE} #{command}"
+  end
+
+  desc "Find prefixes in bulkdownload directory and output standardized them in CSV file"
+  task :find_prefixes, ['name'] => :environment do |task, args|
+    command = "sbt \"runMain sbmeta.SBMeta #{DATA_DIR}/bulkdownloads/#{args[:name]}\""
+    sh "docker run #{OPTIONS} #{VOLUME} #{IMAGE} #{command}"
+  end
+
+  desc "Find seeAlso and sameAs in bulkdownload directory and output standardized them in CSV file"
+  task :find_seeAlso_and_sameAs, ['name', 'prefix_path'] => :environment do |task, args|
+    command = "sbt \"runMain sbmeta.SBMetaSeeAlsoAndSameAs #{DATA_DIR}/bulkdownloads/#{args[:name]} #{args[:prefix_path]}\""
+    sh "docker run #{OPTIONS} #{VOLUME} #{IMAGE} #{command}"
+  end
+
 end
