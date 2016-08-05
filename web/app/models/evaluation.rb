@@ -139,9 +139,7 @@ class Evaluation < ActiveRecord::Base
   end
 
   def self.retrieve_linked_data_rules(retriever, eval)
-    logger = Umakadata::Logging::Log.new
-    eval.subject_is_uri = retriever.uri_subject?(logger: logger)
-    eval.subject_is_uri_log = logger.as_json
+    eval.subject_is_uri = true
     logger = Umakadata::Logging::Log.new
     eval.subject_is_http_uri = retriever.http_subject?(logger: logger)
     eval.subject_is_http_uri_log = logger.as_json
