@@ -1,5 +1,5 @@
 name,url
-Pathway Commons @Malaga,http://150.214.214.5/virtuoso/sparql/
+Pathway Commons @Malaga,http://150.214.214.5/pathwaycommons/
 Pathway Commmons @BaderLab (Experimental),http://webservice.baderlab.org:3030/pc2/
 Linked Life Data,http://linkedlifedata.com/sparql
 National Center for Biomedical Ontologies,http://sparql.bioontology.org
@@ -17,45 +17,14 @@ LinkedCT,http://data.linkedct.org/sparql/
 CiteSeer,http://citeseer.rkbexplorer.com/sparql/
 Chembl @Uppsala,http://rdf.farmbio.uu.se/chembl/sparql
 WikiPathways,http://sparql.wikipathways.org
-Affymetrix (Bio2RDF),http://cu.affymetrix.bio2rdf.org/sparql
-BioPortal (Bio2RDF),http://cu.bioportal.bio2rdf.org/sparql
-ClinicalTrials (Bio2RDF),http://cu.clinicaltrials.bio2rdf.org/sparql
-CTD (Bio2RDF),http://cu.ctd.bio2rdf.org/sparql
-dbSNP (Bio2RDF),http://cu.dbsnp.bio2rdf.org/sparql
-DrugBank (Bio2RDF),http://cu.drugbank.bio2rdf.org/sparql
-GenAge (Bio2RDF),http://cu.genage.bio2rdf.org/sparql
-GenDR (Bio2RDF),http://cu.gendr.bio2rdf.org/sparql
-Gene Ontology Annotation (Bio2RDF),http://cu.goa.bio2rdf.org/sparql
-HUGO Gene Nomenclature Committee (Bio2RDF),http://cu.hgnc.bio2rdf.org/sparql
-NCBI HomoloGene (Bio2RDF),http://cu.homologene.bio2rdf.org/sparql
-InterPro (Bio2RDF),http://cu.interpro.bio2rdf.org/sparql
-iRefIndex (Bio2RDF),http://cu.irefindex.bio2rdf.org/sparql
-KEGG (Bio2RDF),http://cu.kegg.bio2rdf.org/sparql
-LinkedSPL (Bio2RDF),http://cu.linkedspl.bio2rdf.org/sparql
-Life Science Resource Registry (Bio2RDF),http://cu.lsr.bio2rdf.org/sparql
-MeSH (Bio2RDF),http://cu.mesh.bio2rdf.org/sparql
-Mouse Genome Database (Bio2RDF),http://cu.mgi.bio2rdf.org/sparql
-NCBI Gene (Bio2RDF),http://cu.ncbigene.bio2rdf.org/sparql
-National Drug Code (Bio2RDF),http://cu.ndc.bio2rdf.org/sparql
-OMIM (Bio2RDF),http://cu.omim.bio2rdf.org/sparql
-Orphanet (Bio2RDF),http://cu.orphanet.bio2rdf.org/sparql
-Pathway Commons (Bio2RDF),http://cu.pathwaycommons.bio2rdf.org/sparql
-PharmGKB (Bio2RDF),http://cu.pharmgkb.bio2rdf.org/sparql
-Reactome (Bio2RDF),http://cu.reactome.bio2rdf.org/sparql
-SABIO-RK (Bio2RDF),http://cu.sabiork.bio2rdf.org/sparql
-Saccharomyces Genome Database (Bio2RDF),http://cu.sgd.bio2rdf.org/sparql
-SIDER (Bio2RDF),http://cu.sider.bio2rdf.org/sparql
-NCBI taxonomy (Bio2RDF),http://cu.taxonomy.bio2rdf.org/sparql
-WikiPathways (Bio2RDF),http://cu.wikipathways.bio2rdf.org/sparql
-WormBase (Bio2RDF),http://cu.wormbase.bio2rdf.org/sparql
 Life Science Dictionary,http://lsd.dbcls.jp/sparql
 Expression Atlas,http://www.ebi.ac.uk/rdf/services/atlas/sparql
 BioModels,http://www.ebi.ac.uk/rdf/services/biomodels/sparql
 BioSamples,http://www.ebi.ac.uk/rdf/services/biosamples/sparql
-chEMBL,http://www.ebi.ac.uk/rdf/services/chembl/sparql
+ChEMBL,http://www.ebi.ac.uk/rdf/services/chembl/sparql
 Reactome,http://www.ebi.ac.uk/rdf/services/reactome/sparql
 UniProt,http://sparql.uniprot.org/sparql/
-Bio2RDF,http://sparql.openlifedata.org/
+OpenLifeData,http://sparql.openlifedata.org/
 NBDC RDF Portal,http://integbio.jp/rdf/sparql
 Centrally Curated Resources,https://global.eagle-i.net/sparqler/sparql
 Charles R. Drew University of Medicine and Science,https://cdrewu.eagle-i.net/sparqler/sparql
@@ -68,7 +37,7 @@ Harvard University Immunology Collection,https://immunology.harvard.eagle-i.net/
 Harvard University,https://harvard.eagle-i.net/sparqler/sparql
 Howard University,https://howard.eagle-i.net/sparqler/sparql
 "Hunter College, CUNY",https://hunter-cuny.eagle-i.net/sparqler/sparql
-"ITHS Regional Directory",https://eagle-i.iths.org/sparqler/sparql
+ITHS Regional Directory,https://eagle-i.iths.org/sparqler/sparql
 Jackson State University,https://jsu.eagle-i.net/sparqler/sparql
 Meharry Medical College,https://meharry.eagle-i.net/sparqler/sparql
 Michigan State University,https://eagle-i.ctsi.msu.edu/sparqler/sparql
@@ -99,4 +68,7 @@ LinkDB,http://www.genome.jp/sparql/linkdb
 Colil,http://colil.dbcls.jp/sparql
 FirstAuthor Navigation,http://navi.first.lifesciencedb.jp/fanavi/sparql
 DisGeNET,http://rdf.disgenet.org/sparql/
-Wikidata,https://query.wikidata.org/sparql
+WikiData,https://query.wikidata.org/sparql
+OrphaData,http://www.orpha.net/sparql
+Pathway Commons,http://rdf.pathwaycommons.org/sparql/
+Bio2RDF,http://bio2rdf.org/sparql
