@@ -1,4 +1,4 @@
-MYAPP = ""
+MYAPP = "change path depending on your environment"
 SBMETA = "#{MYAPP}/sbMeta"
 OPTIONS = "-it"
 VOLUME = "-v #{SBMETA}:/sbMeta"
