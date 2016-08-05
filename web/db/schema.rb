@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160727012106) do
+ActiveRecord::Schema.define(version: 20160805142450) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,7 +90,6 @@ ActiveRecord::Schema.define(version: 20160727012106) do
     t.text     "alive_log"
     t.text     "service_description_log"
     t.text     "uri_subject_log"
-    t.text     "subject_is_uri_log"
     t.text     "subject_is_http_uri_log"
     t.text     "uri_provides_info_log"
     t.text     "contains_links_log"

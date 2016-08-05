@@ -37,8 +37,6 @@ class EndpointsController < ApplicationController
         json = evaluation.service_description_log
       when 'void_ttl' then
         json = evaluation.void_ttl_log
-      when 'subject_is_uri'
-        json = evaluation.subject_is_uri_log
       when 'subject_is_http_uri'
         json = evaluation.subject_is_http_uri_log
       when 'uri_provides_info'
