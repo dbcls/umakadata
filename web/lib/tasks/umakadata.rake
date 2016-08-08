@@ -33,8 +33,8 @@ namespace :umakadata do
   end
 
   desc "check endpoint liveness"
-  task :crawl => :environment do
-    Endpoint.all.each do |endpoint|
+  task :crawl, ['order'] => :environment do |task, args|
+    Endpoint.all.order("id #{args[:order]}").each do |endpoint|
       puts endpoint.name
       begin
         retriever = Umakadata::Retriever.new endpoint.url
