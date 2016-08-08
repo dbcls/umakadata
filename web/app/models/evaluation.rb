@@ -247,10 +247,9 @@ class Evaluation < ActiveRecord::Base
 
     #validity
     rates[4] += 40.0 * eval.cool_uri_rate.to_f / 100.0 unless eval.cool_uri_rate.blank?
-    rates[4] += 15.0 if eval.subject_is_uri
-    rates[4] += 15.0 if eval.subject_is_http_uri
-    rates[4] += 15.0 if eval.uri_provides_info
-    rates[4] += 15.0 if eval.contains_links
+    rates[4] += 20.0 if eval.subject_is_http_uri
+    rates[4] += 20.0 if eval.uri_provides_info
+    rates[4] += 20.0 if eval.contains_links
 
     #performance
     rates[5] = 100.0 * (1.0 - eval.execution_time) unless eval.execution_time.blank?
