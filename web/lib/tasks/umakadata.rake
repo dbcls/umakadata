@@ -32,7 +32,7 @@ namespace :umakadata do
     end
   end
 
-  desc "check endpoint liveness"
+  desc "check endpoint liveness (argument: ASC, DESC)"
   task :crawl, ['order'] => :environment do |task, args|
     Endpoint.all.order("id #{args[:order]}").each do |endpoint|
       puts endpoint.name
