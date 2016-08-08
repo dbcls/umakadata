@@ -332,8 +332,6 @@ h1.page-header = @endpoint.name
                 span
                   | true if all subjects are URI or blank node, otherwise false.
               = @evaluation.subject_is_uri.to_s
-              '
-              = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :subject_is_uri unless @evaluation.subject_is_uri_log.nil?
             .item
               .umakadata-tooltip
                 | HTTP URIs are used?:
