@@ -9,7 +9,9 @@ class ApiController < ApplicationController
     @conditions = params
     conditions = {'evaluations.latest': true}
     @endpoints = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions)
+    @endpoints = @endpoints.includes(:prefixes) unless params['prefix'].nil?
     self.add_like_condition_for_name_url(params['name']) if !params['name'].blank?
+    self.add_like_condition_for_prefix(params['prefix']) if !params['prefix'].blank?
     self.add_range_condition('evaluations.score', params['score_lower'], params['score_upper'])
     self.add_range_condition('evaluations.alive_rate', params['alive_rate_lower'], params['alive_rate_upper'])
     self.add_rank_condition('evaluations.rank', params['rank']) if !params['rank'].blank?
@@ -36,6 +38,10 @@ class ApiController < ApplicationController
 
   def add_like_condition_for_name_url(value)
     @endpoints = @endpoints.where("LOWER(name) LIKE ? OR LOWER(url) LIKE ?", "%#{value.downcase}%", "%#{value.downcase}%")
+  end
+
+  def add_like_condition_for_prefix(value)
+    @endpoints = @endpoints.where("LOWER(prefixes.uri) LIKE ?", "%#{value.downcase}%")
   end
 
   def add_is_not_empty_condition(column)

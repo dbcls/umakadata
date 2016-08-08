@@ -15,6 +15,9 @@ hr
     label.col-xs-3 Name or URL
     = text_field_tag :name, "", :class => 'form-control'
   .form-inline.row
+    label.col-xs-3 Prefix
+    = text_field_tag :prefix, "", :class => 'form-control'
+  .form-inline.row
     label.col-xs-3 Score (0-100)
     = text_field_tag :score_lower, "", :class => 'form-control form-inline'
     span ~
