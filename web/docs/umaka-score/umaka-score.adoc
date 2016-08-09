@@ -347,7 +347,7 @@ latexmath:[$o(g)$] = latexmath:[$\frac{NCO}{NO}$]
 latexmath:[$NO$] = Number of Ontologies used for Properties
 +
 latexmath:[$NCO$] = Number of Ontologies used for Properties in Table
-[table:common_ontologies]
+\[table:list_of_common_ontologies\]
 +
 .List of Common Ontologies
 [cols="<",options="header",]
