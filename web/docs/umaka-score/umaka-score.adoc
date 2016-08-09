@@ -7,14 +7,14 @@ six aspects, Availability, Freshness, Operation, Usefulness, Validity
 and Performance, for valuable endpoints. We evaluate and score endpoints
 from these aspects. Then Umaka Score is average of these score:
 
-Umaka Score = latexmath:[$\frac{\displaystyle \sum_{aspects}score}{6}$]
+Umaka Score = latexmath:[\frac{\displaystyle \sum_{aspects}score}{6}]
 
 where
 
-latexmath:[$\begin{array}{llll}
+latexmath:[\begin{array}{llll}
 {\rm aspects} = [ & {\rm Availability}, & {\rm Freshness}, & {\rm Operation}, \\
-                  & {\rm Usefulness},   & {\rm Validity},  & {\rm Performance} ]
-\end{array}$]
+                  & {\rm Usefulness},   & {\rm Validity},  & {\rm Performance} \]
+\end{array}]
 
 We rank the endpoint as shown in Table [table:umaka_rank]
 
@@ -148,13 +148,13 @@ Accept: text/turtle,application/rdf+xml
 
 We calculate Operation score as follows:
 
-Operation = latexmath:[$\left\{
+Operation = latexmath:[\left\{
     \begin{array}{ll}
       0   & {\rm if~both~of~them~are~false } \\
       50  & {\rm if~one~of~them~is~false } \\
       100 & {\rm if~both~of~them~are~true }
   \end{array}
-  \right.$]
+  \right.]
 
 [[usefulness]]
 === 2.4 Usefulness
@@ -273,39 +273,39 @@ WHERE{
 We evaluate Metadata score as follows:
 +
 Metadata Score =
-latexmath:[$\frac{\displaystyle \sum_{graphs}^{g}(c(g) + l(g) + p(g) + d(g))}{N}$]
-+
+latexmath:[\frac{\displaystyle \sum_{graphs}^{g}(c(g) + l(g) + p(g) + d(g))}{N}]
+
 where
-+
-latexmath:[$N$] = Number of Graphs
-+
-latexmath:[$c(g) = \left\{
+
+latexmath:[N] = Number of Graphs
+
+latexmath:[c(g) = \left\{
         \begin{array}{ll}
             0   & {\rm if~g~does~not~contains~any~classes} \\
             25  & {\rm if~g~contains~more~than~zero~classes}
         \end{array}
-        \right.$]
-+
-latexmath:[$l(g) = \left\{
+        \right.]
+
+latexmath:[l(g) = \left\{
         \begin{array}{ll}
             0   & {\rm if~g~does~not~contains~any~labels} \\
             25  & {\rm if~g~contains~more~than~zero~labels}
         \end{array}
-        \right.$]
-+
-latexmath:[$p(g) = \left\{
+        \right.]
+
+latexmath:[p(g) = \left\{
         \begin{array}{ll}
             0   & {\rm if~g~does~not~contains~any~properties} \\
             25  & {\rm if~g~contains~more~than~zero~properties}
         \end{array}
-        \right.$]
-+
-latexmath:[$d(g) = \left\{
+        \right.]
+
+latexmath:[d(g) = \left\{
         \begin{array}{ll}
             0   & {\rm if~g~does~not~contains~any~datatypes} \\
             25  & {\rm if~g~contains~more~than~zero~datatypes}
         \end{array}
-        \right.$]
+        \right.]
 * Vocabulary Score
 +
 Vocabulary Score, which is calculated based on metadata, represents how
@@ -314,13 +314,13 @@ many vocabularies data in the endpoint use.
 Vocabulary Score is calculated as follows:
 +
 Vocabulary Score =
-latexmath:[$\frac{\displaystyle \sum_{graphs}^{g}v(g)}{N}$]
-+
+latexmath:[\frac{\displaystyle \sum_{graphs}^{g}v(g)}{N}]
+
 where
-+
-latexmath:[$N$] = Number of Graphs
-+
-latexmath:[$v(g)$] = Number of Properties in Graph g
+
+latexmath:[N] = Number of Graphs
+
+latexmath:[v(g)] = Number of Properties in Graph g
 * Ontology Score
 +
 Ontology Score, which is calculated based on metadata, represents how
@@ -329,17 +329,17 @@ much common ontologies data in the endpoint use.
 Ontology Score is calculated as follows:
 +
 Vocabulary Score =
-latexmath:[$\frac{\displaystyle \sum_{graphs}^{g}o(g)}{N}$]
-+
+latexmath:[\frac{\displaystyle \sum_{graphs}^{g}o(g)}{N}]
+
 where
-+
-latexmath:[$N$] = Number of Graphs
-+
-latexmath:[$o(g)$] = latexmath:[$\frac{NCO}{NO}$]
-+
-latexmath:[$NO$] = Number of Ontologies used for Properties
-+
-latexmath:[$NCO$] = Number of Ontologies used for Properties in Table
+
+latexmath:[N] = Number of Graphs
+
+latexmath:[o(g)] = latexmath:[\frac{NCO}{NO}]
+
+latexmath:[NO] = Number of Ontologies used for Properties
+
+latexmath:[NCO] = Number of Ontologies used for Properties in Table
 \[table:list_of_common_ontologies\]
 +
 .List of Common Ontologies
@@ -362,20 +362,20 @@ latexmath:[$NCO$] = Number of Ontologies used for Properties in Table
 
 At last, we evaluate Usefulness Score as follows:
 
-latexmath:[$\begin{array}{lll}
+latexmath:[\begin{array}{lll}
   {\rm Usefulness} & = & 30.0 * {\rm Metadata~Score} \\
                    & + & 40.0 * f10({\rm Vocabulary~Score}) \\
                    & + & 30.0 * {\rm Ontology~Score}
-  \end{array}$]
+  \end{array}]
 
 where
 
-latexmath:[$f10(x) = \left\{
+latexmath:[f10(x) = \left\{
     \begin{array}{ll}
       10 & {\rm if}~x>10 \\
       x  & {\rm Otherwise}
     \end{array}
-  \right.$]
+  \right.]
 
 [[validity]]
 === 2.5 Validity
@@ -537,10 +537,9 @@ Execution Time = Differences of the response time for those queries.
 
 After that, we evaluate Performance as:
 
-Performance = latexmath:[$\left\{
+Performance = latexmath:[\left\{
     \begin{array}{ll}
-        \multicolumn{2}{l}{100.0 * (1.0 - {\rm Execution~Time})} \\
-          & {\rm if~Execution~Time~is~less~than~1~second}  \\
+        100.0 * (1.0 - {\rm Execution~Time}) & {\rm if~Execution~Time~is~less~than~1~second} \\
         0 & {\rm Otherwise}
     \end{array}
-    \right.$]
+    \right.]
