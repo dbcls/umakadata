@@ -184,7 +184,7 @@ h1.page-header = @endpoint.name
           td.operation
             .umakadata-tooltip
               | VoID
-              span.small
+              span.medium
                 | true if VoID can be found on well known URI, otherwise false.
           td.operation
             = (!@void.blank?).to_s
@@ -266,7 +266,7 @@ h1.page-header = @endpoint.name
           td.usefulness
             .umakadata-tooltip
               | Data Entry
-              span
+              span.medium
                 | Number of statements in the endpoint.
           td.usefulness
             = (@evaluation.number_of_statements.nil? ? 'N/A' : @evaluation.number_of_statements).to_s
