@@ -395,11 +395,12 @@ measure the two metrics:
 +
 The URI of endpoints is preferred to be Cool URI, .
 +
-We check four criteria:
+.We check four criteria:
 1.  A host of URI of endpoints should not be specified by IP address
 2.  A port of URI of endpoints should be 80
 3.  A URI of endpoints should not contain query parameters
 4.  A length of URI of endpoints should be less than 30 characters
+
 +
 Cool URI Score is a percentage of the satisfied rules.
 * Linked Data Rule
@@ -407,7 +408,7 @@ Cool URI Score is a percentage of the satisfied rules.
 The endpoints are preferred to be satisfied with the four rules of
 linked data.
 +
-We check four criteria:
+.We check four criteria:
 1.  Use URIs as names for things
 +
 We assume all subjects of statements are things. We search invalid
