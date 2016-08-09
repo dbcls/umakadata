@@ -1,8 +1,6 @@
 :stem: latexmath
 
-[[umaka-score]]
-Umaka Score
------------
+== 1. Umaka Score
 
 Umaka Score represents how valuable endpoints are. We believe there are
 six aspects, Availability, Freshness, Operation, Usefulness, Validity
@@ -34,12 +32,10 @@ We rank the endpoint as shown in Table [table:umaka_rank]
 In Section [metrics], we show how to score endpoints from each aspect.
 
 [[metrics]]
-Metrics of Umaka Score
-----------------------
+== 2. Metrics of Umaka Score
 
 [[availability]]
-Availability
-~~~~~~~~~~~~
+=== 2.1 Availability
 
 Availability represents the degree of ready for use. High availability
 value means we can access the endpoint most of all the time. Low
@@ -60,8 +56,7 @@ The Availability score is calculated as:
 Availability = Alive Rate
 
 [[freshness]]
-Freshness
-~~~~~~~~~
+=== 2.2 Freshness
 
 Freshness represents how often data in the endpoint is updated. We
 measure the following metrics for freshness:
@@ -129,8 +124,7 @@ adhoc approach does not work well for Virtuoso.
 Freshness = 50
 
 [[operation]]
-Operation
-~~~~~~~~~
+=== 2.3 Operation
 
 Operation represents the degree of the maintenance. We send HTTP request
 to the endpoint URI with using the accept request-header field to
@@ -163,8 +157,7 @@ Operation = latexmath:[$\left\{
   \right.$]
 
 [[usefulness]]
-Usefulness
-~~~~~~~~~~
+=== 2.4 Usefulness
 
 Usefulness represents the degree how easily we can link data in the
 endpoint. We measure the three metrics:
@@ -385,8 +378,7 @@ latexmath:[$f10(x) = \left\{
   \right.$]
 
 [[validity]]
-Validity
-~~~~~~~~
+=== 2.5 Validity
 
 Validity represents how endpoint and data in it obey the rules. We
 measure the two metrics:
@@ -514,8 +506,7 @@ We evaluate Validity as follows:
 Validity = 40 * Cool URI Score + 60.0 * Linked Data Rule Score
 
 [[performance]]
-Performance
-~~~~~~~~~~~
+=== 2.6 Performance
 
 Performace suggests how powerful the endpoint is.
 
