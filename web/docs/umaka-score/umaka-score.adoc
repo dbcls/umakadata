@@ -1,5 +1,19 @@
 :stem: latexmath
 
+[.text-center]
+== Umaka Score
+
+March 31, 2016
+
+*Abstract*
+
+Umaka Scores represents how valuable endpoints are. Umaka Score
+is calculated on the basis of the evaluation from the 6 aspects, Availability,
+Freshness, Operation, Usefulness, Validity and Performance.
+We also rank the endpoints on a scale of A to E according to the
+Umaka score.
+In this document, we show how to calculate Umaka score.
+
 == 1. Umaka Score
 
 Umaka Score represents how valuable endpoints are. We believe there are
