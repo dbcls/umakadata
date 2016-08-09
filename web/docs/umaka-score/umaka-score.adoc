@@ -1,3 +1,5 @@
+:stem: latexmath
+
 [[umaka-score]]
 Umaka Score
 -----------
