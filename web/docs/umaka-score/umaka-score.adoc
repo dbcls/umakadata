@@ -21,6 +21,8 @@ six aspects, Availability, Freshness, Operation, Usefulness, Validity
 and Performance, for valuable endpoints. We evaluate and score endpoints
 from these aspects. Then Umaka Score is average of these score:
 
+[.text-center]
+=====================================================================
 Umaka Score = latexmath:[\frac{\displaystyle \sum_{aspects}score}{6}]
 
 where
@@ -29,6 +31,7 @@ latexmath:[\begin{array}{llll}
 {\rm aspects} = [ & {\rm Availability}, & {\rm Freshness}, & {\rm Operation}, \\
                   & {\rm Usefulness},   & {\rm Validity},  & {\rm Performance} \]
 \end{array}]
+=====================================================================
 
 We rank the endpoint as shown in Table [table:umaka_rank]
 
@@ -67,7 +70,10 @@ Alive rate is the percentage of alive in 30 days.
 
 The Availability score is calculated as:
 
+[.text-center]
+=====================================================================
 Availability = Alive Rate
+=====================================================================
 
 [[freshness]]
 === 2.2 Freshness
@@ -135,7 +141,10 @@ Even though we would like to score freshness on the basis of the Update
 Interval, we give up to score and set 50 for all endpoints since the
 adhoc approach does not work well for Virtuoso.
 
+[.text-center]
+=====================================================================
 Freshness = 50
+=====================================================================
 
 [[operation]]
 === 2.3 Operation
@@ -151,17 +160,23 @@ true if Service Description can be retrieved in Turtle format or RDF/XML
 format, otherwise false. We access the endpoint URI via HTTP with the
 following HTTP Request Header:
 +
+=====================================================================
 Accept: text/turtle,application/rdf+xml
+=====================================================================
 * VoID
 +
 true if VoID can be retrieved from well-known URI in Turtle format or
 RDF/XML format, otherwise false. We access the endpoint URI via HTTP
 with the following HTTP Request Header:
 +
+=====================================================================
 Accept: text/turtle,application/rdf+xml
+=====================================================================
 
 We calculate Operation score as follows:
 
+[.text-center]
+=====================================================================
 Operation = latexmath:[\left\{
     \begin{array}{ll}
       0   & {\rm if~both~of~them~are~false } \\
@@ -169,6 +184,7 @@ Operation = latexmath:[\left\{
       100 & {\rm if~both~of~them~are~true }
   \end{array}
   \right.]
+=====================================================================
 
 [[usefulness]]
 === 2.4 Usefulness
@@ -286,6 +302,8 @@ WHERE{
 +
 We evaluate Metadata score as follows:
 +
+[.text-center]
+=====================================================================
 Metadata Score =
 latexmath:[\frac{\displaystyle \sum_{graphs}^{g}(c(g) + l(g) + p(g) + d(g))}{N}]
 
@@ -320,6 +338,7 @@ latexmath:[d(g) = \left\{
             25  & {\rm if~g~contains~more~than~zero~datatypes}
         \end{array}
         \right.]
+=====================================================================
 * Vocabulary Score
 +
 Vocabulary Score, which is calculated based on metadata, represents how
@@ -327,6 +346,8 @@ many vocabularies data in the endpoint use.
 +
 Vocabulary Score is calculated as follows:
 +
+[.text-center]
+=====================================================================
 Vocabulary Score =
 latexmath:[\frac{\displaystyle \sum_{graphs}^{g}v(g)}{N}]
 
@@ -335,6 +356,8 @@ where
 latexmath:[N] = Number of Graphs
 
 latexmath:[v(g)] = Number of Properties in Graph g
+=====================================================================
+
 * Ontology Score
 +
 Ontology Score, which is calculated based on metadata, represents how
@@ -342,6 +365,8 @@ much common ontologies data in the endpoint use.
 +
 Ontology Score is calculated as follows:
 +
+[.text-center]
+=====================================================================
 Vocabulary Score =
 latexmath:[\frac{\displaystyle \sum_{graphs}^{g}o(g)}{N}]
 
@@ -355,6 +380,7 @@ latexmath:[NO] = Number of Ontologies used for Properties
 
 latexmath:[NCO] = Number of Ontologies used for Properties in Table
 \[table:list_of_common_ontologies\]
+=====================================================================
 +
 .List of Common Ontologies
 [cols="<",options="header",]
@@ -376,6 +402,8 @@ latexmath:[NCO] = Number of Ontologies used for Properties in Table
 
 At last, we evaluate Usefulness Score as follows:
 
+[.text-center]
+=====================================================================
 latexmath:[\begin{array}{lll}
   {\rm Usefulness} & = & 30.0 * {\rm Metadata~Score} \\
                    & + & 40.0 * f10({\rm Vocabulary~Score}) \\
@@ -390,6 +418,7 @@ latexmath:[f10(x) = \left\{
       x  & {\rm Otherwise}
     \end{array}
   \right.]
+=====================================================================
 
 [[validity]]
 === 2.5 Validity
@@ -517,7 +546,10 @@ Linked Data Score is a percentage of the satisfied rules.
 
 We evaluate Validity as follows:
 
+[.text-center]
+=====================================================================
 Validity = 40 * Cool URI Score + 60.0 * Linked Data Rule Score
+=====================================================================
 
 [[performance]]
 === 2.6 Performance
@@ -547,13 +579,19 @@ WHERE {
 
 We assume the execution time as:
 
+[.text-center]
+=====================================================================
 Execution Time = Differences of the response time for those queries.
+=====================================================================
 
 After that, we evaluate Performance as:
 
+[.text-center]
+=====================================================================
 Performance = latexmath:[\left\{
     \begin{array}{ll}
         100.0 * (1.0 - {\rm Execution~Time}) & {\rm if~Execution~Time~is~less~than~1~second} \\
         0 & {\rm Otherwise}
     \end{array}
     \right.]
+=====================================================================
