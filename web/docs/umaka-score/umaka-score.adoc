@@ -84,7 +84,7 @@ assume the endpoint seems to be updated today.
 ....
 SELECT COUNT(*) AS ?c
 WHERE {?s ?p ?o}
-  
+
 ....
 +
 When the number of statements is not changed, we retrieve the first and
@@ -98,14 +98,14 @@ seems to be updated today.
 SELECT *
 WHERE {?s ?p ?o}
 OFFSET 0 LIMIT 1
-  
+
 ....
 +
 ....
 SELECT *
 WHERE {?s ?p ?o}
 OFFSET ($COUNT - 1) LIMIT 1
-  
+
 ....
 +
 Note that $COUNT represents the number of total statements retrieved by
@@ -180,7 +180,7 @@ SELECT DISTINCT ?g
 WHERE{
  GRAPH ?g{ ?s ?p ?o.}
 }
-  
+
 ....
 +
 Then we try to retrieve the metadata for each graph except for Table
@@ -217,7 +217,7 @@ WHERE {
   { [] rdfs:subclassOf ?c. }
 }
 LIMIT 100
-    
+
 ....
 +
 ....
@@ -227,7 +227,7 @@ SELECT DISTINCT ?c
 WHERE{
         [] rdf:type ?c.
 }
-    
+
 ....
 2.  Labels
 +
@@ -245,7 +245,7 @@ WHERE {
       )
     }
 }
-    
+
 ....
 3.  Datatypes
 +
@@ -259,7 +259,7 @@ WHERE{
   [] ?p ?o.
   FILTER(isLiteral(?o))
 }
-    
+
 ....
 4.  Properties
 +
@@ -272,7 +272,7 @@ SELECT DISTINCT ?p
 WHERE{
         ?s ?p ?o.
 }
-    
+
 ....
 +
 We evaluate Metadata score as follows:
@@ -425,7 +425,7 @@ GRAPH ?g { ?s ?p ?o } .
   ))
 }
 LIMIT 1
-      
+
 ....
 2.  Use HTTP URIs so that people can look up those names
 +
@@ -447,7 +447,7 @@ WHERE {
   ))
 }
 LIMIT 1
-      
+
 ....
 3.  When someone looks up a URI, provide useful information, using the
 standards (RDF*, SPARQL)
@@ -471,7 +471,7 @@ WHERE {
 }
 LIMIT 1
 OFFSET 100
-      
+
 ....
 4.  Include links to other URIs. so that they can discover more things
 +
@@ -490,7 +490,7 @@ WHERE {
   GRAPH ?g { ?s owl:sameAs ?o } .
 }
 LIMIT 1
-      
+
 ....
 +
 ....
@@ -501,7 +501,7 @@ WHERE {
   GRAPH ?g { ?s rdfs:seeAlso ?o } .
 }
 LIMIT 1
-      
+
 ....
 +
 Linked Data Score is a percentage of the satisfied rules.
@@ -525,7 +525,7 @@ according to the size of data.
 
 ....
 ASK {}
-  
+
 ....
 
 ....
@@ -534,7 +534,7 @@ SELECT DISTINCT
 WHERE {
   GRAPH ?g { ?s ?p ?o }
 }
-  
+
 ....
 
 We assume the execution time as:
