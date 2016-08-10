@@ -33,8 +33,9 @@ latexmath:[\begin{array}{llll}
 \end{array}]
 =====================================================================
 
-We rank the endpoint as shown in Table [table:umaka_rank]
+We rank the endpoint as shown in Table <<umaka_rank>>
 
+[[umaka_rank]]
 .Umaka Rank
 [cols="^,^",options="header",]
 |=======================
@@ -94,10 +95,12 @@ Thus, we determine the data modification thought the following adhoc
 procedure:
 +
 First, we retrieve a number of statements using a query described in
-Listing [list:query_for_number_of_statements] and compare the number
+Listing <<query_for_number_of_statements>> and compare the number
 with the previous one. If the number of statements has changed, we
 assume the endpoint seems to be updated today.
 +
+[[query_for_number_of_statements]]
+.A query for retrieving a number of statements
 ....
 SELECT COUNT(*) AS ?c
 WHERE {?s ?p ?o}
@@ -106,11 +109,13 @@ WHERE {?s ?p ?o}
 +
 When the number of statements is not changed, we retrieve the first and
 the last statements using queries described in Listing
-[list:query_for_the_first_statement] and
-[list:query_for_the_last_statement]. Then we compare them with those of
+<<query_for_the_first_statement>> and
+<<query_for_the_last_statement>>. Then we compare them with those of
 a previous day. If one of them is different, we assume the endpoint
 seems to be updated today.
 +
+[[query_for_the_first_statement]]
+.A query for the first statement
 ....
 SELECT *
 WHERE {?s ?p ?o}
@@ -118,6 +123,8 @@ OFFSET 0 LIMIT 1
 
 ....
 +
+[[query_for_the_last_statement]]
+.A query for the last statement
 ....
 SELECT *
 WHERE {?s ?p ?o}
@@ -126,7 +133,7 @@ OFFSET ($COUNT - 1) LIMIT 1
 ....
 +
 Note that $COUNT represents the number of total statements retrieved by
-Listing [list:query_for_number_of_statements].
+Listing <<query_for_number_of_statements>>.
 +
 Note that Virtuoso has trouble to count the number of statements. So
 this adhoc procedure does not work well for the endpoint based on
@@ -198,8 +205,10 @@ Metadata Score represents how much the endpoint contains metadata
 defined in .
 +
 First we retrieve a list of graphs in the endpoint using a query
-described in Listing [list:query_for_a_list_of_graphs].
+described in Listing <<query_for_a_list_of_graphs>>.
 +
+[[query_for_a_list_of_graphs]]
+.Obtain graph URIs on a SPARQL endpoint
 ....
 SELECT DISTINCT ?g
 WHERE{
@@ -209,8 +218,9 @@ WHERE{
 ....
 +
 Then we try to retrieve the metadata for each graph except for Table
-[table:ignore_graphs] as follows:
+<<ignore_graphs>> as follows:
 +
+[[ignore_graphs]]
 .List of Ignore Graphs
 [cols="<",options="header",]
 |==========================================
@@ -220,9 +230,11 @@ Then we try to retrieve the metadata for each graph except for Table
 1.  Classes
 +
 We retrieve a list of classes using a query described in Listing
-[list:query_for_classes_on_a_graph] and
-[list:query_for_classes_having_instances_on_a_graph].
+<<query_for_classes_on_a_graph>> and
+<<query_for_classes_having_instances_on_a_graph>>.
 +
+[[query_for_classes_on_a_graph]]
+.Obtain the classes on a graph g
 ....
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -245,6 +257,8 @@ LIMIT 100
 
 ....
 +
+[[query_for_classes_having_instances_on_a_graph]]
+.Obtain the classes having instances on a graph g
 ....
 PREFIX rdf:
 SELECT DISTINCT ?c
@@ -257,8 +271,10 @@ WHERE{
 2.  Labels
 +
 We retrieve a list of labels using a query described in Listing
-[list:query_for_labels_of_classes].
+<<query_for_labels_of_classes>>.
 +
+[[query_for_labels_of_classes]]
+.Obtain labels of the classes c1 c2 ... cn from a graph g
 ....
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT DISTINCT ?c ?label
@@ -275,8 +291,10 @@ WHERE {
 3.  Datatypes
 +
 We retrieve a list of datatypes using a query described in Listing
-[list:query_for_datatypes_on_a_graph].
+<<query_for_datatypes_on_a_graph>>.
 +
+[[query_for_datatypes_on_a_graph]]
+.Obtain the datatypes on a graph g
 ....
 SELECT DISTINCT (datatype(?o) AS ?ldt)
 FROM <g>
@@ -289,8 +307,10 @@ WHERE{
 4.  Properties
 +
 We retrieve a list of properties using a query described in Listing
-[list:query_for_properties_on_a_graph].
+<<query_for_properties_on_a_graph>>.
 +
+[[query_for_properties_on_a_graph]]
+.Obtain the properties on a graph g
 ....
 SELECT DISTINCT ?p
         FROM <g>
@@ -383,7 +403,7 @@ latexmath:[NCO] = Number of Ontologies used for Properties in Table
 =====================================================================
 +
 .List of Common Ontologies
-[cols="<",options="header",]
+[cols="<",options="header,footer"]
 |=======================================================
 |Ontology URI
 |http://www.w3.org/2000/01/rdf-schema
@@ -447,12 +467,14 @@ linked data.
 1.  Use URIs as names for things
 +
 We assume all subjects of statements are things. We search invalid
-statement using a query described in Listing [list:non_uri_subject], and
+statement using a query described in Listing <<non_uri_subject>>, and
 if nothing is found the endpoint satisfied this rule.
 +
 Note that we ignore Virtuoso specific graphs since Virtuoso contains a
 graph which contains invalid statements.
 +
+[[non_uri_subject]]
+.A Query for searching non-URI subjects
 ....
 SELECT
   *
@@ -469,12 +491,14 @@ LIMIT 1
 +
 We assume all subjects of statements are things. We search invalid
 statement using a query described in Listing
-[list:non_http_uri_subject], and if nothing is found the endpoint
+<<non_http_uri_subject>>, and if nothing is found the endpoint
 satisfied this rule.
 +
 Note that we ignore Virtuoso specific graphs since Virtuoso contains a
 graph which contains invalid statements.
 +
+[[non_http_uri_subject]]
+.A Query for searching non-HTTP-URI subjects
 ....
 SELECT
   *
@@ -491,13 +515,15 @@ LIMIT 1
 standards (RDF*, SPARQL)
 +
 We assess this rule by obtaining a subject (URI) using a query described
-in Listing [list:query_for_a_subject] and accessing the URI via HTTP
+in Listing <<query_for_a_subject>> and accessing the URI via HTTP
 protocol. We assume that the endpoint is satisfied with the rule if the
 URI returns any data.
 +
 Note that we ignore Virtuoso specific graphs since Virtuoso contains a
 graph which contains invalid statements.
 +
+[[query_for_a_subject]]
+.A Query for a Subject
 ....
 SELECT
   ?s
@@ -517,9 +543,11 @@ We assume the statement representing the link to other URI uses the
 vocabularies owl:sameAs or rdfs:seeAlso. We think if there are any
 statement of which property is owl:sameAs or rdfs:seeAlso, the endpoint
 is satisfied with the rule. Thus we check the feasibility of the rule by
-using queries described in Listing [list:query_for_same_as],
-[list:query_for_see_also].
+using queries described in Listing <<query_for_same_as>>,
+<<query_for_see_also>>.
 +
+[[query_for_same_as]]
+.A Query for a Same AS Statement
 ....
 PREFIX owl:<http://www.w3.org/2002/07/owl#>
 SELECT
@@ -531,6 +559,8 @@ LIMIT 1
 
 ....
 +
+[[query_for_see_also]]
+.A Query for a See Also Statement
 ....
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT
@@ -557,17 +587,21 @@ Validity = 40 * Cool URI Score + 60.0 * Linked Data Rule Score
 Performace suggests how powerful the endpoint is.
 
 We measure the response times of the two queries, Listing
-[list:query_ask], [list:query_for_list_of_graphs]. The former query is a
+<<query_ask>>, <<query_for_list_of_graphs>>. The former query is a
 most simple query and we use this query to estimate the transfer time.
 The latter query requires a little computations for endpoints. We
 believe the execution cost of this query does not differ very much
 according to the size of data.
 
+[[query_ask]]
+.A Most Simple Query
 ....
 ASK {}
 
 ....
 
+[[query_for_list_of_graphs]]
+.A Query for Listing Graphs
 ....
 SELECT DISTINCT
   ?g
