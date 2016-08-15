@@ -140,8 +140,7 @@ class Evaluation < ActiveRecord::Base
       eval.void_ttl = void_in_sd
     end
     eval.void_ttl_log = logger.as_json
-    void_data = triples(eval.void_ttl)
-    eval.linksets = Umakadata::Linkset::linksets(void_data).map{|linkset| linkset.to_s}
+    eval.linksets = retriever.linksets(eval.void_ttl)
   end
 
   def self.retrieve_linked_data_rules(retriever, eval)
