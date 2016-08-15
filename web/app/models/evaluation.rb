@@ -137,6 +137,10 @@ class Evaluation < ActiveRecord::Base
       eval.void_ttl = void_in_sd
     end
     eval.void_ttl_log = logger.as_json
+
+    eval.linksets = void.linkset.to_json unless void.linkset.nil?
+    eval.license = void.license.to_json unless void.license.nil?
+    eval.publisher = void.publisher.to_json unless void.publisher.nil?
   end
 
   def self.retrieve_linked_data_rules(retriever, eval)
