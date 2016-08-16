@@ -2,12 +2,10 @@ require 'json'
 require 'sparql/client'
 require 'rdf/turtle'
 require 'umakadata/data_format'
-require 'umakadata/linkset'
 
 class EndpointsController < ApplicationController
 
   include Umakadata::DataFormat
-  include Umakadata::Linkset
 
   before_action :set_endpoint, only: [:show]
 
@@ -267,8 +265,6 @@ class EndpointsController < ApplicationController
 
   private
 
-    SD = 'http://www.w3.org/ns/sparql-service-description'.freeze
-
     def render_404
       render :file=>"/public/404.html", :status=>'404 Not Found'
     end
@@ -295,36 +291,11 @@ class EndpointsController < ApplicationController
         end
       end
 
-      @supported_language = ''
-      sd = triples(@evaluation.service_description)
-      unless sd.nil?
-        sl = []
-        sd.each do |subject, predicate, object|
-          if subject == RDF::URI(@endpoint.url)
-            if predicate == RDF::URI("#{SD}#supportedLanguage")
-              sl.push object.to_s.sub(/#{SD}#/, '') unless object.nil?
-            end
-          end
-        end
-        @supported_language = sl.uniq.join("\n")
-      end
-
       @void = @evaluation.void_ttl
-      void = triples(@void)
-      @linksets = self.linksets(void)
-
-      @license = []
-      @publisher = []
-      if void.nil?
-        @void = ''
-      else
-        void.each do |graph, verb, object|
-          @license.push object.to_s   if verb == RDF::URI('http://purl.org/dc/terms/license')
-          @publisher.push object.to_s if verb == RDF::URI('http://purl.org/dc/terms/publisher')
-        end
-      end
-      @license = @license.join('<br/>')
-      @publisher = @publisher.join('<br/>')
+      @supported_language = JSON.parse(@evaluation.supported_language).join('<br/>') unless @evaluation.supported_language.nil?
+      @linksets = JSON.parse(@evaluation.linksets) unless @evaluation.linksets.nil?
+      @license = JSON.parse(@evaluation.license).join('<br/>') unless @evaluation.license.nil?
+      @publisher = JSON.parse(@evaluation.publisher).join('<br/>') unless @evaluation.publisher.nil?
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

@@ -259,9 +259,10 @@ h1.page-header = @endpoint.name
               span.medium
                 | List of datasets specified by void:Linkset in VoID
           td.usefulness
-            - @linksets.each do |linkset|
-              = linkset
-              br
+            - unless @linksets.nil?
+              - @linksets.each do |linkset|
+                = linkset
+                br
         tr
           td.usefulness
             .umakadata-tooltip

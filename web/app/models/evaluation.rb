@@ -3,6 +3,7 @@ require 'rdf/rdfxml'
 require 'rdf/turtle'
 require 'rdf/ntriples'
 require 'rdf/vocab'
+require 'umakadata/linkset'
 require 'umakadata/data_format'
 
 class Evaluation < ActiveRecord::Base
@@ -118,6 +119,7 @@ class Evaluation < ActiveRecord::Base
     return if service_description.nil?
     eval.response_header     = service_description.response_header
     eval.service_description = service_description.text
+    eval.supported_language = retriever.supported_language(service_description)
   end
 
   def self.retrieve_void(retriever, eval)
@@ -126,6 +128,8 @@ class Evaluation < ActiveRecord::Base
     void = retriever.void_on_well_known_uri(logger: logger)
     if !void.nil? && !void.text.nil?
       eval.void_ttl = void.text
+      eval.license = void.license.to_json unless void.license.nil?
+      eval.publisher = void.publisher.to_json unless void.publisher.nil?
     else
       void_in_sd = self.extract_void_from_service_description(eval.service_description)
       if void_in_sd == ''
@@ -136,6 +140,7 @@ class Evaluation < ActiveRecord::Base
       eval.void_ttl = void_in_sd
     end
     eval.void_ttl_log = logger.as_json
+    eval.linksets = retriever.linksets(eval.void_ttl)
   end
 
   def self.retrieve_linked_data_rules(retriever, eval)
