@@ -1,0 +1,16 @@
+h1 Contact Us
+
+div
+  | Please contact us
+
+hr
+
+= simple_form_for @inquiry, :html => {:class => 'form-horizontal'}, :url => 'inquiry/confirm' do |f|
+
+  .form-inputs
+    = f.input :name
+    = f.input :email
+    = f.input :message, :as => :text, :input_html => {:row => 5}
+  
+  .form-actions
+    = f.button :submit

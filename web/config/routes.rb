@@ -21,6 +21,9 @@ Rails.application.routes.draw do
 
   get  'api/specifications' => 'api#specifications'
 
+  get 'inquiry' => 'endpoints#inquiry'
+  post 'inquiry' => 'endpoints#send_inquiry'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

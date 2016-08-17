@@ -13,8 +13,12 @@ class EndpointsController < ApplicationController
     conditions = {'evaluations.latest': true}
     @endpoints = Endpoint.includes(:evaluation).where(conditions).order('evaluations.score DESC')
   end
-
+  
   def search
+  end
+  
+  def inquiry
+    @inquiry = Inquiry.new
   end
 
   def show
