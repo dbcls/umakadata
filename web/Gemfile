@@ -67,3 +67,5 @@ gem 'umakadata', :path => './lib/assets/umakadata'
 gem 'octokit'
 
 gem 'json-ld'
+
+gem 'simple_form'
