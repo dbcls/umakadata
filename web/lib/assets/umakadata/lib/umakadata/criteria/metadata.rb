@@ -133,12 +133,11 @@ module Umakadata
           logger.push graph_log unless logger.nil?
 
           if data[:properties].empty?
-            score =  0
             properties_log = data[:properties_log]
             graph_log.push properties_log
             properties_log.result = '0 ontologies are found'
-            logger.result = 'Ontology score is 0'
-            return score
+            graph_log.result = "Score for #{graph} is 0"
+            return 0
           end
 
           ontologies = self.ontologies(data[:properties])
