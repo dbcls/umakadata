@@ -69,7 +69,18 @@ hr
         label.checkbox-inline.col-xs-3
           input[name="xml" type="checkbox"] XML Data Format
 
-  input#search_button.btn.btn-default[type="button" value="Search"]
+  input#search_button.btn.btn-default[type="button" value="Search" data-toggle="modal" data-target="#searching"]
+
+  #searching.modal.fade[data-backdrop="static"]
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close[type="button" data-dismiss="modal"]
+            | &times;
+          h4.modal-title Please wait...
+        .modal-body
+          | Searching endpoints satisfied with the conditions.
+
 hr
 
 #result
