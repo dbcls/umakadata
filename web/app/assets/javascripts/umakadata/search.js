@@ -16,6 +16,7 @@ $(function() {
         row.append($("<td>").text(endpoint.evaluation.score));
         $("#result_body").append(row);
       }
+      $('#searching').modal('hide');
     });
   });
 });
