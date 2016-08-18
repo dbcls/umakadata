@@ -41,6 +41,6 @@ html[lang="en"]
             li
               = link_to 'Forum', "https://github.com/#{Rails.application.secrets.github_repo}/issues"
             li
-              = link_to 'Contact Us', {:controller => 'endpoints', :action => 'inquiry'}
+              = link_to 'Contact Us', {:controller => 'inquiries', :action => 'form'}
         .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
           == yield

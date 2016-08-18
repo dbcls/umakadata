@@ -8,7 +8,7 @@ hr
 - flash.each do |key, value|
   = content_tag(:div, value, class: "alert alert-#{key}", role: 'alert')
 
-= simple_form_for @inquiry, :url => 'inquiry' do |f|
+= simple_form_for @inquiry do |f|
   = f.error_notification
   = f.input :name
   = f.input :email
