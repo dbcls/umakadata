@@ -21,6 +21,21 @@ class EndpointsController < ApplicationController
     @inquiry = Inquiry.new
   end
 
+  def send_inquiry
+    @inquiry = Inquiry.new(params.require(:inquiry).permit(:name, :email, :message))
+    if @inquiry.valid?
+      begin
+        ContactUs.send_mail(@inquiry).deliver_now
+        flash[:success] = 'Complate to send a message. thank you for your maessage!'
+      rescue
+        flash[:warning] = 'Sorry, an error occured in server. please wait for a while.'
+      end
+      redirect_to :action => 'inquiry'
+    else
+      render :action => 'inquiry'
+    end
+  end
+
   def show
   end
 

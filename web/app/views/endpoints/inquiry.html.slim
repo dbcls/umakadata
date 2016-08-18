@@ -1,16 +1,18 @@
 h1 Contact Us
 
 div
-  | Please contact us
+  | Send a message to us using the form below. 
 
 hr
 
-= simple_form_for @inquiry, :html => {:class => 'form-horizontal'}, :url => 'inquiry/confirm' do |f|
+- flash.each do |key, value|
+  = content_tag(:div, value, class: "alert alert-#{key}", role: 'alert')
 
-  .form-inputs
-    = f.input :name
-    = f.input :email
-    = f.input :message, :as => :text, :input_html => {:row => 5}
-  
-  .form-actions
-    = f.button :submit
+= simple_form_for @inquiry, :url => 'inquiry' do |f|
+  = f.error_notification
+  = f.input :name
+  = f.input :email
+  = f.input :message, as: :text, input_html: {rows: 10}
+
+  .form-actions.pull-right
+    = f.button :submit, :value => 'Send request'
