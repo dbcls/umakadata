@@ -72,3 +72,7 @@ WikiData,https://query.wikidata.org/sparql
 OrphaData,http://www.orpha.net/sparql
 Pathway Commons,http://rdf.pathwaycommons.org/sparql/
 Bio2RDF,http://bio2rdf.org/sparql
+Organic.Edunet,http://data.organic-edunet.eu/sparql
+LODAC BDLS,http://lod.ac/bdls/sparql
+DrugBank @ Universität Mannheim,http://wifo5-03.informatik.uni-mannheim.de/drugbank/sparql
+HealthData.gov Platform (HDP),http://healthdata.tw.rpi.edu/sparql
