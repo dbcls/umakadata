@@ -52,5 +52,6 @@ module UmakadataUi
     config.autoload_paths += %W(#{config.root}/lib)
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
 
+    config.action_mailer.default_options = {to: 'test@example.com', from: 'no-reply@example.com'}
   end
 end
