@@ -18,6 +18,18 @@ hr
     label.col-xs-3 Prefix
     = text_field_tag :prefix, "", :class => 'form-control'
   .form-inline.row
+    label.col-xs-3 URI
+    .form-group
+      label.radio-inline
+        input[name="element_type" type="radio" value="subject"]
+        | Subject
+      label.radio-inline
+        input[name="element_type" type="radio" value="object"]
+        | Object
+  .form-inline.row
+    label.col-xs-3
+    = text_field_tag :prefix_filter_uri, "", :class =>'form-control form-inline'
+  .form-inline.row
     label.col-xs-3 Score (0-100)
     = text_field_tag :score_lower, "", :class => 'form-control form-inline'
     span ~
