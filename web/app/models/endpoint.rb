@@ -5,6 +5,8 @@ class Endpoint < ActiveRecord::Base
   has_many :prefix_filters
   has_one :evaluation
 
+  scope :created_at, ->(date) { where('evaluations.created_at': date) }
+
   def self.rdf_graph
     endpoints = self.thin_out_attributes
     UmakaRDF.build(endpoints)
@@ -48,6 +50,22 @@ class Endpoint < ActiveRecord::Base
 
   after_destroy do
     GithubHelper.close_issue(self.issue_id) unless self.issue_id.nil?
+  end
+
+  def self.crawled_at(date)
+    day_begin = Time.zone.local(date.year, date.month, date.day, 0, 0, 0)
+    day_end = Time.zone.local(date.year, date.mon, date.day, 23, 59, 59)
+    self.includes(:evaluation).created_at(day_begin..day_end).references(:evaluation)
+  end
+
+  def self.get_last_crawled_date
+    conditions = {'evaluations.latest': true, 'evaluations.alive': true}
+    endpoints = self.includes(:evaluation).where(conditions)
+    first_endpoint = endpoints.first
+    last_endpoint = endpoints.last
+    start_or_end_date = first_endpoint.evaluations.order('created_at DESC').first.created_at
+    end_or_start_date = last_endpoint.evaluations.order('created_at DESC').first.created_at
+    start_or_end_date > end_or_start_date ? end_or_start_date : start_or_end_date
   end
 
 end
