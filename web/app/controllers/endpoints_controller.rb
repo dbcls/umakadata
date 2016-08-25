@@ -196,9 +196,7 @@ class EndpointsController < ApplicationController
     medians = Array.new
 
     (from.to_datetime..last_updated.to_datetime).each {|date|
-      day_begin = DateTime.new(date.year, date.mon, date.day, 0, 0, 0, date.offset)
-      day_end = DateTime.new(date.year, date.mon, date.day, 23, 59, 59, date.offset)
-      scores = Evaluation.where(created_at: day_begin..day_end).pluck(:score).sort
+      scores = Endpoint.crawled_at(date.to_time).map {|endpoint| endpoint.evaluation.score}
 
       labels.push date.strftime('%m/%d')
       if scores.empty?
