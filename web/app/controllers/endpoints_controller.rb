@@ -71,8 +71,8 @@ class EndpointsController < ApplicationController
 
   def scores
     count = {1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0}
-    conditions = {'evaluations.latest': true}
-    @endpoints = Endpoint.includes(:evaluation).where(conditions).order('evaluations.score DESC')
+    date = Endpoint.get_last_crawled_date
+    @endpoints = Endpoint.crawled_at(date)
     @endpoints.each do |endpoint|
       rank = endpoint.evaluation.rank
       count[rank] += 1
@@ -166,8 +166,8 @@ class EndpointsController < ApplicationController
 
   def alive
     count = { :alive => 0, :dead => 0 }
-    conditions = {'evaluations.latest': true}
-    @endpoints = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions)
+    date = Endpoint.get_last_crawled_date
+    @endpoints = Endpoint.crawled_at(date)
     @endpoints.each do |endpoint|
       alive = endpoint.evaluation.alive
       alive ? count[:alive] += 1 : count[:dead] += 1
@@ -177,8 +177,8 @@ class EndpointsController < ApplicationController
 
   def service_descriptions
     count = { :true => 0, :false => 0 }
-    conditions = {'evaluations.latest': true, 'evaluations.alive': true}
-    @endpoints = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions)
+    date = Endpoint.get_last_crawled_date
+    @endpoints = Endpoint.includes(:evaluation).crawled_at(date)
     @endpoints.each do |endpoint|
       sd = endpoint.evaluation.service_description
       sd.present? ? count[:true] += 1 : count[:false] += 1
