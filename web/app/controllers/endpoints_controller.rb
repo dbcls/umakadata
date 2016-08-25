@@ -10,8 +10,8 @@ class EndpointsController < ApplicationController
   before_action :set_endpoint, only: [:show]
 
   def top
-    conditions = {'evaluations.latest': true}
-    @endpoints = Endpoint.includes(:evaluation).where(conditions).order('evaluations.score DESC')
+    date = Endpoint.get_last_crawled_date
+    @endpoints = Endpoint.crawled_at(date).order('evaluations.score DESC')
   end
 
   def search
