@@ -188,14 +188,14 @@ class EndpointsController < ApplicationController
 
 
   def score_statistics
-    today = DateTime.now
-    from = 9.days.ago(today)
+    last_updated = Endpoint.get_last_crawled_date
+    from = 9.days.ago(last_updated)
 
     labels = Array.new
     averages = Array.new
     medians = Array.new
 
-    (from..today).each {|date|
+    (from.to_datetime..last_updated.to_datetime).each {|date|
       day_begin = DateTime.new(date.year, date.mon, date.day, 0, 0, 0, date.offset)
       day_end = DateTime.new(date.year, date.mon, date.day, 23, 59, 59, date.offset)
       scores = Evaluation.where(created_at: day_begin..day_end).pluck(:score).sort
@@ -228,9 +228,9 @@ class EndpointsController < ApplicationController
   end
 
   def alive_statistics
-    today = Time.zone.now
-    from = 9.days.ago(Time.zone.local(today.year, today.month, today.day, 0, 0, 0))
-    grouped_evaluations = Evaluation.where(created_at: from..today).group('date(created_at)').order('date(created_at)')
+    last_crawled_date = Endpoint.get_last_crawled_date
+    from = 9.days.ago(Time.zone.local(last_crawled_date.year, last_crawled_date.month, last_crawled_date.day, 0, 0, 0))
+    grouped_evaluations = Evaluation.where(created_at: from..last_crawled_date).group('date(created_at)').order('date(created_at)')
     labels = grouped_evaluations.count.keys.map{|date| date.strftime('%m/%d')}
     alive_data = grouped_evaluations.where(alive: true).count.values
 
@@ -246,9 +246,9 @@ class EndpointsController < ApplicationController
   end
 
   def service_description_statistics
-    today = Time.zone.now
-    from = 9.days.ago(Time.zone.local(today.year, today.month, today.day, 0, 0, 0))
-    grouped_evaluations = Evaluation.where(created_at: from..today).group('date(created_at)').order('date(created_at)')
+    last_crawled_date = Endpoint.get_last_crawled_date
+    from = 9.days.ago(Time.zone.local(last_crawled_date.year, last_crawled_date.month, last_crawled_date.day, 0, 0, 0))
+    grouped_evaluations = Evaluation.where(created_at: from..last_crawled_date).group('date(created_at)').order('date(created_at)')
     labels = grouped_evaluations.count.keys.map{|date| date.strftime('%m/%d')}
     have_data = grouped_evaluations.where.not(service_description: nil).count.values
 
