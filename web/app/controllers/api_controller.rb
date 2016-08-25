@@ -25,7 +25,7 @@ class ApiController < ApplicationController
     self.add_is_not_empty_condition('evaluations.support_html_format') if !params['html'].blank?
     self.add_is_not_empty_condition('evaluations.support_turtle_format') if !params['turtle'].blank?
     self.add_is_not_empty_condition('evaluations.support_xml_format') if !params['xml'].blank?
-    self.filter_endpoints(params['element_type'], params['prefix_filter_uri']) if !params['element_type'].blank? && !params['prefix_filter_uri'].blank?
+    self.add_equal_condition_for_prefix_filter(params['element_type'], params['prefix_filter_uri'], params['prefix_filter_uri_fragment']) if !params['element_type'].blank? && !params['prefix_filter_uri'].blank?
 
     respond_to do |format|
       format.jsonld  { render json: @endpoints.to_jsonld }
@@ -70,10 +70,49 @@ class ApiController < ApplicationController
     end
   end
 
-  def filter_endpoints(element_type, uri)
+  def add_equal_condition_for_prefix_filter(element_type, uri, fragment)
+    identifier = "##{fragment}" unless fragment.blank?
+    input_uri = "#{uri}#{identifier}"
     prefix_filters = PrefixFilter.where(element_type: element_type)
-    endpoint_ids = prefix_filters.select{|prefix_filter| uri =~ /.*#{prefix_filter.uri}.*/}.map(&:endpoint_id)
-    @endpoints = @endpoints.where(id: endpoint_ids)
+    endpoint_ids = prefix_filters.select{|prefix_filter| input_uri =~ /.*#{prefix_filter.uri}.*/}.map(&:endpoint_id)
+    self.add_equal_condition(:id, endpoint_ids)
+    self.filter_endpoints_with_sparql_query(element_type, input_uri)
+  end
+
+  def filter_endpoints_with_sparql_query(element_type, uri)
+    query = create_filter_endpoints_query(element_type, uri)
+    endpoint_ids = Array.new
+    @endpoints.each do |endpoint|
+      [:post, :get].each do |method|
+        response = Umakadata::SparqlHelper.query(URI(endpoint.url), query, logger: nil, options: {method: method})
+        if !response.nil? && response.length > 0
+          endpoint_ids.push endpoint.id
+          break
+        end
+      end
+    end
+    self.add_equal_condition(:id, endpoint_ids)
+  end
+
+  def create_filter_endpoints_query(element_type, uri)
+    case element_type
+    when 'subject'
+      subject = "<#{uri}>"
+      object = "?o"
+    when 'object'
+      subject = '?s'
+      object = "<#{uri}>"
+    end
+    query = <<-SPARQL
+SELECT
+  *
+WHERE
+  {
+    #{subject} ?p #{object}
+  }
+LIMIT 1
+SPARQL
+
   end
 
   def endpoints_graph
