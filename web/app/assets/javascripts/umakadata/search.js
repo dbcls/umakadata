@@ -1,7 +1,33 @@
+$(document).ready(function() {
+  $("form").validate({
+    rules: {
+      prefix_filter_uri: {
+        url: true
+      }
+    },
+    messages: {
+      prefix_filter_uri: {
+        url: "Please enter a valid URI."
+      }
+    },
+    errorClass: "control-label",
+    highlight: function(element, errorClass) {
+      $(element).parent().addClass('has-error');
+    },
+    unhighlight: function(element, errorClass) {
+      $(element).parent().removeClass('has-error');
+    }
+  });
+});
+
 $(function() {
   $("#result").hide();
 
   $("#search_button").on("click", function() {
+    if(!$("form").valid()){
+      $('#searching').modal('hide');
+      return false;
+    }
     var values = getInputValues();
     var params = createParams(values);
     var url = "/api/endpoints/search/?" + params;
