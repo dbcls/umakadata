@@ -59,12 +59,9 @@ class Endpoint < ActiveRecord::Base
   end
 
   def self.get_last_crawled_date
-    conditions = {'evaluations.latest': true, 'evaluations.alive': true}
-    endpoints = self.includes(:evaluation).where(conditions)
-    first_endpoint = endpoints.first
-    last_endpoint = endpoints.last
-    start_or_end_date = first_endpoint.evaluations.order('created_at DESC').first.created_at
-    end_or_start_date = last_endpoint.evaluations.order('created_at DESC').first.created_at
+    endpoints = self.joins(:evaluation)
+    start_or_end_date = endpoints.first.evaluations.order('created_at DESC').first.created_at
+    end_or_start_date = endpoints.last.evaluations.order('created_at DESC').first.created_at
     start_or_end_date > end_or_start_date ? end_or_start_date : start_or_end_date
   end
 
