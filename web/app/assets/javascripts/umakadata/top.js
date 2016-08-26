@@ -20,19 +20,21 @@ $(function() {
     var labels = json['labels'];
     var datasets = json['datasets'];
     data = make_score_statistics_data(labels, datasets)
-    showLine("#score_statistics", data);
+    showLine("#score_statistics", data, make_scale_options(100));
   });
   var drawAliveStatistics = $.getJSON("endpoints/alive_statistics", function(json) {
     var labels = json['labels'];
     var datasets = json['datasets'];
     data = make_alive_statistics_data(labels, datasets)
-    showLine("#alive_statistics", data);
+    var max = select_max_from_data(datasets[0]['data'])
+    showLine("#alive_statistics", data, make_scale_options(max));
   });
   var drawSdStatistics = $.getJSON("endpoints/service_description_statistics", function(json) {
     var labels = json['labels'];
     var datasets = json['datasets'];
     data = make_sd_statistics_data(labels, datasets)
-    showLine("#sd_statistics", data);
+    var max = select_max_from_data(datasets[0]['data'])
+    showLine("#sd_statistics", data, make_scale_options(max));
   });
 
   setTimeout(function(){ drawScoreStatistics.abort(); }, 10000);
@@ -155,6 +157,25 @@ function make_sd_statistics_data(labels, datasets) {
     ]
   }
 }
+
+function make_scale_options(max) {
+  return {
+    scales: {
+      yAxes: [{
+        ticks: {
+          max: max += 10,
+          min: 0
+        }
+      }]
+    }
+  }
+}
+
+function select_max_from_data(data) {
+  var max = Math.max(...data)
+  return (max > 100) ? max : 100
+}
+
 function showPie(id, data) {
   new Chart($(id), {
     type: 'pie',
@@ -166,9 +187,11 @@ function showPie(id, data) {
     }
   });
 }
-function showLine(context, data) {
+
+function showLine(context, data, options) {
   new Chart($(context), {
     type: 'line',
-    data: data
+    data: data,
+    options: options
   });
 }
