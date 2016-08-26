@@ -7,11 +7,11 @@ class ApiController < ApplicationController
 
   def endpoints_search
     @conditions = params
-    conditions = {'evaluations.latest': true}
-    @endpoints = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions)
+    @endpoints = Endpoint.includes(:evaluation).order('evaluations.score DESC')
     @endpoints = @endpoints.includes(:prefixes) unless params['prefix'].nil?
     self.add_like_condition_for_name_url(params['name']) if !params['name'].blank?
     self.add_like_condition_for_prefix(params['prefix']) if !params['prefix'].blank?
+    self.add_date_condition(params['date']) if !params['date'].blank?
     self.add_range_condition('evaluations.score', params['score_lower'], params['score_upper'])
     self.add_range_condition('evaluations.alive_rate', params['alive_rate_lower'], params['alive_rate_upper'])
     self.add_rank_condition('evaluations.rank', params['rank']) if !params['rank'].blank?
@@ -56,6 +56,14 @@ class ApiController < ApplicationController
   def add_rank_condition(column, value)
     rank_values = { 'A' => 5, 'B' => 4, 'C' => 3, 'D' => 2, 'E' => 1 }
     add_equal_condition(column, rank_values[value]) unless rank_values[value].nil?
+  end
+
+  def add_date_condition(value)
+    begin
+      date = Time.parse(value)
+      @endpoints = @endpoints.crawled_at(date)
+    rescue
+    end
   end
 
   def add_range_condition(column, lower, upper)

@@ -16,7 +16,7 @@ class Endpoint < ActiveRecord::Base
     endpoints = []
     all.each do |endpoint|
       hash = endpoint.attributes
-      hash['evaluation'] = endpoint.evaluations[0].attributes.select {|key, value| /_log$/ !~ key }
+      hash['evaluation'] = endpoint.evaluation.attributes.select {|key, value| /_log$/ !~ key }
       endpoints << hash
     end
     endpoints
