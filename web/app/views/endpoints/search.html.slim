@@ -13,13 +13,13 @@ div
 hr
 
 = form_tag :controller => :endpoints, :action => :search
-  .form-inline.row
+  .form-inline.form-group.row
     label.col-xs-3 Name or URL
     = text_field_tag :name, "", :class => 'form-control'
-  .form-inline.row
+  .form-inline.form-group.row
     label.col-xs-3 Prefix
     = text_field_tag :prefix, "", :class => 'form-control'
-  .form-inline.row
+  .form-inline.form-group.row
     label.col-xs-3 URI
     .form-group
       label.radio-inline
@@ -28,38 +28,38 @@ hr
       label.radio-inline
         input[name="element_type" type="radio" value="object"]
         | Object
-  .form-inline.row
+  .form-inline.form-group.row
     label.col-xs-3
     = text_field_tag :prefix_filter_uri, "", :class =>'form-control form-inline'
-  .form-inline.row
+  .form-inline.form-group.row
     label.col-xs-3 Score (0-100)
     = text_field_tag :score_lower, "", :class => 'form-control form-inline'
     span ~
     = text_field_tag :score_upper, "", :class => 'form-control form-inline'
-  .form-inline.row
+  .form-inline.form-group.row
     label.col-xs-3 Alive Rate (0-100)
     = text_field_tag :alive_rate_lower, "", :class => 'form-control form-inline'
     span ~
     = text_field_tag :alive_rate_upper, "", :class => 'form-control form-inline'
-  .form-inline.row
+  .form-inline.form-group.row
     label.col-xs-3 Rank (A,B,C,D,E)
     = text_field_tag :rank, "", :class => 'form-control'
-  .form-inline.row
+  .form-inline.form-group.row
     label.col-xs-3 Cool URI Rate (0-100)
     = text_field_tag :cool_uri_rate_lower, "", :class => 'form-control form-inline'
     span ~
     = text_field_tag :cool_uri_rate_upper, "", :class => 'form-control form-inline'
-  .form-inline.row
+  .form-inline.form-group.row
     label.col-xs-3 Ontology (0-100)
     = text_field_tag :ontology_lower, "", :class => 'form-control form-inline'
     span ~
     = text_field_tag :ontology_upper, "", :class => 'form-control form-inline'
-  .form-inline.row
+  .form-inline.form-group.row
     label.col-xs-3 Metadata Coverage (0-100)
     = text_field_tag :metadata_lower, "", :class => 'form-control form-inline'
     span ~
     = text_field_tag :metadata_upper, "", :class => 'form-control form-inline'
-  .form-inline.row
+  .form-inline.form-group.row
     label.col-xs-3 Vocabulary (0-100)
     = text_field_tag :vocabulary_lower, "", :class => 'form-control form-inline'
     span ~
