@@ -10,8 +10,7 @@ class EndpointsController < ApplicationController
   before_action :set_endpoint, only: [:show]
 
   def top
-    date = Endpoint.get_last_crawled_date
-    @endpoints = Endpoint.crawled_at(date).order('evaluations.score DESC')
+    @endpoints = Endpoint.crawled_at(date_param).order('evaluations.score DESC')
   end
 
   def search
@@ -311,6 +310,15 @@ class EndpointsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def endpoint_params
       params.require(:endpoint).permit(:name, :url)
+    end
+
+    def date_param
+      input_date = params[:date]
+      if input_date.blank?
+        date = Endpoint.get_last_crawled_date
+      else
+        date = Time.parse(input_date)
+      end
     end
 
 end
