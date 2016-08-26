@@ -251,10 +251,16 @@ class EndpointsController < ApplicationController
 
   def service_description_statistics
     last_crawled_date = Endpoint.get_last_crawled_date
-    from = 9.days.ago(Time.zone.local(last_crawled_date.year, last_crawled_date.month, last_crawled_date.day, 0, 0, 0))
-    grouped_evaluations = Evaluation.where(created_at: from..last_crawled_date).group('date(created_at)').order('date(created_at)')
-    labels = grouped_evaluations.count.keys.map{|date| date.strftime('%m/%d')}
-    have_data = grouped_evaluations.where.not(service_description: nil).count.values
+    from = 9.days.ago(last_crawled_date)
+
+    labels = Array.new
+    have_data = Array.new
+
+    (from.to_datetime..last_crawled_date.to_datetime).each {|date|
+      labels.push date.strftime('%m/%d')
+      score = Endpoint.crawled_at(date.to_time).inject(0) {|sum, endpoint| sum + (endpoint.evaluation.service_description.nil? ? 0 : 1)}
+      have_data.push(score)
+    }
 
     render :json => {
       :labels => labels,
