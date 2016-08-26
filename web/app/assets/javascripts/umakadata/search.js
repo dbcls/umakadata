@@ -31,12 +31,24 @@ function getInputValues(){
     if ($(this).attr('type') == 'text'){
       params[name] = $(this).val();
     }
-    else if ($(this).attr('type') == 'checkbox'){
+    else if ($(this).attr('type') == 'checkbox' || $(this).attr('type') == 'radio'){
       if ($(this).is(':checked')){
         params[name] = $(this).val();
       }
     }
   });
+  return splitFragmentIdentifier(params);
+}
+
+function splitFragmentIdentifier(params) {
+  var domainUri = params['prefix_filter_uri'];
+  if (domainUri != "") {
+    var splited = domainUri.split("#");
+    if(splited[1] != undefined) {
+      params['prefix_filter_uri'] = splited[0];
+      params['prefix_filter_uri_fragment'] = splited[1];
+    }
+  }
   return params;
 }
 

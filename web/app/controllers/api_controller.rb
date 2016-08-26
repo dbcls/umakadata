@@ -25,6 +25,7 @@ class ApiController < ApplicationController
     self.add_is_not_empty_condition('evaluations.support_html_format') if !params['html'].blank?
     self.add_is_not_empty_condition('evaluations.support_turtle_format') if !params['turtle'].blank?
     self.add_is_not_empty_condition('evaluations.support_xml_format') if !params['xml'].blank?
+    self.filter_endpoints(params['element_type'], params['prefix_filter_uri']) if !params['element_type'].blank? && !params['prefix_filter_uri'].blank?
 
     respond_to do |format|
       format.jsonld  { render json: @endpoints.to_jsonld }
@@ -67,6 +68,12 @@ class ApiController < ApplicationController
     else
       @endpoints = @endpoints.where(column => Range.new(lower, upper))
     end
+  end
+
+  def filter_endpoints(element_type, uri)
+    prefix_filters = PrefixFilter.where(element_type: element_type)
+    endpoint_ids = prefix_filters.select{|prefix_filter| uri =~ /.*#{prefix_filter.uri}.*/}.map(&:endpoint_id)
+    @endpoints = @endpoints.where(id: endpoint_ids)
   end
 
   def endpoints_graph
