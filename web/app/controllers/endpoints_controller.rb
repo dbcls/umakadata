@@ -222,7 +222,7 @@ class EndpointsController < ApplicationController
   end
 
   def alive_statistics
-    last_crawled_date = Endpoint.get_last_crawled_date
+    last_crawled_date = date_param
     from = 9.days.ago(last_crawled_date)
 
     labels = Array.new
