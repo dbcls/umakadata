@@ -70,8 +70,7 @@ class EndpointsController < ApplicationController
 
   def scores
     count = {1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0}
-    date = Endpoint.get_last_crawled_date
-    @endpoints = Endpoint.crawled_at(date)
+    @endpoints = Endpoint.crawled_at(date_param)
     @endpoints.each do |endpoint|
       rank = endpoint.evaluation.rank
       count[rank] += 1
