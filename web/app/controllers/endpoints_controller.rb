@@ -184,7 +184,7 @@ class EndpointsController < ApplicationController
 
 
   def score_statistics
-    last_updated = Endpoint.get_last_crawled_date
+    last_updated = date_param
     from = 9.days.ago(last_updated)
 
     labels = Array.new
