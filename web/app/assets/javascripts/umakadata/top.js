@@ -196,9 +196,15 @@ function showLine(context, data, options) {
   });
   $(context).on("click", function(evt){
     var activePoints = lineChart.getElementsAtEvent(evt);
-    if (activePoints.length != 0) {
-      var index = activePoints[0]['_index'];
+    if (activePoints.length == 0) {
+      return
     }
+    var datestring = data.labels[0];
+    var clickedDate = new Date(datestring);
+    var index = activePoints[0]['_index'];
+    clickedDate.setDate(clickedDate.getDate() + index);
+    var clickedDateFormat = clickedDate.getFullYear() + "-" + (clickedDate.getMonth() + 1) + "-" + clickedDate.getDate();
+    location.href = "http://192.168.99.100:3000?date=" + clickedDateFormat;
   });
 
 }

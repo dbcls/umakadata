@@ -105,7 +105,7 @@ class EndpointsController < ApplicationController
     to =  1.days.ago(target_evaluation.created_at.to_datetime())
     from = 28.days.ago(to)
     (from..to).each {|date|
-      labels.push(date.strftime('%m/%d'))
+      labels.push(date.strftime('%Y-%m-%d'))
       day_begin = DateTime.new(date.year, date.mon, date.day, 0, 0, 0, date.offset)
       day_end = DateTime.new(date.year, date.mon, date.day, 23, 59, 59, date.offset)
       evaluation = Evaluation.where(created_at: day_begin..day_end, endpoint_id: params[:id]).first || Evaluation.new
@@ -119,7 +119,7 @@ class EndpointsController < ApplicationController
       rank.push(evaluation.score.presence || 0)
     }
 
-    labels.push(target_evaluation.created_at.strftime('%m/%d'))
+    labels.push(target_evaluation.created_at.strftime('%Y-%m-%d'))
     rates = Evaluation.calc_rates(target_evaluation)
     availability.push(rates[0])
     freshness.push(rates[1])
@@ -198,7 +198,7 @@ class EndpointsController < ApplicationController
     (from.to_datetime..last_updated.to_datetime).each {|date|
       scores = Endpoint.crawled_at(date.to_time).map {|endpoint| endpoint.evaluation.score}
 
-      labels.push date.strftime('%m/%d')
+      labels.push date.strftime('%Y-%m-%d')
       if scores.empty?
         averages.push 0
         medians.push 0
@@ -233,7 +233,7 @@ class EndpointsController < ApplicationController
     alive_data = Array.new
 
     (from.to_datetime..last_crawled_date.to_datetime).each {|date|
-      labels.push date.strftime('%m/%d')
+      labels.push date.strftime('%Y-%m-%d')
       score = Endpoint.crawled_at(date.to_time).inject(0) {|sum, endpoint| sum + (endpoint.evaluation.alive ? 1 : 0)}
       alive_data.push(score)
     }
@@ -257,7 +257,7 @@ class EndpointsController < ApplicationController
     have_data = Array.new
 
     (from.to_datetime..last_crawled_date.to_datetime).each {|date|
-      labels.push date.strftime('%m/%d')
+      labels.push date.strftime('%Y-%m-%d')
       score = Endpoint.crawled_at(date.to_time).inject(0) {|sum, endpoint| sum + (endpoint.evaluation.service_description.nil? ? 0 : 1)}
       have_data.push(score)
     }
