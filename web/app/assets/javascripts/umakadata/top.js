@@ -189,9 +189,16 @@ function showPie(id, data) {
 }
 
 function showLine(context, data, options) {
-  new Chart($(context), {
+  var lineChart = new Chart($(context), {
     type: 'line',
     data: data,
     options: options
   });
+  $(context).on("click", function(evt){
+    var activePoints = lineChart.getElementsAtEvent(evt);
+    if (activePoints.length != 0) {
+      var index = activePoints[0]['_index'];
+    }
+  });
+
 }
