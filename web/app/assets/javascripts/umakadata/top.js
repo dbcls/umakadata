@@ -204,7 +204,8 @@ function showLine(context, data, options) {
     var index = activePoints[0]['_index'];
     clickedDate.setDate(clickedDate.getDate() + index);
     var clickedDateFormat = clickedDate.getFullYear() + "-" + ("0" + (clickedDate.getMonth() + 1)).slice(-2) + "-" + clickedDate.getDate();
-    location.href = "http://192.168.99.100:3000?date=" + clickedDateFormat;
+    var pathname = location.pathname;
+    location.href = location.protocol + "//" + location.host + pathname + "?date=" + clickedDateFormat;
   });
 
 }
