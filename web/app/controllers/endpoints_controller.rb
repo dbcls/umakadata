@@ -10,7 +10,8 @@ class EndpointsController < ApplicationController
   before_action :set_endpoint, only: [:show]
 
   def top
-    @endpoints = Endpoint.crawled_at(date_param).order('evaluations.score DESC')
+    @date = date_param
+    @endpoints = Endpoint.crawled_at(@date).order('evaluations.score DESC')
   end
 
   def search
