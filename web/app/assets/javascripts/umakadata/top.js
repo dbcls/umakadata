@@ -49,7 +49,7 @@ function make_score_data(count) {
       {
         data: [count[5], count[4], count[3], count[2], count[1]],
         backgroundColor: ['#1D2088', '#00A0E9', '#009944', '#FFF100', '#E60012'],
-        hoverBackgroundColor: ['#6356A3', '#00B9EF', '#03EB37', 'FFF462', '#FF5A5E']
+        hoverBackgroundColor: ['#6356A3', '#00B9EF', '#03EB37', '#FFF462', '#FF5A5E']
       }
     ],
     options: {
