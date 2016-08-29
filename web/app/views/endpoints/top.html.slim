@@ -1,6 +1,9 @@
 = javascript_include_tag 'Chart.min'
 = javascript_include_tag 'umakadata/top'
 
+- content_for(:calendar)
+  == render "calendar"
+
 h1.page-header Dashboard
 .row.placeholders
   .col-xs-6.col-sm-4.placeholder
