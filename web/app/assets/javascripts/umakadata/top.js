@@ -40,25 +40,6 @@ $(function() {
   setTimeout(function(){ drawScoreStatistics.abort(); }, 10000);
   setTimeout(function(){ drawAliveStatistics.abort(); }, 10000);
   setTimeout(function(){ drawSdStatistics.abort(); }, 10000);
-
-  var date = new Date();
-  var year = date.getFullYear();
-  var month = date.getMonth() + 1;
-  var day = date.getDate();
-  if(month < 10) {
-    month = '0' + month;
-  }
-  if(day < 10) {
-    day = '0' + day;
-  }
-  var today = year + '-' + month + '-' + day;
-  $('#calendar').datepicker({
-    autoclose: true,
-    endDate: date,
-    format: 'yyyy-mm-dd',
-    todayHighlight: true
-  }).val(today);
-
 });
 
 function make_score_data(count) {
