@@ -149,7 +149,7 @@ SPARQL
     render :json => nodes.concat(edges)
   end
 
-  def endpoint_id
+  def evaluation_id
     evaluation_id = ""
     unless params['date'].nil?
       begin
