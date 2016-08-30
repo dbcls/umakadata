@@ -166,12 +166,12 @@ function make_scale_options(max) {
           max: max += 10,
           min: 0
         },
-        afterBuildTicks: function(humdaysChart) {
-          humdaysChart.ticks = [];
+        afterBuildTicks: function(scale) {
+          scale.ticks = [];
           var interval = max / 5
           var rounded = Math.round((interval / 10)) * 10
           for (var i = 0; i < max; i += rounded) {
-            humdaysChart.ticks.push(i)
+            scale.ticks.push(i)
           }
         }
       }]
