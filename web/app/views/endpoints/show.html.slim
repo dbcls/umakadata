@@ -20,15 +20,7 @@ javascript:
 - content_for(:calendar)
   == render "calendar"
 
-#get_evaluation_id.modal.fade[data-backdrop="static"]
-  .modal-dialog
-    .modal-content
-      .modal-header
-        button.close[type="button" data-dismiss="modal"]
-          | &times;
-        h4.modal-title The evaluation is not found
-      .modal-body
-        | Please select another day
+= render partial: "alert_dialog", locals: {id: "get_evaluation_id", title: "The evaluation is not found", body: "Please select another day"}
 
 h1.page-header = @endpoint.name
 
