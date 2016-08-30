@@ -11,6 +11,7 @@ class Evaluation < ActiveRecord::Base
   extend Umakadata::DataFormat
 
   belongs_to :endpoint
+  scope :created_at, ->(date) { where('created_at': date) }
 
   def self.lookup(endpoint_id, evaluation_id)
     if evaluation_id.nil?
