@@ -22,21 +22,27 @@ $(function() {
     var labels = json['labels'];
     var datasets = json['datasets'];
     data = make_score_statistics_data(labels, datasets)
-    showLine("#score_statistics", data, make_scale_options(100));
+    var canvas_id = "#score_statistics";
+    var lineChart = showLine(canvas_id, data, make_scale_options(100));
+    addGraphClickEvent(canvas_id, lineChart, labels, location.pathname);
   });
   var drawAliveStatistics = $.getJSON("endpoints/alive_statistics" + param, function(json) {
     var labels = json['labels'];
     var datasets = json['datasets'];
     data = make_alive_statistics_data(labels, datasets)
     var max = select_max_from_data(datasets[0]['data'])
-    showLine("#alive_statistics", data, make_scale_options(max));
+    var canvas_id = "#alive_statistics";
+    var lineChart = showLine(canvas_id, data, make_scale_options(max));
+    addGraphClickEvent(canvas_id, lineChart, labels, location.pathname);
   });
   var drawSdStatistics = $.getJSON("endpoints/service_description_statistics" + param, function(json) {
     var labels = json['labels'];
     var datasets = json['datasets'];
     data = make_sd_statistics_data(labels, datasets)
     var max = select_max_from_data(datasets[0]['data'])
-    showLine("#sd_statistics", data, make_scale_options(max));
+    var canvas_id = "#sd_statistics";
+    var lineChart = showLine(canvas_id, data, make_scale_options(max));
+    addGraphClickEvent(canvas_id, lineChart, labels, location.pathname);
   });
 
   setTimeout(function(){ drawScoreStatistics.abort(); }, 10000);
@@ -103,7 +109,7 @@ function make_sd_data(count) {
 }
 function make_score_statistics_data(labels, datasets) {
   return {
-    labels: labels,
+    labels: labels.map(formatDate),
     datasets: [
       {
         label: datasets[0]['label'],
@@ -128,7 +134,7 @@ function make_score_statistics_data(labels, datasets) {
 }
 function make_alive_statistics_data(labels, datasets) {
   return {
-    labels: labels,
+    labels: labels.map(formatDate),
     datasets: [
       {
         label: datasets[0]['label'],
@@ -145,7 +151,7 @@ function make_alive_statistics_data(labels, datasets) {
 
 function make_sd_statistics_data(labels, datasets) {
   return {
-    labels: labels,
+    labels: labels.map(formatDate),
     datasets: [
       {
         label: datasets[0]['label'],
@@ -178,6 +184,11 @@ function select_max_from_data(data) {
   return (max > 100) ? max : 100
 }
 
+function formatDate(label) {
+  var clickedDate = new Date(label);
+  return ("0" + (clickedDate.getMonth() + 1)).slice(-2) + "/" + ("0" + clickedDate.getDate()).slice(-2);
+}
+
 function showPie(id, data) {
   new Chart($(id), {
     type: 'pie',
@@ -191,9 +202,24 @@ function showPie(id, data) {
 }
 
 function showLine(context, data, options) {
-  new Chart($(context), {
+  return new Chart($(context), {
     type: 'line',
     data: data,
     options: options
   });
+}
+
+function addGraphClickEvent(context, lineChart, labels, pathname) {
+  $(context).on("click", function(evt) {
+    var activePoints = lineChart.getElementsAtEvent(evt);
+    if (activePoints.length == 0) {
+      return
+    }
+    var index = activePoints[0]['_index'];
+    var datestring = labels[index];
+    var clickedDate = new Date(datestring);
+    var clickedDateFormat = clickedDate.getFullYear() + "-" + ("0" + (clickedDate.getMonth() + 1)).slice(-2) + "-" + ("0" + (clickedDate.getDate() + 1)).slice(-2);
+    location.href = location.protocol + "//" + location.host + pathname + "?date=" + clickedDateFormat;
+  });
+
 }
