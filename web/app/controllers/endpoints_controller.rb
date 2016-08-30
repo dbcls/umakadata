@@ -70,8 +70,7 @@ class EndpointsController < ApplicationController
 
   def scores
     count = {1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0}
-    date = Endpoint.get_last_crawled_date
-    @endpoints = Endpoint.crawled_at(date)
+    @endpoints = Endpoint.crawled_at(date_param)
     @endpoints.each do |endpoint|
       rank = endpoint.evaluation.rank
       count[rank] += 1
@@ -165,8 +164,7 @@ class EndpointsController < ApplicationController
 
   def alive
     count = { :alive => 0, :dead => 0 }
-    date = Endpoint.get_last_crawled_date
-    @endpoints = Endpoint.crawled_at(date)
+    @endpoints = Endpoint.crawled_at(date_param)
     @endpoints.each do |endpoint|
       alive = endpoint.evaluation.alive
       alive ? count[:alive] += 1 : count[:dead] += 1
@@ -176,8 +174,7 @@ class EndpointsController < ApplicationController
 
   def service_descriptions
     count = { :true => 0, :false => 0 }
-    date = Endpoint.get_last_crawled_date
-    @endpoints = Endpoint.includes(:evaluation).crawled_at(date)
+    @endpoints = Endpoint.includes(:evaluation).crawled_at(date_param)
     @endpoints.each do |endpoint|
       sd = endpoint.evaluation.service_description
       sd.present? ? count[:true] += 1 : count[:false] += 1
@@ -187,7 +184,7 @@ class EndpointsController < ApplicationController
 
 
   def score_statistics
-    last_updated = Endpoint.get_last_crawled_date
+    last_updated = date_param
     from = 9.days.ago(last_updated)
 
     labels = Array.new
@@ -225,7 +222,7 @@ class EndpointsController < ApplicationController
   end
 
   def alive_statistics
-    last_crawled_date = Endpoint.get_last_crawled_date
+    last_crawled_date = date_param
     from = 9.days.ago(last_crawled_date)
 
     labels = Array.new
@@ -249,7 +246,7 @@ class EndpointsController < ApplicationController
   end
 
   def service_description_statistics
-    last_crawled_date = Endpoint.get_last_crawled_date
+    last_crawled_date = date_param
     from = 9.days.ago(last_crawled_date)
 
     labels = Array.new
