@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  $("form").validate({
+  $("form#search").validate({
     rules: {
       prefix_filter_uri: {
         url: true
@@ -24,7 +24,7 @@ $(function() {
   $("#result").hide();
 
   $("#search_button").on("click", function() {
-    if(!$("form").valid()){
+    if(!$("form#search").valid()){
       $('#searching').modal('hide');
       return false;
     }
