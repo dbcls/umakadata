@@ -12,7 +12,7 @@ div
 
 hr
 
-= form_tag :controller => :endpoints, :action => :search
+= form_tag({:action => :search, :controller => :endpoints}, {:id => 'search'})
   .form-inline.form-group.row
     label.col-xs-3 Name or URL
     = text_field_tag :name, "", :class => 'form-control'
