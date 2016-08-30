@@ -1,13 +1,15 @@
 $(function() {
-  var drawScores = $.getJSON("endpoints/scores", function(json) {
+  var input_date = $("#calendar").val();
+  var param = (input_date == '') ? '' : '/?date=' + input_date
+  var drawScores = $.getJSON("endpoints/scores" + param, function(json) {
     data = make_score_data(json)
     showPie("#score", data);
   });
-  var drawAlive = $.getJSON("endpoints/alive", function(json) {
+  var drawAlive = $.getJSON("endpoints/alive" + param, function(json) {
     data = make_alive_data(json)
     showPie("#alive", data);
   });
-  var drawSd = $.getJSON("endpoints/service_descriptions", function(json) {
+  var drawSd = $.getJSON("endpoints/service_descriptions" + param, function(json) {
     data = make_sd_data(json)
     showPie("#sd", data);
   });
@@ -16,20 +18,20 @@ $(function() {
   setTimeout(function(){ drawAlive.abort(); }, 10000);
   setTimeout(function(){ drawSd.abort(); }, 10000);
 
-  var drawScoreStatistics = $.getJSON("endpoints/score_statistics", function(json) {
+  var drawScoreStatistics = $.getJSON("endpoints/score_statistics" + param, function(json) {
     var labels = json['labels'];
     var datasets = json['datasets'];
     data = make_score_statistics_data(labels, datasets)
     showLine("#score_statistics", data, make_scale_options(100));
   });
-  var drawAliveStatistics = $.getJSON("endpoints/alive_statistics", function(json) {
+  var drawAliveStatistics = $.getJSON("endpoints/alive_statistics" + param, function(json) {
     var labels = json['labels'];
     var datasets = json['datasets'];
     data = make_alive_statistics_data(labels, datasets)
     var max = select_max_from_data(datasets[0]['data'])
     showLine("#alive_statistics", data, make_scale_options(max));
   });
-  var drawSdStatistics = $.getJSON("endpoints/service_description_statistics", function(json) {
+  var drawSdStatistics = $.getJSON("endpoints/service_description_statistics" + param, function(json) {
     var labels = json['labels'];
     var datasets = json['datasets'];
     data = make_sd_statistics_data(labels, datasets)
