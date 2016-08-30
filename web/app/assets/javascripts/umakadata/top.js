@@ -213,10 +213,9 @@ function addGraphClickEvent(context, lineChart, labels, pathname) {
     if (activePoints.length == 0) {
       return
     }
-    var datestring = labels[0];
-    var clickedDate = new Date(datestring);
     var index = activePoints[0]['_index'];
-    clickedDate.setDate(clickedDate.getDate() + index);
+    var datestring = labels[index];
+    var clickedDate = new Date(datestring);
     var clickedDateFormat = clickedDate.getFullYear() + "-" + ("0" + (clickedDate.getMonth() + 1)).slice(-2) + "-" + clickedDate.getDate();
     location.href = location.protocol + "//" + location.host + pathname + "?date=" + clickedDateFormat;
   });
