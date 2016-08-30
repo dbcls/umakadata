@@ -2,7 +2,19 @@ javascript:
   $(function(){
     showRadar(#{@endpoint.id}, #{@evaluation.id});
     showScoreHistory(#{@endpoint.id}, #{@evaluation.id});
+
+    $('#jump-button').on("click", function() {
+      var input_date = $("#calendar").val();
+      var param = (input_date == '') ? '' : '?date=' + input_date;
+      $.getJSON("/api/endpoints/#{@endpoint.id}/created_at" + param, function(json) {
+        var evaluation_id = json['evaluation_id'];
+        location.href = "/endpoints/#{@endpoint.id}/" + evaluation_id + param
+      });
+    });
   });
+
+- content_for(:calendar)
+  == render "calendar"
 
 h1.page-header = @endpoint.name
 
