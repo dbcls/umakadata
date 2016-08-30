@@ -18,6 +18,7 @@ class EndpointsController < ApplicationController
   end
 
   def show
+    @date = date_param
   end
 
   def log

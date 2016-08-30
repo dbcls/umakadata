@@ -4,6 +4,9 @@ javascript:
     showScoreHistory(#{@endpoint.id}, #{@evaluation.id});
   });
 
+- content_for(:calendar)
+  == render "calendar"
+
 h1.page-header = @endpoint.name
 
 - if !@prev_evaluation.nil?
