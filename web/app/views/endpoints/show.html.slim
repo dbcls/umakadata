@@ -8,13 +8,27 @@ javascript:
       var param = (input_date == '') ? '' : '?date=' + input_date;
       $.getJSON("/api/endpoints/#{@endpoint.id}/created_at" + param, function(json) {
         var evaluation_id = json['evaluation_id'];
-        location.href = "/endpoints/#{@endpoint.id}/" + evaluation_id + param
+        if (evaluation_id == '') {
+          $('#get_evaluation_id').modal();
+        } else {
+          location.href = "/endpoints/#{@endpoint.id}/" + evaluation_id + param
+        }
       });
     });
   });
 
 - content_for(:calendar)
   == render "calendar"
+
+#get_evaluation_id.modal.fade[data-backdrop="static"]
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close[type="button" data-dismiss="modal"]
+          | &times;
+        h4.modal-title Oops...
+      .modal-body
+        | Evaluation is not found!
 
 h1.page-header = @endpoint.name
 
