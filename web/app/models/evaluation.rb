@@ -303,14 +303,18 @@ class Evaluation < ActiveRecord::Base
              else
                :ntriples
              end
+    statements = []
+    sd.each do |subject, predicate, object|
+      if predicate =~ %r|void| || predicate =~ %r|isPartOf|
+        statements << RDF::Statement.new(subject, predicate, object)
+      end
+    end
+    return '' if statements.empty?
     buffer = StringIO.new
     prefixes = {:dcterms => RDF::Vocab::DC, :void => RDF::Vocab::VOID}
     RDF::Writer.for(format).new(buffer, :prefixes => prefixes) do |writer|
-      sd.each do |subject, predicate, object|
-        if predicate =~ %r|void| || predicate =~ %r|isPartOf|
-          statement = RDF::Statement.new(subject, predicate, object)
-          writer << statement
-        end
+      statements.each do | statement |
+        writer << statement
       end
     end
     buffer.close
