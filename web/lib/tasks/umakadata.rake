@@ -44,7 +44,7 @@ namespace :umakadata do
     endpoint = Endpoint.where(:name => name).take
     file_path = "#{SBMETA}/data/bulkdownloads/#{name}_subject_and_object_prefix.csv"
     if !endpoint.nil? && File.exist?(file_path)
-      endpoint.prefix_filters.delete_all
+      endpoint.prefix_filters.destroy_all
       CSV.foreach(file_path, {:headers => true}) do |row|
         PrefixFilter.create(:endpoint_id => endpoint.id, :uri => row[0], :element_type => row[2])
       end
