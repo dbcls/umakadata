@@ -102,22 +102,34 @@ function showScoreHistory(endpoint_id, evaluation_id) {
   $.getJSON("/endpoints/" + endpoint_id + "/" + evaluation_id + "/score_history", function(json) {
     var context = $("#score_history");
     appendOptions(json);
-
-    new Chart(context, {
+    var labels = json['labels'];
+    json['labels'] = labels.map(formatDate);
+    var options = make_scale_options(100)
+    options['datasetFill'] = false
+    var lineChart = new Chart(context, {
       type: 'line',
       data: json,
-      options: {
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                max: 110,
-                min: 0
-              }
-            }
-          ]
-        },
-        datasetFill: false
+      options: options
+    });
+    addGraphClickEvent(context, lineChart, labels, endpoint_id);
+  });
+}
+
+function addGraphClickEvent(context, lineChart, labels, endpoint_id) {
+  $(context).on("click", function(evt) {
+    var activePoints = lineChart.getElementsAtEvent(evt);
+    if (activePoints.length == 0) {
+      return
+    }
+    var index = activePoints[0]['_index'];
+    var datestring = labels[index];
+    var clickedDate = new Date(datestring);
+    $.getJSON("/api/endpoints/" + endpoint_id + "/created_at?date=" + datestring, function(json) {
+      var evaluation_id = json['evaluation_id']
+      if (evaluation_id == '') {
+        $('#get_evaluation_id').modal();
+      } else {
+        location.href = location.protocol + "//" + location.host + '/endpoints/' + endpoint_id + '/' + evaluation_id + "?date=" + datestring
       }
     });
   });
