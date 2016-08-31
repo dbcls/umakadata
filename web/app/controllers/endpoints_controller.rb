@@ -8,6 +8,7 @@ class EndpointsController < ApplicationController
   include Umakadata::DataFormat
 
   before_action :set_endpoint, only: [:show]
+  before_action :set_start_date, only: [:top, :show]
 
   def top
     @date = date_param
@@ -318,6 +319,12 @@ class EndpointsController < ApplicationController
       else
         date = Time.parse(input_date)
       end
+    end
+
+    def set_start_date
+      evaluations = params[:id].nil? ? Evaluation.all : Evaluation.where(:endpoint_id => params[:id])
+      oldest_evaluation = evaluations.order('created_at ASC').first
+      @start_date = oldest_evaluation.created_at.strftime('%Y-%m-%d')
     end
 
 end
