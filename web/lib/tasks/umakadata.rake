@@ -32,6 +32,12 @@ namespace :umakadata do
     end
   end
 
+  desc "import prefix filters for all endpoints from CSV file"
+  task :import_prefix_filters_for_all_endpoints => :environment do
+    names = Endpoint.pluck(:name)
+    names.each {|name| Rake::Task["umakadata:import_prefix_filters"].execute(Rake::TaskArguments.new([:name], [name]))}
+  end
+
   desc "import prefix filters from CSV file"
   task :import_prefix_filters, ['name'] => :environment do |task, args|
     name = args[:name]
