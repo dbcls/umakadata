@@ -32,6 +32,19 @@ namespace :umakadata do
     end
   end
 
+  desc "import prefix filters from CSV file"
+  task :import_prefix_filters, ['name'] => :environment do |task, args|
+    name = args[:name]
+    endpoint = Endpoint.where(:name => name).take
+    file_path = "#{SBMETA}/data/bulkdownloads/#{name}_subject_and_object_prefix.csv"
+    if !endpoint.nil? && File.exist?(file_path)
+      endpoint.prefix_filters.delete_all
+      CSV.foreach(file_path, {:headers => true}) do |row|
+        PrefixFilter.create(:endpoint_id => endpoint.id, :uri => row[0], :element_type => row[2])
+      end
+    end
+  end
+
   desc "check endpoint liveness (argument: ASC, DESC)"
   task :crawl, ['order'] => :environment do |task, args|
     Endpoint.all.order("id #{args[:order]}").each do |endpoint|
