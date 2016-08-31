@@ -8,13 +8,19 @@ javascript:
       var param = (input_date == '') ? '' : '?date=' + input_date;
       $.getJSON("/api/endpoints/#{@endpoint.id}/created_at" + param, function(json) {
         var evaluation_id = json['evaluation_id'];
-        location.href = "/endpoints/#{@endpoint.id}/" + evaluation_id + param
+        if (evaluation_id == '') {
+          $('#get_evaluation_id').modal();
+        } else {
+          location.href = "/endpoints/#{@endpoint.id}/" + evaluation_id + param
+        }
       });
     });
   });
 
 - content_for(:calendar)
   == render "calendar"
+
+= render partial: "alert_dialog", locals: {id: "get_evaluation_id", title: "The evaluation is not found", body: "Please select another day"}
 
 h1.page-header = @endpoint.name
 
