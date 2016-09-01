@@ -315,7 +315,12 @@ class EndpointsController < ApplicationController
     def date_param
       input_date = params[:date]
       if input_date.blank?
-        date = Endpoint.get_last_crawled_date
+        if params[:id].blank?
+          date = Endpoint.get_last_crawled_date
+        else
+          evaluation = Evaluation.lookup(params[:id], params[:evaluation_id])
+          date = evaluation.created_at
+        end
       else
         date = Time.parse(input_date)
       end
