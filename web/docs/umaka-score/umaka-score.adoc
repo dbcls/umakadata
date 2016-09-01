@@ -47,7 +47,7 @@ We rank the endpoint as shown in Table <<umaka_rank>>
 |0 - 20 |E
 |=======================
 
-In Section [metrics], we show how to score endpoints from each aspect.
+In Section <<metrics, 2>>, we show how to score endpoints from each aspect.
 
 [[metrics]]
 == 2. Metrics of Umaka Score
@@ -399,9 +399,10 @@ latexmath:[o(g)] = latexmath:[\frac{NCO}{NO}]
 latexmath:[NO] = Number of Ontologies used for Properties
 
 latexmath:[NCO] = Number of Ontologies used for Properties in Table
-\[table:list_of_common_ontologies\]
+<<list_of_common_ontologies>>
 =====================================================================
 +
+[[list_of_common_ontologies]]
 .List of Common Ontologies
 [cols="<",options="header,footer"]
 |=======================================================
