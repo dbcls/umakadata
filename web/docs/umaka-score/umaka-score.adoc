@@ -95,9 +95,7 @@ Thus, we determine the data modification thought the following adhoc
 procedure:
 +
 First, we retrieve a number of statements using a query described in
-Listing <<query_for_number_of_statements, 1>> and compare the number
-with the previous one. If the number of statements has changed, we
-assume the endpoint seems to be updated today.
+Listing <<query_for_number_of_statements, 1>>.
 +
 [[query_for_number_of_statements]]
 .Listing 1. A query for retrieving a number of statements
@@ -107,7 +105,7 @@ WHERE {?s ?p ?o}
 
 ....
 +
-When the number of statements is not changed, we retrieve the first and
+We retrieve the first and
 the last statements using queries described in Listing
 <<query_for_the_first_statement, 2>> and
 <<query_for_the_last_statement, 3>>. Then we compare them with those of
