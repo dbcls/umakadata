@@ -172,7 +172,7 @@ Accept: text/turtle,application/rdf+xml
 =====================================================================
 * VoID
 +
-true if VoID can be retrieved from well-known URI in Turtle format or
+true if VoID can be retrieved from well-known URI<<1>> in Turtle format or
 RDF/XML format, otherwise false. We access the endpoint URI via HTTP
 with the following HTTP Request Header:
 +
@@ -202,7 +202,7 @@ endpoint. We measure the three metrics:
 * Metadata Score
 +
 Metadata Score represents how much the endpoint contains metadata
-defined in .
+defined in <<3>>.
 +
 First we retrieve a list of graphs in the endpoint using a query
 described in Listing <<query_for_a_list_of_graphs>>.
@@ -448,7 +448,7 @@ measure the two metrics:
 
 * Cool URI
 +
-The URI of endpoints is preferred to be Cool URI, .
+The URI of endpoints is preferred to be Cool URI<<5>>, <<4>>.
 +
 .We check four criteria:
 1.  A host of URI of endpoints should not be specified by IP address
@@ -461,7 +461,7 @@ Cool URI Score is a percentage of the satisfied rules.
 * Linked Data Rule
 +
 The endpoints are preferred to be satisfied with the four rules of
-linked data.
+linked data<<2>>.
 +
 .We check four criteria:
 1.  Use URIs as names for things
@@ -629,3 +629,21 @@ Performance = latexmath:[\left\{
     \end{array}
     \right.]
 =====================================================================
+
+== References
+[[[1]]] Keith Alexander, Richard Cyganiak, Michael Hausenblas, and Jun
+Zhao. Describing linked datasets with the void vocabulary.
+https://www.w3.org/TR/void/, March 2011.
+
+[[[2]]] Tim Berners-Lee. Linked data - design issues.
+https://www.w3.org/DesignIssues/LinkedData.html, 2006.
+
+[[[3]]] DBCLS. Sparql queries for sparql builder metadata.
+http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-buildermetadata/.
+
+[[[4]]] Leigh Dodds and Ian Davis. Linked data patterns - a pattern
+catalogue for modelling, publishing, and consuming linked data.
+http://patterns.dataincubator.org, 2012.
+
+[[[5]]] Leo Sauermann and Richard Cyganiak. Cool uris for the semantic web.
+https://www.w3.org/TR/cooluris/, Descember 2008.
