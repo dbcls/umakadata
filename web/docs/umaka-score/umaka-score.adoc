@@ -33,7 +33,7 @@ latexmath:[\begin{array}{llll}
 \end{array}]
 =====================================================================
 
-We rank the endpoint as shown in Table <<umaka_rank>>
+We rank the endpoint as shown in Table <<umaka_rank, 1>>
 
 [[umaka_rank]]
 .Umaka Rank
@@ -218,7 +218,7 @@ WHERE{
 ....
 +
 Then we try to retrieve the metadata for each graph except for Table
-<<ignore_graphs>> as follows:
+<<ignore_graphs, 2>> as follows:
 +
 [[ignore_graphs]]
 .List of Ignore Graphs
@@ -399,7 +399,7 @@ latexmath:[o(g)] = latexmath:[\frac{NCO}{NO}]
 latexmath:[NO] = Number of Ontologies used for Properties
 
 latexmath:[NCO] = Number of Ontologies used for Properties in Table
-<<list_of_common_ontologies>>
+<<list_of_common_ontologies, 3>>
 =====================================================================
 +
 [[list_of_common_ontologies]]
