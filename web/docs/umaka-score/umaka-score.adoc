@@ -461,10 +461,18 @@ The URI of endpoints is preferred to be Cool URI<<5>>, <<4>>.
 Cool URI Score is a percentage of the satisfied rules.
 * Linked Data Rule
 +
-The endpoints are preferred to be satisfied with the four rules of
-linked data<<2>>.
+However the endpoints are preferred to be satisfied with the four rules of
+linked data<<2>> listed below, we ignore the first of them.
+Because the first rule is natural for RDF and it is meaningless for umakadata score.
 +
-.We check four criteria:
+. Use URIs as names for things
+. Use HTTP URIs so that people can look up those names
+. When someone looks up a URI, provide useful information, using the
+standards (RDF*, SPARQL)
+. Include links to other URIs. so that they can discover more things
+
++
+.We check above criteria except 1.:
 [start=2]
 . Use HTTP URIs so that people can look up those names
 +
