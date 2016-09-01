@@ -465,30 +465,8 @@ The endpoints are preferred to be satisfied with the four rules of
 linked data<<2>>.
 +
 .We check four criteria:
-1.  Use URIs as names for things
-+
-We assume all subjects of statements are things. We search invalid
-statement using a query described in Listing <<non_uri_subject, 10>>, and
-if nothing is found the endpoint satisfied this rule.
-+
-Note that we ignore Virtuoso specific graphs since Virtuoso contains a
-graph which contains invalid statements.
-+
-[[non_uri_subject]]
-.Listing 10. A Query for searching non-URI subjects
-....
-SELECT
-  *
-WHERE {
-GRAPH ?g { ?s ?p ?o } .
-  filter (!isURI(?s) && !isBLANK(?s) && ?g NOT IN (
-    <http://www.openlinksw.com/schemas/virtrdf#>
-  ))
-}
-LIMIT 1
-
-....
-2.  Use HTTP URIs so that people can look up those names
+[start=2]
+. Use HTTP URIs so that people can look up those names
 +
 We assume all subjects of statements are things. We search invalid
 statement using a query described in Listing
@@ -512,7 +490,7 @@ WHERE {
 LIMIT 1
 
 ....
-3.  When someone looks up a URI, provide useful information, using the
+. When someone looks up a URI, provide useful information, using the
 standards (RDF*, SPARQL)
 +
 We assess this rule by obtaining a subject (URI) using a query described
@@ -538,7 +516,7 @@ LIMIT 1
 OFFSET 100
 
 ....
-4.  Include links to other URIs. so that they can discover more things
+. Include links to other URIs. so that they can discover more things
 +
 We assume the statement representing the link to other URI uses the
 vocabularies owl:sameAs or rdfs:seeAlso. We think if there are any
