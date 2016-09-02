@@ -130,11 +130,13 @@ OFFSET ($COUNT - 1) LIMIT 1
 
 ....
 +
-Note that $COUNT represents the number to which We round down the total statements retrieved by
-Listing <<query_for_number_of_statements, 1>> by certain digit .
+Note that $COUNT represents the number of "nearly total statements"
+which is subtracted the number of count error in the following note
+from the number of total statements retrieved by
+Listing <<query_for_number_of_statements, 1>>.
 +
 Note that Virtuoso has trouble to count the number of statements. So
-We round off the count error beyond the digit of 0.05% of the number of statemnts.
+we round off the count error beyond the digit of 0.05% of the number of statemnts.
 * Update Interval
 +
 Update Interval is average of the interval between last updated. Update
