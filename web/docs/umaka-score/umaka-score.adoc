@@ -95,9 +95,7 @@ Thus, we determine the data modification thought the following adhoc
 procedure:
 +
 First, we retrieve a number of statements using a query described in
-Listing <<query_for_number_of_statements, 1>> and compare the number
-with the previous one. If the number of statements has changed, we
-assume the endpoint seems to be updated today.
+Listing <<query_for_number_of_statements, 1>>.
 +
 [[query_for_number_of_statements]]
 .Listing 1. A query for retrieving a number of statements
@@ -107,7 +105,7 @@ WHERE {?s ?p ?o}
 
 ....
 +
-When the number of statements is not changed, we retrieve the first and
+We retrieve the first and
 the last statements using queries described in Listing
 <<query_for_the_first_statement, 2>> and
 <<query_for_the_last_statement, 3>>. Then we compare them with those of
@@ -132,12 +130,13 @@ OFFSET ($COUNT - 1) LIMIT 1
 
 ....
 +
-Note that $COUNT represents the number of total statements retrieved by
+Note that $COUNT represents the number of "nearly total statements"
+which is subtracted the number of count error in the following note
+from the number of total statements retrieved by
 Listing <<query_for_number_of_statements, 1>>.
 +
 Note that Virtuoso has trouble to count the number of statements. So
-this adhoc procedure does not work well for the endpoint based on
-Virtuoso.
+we round off the count error beyond the digit of 0.05% of the number of statemnts.
 * Update Interval
 +
 Update Interval is average of the interval between last updated. Update
