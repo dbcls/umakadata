@@ -460,62 +460,48 @@ The URI of endpoints is preferred to be Cool URI<<5>>, <<4>>.
 Cool URI Score is a percentage of the satisfied rules.
 * Linked Data Rule
 +
-The endpoints are preferred to be satisfied with the four rules of
-linked data<<2>>.
+Though the endpoints are preferred to be satisfied with the four rules of
+linked data<<2>> listed below, we omit the first of them.
+This is because the first rule is natural for RDF and it is meaningless for umakadata score.
 +
-.We check four criteria:
-1.  Use URIs as names for things
-+
-We assume all subjects of statements are things. We search invalid
-statement using a query described in Listing <<non_uri_subject, 10>>, and
-if nothing is found the endpoint satisfied this rule.
-+
-Note that we ignore Virtuoso specific graphs since Virtuoso contains a
-graph which contains invalid statements.
-+
-[[non_uri_subject]]
-.Listing 10. A Query for searching non-URI subjects
-....
-SELECT
-  *
-WHERE {
-GRAPH ?g { ?s ?p ?o } .
-  filter (!isURI(?s) && !isBLANK(?s) && ?g NOT IN (
-    <http://www.openlinksw.com/schemas/virtrdf#>
-  ))
-}
-LIMIT 1
+. Use URIs as names for things
+. Use HTTP URIs so that people can look up those names
+. When someone looks up a URI, provide useful information, using the
+standards (RDF*, SPARQL)
+. Include links to other URIs. so that they can discover more things
 
-....
-2.  Use HTTP URIs so that people can look up those names
++
+.We check above criteria except 1.:
+[start=2]
+. Use HTTP URIs so that people can look up those names
 +
 We assume all subjects of statements are things. We search invalid
 statement using a query described in Listing
-<<non_http_uri_subject, 11>>, and if nothing is found the endpoint
+<<non_http_uri_subject, 10>>, and if nothing is found the endpoint
 satisfied this rule.
 +
 Note that we ignore Virtuoso specific graphs since Virtuoso contains a
 graph which contains invalid statements.
 +
 [[non_http_uri_subject]]
-.Listing 11. A Query for searching non-HTTP-URI subjects
+.Listing 10. A Query for searching non-HTTP-URI subjects
 ....
 SELECT
   *
 WHERE {
   GRAPH ?g { ?s ?p ?o } .
-  filter (!regex(?s, "http://", "i") && !isBLANK(?s) && ?g NOT IN (
+  filter (!regex(?s, "^http://", "i") && !isBLANK(?s) && ?g NOT IN (
     <http://www.openlinksw.com/schemas/virtrdf#>
   ))
 }
 LIMIT 1
 
 ....
-3.  When someone looks up a URI, provide useful information, using the
+. When someone looks up a URI, provide useful information, using the
 standards (RDF*, SPARQL)
 +
 We assess this rule by obtaining a subject (URI) using a query described
-in Listing <<query_for_a_subject, 12>> and accessing the URI via HTTP
+in Listing <<query_for_a_subject, 11>> and accessing the URI via HTTP
 protocol. We assume that the endpoint is satisfied with the rule if the
 URI returns any data.
 +
@@ -523,7 +509,7 @@ Note that we ignore Virtuoso specific graphs since Virtuoso contains a
 graph which contains invalid statements.
 +
 [[query_for_a_subject]]
-.Listing 12. A Query for a Subject
+.Listing 11. A Query for a Subject
 ....
 SELECT
   ?s
@@ -537,17 +523,17 @@ LIMIT 1
 OFFSET 100
 
 ....
-4.  Include links to other URIs. so that they can discover more things
+. Include links to other URIs. so that they can discover more things
 +
 We assume the statement representing the link to other URI uses the
 vocabularies owl:sameAs or rdfs:seeAlso. We think if there are any
 statement of which property is owl:sameAs or rdfs:seeAlso, the endpoint
 is satisfied with the rule. Thus we check the feasibility of the rule by
-using queries described in Listing <<query_for_same_as, 13>>,
-<<query_for_see_also, 14>>.
+using queries described in Listing <<query_for_same_as, 12>>,
+<<query_for_see_also, 13>>.
 +
 [[query_for_same_as]]
-.Listing 13. A Query for a Same AS Statement
+.Listing 12. A Query for a Same AS Statement
 ....
 PREFIX owl:<http://www.w3.org/2002/07/owl#>
 SELECT
@@ -560,7 +546,7 @@ LIMIT 1
 ....
 +
 [[query_for_see_also]]
-.Listing 14. A Query for a See Also Statement
+.Listing 13. A Query for a See Also Statement
 ....
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT
@@ -587,21 +573,21 @@ Validity = 40 * Cool URI Score + 60.0 * Linked Data Rule Score
 Performace suggests how powerful the endpoint is.
 
 We measure the response times of the two queries, Listing
-<<query_ask, 15>>, <<query_for_list_of_graphs, 16>>. The former query is a
+<<query_ask, 14>>, <<query_for_list_of_graphs, 15>>. The former query is a
 most simple query and we use this query to estimate the transfer time.
 The latter query requires a little computations for endpoints. We
 believe the execution cost of this query does not differ very much
 according to the size of data.
 
 [[query_ask]]
-.Listing 15. A Most Simple Query
+.Listing 14. A Most Simple Query
 ....
 ASK {}
 
 ....
 
 [[query_for_list_of_graphs]]
-.Listing 16. A Query for Listing Graphs
+.Listing 15. A Query for Listing Graphs
 ....
 SELECT DISTINCT
   ?g
