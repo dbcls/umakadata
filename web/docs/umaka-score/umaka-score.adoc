@@ -463,7 +463,7 @@ Cool URI Score is a percentage of the satisfied rules.
 +
 Though the endpoints are preferred to be satisfied with the four rules of
 linked data<<2>> listed below, we omit the first of them.
-Because the first rule is natural for RDF and it is meaningless for umakadata score.
+This is because the first rule is natural for RDF and it is meaningless for umakadata score.
 +
 . Use URIs as names for things
 . Use HTTP URIs so that people can look up those names
