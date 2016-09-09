@@ -100,7 +100,7 @@ Listing <<query_for_number_of_statements, 1>>.
 [[query_for_number_of_statements]]
 .Listing 1. A query for retrieving a number of statements
 ....
-SELECT COUNT(*) AS ?c
+SELECT (COUNT(*) AS ?count)
 WHERE {?s ?p ?o}
 
 ....
