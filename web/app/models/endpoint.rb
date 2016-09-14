@@ -1,4 +1,5 @@
 class Endpoint < ActiveRecord::Base
+
   has_many :evaluations
   has_many :prefixes
   has_many :relations
@@ -73,6 +74,14 @@ class Endpoint < ActiveRecord::Base
     start_or_end_date = endpoints.first.evaluations.order('created_at DESC').first.created_at
     end_or_start_date = endpoints.last.evaluations.order('created_at DESC').first.created_at
     start_or_end_date > end_or_start_date ? end_or_start_date : start_or_end_date
+  end
+
+  def self.score_statistics_from_to(b, e)
+    range = b.beginning_of_day..e.end_of_day
+    data = {}
+    data['average'] = self.joins(:evaluation).where(evaluations: {created_at: range}).group('date(evaluations.created_at)').average('evaluations.score')
+    data['median']  = self.joins(:evaluation).where(evaluations: {created_at: range}).group('date(evaluations.created_at)').median('evaluations.score')
+    data
   end
 
 end
