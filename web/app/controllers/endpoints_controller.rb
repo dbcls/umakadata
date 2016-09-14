@@ -231,11 +231,12 @@ class EndpointsController < ApplicationController
     labels = Array.new
     alive_data = Array.new
 
-    (from.to_datetime..last_crawled_date.to_datetime).each {|date|
-      labels.push date.strftime('%Y-%m-%d')
-      score = Endpoint.crawled_at(date.to_time).inject(0) {|sum, endpoint| sum + (endpoint.evaluation.alive ? 1 : 0)}
-      alive_data.push(score)
-    }
+    time_series = Endpoint.alive_statistics_from_to(from, last_crawled_date)
+    (from.to_datetime..last_crawled_date.to_datetime).each do |datetime|
+      date = datetime.strftime('%Y-%m-%d')
+      labels.push date
+      alive_data.push time_series.fetch(Date.parse(date), 0)
+    end
 
     render :json => {
       :labels => labels,
