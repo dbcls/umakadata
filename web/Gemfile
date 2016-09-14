@@ -69,3 +69,5 @@ gem 'octokit'
 gem 'json-ld'
 
 gem 'simple_form'
+
+gem 'active_median'
