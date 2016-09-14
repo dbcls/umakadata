@@ -58,6 +58,11 @@ class Endpoint < ActiveRecord::Base
     self.includes(:evaluation).created_at(day_begin..day_end).references(:evaluation)
   end
 
+  def self.sd_statistics_from_to(b, e)
+    range = b.beginning_of_day..e.end_of_day
+    self.joins(:evaluation).where(evaluations: {created_at: range}).where.not('evaluations.service_description': [nil,'']).group('date(evaluations.created_at)').count
+  end
+
   def self.get_last_crawled_date
     endpoints = self.joins(:evaluation)
     start_or_end_date = endpoints.first.evaluations.order('created_at DESC').first.created_at
