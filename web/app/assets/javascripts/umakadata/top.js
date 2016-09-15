@@ -23,7 +23,7 @@ $(function() {
     var datasets = json['datasets'];
     data = make_score_statistics_data(labels, datasets)
     var canvas_id = "#score_statistics";
-    var lineChart = showLine(canvas_id, data, make_scale_options(100));
+    var lineChart = showLine(canvas_id, data, make_scale_options());
     addGraphClickEvent(canvas_id, lineChart, labels, location.pathname);
   });
   var drawAliveStatistics = $.getJSON("endpoints/alive_statistics" + param, function(json) {
@@ -32,7 +32,7 @@ $(function() {
     data = make_alive_statistics_data(labels, datasets)
     var max = select_max_from_data(datasets[0]['data'])
     var canvas_id = "#alive_statistics";
-    var lineChart = showLine(canvas_id, data, make_scale_options(max));
+    var lineChart = showLine(canvas_id, data, make_scale_options());
     addGraphClickEvent(canvas_id, lineChart, labels, location.pathname);
   });
   var drawSdStatistics = $.getJSON("endpoints/service_description_statistics" + param, function(json) {
@@ -41,7 +41,7 @@ $(function() {
     data = make_sd_statistics_data(labels, datasets)
     var max = select_max_from_data(datasets[0]['data'])
     var canvas_id = "#sd_statistics";
-    var lineChart = showLine(canvas_id, data, make_scale_options(max));
+    var lineChart = showLine(canvas_id, data, make_scale_options());
     addGraphClickEvent(canvas_id, lineChart, labels, location.pathname);
   });
 

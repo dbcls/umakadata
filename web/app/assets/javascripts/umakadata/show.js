@@ -104,7 +104,7 @@ function showScoreHistory(endpoint_id, evaluation_id) {
     appendOptions(json);
     var labels = json['labels'];
     json['labels'] = labels.map(formatDate);
-    var options = make_scale_options(100)
+    var options = make_scale_options()
     options['datasetFill'] = false
     var lineChart = new Chart(context, {
       type: 'line',
