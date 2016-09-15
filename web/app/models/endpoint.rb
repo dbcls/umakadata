@@ -73,7 +73,15 @@ class Endpoint < ActiveRecord::Base
     endpoints = self.joins(:evaluation)
     start_or_end_datetime = endpoints.first.evaluations.order('created_at DESC').first.created_at
     end_or_start_datetime = endpoints.last.evaluations.order('created_at DESC').first.created_at
-    start_or_end_datetime > end_or_start_datetime ? end_or_start_datetime : start_or_end_datetime
+    start_or_end_date = start_or_end_datetime.strftime('%Y-%m-%d')
+    end_or_start_date = end_or_start_datetime.strftime('%Y-%m-%d')
+    if start_or_end_date == end_or_start_date
+      time_with_zone = start_or_end_datetime > end_or_start_datetime ? end_or_start_datetime : start_or_end_datetime
+      Time.parse(time_with_zone.to_s)
+    else
+      date = endpoints.select('date(evaluations.created_at)').group('date(evaluations.created_at)').limit(2)[1].date
+      Time.parse(date.to_s)
+    end
   end
 
   def self.score_statistics_from_to(b, e)
