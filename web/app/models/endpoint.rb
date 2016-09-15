@@ -61,7 +61,7 @@ class Endpoint < ActiveRecord::Base
 
   def self.alive_statistics_from_to(b, e)
     range = b.beginning_of_day..e.end_of_day
-    self.joins(:evaluation).where(evaluations: {created_at: range, alive: true}).group('date(evaluations.created_at)').count
+    self.joins(:evaluation).where(evaluations: {created_at: range, alive: true}).group('date(evaluations.created_at)').pluck('date(evaluations.created_at), (count(evaluations.created_at) * 1.0) / (select count(endpoints.id) from endpoints) * 100').to_h
   end
 
   def self.sd_statistics_from_to(b, e)
