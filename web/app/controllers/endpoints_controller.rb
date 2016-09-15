@@ -200,7 +200,7 @@ class EndpointsController < ApplicationController
     (from.to_datetime..last_crawled_date.to_datetime).each {|datetime|
       date = datetime.strftime('%Y-%m-%d')
       labels.push date
-      averages.push average.fetch(Date.parse(date), 0)
+      averages.push average.fetch(Date.parse(date), 0).round(1)
       medians.push median.fetch(Date.parse(date), 0)
     }
 
