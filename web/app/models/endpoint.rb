@@ -79,7 +79,7 @@ class Endpoint < ActiveRecord::Base
       time_with_zone = start_or_end_datetime > end_or_start_datetime ? end_or_start_datetime : start_or_end_datetime
       Time.parse(time_with_zone.to_s)
     else
-      date = endpoints.select('date(evaluations.created_at)').group('date(evaluations.created_at)').limit(2)[1].date
+      date = endpoints.select('date(evaluations.created_at)').group('date(evaluations.created_at)').order('date(evaluations.created_at) DESC').limit(2)[1].date
       Time.parse(date.to_s)
     end
   end
