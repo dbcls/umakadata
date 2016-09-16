@@ -71,9 +71,16 @@ class Endpoint < ActiveRecord::Base
 
   def self.get_last_crawled_date
     endpoints = self.joins(:evaluation)
-    start_or_end_date = endpoints.first.evaluations.order('created_at DESC').first.created_at
-    end_or_start_date = endpoints.last.evaluations.order('created_at DESC').first.created_at
-    start_or_end_date > end_or_start_date ? end_or_start_date : start_or_end_date
+    start_or_end_datetime = endpoints.first.evaluations.order('created_at DESC').first.created_at
+    end_or_start_datetime = endpoints.last.evaluations.order('created_at DESC').first.created_at
+    start_or_end_date = start_or_end_datetime.strftime('%Y-%m-%d')
+    end_or_start_date = end_or_start_datetime.strftime('%Y-%m-%d')
+    if start_or_end_date == end_or_start_date
+      Time.parse(start_or_end_date)
+    else
+      date = endpoints.select('date(evaluations.created_at)').group('date(evaluations.created_at)').order('date(evaluations.created_at) DESC').limit(2)[1].date
+      Time.parse(date.to_s)
+    end
   end
 
   def self.score_statistics_from_to(b, e)
