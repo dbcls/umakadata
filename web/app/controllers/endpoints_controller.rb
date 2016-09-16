@@ -256,7 +256,7 @@ class EndpointsController < ApplicationController
     (from.to_datetime..last_crawled_date.to_datetime).each do |datetime|
       date = datetime.strftime('%Y-%m-%d')
       labels.push date
-      have_data.push time_series.fetch(Date.parse(date), 0)
+      have_data.push time_series.fetch(Date.parse(date), 0).round(1)
     end
 
     render :json => {
