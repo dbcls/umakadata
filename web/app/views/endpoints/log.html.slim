@@ -13,7 +13,7 @@
             th
               | Value
         tbody
-         = render partial: 'endpoints/row', locals: {key: nil, content: @log, id: 1, parent_id: nil}
+          = createRowRecursive(nil, @log, 1, nil)
   - else
     p.h3
       | Error
