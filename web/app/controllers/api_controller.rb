@@ -124,8 +124,11 @@ SPARQL
   end
 
   def endpoints_graph
-    nodes = Endpoint.all.map do |endpoint|
-      {
+    endpoint_ids = Array.new
+    nodes = Array.new
+    Endpoint.all.each do |endpoint|
+      endpoint_ids << endpoint.id
+      nodes << {
         :group => "nodes",
         :data => {
           :id => "n#{endpoint.id}",
@@ -133,8 +136,7 @@ SPARQL
         }
       }
     end
-    edges = Relation.all.map do |relation|
-      next if !Endpoint.exists?(:id => relation.endpoint_id) || !Endpoint.exists?(:id => relation.dst_id)
+    edges = Relation.where(endpoint_id: endppint_ids).map do |relation|
       {
         :group => "edges",
         :data => {
