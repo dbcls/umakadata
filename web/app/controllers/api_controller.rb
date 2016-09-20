@@ -136,18 +136,18 @@ SPARQL
         }
       }
     end
-    edges = Relation.where(endpoint_id: endppint_ids).map do |relation|
+    index = 0
+    edges = Relation.where(endpoint_id: endpoint_ids).pluck(:src_id, :dst_id, :name).uniq.map {|element|
       {
         :group => "edges",
         :data => {
-          :id => "e#{relation.id}",
-          :source => "n#{relation.endpoint_id}",
-          :target => "n#{relation.dst_id}",
-          :label => relation.name
+          :id => "e#{index = index + 1}",
+          :source => "n#{element[0]}",
+          :target => "n#{element[1]}",
+          :label => element[2]
         }
       }
-    end
-    edges.delete(nil)
+    }
     render :json => nodes.concat(edges)
   end
 
