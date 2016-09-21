@@ -124,11 +124,8 @@ SPARQL
   end
 
   def endpoints_graph
-    endpoint_ids = Array.new
-    nodes = Array.new
-    Endpoint.all.each do |endpoint|
-      endpoint_ids << endpoint.id
-      nodes << {
+    nodes = Endpoint.all.map do |endpoint|
+      {
         :group => "nodes",
         :data => {
           :id => "n#{endpoint.id}",
@@ -137,11 +134,11 @@ SPARQL
       }
     end
     index = 0
-    edges = Relation.where(endpoint_id: endpoint_ids).pluck(:src_id, :dst_id, :name).uniq.map {|element|
+    edges = Relation.joins(:endpoint).pluck(:src_id, :dst_id, :name).uniq.map {|element|
       {
         :group => "edges",
         :data => {
-          :id => "e#{index = index + 1}",
+          :id => "e#{index += 1}",
           :source => "n#{element[0]}",
           :target => "n#{element[1]}",
           :label => element[2]
