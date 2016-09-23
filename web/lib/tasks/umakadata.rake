@@ -1,5 +1,6 @@
 MYAPP = "change path depending on your environment"
-SBMETA = "#{MYAPP}/sbMeta"
+
+SBMETA = "change path depending on your environment"
 OPTIONS = "-it"
 VOLUME = "-v #{SBMETA}:/sbMeta"
 IMAGE = "sbmeta"
@@ -25,7 +26,7 @@ namespace :umakadata do
 
   desc "export all prefixes to csv file"
   task :export_prefixes, ['output_path'] => :environment do |task, args|
-    path = %W(#{Dir.pwd} all_prefixes.csv).join('/') unless path = args[:output_path]
+    path = args[:output_path]
     CSV.open(path, 'w') do |row|
       row << %w(id endpoint_id uri)
       Prefix.all.each {|prefix| row << %W(#{prefix.id} #{prefix.endpoint_id} #{prefix.uri})}
@@ -145,7 +146,7 @@ namespace :sbmeta do
 
   desc "Find prefixes in bulkdownload directory and output standardized them in CSV file"
   task :find_prefixes, ['name'] => :environment do |task, args|
-    command = "sbt \"runMain sbmeta.SBMeta #{DATA_DIR}/bulkdownloads/#{args[:name]}\""
+    command = "/bin/bash #{SCRIPT_DIR}/create_prefixes.sh #{args[:name]}"
     sh "docker run #{OPTIONS} #{VOLUME} #{IMAGE} #{command}"
   end
 
