@@ -20,7 +20,7 @@ namespace :umakadata do
   task :seeAlso_sameAs, ['csv'] => :environment do |task, args|
     Relation.delete_all
     CSV.foreach(args[:csv]) do |row|
-      Relation.create(:endpoint_id => row[0], :dst_id => row[1], :name => row[2])
+      Relation.create(:endpoint_id => row[0], :src_id => row[1], :dst_id => row[2], :name => row[3])
     end
   end
 
@@ -150,9 +150,9 @@ namespace :sbmeta do
     sh "docker run #{DOCKER_OPTIONS} #{VOLUME} #{IMAGE} #{command}"
   end
 
-  desc "Find seeAlso and sameAs in bulkdownload directory and output standardized them in CSV file"
-  task :find_seeAlso_and_sameAs, ['name', 'prefix_path'] => :environment do |task, args|
-    command = "sbt \"runMain sbmeta.SBMetaSeeAlsoAndSameAs #{DATA_DIR}/bulkdownloads/#{args[:name]} #{args[:prefix_path]}\""
+  desc "Find seeAlso and sameAs for an endpoint"
+  task :find_seeAlso_and_sameAs, ['name', 'prefix_path', 'id'] => :environment do |task, args|
+    command = "sbt \"runMain sbmeta.SBMetaSeeAlsoAndSameAs #{DATA_DIR}/bulkdownloads/#{args[:name]} #{args[:prefix_path]} #{args[:id]}\""
     sh "docker run #{DOCKER_OPTIONS} #{VOLUME} #{IMAGE} #{command}"
   end
 
