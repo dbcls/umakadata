@@ -33,10 +33,14 @@ namespace :umakadata do
   end
 
   desc "import seeAlso and sameAs data from CSV file"
-  task :seeAlso_sameAs, ['csv'] => :environment do |task, args|
-    Relation.delete_all
-    CSV.foreach(args[:csv]) do |row|
-      Relation.create(:endpoint_id => row[0], :src_id => row[1], :dst_id => row[2], :name => row[3])
+  task :seeAlso_sameAs, ['name'] => :environment do |task, args|
+    endpoint = Endpoint.where(:name => args[:name]).take
+    file_path = "#{SBMETA}/data/bulkdownloads/#{args[:name]}_relation.csv"
+    if !endpoint.nil? && File.exist?(file_path)
+      endpoint.prefix_filters.destroy_all
+      CSV.foreach(file_path) do |row|
+        Relation.create(:endpoint_id => row[0], :src_id => row[1], :dst_id => row[2], :name => row[3])
+      end
     end
   end
 
