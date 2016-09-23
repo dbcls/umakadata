@@ -12,7 +12,7 @@ class EndpointsController < ApplicationController
 
   def top
     @date = date_param
-    @endpoints = Endpoint.crawled_at(@date).order('evaluations.score DESC')
+    @endpoints = Endpoint.crawled_before(@date).order('evaluations.score DESC')
   end
 
   def search
