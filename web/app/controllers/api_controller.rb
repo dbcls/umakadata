@@ -7,7 +7,7 @@ class ApiController < ApplicationController
 
   def endpoints_search
     @conditions = params
-    @endpoints = Endpoint.joins(:evaluation).order('evaluations.score DESC')
+    @endpoints = Endpoint.joins(:evaluation).eager_load(:evaluation).order('evaluations.score DESC')
     @endpoints = @endpoints.includes(:prefixes) unless params['prefix'].blank?
     self.add_like_condition_for_name_url(params['name']) if !params['name'].blank?
     self.add_like_condition_for_prefix(params['prefix']) if !params['prefix'].blank?
