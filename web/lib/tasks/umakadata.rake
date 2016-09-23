@@ -9,11 +9,27 @@ DATA_DIR = "/sbMeta/data"
 
 namespace :umakadata do
 
-  desc "Create relations between endpoints"
-  task :create_relations_csv => :environment do |task, args|
-    Rake::Task["umakadata:export_prefixes"].execute(Rake::TaskArguments.new([:output_path], ["#{DATA_DIR}/all_prefixes.csv"]))
-    Rake::Task["sbmeta:find_seeAlso_and_sameAs"].execute(Rake::TaskArguments.new([:name, :prefix_path], ["", "#{DATA_DIR}/all_prefixes.csv"]))
-    Rake::Task["umakadata:seeAlso_sameAs"].execute(Rake::TaskArguments.new([:csv], ["#{DATA_DIR}/bulkdownloads_relation.csv"]))
+  desc "Create relations between endpoints for all endpoints"
+  task :create_relations_csv_for_all_endpoints => :environment do |task, args|
+    all_prefixes_file = "#{DATA_DIR}/all_prefixes.csv"
+    Rake::Task["umakadata:export_prefixes"].execute(Rake::TaskArguments.new([:output_path], [all_prefixes_file]))
+    Endpoint.pluck(:name).each do |name|
+      Rake::Task["sbmeta:create_relations_csv"].execute(Rake::TaskArguments.new([:name, :id], [name]))
+    end
+  end
+
+  desc "Create relations between endpoints for an endpoint"
+  task :create_relations_csv, ['name'] => :environment do |task, args|
+    directory_path = "#{SBMETA}/data/bulkdownloads/#{args[:name]}/downloads"
+    endpoint = Endpoint.where(:name => args[:name]).take
+    if !endpoint.nil? && File.exist?(directory_path)
+      Rake::Task["sbmeta:extract"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
+      Rake::Task["sbmeta:find_seeAlso_and_sameAs"].execute(Rake::TaskArguments.new([:name, :prefix_path, :id], [args[:name], "#{DATA_DIR}/all_prefixes.csv", endpoint.id]))
+      Rake::Task["sbmeta:remove_extractions"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
+      Rake::Task["umakadata:seeAlso_sameAs"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
+    else
+      puts "#{args[:name]} dose not have bulkdownload files"
+    end
   end
 
   desc "import seeAlso and sameAs data from CSV file"
