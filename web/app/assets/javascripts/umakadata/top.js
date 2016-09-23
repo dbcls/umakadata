@@ -48,6 +48,40 @@ $(function() {
   setTimeout(function(){ drawScoreStatistics.abort(); }, 10000);
   setTimeout(function(){ drawAliveStatistics.abort(); }, 10000);
   setTimeout(function(){ drawSdStatistics.abort(); }, 10000);
+
+  $('.column').on('click', function(){
+    var column = $(this).text().trim().toLowerCase();
+    var direction = $(this).attr('data-direction');
+    var type = direction == undefined ? column == 'score' ? 'ASC'
+                                                          : 'DESC'
+                                      : direction == 'ASC' ? 'DESC'
+                                                           : 'ASC';
+    $(this).attr('data-direction', type);
+    var hash = getDateFromURLQuery(column, type);
+    hash['column'] = column;
+    hash['direction'] = type;
+    var params = createParams(hash);
+    var query = '/?' + params;
+    var score_ranking = $.getJSON("endpoints/score_ranking" + query, function(data) {
+      $("#result_body").empty();
+      for (var i = 0; i < data.length; i++) {
+        var endpoint = data[i];
+        var id = endpoint[0];
+        var evaluation_id = endpoint[1];
+        var name = endpoint[2];
+        var url = endpoint[3];
+        var last_checked = endpoint[4];
+        var score = endpoint[5];
+        var row = $("<tr>");
+        row.append($("<td>").append($("<a>").attr("href", "/endpoints/" + id + "/" + evaluation_id).text(name)));
+        row.append($("<td>").append($("<a>").attr("href", url).text(url)));
+        row.append($("<td>").text(last_checked));
+        row.append($("<td>").text(score));
+        $("#result_body").append(row);
+      }
+    });
+})
+
 });
 
 function make_score_data(count) {
@@ -204,4 +238,26 @@ function addGraphClickEvent(context, lineChart, labels, pathname) {
     location.href = location.protocol + "//" + location.host + pathname + "?date=" + clickedDateFormat;
   });
 
+}
+
+function getDateFromURLQuery(column, type)
+{
+  var hash = new Object();
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i = 0; i < vars.length; i++) {
+    var pair = vars[i].split("=");
+    if (pair[0] == 'date') {
+      hash['date'] = pair[1];
+    }
+  }
+  return hash;
+}
+
+function createParams(values) {
+  var list = new Array();
+  for (key in values) {
+    list.push(key + "=" + values[key]);
+  }
+  return list.join("&");
 }
