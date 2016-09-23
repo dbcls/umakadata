@@ -38,7 +38,7 @@ namespace :umakadata do
     file_path = "#{SBMETA}/data/bulkdownloads/#{args[:name]}_relation.csv"
     if !endpoint.nil? && File.exist?(file_path)
       endpoint.prefix_filters.destroy_all
-      CSV.foreach(file_path) do |row|
+      CSV.foreach(file_path, {:headers => true}) do |row|
         Relation.create(:endpoint_id => row[0], :src_id => row[1], :dst_id => row[2], :name => row[3])
       end
     end
