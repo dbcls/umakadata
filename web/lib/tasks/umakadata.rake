@@ -167,6 +167,12 @@ namespace :sbmeta do
     sh "docker run #{DOCKER_OPTIONS} #{VOLUME} #{IMAGE} #{command}"
   end
 
+  desc "remove all extract files"
+  task :remove_extractions, ['name'] => :environment do |task, args|
+    command = "rm -rf #{DATA_DIR}/bulkdownloads/#{args[:name]}/extractions"
+    sh "docker run #{DOCKER_OPTIONS} #{VOLUME} #{IMAGE} #{command}"
+  end
+
   desc "Find prefixes in bulkdownload directory and output standardized them in CSV file"
   task :find_prefixes, ['name'] => :environment do |task, args|
     command = "/bin/bash #{SCRIPT_DIR}/create_prefixes.sh #{args[:name]}"
