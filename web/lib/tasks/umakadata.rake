@@ -150,13 +150,20 @@ namespace :sbmeta do
 
   desc "Create prefix list"
   task :create_prefixes_csv_files, ['name'] => :environment do |task, args|
-    Rake::Task["sbmeta:download_and_extract"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
+    Rake::Task["sbmeta:download"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
+    Rake::Task["sbmeta:extract"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
     Rake::Task["sbmeta:find_prefixes"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
   end
 
-  desc "Bulkdownload and extract from each endpoint to bulkdownload directory"
-  task :download_and_extract, ['name'] => :environment do |task, args|
-    command = "/bin/bash #{SCRIPT_DIR}/download_and_extract.sh #{args[:name]}"
+  desc "Bulkdownload from each endpoint to bulkdownload directory"
+  task :download, ['name'] => :environment do |task, args|
+    command = "/bin/bash #{SCRIPT_DIR}/download.sh #{args[:name]}"
+    sh "docker run #{DOCKER_OPTIONS} #{VOLUME} #{IMAGE} #{command}"
+  end
+
+  desc "Extract from each endpoint to bulkdownload directory"
+  task :extract, ['name'] => :environment do |task, args|
+    command = "/bin/bash #{SCRIPT_DIR}/extract.sh #{args[:name]}"
     sh "docker run #{DOCKER_OPTIONS} #{VOLUME} #{IMAGE} #{command}"
   end
 
