@@ -1,7 +1,7 @@
 MYAPP = "change path depending on your environment"
 
 SBMETA = "change path depending on your environment"
-OPTIONS = "-it"
+DOCKER_OPTIONS = "-it"
 VOLUME = "-v #{SBMETA}:/sbMeta"
 IMAGE = "sbmeta"
 SCRIPT_DIR = "/sbMeta/script"
@@ -141,19 +141,19 @@ namespace :sbmeta do
   desc "Bulkdownload and extract from each endpoint to bulkdownload directory"
   task :download_and_extract, ['name'] => :environment do |task, args|
     command = "/bin/bash #{SCRIPT_DIR}/download_and_extract.sh #{args[:name]}"
-    sh "docker run #{OPTIONS} #{VOLUME} #{IMAGE} #{command}"
+    sh "docker run #{DOCKER_OPTIONS} #{VOLUME} #{IMAGE} #{command}"
   end
 
   desc "Find prefixes in bulkdownload directory and output standardized them in CSV file"
   task :find_prefixes, ['name'] => :environment do |task, args|
     command = "/bin/bash #{SCRIPT_DIR}/create_prefixes.sh #{args[:name]}"
-    sh "docker run #{OPTIONS} #{VOLUME} #{IMAGE} #{command}"
+    sh "docker run #{DOCKER_OPTIONS} #{VOLUME} #{IMAGE} #{command}"
   end
 
   desc "Find seeAlso and sameAs in bulkdownload directory and output standardized them in CSV file"
   task :find_seeAlso_and_sameAs, ['name', 'prefix_path'] => :environment do |task, args|
     command = "sbt \"runMain sbmeta.SBMetaSeeAlsoAndSameAs #{DATA_DIR}/bulkdownloads/#{args[:name]} #{args[:prefix_path]}\""
-    sh "docker run #{OPTIONS} #{VOLUME} #{IMAGE} #{command}"
+    sh "docker run #{DOCKER_OPTIONS} #{VOLUME} #{IMAGE} #{command}"
   end
 
 end
