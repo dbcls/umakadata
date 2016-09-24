@@ -228,7 +228,7 @@ Then we try to retrieve the metadata for each graph except for Table
 |==========================================
 1.  Classes
 +
-We retrieve a list of classes using a query described in Listing
+If there is GRAPH clause being applied, we retrieve a list of classes using a query described in Listing
 <<query_for_classes_on_a_graph, 5>> and
 <<query_for_classes_having_instances_on_a_graph, 6>>.
 +
@@ -269,7 +269,7 @@ WHERE{
 ....
 2.  Labels
 +
-We retrieve a list of labels using a query described in Listing
+If there is GRAPH clause being applied, we retrieve a list of labels using a query described in Listing
 <<query_for_labels_of_classes, 7>>.
 +
 [[query_for_labels_of_classes]]
@@ -289,7 +289,7 @@ WHERE {
 ....
 3.  Datatypes
 +
-We retrieve a list of datatypes using a query described in Listing
+If there is GRAPH clause being applied, we retrieve a list of datatypes using a query described in Listing
 <<query_for_datatypes_on_a_graph, 8>>.
 +
 [[query_for_datatypes_on_a_graph]]
@@ -305,7 +305,7 @@ WHERE{
 ....
 4.  Properties
 +
-We retrieve a list of properties using a query described in Listing
+If there is GRAPH clause being applied, we retrieve a list of properties using a query described in Listing
 <<query_for_properties_on_a_graph, 9>>.
 +
 [[query_for_properties_on_a_graph]]
@@ -475,7 +475,7 @@ standards (RDF*, SPARQL)
 [start=2]
 . Use HTTP URIs so that people can look up those names
 +
-We assume all subjects of statements are things. We search invalid
+We assume all subjects of statements are things. If there is GRAPH clause being applied, we search invalid
 statement using a query described in Listing
 <<non_http_uri_subject, 10>>, and if nothing is found the endpoint
 satisfied this rule.
@@ -528,7 +528,7 @@ OFFSET 100
 We assume the statement representing the link to other URI uses the
 vocabularies owl:sameAs or rdfs:seeAlso. We think if there are any
 statement of which property is owl:sameAs or rdfs:seeAlso, the endpoint
-is satisfied with the rule. Thus we check the feasibility of the rule by
+is satisfied with the rule. If there is GRAPH clause being applied, we check the feasibility of the rule by
 using queries described in Listing <<query_for_same_as, 12>>,
 <<query_for_see_also, 13>>.
 +
