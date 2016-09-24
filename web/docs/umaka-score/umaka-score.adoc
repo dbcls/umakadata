@@ -203,8 +203,8 @@ endpoint. We measure the three metrics:
 Metadata Score represents how much the endpoint contains metadata
 defined in <<3>>.
 +
-First we retrieve a list of graphs in the endpoint using a query
-described in Listing <<query_for_a_list_of_graphs, 4>>.
+If there is GRAPH clause being applied, we retrieve a list of graphs in the endpoint using a query
+described in Listing <<query_for_a_list_of_graphs, 4>>, otherwise we use one graph which does not have a name, called the background graph.
 +
 [[query_for_a_list_of_graphs]]
 .Listing 4. Obtain graph URIs on a SPARQL endpoint
