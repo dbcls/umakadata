@@ -228,9 +228,12 @@ Then we try to retrieve the metadata for each graph except for Table
 |==========================================
 1.  Classes
 +
-If there is GRAPH clause being applied, we retrieve a list of classes using a query described in Listing
+we retrieve a list of classes using a query described in Listing
 <<query_for_classes_on_a_graph, 5>> and
-<<query_for_classes_having_instances_on_a_graph, 6>>.
+<<query_for_classes_having_instances_on_a_graph, 6>> if there is GRAPH clause being applied;
+otherwise
+Listing <<query_for_classes_on_background_graph, 7>> and
+<<query_for_classes_having_instances_on_background_graph, 8>>.
 +
 [[query_for_classes_on_a_graph]]
 .Listing 5. Obtain the classes on a graph g
@@ -300,8 +303,10 @@ WHERE{
 ....
 2.  Labels
 +
-If there is GRAPH clause being applied, we retrieve a list of labels using a query described in Listing
-<<query_for_labels_of_classes_on_a_graph, 9>>.
+We retrieve a list of labels using a query described in Listing
+<<query_for_labels_of_classes_on_a_graph, 9>> if there is GRAPH clause being applied;
+otherwise Listing
+<<query_for_labels_of_classes_on_background_graph, 10>>.
 +
 [[query_for_labels_of_classes_on_a_graph]]
 .Listing 9. Obtain labels of the classes c1 c2 ... cn from a graph g
@@ -333,8 +338,10 @@ WHERE {
 ....
 3.  Datatypes
 +
-If there is GRAPH clause being applied, we retrieve a list of datatypes using a query described in Listing
-<<query_for_datatypes_on_a_graph, 11>>.
+We retrieve a list of datatypes using a query described in Listing
+<<query_for_datatypes_on_a_graph, 11>> if there is GRAPH clause being applied;
+otherwise Listing
+<<query_for_datatypes_on_background_graph, 12>>.
 +
 [[query_for_datatypes_on_a_graph]]
 .Listing 11. Obtain the datatypes on a graph g
@@ -358,8 +365,10 @@ WHERE{
 ....
 4.  Properties
 +
-If there is GRAPH clause being applied, we retrieve a list of properties using a query described in Listing
-<<query_for_properties_on_a_graph, 13>>.
+We retrieve a list of properties using a query described in Listing
+<<query_for_properties_on_a_graph, 13>> if there is GRAPH clause being applied;
+otherwise Listing
+<<query_for_properties_on_background_graph, 14>>.
 +
 [[query_for_properties_on_a_graph]]
 .Listing 13. Obtain the properties on a graph g
@@ -536,9 +545,11 @@ standards (RDF*, SPARQL)
 [start=2]
 . Use HTTP URIs so that people can look up those names
 +
-We assume all subjects of statements are things. If there is GRAPH clause being applied, we search invalid
+We assume all subjects of statements are things. We search invalid
 statement using a query described in Listing
-<<non_http_uri_subject_on_a_graph, 15>>, and if nothing is found the endpoint
+<<non_http_uri_subject_on_a_graph, 15>> if there is GRAPH clause being applied;
+otherwise Listing
+<<non_http_uri_subject_on_background_graph, 16>>. If nothing is found the endpoint
 satisfied this rule.
 +
 Note that we ignore Virtuoso specific graphs since Virtuoso contains a
@@ -574,7 +585,9 @@ LIMIT 1
 standards (RDF*, SPARQL)
 +
 We assess this rule by obtaining a subject (URI) using a query described
-in Listing <<query_for_a_subject_on_a_graph, 17>> and accessing the URI via HTTP
+in Listing <<query_for_a_subject_on_a_graph, 17>> if there is GRAPH clause being applied
+otherwise Listing <<query_for_a_subject_on_background_graph, 18>>
+, and accessing the URI via HTTP
 protocol. We assume that the endpoint is satisfied with the rule if the
 URI returns any data.
 +
@@ -616,7 +629,10 @@ vocabularies owl:sameAs or rdfs:seeAlso. We think if there are any
 statement of which property is owl:sameAs or rdfs:seeAlso, the endpoint
 is satisfied with the rule. If there is GRAPH clause being applied, we check the feasibility of the rule by
 using queries described in Listing <<query_for_same_as_on_a_graph, 19>>,
-<<query_for_see_also_on_a_graph, 20>>.
+<<query_for_see_also_on_a_graph, 20>> if there is GRAPH clause being applied;
+otherwise Listing <<query_for_same_as_on_background_graph, 21>>,
+<<query_for_see_also_on_background_graph, 22>>
+
 +
 [[query_for_same_as_on_a_graph]]
 .Listing 19. A Query for a Same AS Statement on a graph g
