@@ -14,7 +14,7 @@ ActiveAdmin.register Endpoint do
 # end
 
   permit_params do
-    permitted = [:name, :url]
+    permitted = [:name, :url, :description_url]
   end
 
   filter :name
@@ -62,6 +62,7 @@ ActiveAdmin.register Endpoint do
         row :id
         row :name
         row :url
+        row :description_url
         row :created_at
         row :updated_at
         row :issue_id
