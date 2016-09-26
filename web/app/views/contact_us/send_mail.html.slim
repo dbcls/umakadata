@@ -18,5 +18,5 @@ div
   '
   br
   div
-    = simple_format(@inquiry.message)
+    = sanitize simple_format(@inquiry.message)
 hr
