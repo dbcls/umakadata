@@ -47,10 +47,10 @@ h2.sub-header Score Ranking
   table.table.table-striped
     thead
       tr
-        th.column Name
-        th.column URL
+        th.column[style="cursor: pointer;"] Name
+        th.column[style="cursor: pointer;"] URL
         th Last Checked
-        th.column Score
+        th.column[style="cursor: pointer;"] Score
     tbody#result_body
       - @endpoints.each do |endpoint|
         tr
