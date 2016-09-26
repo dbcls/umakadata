@@ -14,7 +14,7 @@ ActiveAdmin.register Endpoint do
 # end
 
   permit_params do
-    permitted = [:name, :url]
+    permitted = [:name, :url, :description_url]
   end
 
   filter :name

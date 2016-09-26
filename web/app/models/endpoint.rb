@@ -6,6 +6,8 @@ class Endpoint < ActiveRecord::Base
   has_many :prefix_filters
   has_one :evaluation
 
+  validates :description_url, format: /\A#{URI::regexp(%w(http https))}\z/, if: 'description_url.present?'
+
   scope :created_at, ->(date) { where('evaluations.created_at': date) }
 
   def self.rdf_graph
