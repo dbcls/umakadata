@@ -47,6 +47,7 @@ class Endpoint < ActiveRecord::Base
     else
       GithubHelper.edit_issue(self.issue_id, self.name)
     end
+    GithubHelper.add_labels_to_an_issue(self.issue_id, ['endpoints'])
   end
 
   after_destroy do

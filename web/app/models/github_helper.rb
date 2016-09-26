@@ -15,6 +15,10 @@ class GithubHelper
     call_github_api {|client, github_repo| client.update_issue(github_repo, number, title)}
   end
 
+  def self.add_labels_to_an_issue(number, labels)
+    call_github_api {|client, github_repo| client.add_labels_to_an_issue(github_repo, number, labels)}
+  end
+
   def self.close_issue(number)
     call_github_api {|client, github_repo| client.close_issue(github_repo, number)}
   end
