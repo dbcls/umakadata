@@ -11,7 +11,7 @@ namespace :umakadata do
 
   desc "Create relations between endpoints for all endpoints"
   task :create_relations_csv_for_all_endpoints => :environment do |task, args|
-    all_prefixes_file = "#{DATA_DIR}/all_prefixes.csv"
+    all_prefixes_file = "#{SBMETA}/data/all_prefixes.csv"
     Rake::Task["umakadata:export_prefixes"].execute(Rake::TaskArguments.new([:output_path], [all_prefixes_file]))
     Endpoint.pluck(:name).each do |name|
       Rake::Task["sbmeta:create_relations_csv"].execute(Rake::TaskArguments.new([:name, :id], [name]))
