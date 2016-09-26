@@ -22,6 +22,40 @@ ActiveAdmin.register Endpoint do
   filter :created_at
   filter :updated_at
 
+  index do
+    selectable_column
+    id_column
+    column :name
+    column :url
+    column :alive do |endpoint|
+      evaluations = endpoint.evaluations
+      if evaluations.present?
+        if evaluations.where(:alive => true).present?
+          evaluations.where(:alive => true).last.created_at.to_formatted_s(:long)
+        else
+          "Dead"
+        end
+      else
+        "N/A"
+      end
+    end
+    column :dead_flag do |endpoint|
+      evaluations = endpoint.evaluations
+      if evaluations.present?
+        if evaluations.where(:alive => true).present?
+          if evaluations.where(:alive => true).last.created_at < 1.month.ago
+            "True"
+          end
+        else
+          "True"
+        end
+      else
+        "N/A"
+      end
+    end
+    actions
+  end
+
   show do
     panel "Endpoint Details" do
       attributes_table_for endpoint do
