@@ -2,25 +2,6 @@
 = javascript_include_tag 'umakadata/chart-helper'
 = javascript_include_tag 'umakadata/show'
 
-javascript:
-  $(function(){
-    showRadar(#{@endpoint.id}, #{@evaluation.id});
-    showScoreHistory(#{@endpoint.id}, #{@evaluation.id});
-
-    $('#jump-button').on("click", function() {
-      var input_date = $("#calendar").val();
-      var param = (input_date == '') ? '' : '?date=' + input_date;
-      $.getJSON("/api/endpoints/#{@endpoint.id}/created_at" + param, function(json) {
-        var evaluation_id = json['evaluation_id'];
-        if (evaluation_id == '') {
-          $('#get_evaluation_id').modal();
-        } else {
-          location.href = "/endpoints/#{@endpoint.id}/" + evaluation_id + param
-        }
-      });
-    });
-  });
-
 - content_for(:calendar)
   == render "calendar"
 
@@ -141,7 +122,7 @@ h1.page-header = @endpoint.name
     | &nbsp;for more details about Umaka Score.
 
   .col-xs-12.col-sm-6
-    canvas#radar[width="400" height="300"]
+    canvas#radar[width="400" height="300" data-endpoint-id=@endpoint.id data-evaluation-id=@evaluation.id]
 
   .col-xs-12.col-sm-12
     canvas#score_history[width="800" height="300"]
