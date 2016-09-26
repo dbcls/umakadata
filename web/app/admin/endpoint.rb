@@ -22,6 +22,14 @@ ActiveAdmin.register Endpoint do
   filter :created_at
   filter :updated_at
 
+  index do
+    selectable_column
+    id_column
+    column :name
+    column :url
+    actions
+  end
+
   show do
     panel "Endpoint Details" do
       attributes_table_for endpoint do
