@@ -62,17 +62,17 @@ h1.page-header = @endpoint.name
               = @endpoint.url
         tr
           td
+            | About the site
+          td
+            = @endpoint.description_url
+        tr
+          td
             .umakadata-tooltip
               | Organization Information
               span.small
                 | data specified by dcterms:publisher in VoID
           td
             = @publisher
-        tr
-          td
-            | About the site
-          td
-            = @endpoint.description_url
         tr
           td
             .umakadata-tooltip
