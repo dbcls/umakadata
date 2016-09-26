@@ -27,6 +27,18 @@ ActiveAdmin.register Endpoint do
     id_column
     column :name
     column :url
+    column :alive do |endpoint|
+      evaluations = endpoint.evaluations
+      if evaluations.present?
+        if evaluations.where(:alive => true).present?
+          evaluations.where(:alive => true).last.created_at.to_formatted_s(:long)
+        else
+          "Dead"
+        end
+      else
+        "N/A"
+      end
+    end
     actions
   end
 
