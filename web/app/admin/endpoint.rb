@@ -39,6 +39,20 @@ ActiveAdmin.register Endpoint do
         "N/A"
       end
     end
+    column :dead_flag do |endpoint|
+      evaluations = endpoint.evaluations
+      if evaluations.present?
+        if evaluations.where(:alive => true).present?
+          if evaluations.where(:alive => true).last.created_at < 1.month.ago
+            "True"
+          end
+        else
+          "True"
+        end
+      else
+        "N/A"
+      end
+    end
     actions
   end
 
