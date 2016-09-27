@@ -1328,12 +1328,12 @@ according to the size of data.</p>
 </div>
 </div>
 <div id="query_for_list_of_graphs" class="literalblock">
-<div class="title">Listing 24. A Query for Listing Graphs</div>
+<div class="title">Listing 24. A Query for retrieving a number of class</div>
 <div class="content">
 <pre>SELECT DISTINCT
-  ?g
+  (COUNT(?class) AS ?c)
 WHERE {
-  GRAPH ?g { ?s ?p ?o }
+  { [] a ?class .}
 }</pre>
 </div>
 </div>
