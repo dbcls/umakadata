@@ -974,33 +974,6 @@ WHERE{
 </div>
 </li>
 <li>
-<p>Vocabulary Score</p>
-<div class="paragraph">
-<p>Vocabulary Score, which is calculated based on metadata, represents how
-many vocabularies data in the endpoint use.</p>
-</div>
-<div class="paragraph">
-<p>Vocabulary Score is calculated as follows:</p>
-</div>
-<div class="exampleblock text-center">
-<div class="content">
-<div class="paragraph">
-<p>Vocabulary Score =
-\(\frac{\displaystyle \sum_{graphs}^{g}v(g)}{N}\)</p>
-</div>
-<div class="paragraph">
-<p>where</p>
-</div>
-<div class="paragraph">
-<p>\(N\) = Number of Graphs</p>
-</div>
-<div class="paragraph">
-<p>\(v(g)\) = Number of Properties in Graph g</p>
-</div>
-</div>
-</div>
-</li>
-<li>
 <p>Ontology Score</p>
 <div class="paragraph">
 <p>Ontology Score, which is calculated based on metadata, represents how
@@ -1012,7 +985,7 @@ much common ontologies data in the endpoint use.</p>
 <div class="exampleblock text-center">
 <div class="content">
 <div class="paragraph">
-<p>Vocabulary Score =
+<p>Ontology Score =
 \(\frac{\displaystyle \sum_{graphs}^{g}o(g)}{N}\)</p>
 </div>
 <div class="paragraph">
@@ -1084,9 +1057,6 @@ much common ontologies data in the endpoint use.</p>
 </tr>
 </tbody>
 </table>
-</li>
-</ul>
-</div>
 <div class="paragraph">
 <p>At last, we evaluate Usefulness Score as follows:</p>
 </div>
@@ -1094,9 +1064,8 @@ much common ontologies data in the endpoint use.</p>
 <div class="content">
 <div class="paragraph">
 <p>\(\begin{array}{lll}
-  {\rm Usefulness} &amp; = &amp; 30.0 * {\rm Metadata~Score} \\
-                   &amp; + &amp; 40.0 * f10({\rm Vocabulary~Score}) \\
-                   &amp; + &amp; 30.0 * {\rm Ontology~Score}
+  {\rm Usefulness} &amp; = &amp; 50.0 * {\rm Metadata~Score} \\
+                   &amp; + &amp; 50.0 * {\rm Ontology~Score}
   \end{array}\)</p>
 </div>
 <div class="paragraph">
@@ -1111,6 +1080,9 @@ much common ontologies data in the endpoint use.</p>
   \right.\)</p>
 </div>
 </div>
+</div>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
@@ -1423,7 +1395,7 @@ catalogue for modelling, publishing, and consuming linked data.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-09-27 18:19:22 JST
+Last updated 2016-09-27 18:34:27 JST
 </div>
 </div>
 <script type="text/x-mathjax-config">

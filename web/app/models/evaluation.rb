@@ -89,10 +89,6 @@ class Evaluation < ActiveRecord::Base
         logger = Umakadata::Logging::Log.new
         eval.ontology_score = retriever.score_ontologies(metadata, logger: logger)
         eval.ontology_log = logger.as_json
-
-        logger = Umakadata::Logging::Log.new
-        eval.vocabulary_score = retriever.score_vocabularies(metadata, logger: logger)
-        eval.vocabulary_log = logger.as_json
       end
 
       logger = Umakadata::Logging::Log.new
@@ -247,9 +243,8 @@ class Evaluation < ActiveRecord::Base
     rates[2] += 50.0 unless eval.void_ttl.blank?
 
     #usefulness
-    rates[3] += 40.0 * (eval.vocabulary_score > 10.0 ? 10.0 : eval.vocabulary_score) / 10.0 unless eval.vocabulary_score.blank?
-    rates[3] += 30.0 * eval.ontology_score / 100.0 unless eval.ontology_score.blank?
-    rates[3] += 30.0 * eval.metadata_score / 100.0 unless eval.metadata_score.blank?
+    rates[3] += 50.0 * eval.ontology_score / 100.0 unless eval.ontology_score.blank?
+    rates[3] += 50.0 * eval.metadata_score / 100.0 unless eval.metadata_score.blank?
 
     #validity
     rates[4] += 40.0 * eval.cool_uri_rate.to_f / 100.0 unless eval.cool_uri_rate.blank?

@@ -34,7 +34,6 @@ module UmakaRDF
     'execution_time',
     'metadata_score',
     'ontology_score',
-    'vocabulary_score',
     'last_updated',
     'last_updated_source',
     'update_interval',
