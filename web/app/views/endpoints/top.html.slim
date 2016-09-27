@@ -15,6 +15,19 @@ javascript:
 - content_for(:calendar)
   == render "calendar"
 
+h1#about.page-header Umaka Data
+.row
+  .col-md-12
+    p
+    | YummyData (in Japanese Umaka Data) is a site that lists and monitors SPARQL endpoints that
+    | provide data of interest to the biomedical community. Sometimes it is difficult to decide which
+    | endpoint to use. YummyData helps by providing a curated list of endpoints, and by monitoring over time
+    | their availability, updates rate, standard compliance and other features that are important
+    | to data consumers. Beyond this, YummyData provides a forum where consumers and providers of
+    | biomedical information in RDF can communicate and improve the usability of the web of (bio) data.
+    | If you are a provider and want your resource exposed in a curated directory, or if you are a user and
+    | have issues with an endpoint, YummyData is here to help.
+
 h1.page-header Dashboard
 .row.placeholders
   .col-xs-6.col-sm-4.placeholder
@@ -50,16 +63,14 @@ h2.sub-header Score Ranking
       tr
         th.column Name
         th.column URL
-        th Last Checked
         th.column Score
     tbody#result_body
+
       - @endpoints.each do |endpoint|
         tr
           td
             = link_to endpoint.name, endpoint_path(endpoint, endpoint.evaluation)
           td
             = link_to endpoint.url, endpoint.url
-          td
-            = endpoint.evaluation.created_at.getutc
           td
             = endpoint.evaluation[:score]
