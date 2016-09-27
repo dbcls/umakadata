@@ -1355,10 +1355,16 @@ WHERE {
 <div class="paragraph">
 <p>Performance = \(\left\{
     \begin{array}{ll}
-        100.0 * (1.0 - {\rm Execution~Time}) &amp; {\rm if~Execution~Time~is~less~than~1~second} \\
+        100.0 * (1.0 - (({\rm Execution~Time} {\rm ~ / ~} N) * 1000000)) &amp; {\rm if~Execution~Time~is~less~than~1~second} \\
         0 &amp; {\rm Otherwise}
     \end{array}
     \right.\)</p>
+</div>
+<div class="paragraph">
+<p>where</p>
+</div>
+<div class="paragraph">
+<p>N = Number of statements</p>
 </div>
 </div>
 </div>
@@ -1395,7 +1401,7 @@ catalogue for modelling, publishing, and consuming linked data.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-09-27 18:34:27 JST
+Last updated 2016-09-27 21:47:10 JST
 </div>
 </div>
 <script type="text/x-mathjax-config">

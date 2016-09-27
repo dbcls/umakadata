@@ -715,10 +715,14 @@ After that, we evaluate Performance as:
 =====================================================================
 Performance = latexmath:[\left\{
     \begin{array}{ll}
-        100.0 * (1.0 - {\rm Execution~Time}) & {\rm if~Execution~Time~is~less~than~1~second} \\
+        100.0 * (1.0 - (({\rm Execution~Time} {\rm ~ / ~} N) * 1000000)) & {\rm if~Execution~Time~is~less~than~1~second} \\
         0 & {\rm Otherwise}
     \end{array}
     \right.]
+
+where
+
+N = Number of statements
 =====================================================================
 
 == References
