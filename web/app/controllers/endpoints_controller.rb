@@ -101,7 +101,7 @@ class EndpointsController < ApplicationController
     rank = Array.new
 
     target_evaluation = Evaluation.lookup(params[:id], params[:evaluation_id])
-    to =  1.days.ago(target_evaluation.created_at.to_datetime())
+    to =  1.days.ago(target_evaluation.created_at.to_datetime)
     from = 28.days.ago(to)
     (from..to).each {|date|
       labels.push(date.strftime('%Y-%m-%d'))
