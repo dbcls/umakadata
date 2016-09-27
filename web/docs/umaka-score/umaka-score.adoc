@@ -428,25 +428,6 @@ latexmath:[d(g) = \left\{
         \end{array}
         \right.]
 =====================================================================
-* Vocabulary Score
-+
-Vocabulary Score, which is calculated based on metadata, represents how
-many vocabularies data in the endpoint use.
-+
-Vocabulary Score is calculated as follows:
-+
-[.text-center]
-=====================================================================
-Vocabulary Score =
-latexmath:[\frac{\displaystyle \sum_{graphs}^{g}v(g)}{N}]
-
-where
-
-latexmath:[N] = Number of Graphs
-
-latexmath:[v(g)] = Number of Properties in Graph g
-=====================================================================
-
 * Ontology Score
 +
 Ontology Score, which is calculated based on metadata, represents how
@@ -495,9 +476,8 @@ At last, we evaluate Usefulness Score as follows:
 [.text-center]
 =====================================================================
 latexmath:[\begin{array}{lll}
-  {\rm Usefulness} & = & 30.0 * {\rm Metadata~Score} \\
-                   & + & 40.0 * f10({\rm Vocabulary~Score}) \\
-                   & + & 30.0 * {\rm Ontology~Score}
+  {\rm Usefulness} & = & 50.0 * {\rm Metadata~Score} \\
+                   & + & 50.0 * {\rm Ontology~Score}
   \end{array}]
 
 where
