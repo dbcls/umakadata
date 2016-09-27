@@ -70,12 +70,10 @@ $(function() {
         var evaluation_id = endpoint[1];
         var name = endpoint[2];
         var url = endpoint[3];
-        var last_checked = endpoint[4];
-        var score = endpoint[5];
+        var score = endpoint[4];
         var row = $("<tr>");
         row.append($("<td>").append($("<a>").attr("href", "/endpoints/" + id + "/" + evaluation_id).text(name)));
         row.append($("<td>").append($("<a>").attr("href", url).text(url)));
-        row.append($("<td>").text(last_checked));
         row.append($("<td>").text(score));
         $("#result_body").append(row);
       }

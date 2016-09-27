@@ -271,11 +271,7 @@ class EndpointsController < ApplicationController
   end
 
   def score_ranking
-    endpoints = Endpoint.crawled_before(date_param).order(endpointlist_param).pluck(:id, 'evaluations.id', :name, :url, 'evaluations.created_at', :score)
-    endpoints.map! do |e|
-      [e[0], e[1], e[2], e[3], Time.parse(e[4].to_s).getutc.to_s, e[5]]
-    end
-    render json: endpoints
+    render json: Endpoint.crawled_before(date_param).order(endpointlist_param).pluck(:id, 'evaluations.id', :name, :url, :score)
   end
 
   private
