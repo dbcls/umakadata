@@ -64,7 +64,7 @@ h1.page-header = @endpoint.name
           td
             | About the site
           td
-            = link_to @endpoint.description_url, @endpoint.description_url
+            = link_to @endpoint.description_url, @endpoint.description_url unless @endpoint.description_url.nil?
         tr
           td
             .umakadata-tooltip
