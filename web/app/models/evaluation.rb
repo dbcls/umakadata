@@ -56,7 +56,9 @@ class Evaluation < ActiveRecord::Base
       eval.support_graph_clause = retriever.support_graph_clause
       self.retrieve_service_description(retriever, eval)
       self.retrieve_void(retriever, eval)
-      self.retrieve_linked_data_rules(retriever, eval)
+      if eval.endpoint.prefixes.present?
+        self.retrieve_linked_data_rules(retriever, eval)
+      end
 
       logger = Umakadata::Logging::Log.new
       eval.execution_time = retriever.execution_time(logger: logger)
