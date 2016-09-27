@@ -470,9 +470,9 @@ latexmath:[NCO] = Number of Ontologies used for Properties in Table
 |http://www.territorio.provincia.tn.it/geodati/ontology/
 |http://www.w3.org/2004/02/skos/core
 |=======================================================
-
++
 At last, we evaluate Usefulness Score as follows:
-
++
 [.text-center]
 =====================================================================
 latexmath:[\begin{array}{lll}
