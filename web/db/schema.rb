@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160926100158) do
+ActiveRecord::Schema.define(version: 20160927065455) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,7 +86,6 @@ ActiveRecord::Schema.define(version: 20160926100158) do
     t.float    "execution_time"
     t.float    "metadata_score"
     t.float    "ontology_score"
-    t.float    "vocabulary_score"
     t.date     "last_updated"
     t.text     "last_updated_source"
     t.integer  "update_interval"
@@ -104,7 +103,6 @@ ActiveRecord::Schema.define(version: 20160926100158) do
     t.text     "number_of_statements_log"
     t.text     "cool_uri_rate_log"
     t.text     "last_updated_log"
-    t.text     "vocabulary_log"
     t.text     "ontology_log"
     t.text     "support_turtle_format_log"
     t.text     "support_xml_format_log"
