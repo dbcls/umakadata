@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160926055022) do
+ActiveRecord::Schema.define(version: 20160926100158) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,6 +57,9 @@ ActiveRecord::Schema.define(version: 20160926055022) do
     t.integer  "issue_id"
     t.string   "description_url"
   end
+
+  add_index "endpoints", ["name"], name: "index_endpoints_on_name", unique: true, using: :btree
+  add_index "endpoints", ["url"], name: "index_endpoints_on_url", unique: true, using: :btree
 
   create_table "evaluations", force: :cascade do |t|
     t.integer  "endpoint_id"
