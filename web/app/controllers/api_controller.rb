@@ -59,7 +59,7 @@ class ApiController < ApplicationController
 
   def add_date_condition(value)
     begin
-      date = Time.parse(value)
+      date = Time.zone.parse(value)
       @endpoints = @endpoints.crawled_at(date)
     rescue
     end
@@ -151,7 +151,7 @@ SPARQL
     evaluation_id = ""
     unless params['date'].nil?
       begin
-        date = Time.parse(params['date'])
+        date = Time.zone.parse(params['date'])
         day_begin = Time.zone.local(date.year, date.month, date.day, 0, 0, 0)
         day_end = Time.zone.local(date.year, date.mon, date.day, 23, 59, 59)
         evaluations = Evaluation.where(:endpoint_id => params[:id]).created_at(day_begin..day_end)

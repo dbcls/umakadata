@@ -101,10 +101,10 @@ class Endpoint < ActiveRecord::Base
     start_or_end_date = start_or_end_datetime.strftime('%Y-%m-%d')
     end_or_start_date = end_or_start_datetime.strftime('%Y-%m-%d')
     if start_or_end_date == end_or_start_date
-      Time.parse(start_or_end_date)
+      Time.zone.parse(start_or_end_date)
     else
       date = endpoints.select('date(evaluations.created_at)').group('date(evaluations.created_at)').order('date(evaluations.created_at) DESC').limit(2)[1].date
-      Time.parse(date.to_s)
+      Time.zone.parse(date.to_s)
     end
   end
 

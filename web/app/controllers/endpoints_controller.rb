@@ -322,7 +322,7 @@ class EndpointsController < ApplicationController
           date = evaluation.created_at
         end
       else
-        date = Time.parse(input_date)
+        date = Time.zone.parse(input_date)
       end
     end
 
