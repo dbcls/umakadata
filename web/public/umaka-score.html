@@ -578,7 +578,7 @@ Listing <a href="#query_for_number_of_statements">1</a>.</p>
 <div id="query_for_number_of_statements" class="literalblock">
 <div class="title">Listing 1. A query for retrieving a number of statements</div>
 <div class="content">
-<pre>SELECT COUNT(*) AS ?c
+<pre>SELECT (COUNT(*) AS ?count)
 WHERE {?s ?p ?o}</pre>
 </div>
 </div>
@@ -714,8 +714,8 @@ endpoint. We measure the three metrics:</p>
 defined in <a href="#3">[3]</a>.</p>
 </div>
 <div class="paragraph">
-<p>First we retrieve a list of graphs in the endpoint using a query
-described in Listing <a href="#query_for_a_list_of_graphs">4</a>.</p>
+<p>If there is GRAPH clause being applied, we retrieve a list of graphs in the endpoint using a query
+described in Listing <a href="#query_for_a_list_of_graphs">4</a>, otherwise we use one graph which does not have a name, called the background graph.</p>
 </div>
 <div id="query_for_a_list_of_graphs" class="literalblock">
 <div class="title">Listing 4. Obtain graph URIs on a SPARQL endpoint</div>
@@ -751,9 +751,12 @@ WHERE{
 <li>
 <p>Classes</p>
 <div class="paragraph">
-<p>We retrieve a list of classes using a query described in Listing
+<p>we retrieve a list of classes using a query described in Listing
 <a href="#query_for_classes_on_a_graph">5</a> and
-<a href="#query_for_classes_having_instances_on_a_graph">6</a>.</p>
+<a href="#query_for_classes_having_instances_on_a_graph">6</a> if there is GRAPH clause being applied;
+otherwise
+Listing <a href="#query_for_classes_on_background_graph">7</a> and
+<a href="#query_for_classes_having_instances_on_background_graph">8</a>.</p>
 </div>
 <div id="query_for_classes_on_a_graph" class="literalblock">
 <div class="title">Listing 5. Obtain the classes on a graph g</div>
@@ -789,15 +792,49 @@ WHERE{
 }</pre>
 </div>
 </div>
+<div id="query_for_classes_on_background_graph" class="literalblock">
+<div class="title">Listing 7. Obtain the classes on the background graph</div>
+<div class="content">
+<pre>PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+SELECT DISTINCT ?c
+WHERE {
+  { ?c rdf:type rdfs:Class. }
+  UNION
+  { [] rdf:type ?c. }
+  UNION
+  { [] rdfs:domain ?c. }
+  UNION
+  { [] rdfs:range ?c. }
+  UNION
+  { ?c rdfs:subclassOf []. }
+  UNION
+  { [] rdfs:subclassOf ?c. }
+}
+LIMIT 100</pre>
+</div>
+</div>
+<div id="query_for_classes_having_instances_on_background_graph" class="literalblock">
+<div class="title">Listing 8. Obtain the classes having instances on the background graph</div>
+<div class="content">
+<pre>PREFIX rdf:
+SELECT DISTINCT ?c
+WHERE{
+        [] rdf:type ?c.
+}</pre>
+</div>
+</div>
 </li>
 <li>
 <p>Labels</p>
 <div class="paragraph">
 <p>We retrieve a list of labels using a query described in Listing
-<a href="#query_for_labels_of_classes">7</a>.</p>
+<a href="#query_for_labels_of_classes_on_a_graph">9</a> if there is GRAPH clause being applied;
+otherwise Listing
+<a href="#query_for_labels_of_classes_on_background_graph">10</a>.</p>
 </div>
-<div id="query_for_labels_of_classes" class="literalblock">
-<div class="title">Listing 7. Obtain labels of the classes c1 c2 &#8230;&#8203; cn from a graph g</div>
+<div id="query_for_labels_of_classes_on_a_graph" class="literalblock">
+<div class="title">Listing 9. Obtain labels of the classes c1 c2 &#8230;&#8203; cn from a graph g</div>
 <div class="content">
 <pre>PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
 SELECT DISTINCT ?c ?label
@@ -811,18 +848,44 @@ WHERE {
 }</pre>
 </div>
 </div>
+<div id="query_for_labels_of_classes_on_background_graph" class="literalblock">
+<div class="title">Listing 10. Obtain labels of the classes c1 c2 &#8230;&#8203; cn from the background graph</div>
+<div class="content">
+<pre>PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+SELECT DISTINCT ?c ?label
+WHERE {
+      ?c rdfs:label ?label.
+      filter (
+        ?c IN (&lt;c1&gt;, &lt;c2&gt;, ..., &lt;cn&gt;)
+      )
+    }
+}</pre>
+</div>
+</div>
 </li>
 <li>
 <p>Datatypes</p>
 <div class="paragraph">
 <p>We retrieve a list of datatypes using a query described in Listing
-<a href="#query_for_datatypes_on_a_graph">8</a>.</p>
+<a href="#query_for_datatypes_on_a_graph">11</a> if there is GRAPH clause being applied;
+otherwise Listing
+<a href="#query_for_datatypes_on_background_graph">12</a>.</p>
 </div>
 <div id="query_for_datatypes_on_a_graph" class="literalblock">
-<div class="title">Listing 8. Obtain the datatypes on a graph g</div>
+<div class="title">Listing 11. Obtain the datatypes on a graph g</div>
 <div class="content">
 <pre>SELECT DISTINCT (datatype(?o) AS ?ldt)
 FROM &lt;g&gt;
+WHERE{
+  [] ?p ?o.
+  FILTER(isLiteral(?o))
+}</pre>
+</div>
+</div>
+<div id="query_for_datatypes_on_background_graph" class="literalblock">
+<div class="title">Listing 12. Obtain the datatypes on the background graph</div>
+<div class="content">
+<pre>SELECT DISTINCT (datatype(?o) AS ?ldt)
 WHERE{
   [] ?p ?o.
   FILTER(isLiteral(?o))
@@ -834,13 +897,24 @@ WHERE{
 <p>Properties</p>
 <div class="paragraph">
 <p>We retrieve a list of properties using a query described in Listing
-<a href="#query_for_properties_on_a_graph">9</a>.</p>
+<a href="#query_for_properties_on_a_graph">13</a> if there is GRAPH clause being applied;
+otherwise Listing
+<a href="#query_for_properties_on_background_graph">14</a>.</p>
 </div>
 <div id="query_for_properties_on_a_graph" class="literalblock">
-<div class="title">Listing 9. Obtain the properties on a graph g</div>
+<div class="title">Listing 13. Obtain the properties on a graph g</div>
 <div class="content">
 <pre>SELECT DISTINCT ?p
         FROM &lt;g&gt;
+WHERE{
+        ?s ?p ?o.
+}</pre>
+</div>
+</div>
+<div id="query_for_properties_on_background_graph" class="literalblock">
+<div class="title">Listing 14. Obtain the properties on the background graph</div>
+<div class="content">
+<pre>SELECT DISTINCT ?p
 WHERE{
         ?s ?p ?o.
 }</pre>
@@ -1095,30 +1169,40 @@ standards (RDF*, SPARQL)</p>
 <li>
 <p>Include links to other URIs. so that they can discover more things</p>
 </li>
-</ol>
-</div>
-<div class="olist arabic">
-<div class="title">We check above criteria except 1.:</div>
-<ol class="arabic" start="2">
 <li>
 <p>Use HTTP URIs so that people can look up those names</p>
 <div class="paragraph">
 <p>We assume all subjects of statements are things. We search invalid
 statement using a query described in Listing
-<a href="#non_http_uri_subject">10</a>, and if nothing is found the endpoint
+<a href="#non_http_uri_subject_on_a_graph">15</a> if there is GRAPH clause being applied;
+otherwise Listing
+<a href="#non_http_uri_subject_on_background_graph">16</a>. If nothing is found the endpoint
 satisfied this rule.</p>
 </div>
 <div class="paragraph">
 <p>Note that we ignore Virtuoso specific graphs since Virtuoso contains a
 graph which contains invalid statements.</p>
 </div>
-<div id="non_http_uri_subject" class="literalblock">
-<div class="title">Listing 10. A Query for searching non-HTTP-URI subjects</div>
+<div id="non_http_uri_subject_on_a_graph" class="literalblock">
+<div class="title">Listing 15. A Query for searching non-HTTP-URI subjects on a graph g</div>
 <div class="content">
 <pre>SELECT
   *
 WHERE {
   GRAPH ?g { ?s ?p ?o } .
+  filter (!regex(?s, "^http://", "i") &amp;&amp; !isBLANK(?s) &amp;&amp; ?g NOT IN (
+    &lt;http://www.openlinksw.com/schemas/virtrdf#&gt;
+  ))
+}
+LIMIT 1</pre>
+</div>
+</div>
+<div id="non_http_uri_subject_on_background_graph" class="literalblock">
+<div class="title">Listing 16. A Query for searching non-HTTP-URI subjects on the background graph</div>
+<div class="content">
+<pre>SELECT
+  *
+WHERE {
   filter (!regex(?s, "^http://", "i") &amp;&amp; !isBLANK(?s) &amp;&amp; ?g NOT IN (
     &lt;http://www.openlinksw.com/schemas/virtrdf#&gt;
   ))
@@ -1132,7 +1216,9 @@ LIMIT 1</pre>
 standards (RDF*, SPARQL)</p>
 <div class="paragraph">
 <p>We assess this rule by obtaining a subject (URI) using a query described
-in Listing <a href="#query_for_a_subject">11</a> and accessing the URI via HTTP
+in Listing <a href="#query_for_a_subject_on_a_graph">17</a> if there is GRAPH clause being applied
+otherwise Listing <a href="#query_for_a_subject_on_background_graph">18</a>
+, and accessing the URI via HTTP
 protocol. We assume that the endpoint is satisfied with the rule if the
 URI returns any data.</p>
 </div>
@@ -1140,13 +1226,27 @@ URI returns any data.</p>
 <p>Note that we ignore Virtuoso specific graphs since Virtuoso contains a
 graph which contains invalid statements.</p>
 </div>
-<div id="query_for_a_subject" class="literalblock">
-<div class="title">Listing 11. A Query for a Subject</div>
+<div id="query_for_a_subject_on_a_graph" class="literalblock">
+<div class="title">Listing 17. A Query for a Subject on a graph g</div>
 <div class="content">
 <pre>SELECT
   ?s
 WHERE {
   GRAPH ?g { ?s ?p ?o } .
+  filter (isURI(?s) &amp;&amp; ?g NOT IN (
+    &lt;http://www.openlinksw.com/schemas/virtrdf#&gt;
+  ))
+}
+LIMIT 1
+OFFSET 100</pre>
+</div>
+</div>
+<div id="query_for_a_subject_on_background_graph" class="literalblock">
+<div class="title">Listing 18. A Query for a Subject on the background graph</div>
+<div class="content">
+<pre>SELECT
+  ?s
+WHERE {
   filter (isURI(?s) &amp;&amp; ?g NOT IN (
     &lt;http://www.openlinksw.com/schemas/virtrdf#&gt;
   ))
@@ -1162,12 +1262,14 @@ OFFSET 100</pre>
 <p>We assume the statement representing the link to other URI uses the
 vocabularies owl:sameAs or rdfs:seeAlso. We think if there are any
 statement of which property is owl:sameAs or rdfs:seeAlso, the endpoint
-is satisfied with the rule. Thus we check the feasibility of the rule by
-using queries described in Listing <a href="#query_for_same_as">12</a>,
-<a href="#query_for_see_also">13</a>.</p>
+is satisfied with the rule. If there is GRAPH clause being applied, we check the feasibility of the rule by
+using queries described in Listing <a href="#query_for_same_as_on_a_graph">19</a>,
+<a href="#query_for_see_also_on_a_graph">20</a> if there is GRAPH clause being applied;
+otherwise Listing <a href="#query_for_same_as_on_background_graph">21</a>,
+<a href="#query_for_see_also_on_background_graph">22</a></p>
 </div>
-<div id="query_for_same_as" class="literalblock">
-<div class="title">Listing 12. A Query for a Same AS Statement</div>
+<div id="query_for_same_as_on_a_graph" class="literalblock">
+<div class="title">Listing 19. A Query for a Same AS Statement on a graph g</div>
 <div class="content">
 <pre>PREFIX owl:&lt;http://www.w3.org/2002/07/owl#&gt;
 SELECT
@@ -1178,23 +1280,47 @@ WHERE {
 LIMIT 1</pre>
 </div>
 </div>
-<div id="query_for_see_also" class="literalblock">
-<div class="title">Listing 13. A Query for a See Also Statement</div>
+<div id="query_for_see_also_on_a_graph" class="literalblock">
+<div class="title">Listing 20. A Query for a See Also Statement on a graph g</div>
 <div class="content">
 <pre>PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
 SELECT
-  *
+*
 WHERE {
-  GRAPH ?g { ?s rdfs:seeAlso ?o } .
+GRAPH ?g { ?s rdfs:seeAlso ?o } .
 }
 LIMIT 1</pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Linked Data Score is a percentage of the satisfied rules.</p>
+<div id="query_for_same_as_on_background_graph" class="literalblock">
+<div class="title">Listing 21. A Query for a Same AS Statement on the background graph</div>
+<div class="content">
+<pre>PREFIX owl:&lt;http://www.w3.org/2002/07/owl#&gt;
+SELECT
+  *
+WHERE {
+  ?s owl:sameAs ?o .
+}
+LIMIT 1</pre>
+</div>
+</div>
+<div id="query_for_see_also_on_background_graph" class="literalblock">
+<div class="title">Listing 22. A Query for a See Also Statement on the background graph</div>
+<div class="content">
+<pre>PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+SELECT
+*
+WHERE {
+  ?s rdfs:seeAlso ?o .
+}
+LIMIT 1</pre>
+</div>
 </div>
 </li>
 </ol>
+</div>
+<div class="paragraph">
+<p>Linked Data Score is a percentage of the satisfied rules.</p>
 </div>
 </li>
 </ul>
@@ -1217,20 +1343,20 @@ LIMIT 1</pre>
 </div>
 <div class="paragraph">
 <p>We measure the response times of the two queries, Listing
-<a href="#query_ask">14</a>, <a href="#query_for_list_of_graphs">15</a>. The former query is a
+<a href="#query_ask">23</a>, <a href="#query_for_list_of_graphs">24</a>. The former query is a
 most simple query and we use this query to estimate the transfer time.
 The latter query requires a little computations for endpoints. We
 believe the execution cost of this query does not differ very much
 according to the size of data.</p>
 </div>
 <div id="query_ask" class="literalblock">
-<div class="title">Listing 14. A Most Simple Query</div>
+<div class="title">Listing 23. A Most Simple Query</div>
 <div class="content">
 <pre>ASK {}</pre>
 </div>
 </div>
 <div id="query_for_list_of_graphs" class="literalblock">
-<div class="title">Listing 15. A Query for Listing Graphs</div>
+<div class="title">Listing 24. A Query for Listing Graphs</div>
 <div class="content">
 <pre>SELECT DISTINCT
   ?g
@@ -1297,7 +1423,7 @@ catalogue for modelling, publishing, and consuming linked data.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-09-02 17:37:00 JST
+Last updated 2016-09-27 18:19:22 JST
 </div>
 </div>
 <script type="text/x-mathjax-config">
