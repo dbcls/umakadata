@@ -203,24 +203,6 @@ h1.page-header = @endpoint.name
             | Usefulness
             br
             #usefulness_score.feature_score
-          td.usefulness
-            .umakadata-tooltip
-              | Vocabulary
-              span.medium
-                | This value shows the how many vocabularies are used in the endpoint.
-                | We calculate the value as the average of the number of properties in metadata for each graph.
-                br
-                | Please see also the following pages:
-                br
-                a href="http://lov.okfn.org/dataset/lov"
-                  | http://lov.okfn.org/dataset/lov
-                br
-                a href="http://stats.lod2.eu/vocabularies"
-                  | http://stats.lod2.eu/vocabularies
-          td.usefulness
-            = @evaluation.vocabulary_score.nil? ? 'N/A' : sprintf("%.2f", @evaluation.vocabulary_score)
-            '
-            = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :vocabulary_score unless @evaluation.vocabulary_log.nil?
         tr
           td.usefulness
             .umakadata-tooltip

@@ -47,8 +47,6 @@ class EndpointsController < ApplicationController
         json = evaluation.metadata_log
       when 'ontology_score' then
         json = evaluation.ontology_log
-      when 'vocabulary_score' then
-        json = evaluation.vocabulary_log
       when 'support_xml_format' then
         json = evaluation.support_content_negotiation_log
       when 'support_html_format' then
