@@ -1,3 +1,4 @@
+= stylesheet_link_tag 'umakadata/top'
 = javascript_include_tag 'Chart.min'
 = javascript_include_tag 'umakadata/chart-helper'
 = javascript_include_tag 'umakadata/top'
@@ -47,12 +48,11 @@ h2.sub-header Score Ranking
   table.table.table-striped
     thead
       tr
-        th Name
-        th URL
+        th.column Name
+        th.column URL
         th Last Checked
-        th Score
-    tbody
-
+        th.column Score
+    tbody#result_body
       - @endpoints.each do |endpoint|
         tr
           td

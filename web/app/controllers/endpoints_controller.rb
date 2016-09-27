@@ -12,7 +12,7 @@ class EndpointsController < ApplicationController
 
   def top
     @date = date_param
-    @endpoints = Endpoint.crawled_before(@date).order('evaluations.score DESC')
+    @endpoints = Endpoint.crawled_before(@date).order(endpointlist_param)
   end
 
   def search
@@ -270,6 +270,14 @@ class EndpointsController < ApplicationController
     }
   end
 
+  def score_ranking
+    endpoints = Endpoint.crawled_before(date_param).order(endpointlist_param).pluck(:id, 'evaluations.id', :name, :url, 'evaluations.created_at', :score)
+    endpoints.map! do |e|
+      [e[0], e[1], e[2], e[3], Time.parse(e[4].to_s).getutc.to_s, e[5]]
+    end
+    render json: endpoints
+  end
+
   private
 
     def render_404
@@ -328,6 +336,14 @@ class EndpointsController < ApplicationController
       evaluations = params[:id].nil? ? Evaluation.all : Evaluation.where(:endpoint_id => params[:id])
       oldest_evaluation = evaluations.order('created_at ASC').first
       @start_date = oldest_evaluation.created_at.strftime('%Y-%m-%d')
+    end
+
+    def endpointlist_param
+      column = %w[name url score].include?(params[:column]) ? params[:column] : 'score'
+      direction = %w[ASC DESC].include?(params[:direction]) ? params[:direction]
+                                                            : %w[score].include?(params[:column]) || params[:column].blank? ? 'DESC'
+                                                                                                                            : 'ASC'
+      column + ' ' + direction
     end
 
 end
