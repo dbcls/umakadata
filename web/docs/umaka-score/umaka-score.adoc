@@ -437,7 +437,7 @@ Ontology Score is calculated as follows:
 +
 [.text-center]
 =====================================================================
-Vocabulary Score =
+Ontology Score =
 latexmath:[\frac{\displaystyle \sum_{graphs}^{g}o(g)}{N}]
 
 where
