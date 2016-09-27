@@ -134,3 +134,22 @@ function addGraphClickEvent(context, lineChart, labels, endpoint_id) {
     });
   });
 }
+
+$(function() {
+  var endpoint_id = $('#radar').attr('data-endpoint-id')
+  var evaluation_id = $('#radar').attr('data-evaluation-id')
+  showRadar(endpoint_id, evaluation_id);
+  showScoreHistory(endpoint_id, evaluation_id);
+  $('#jump-button').on("click", function() {
+    var input_date = $("#calendar").val();
+    var param = (input_date == '') ? '' : '?date=' + input_date;
+    $.getJSON("/api/endpoints/" + endpoint_id + "/created_at" + param, function(json) {
+      var evaluation_id = json['evaluation_id'];
+      if (evaluation_id == '') {
+        $('#get_evaluation_id').modal();
+      } else {
+        location.href = "/endpoints/" + endpoint_id + "/" + evaluation_id + param
+      }
+    });
+  });
+});
