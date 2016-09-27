@@ -1,6 +1,7 @@
 MYAPP = "change path depending on your environment"
-SBMETA = "#{MYAPP}/sbMeta"
-OPTIONS = "-it"
+
+SBMETA = "change path depending on your environment"
+DOCKER_OPTIONS = "-it"
 VOLUME = "-v #{SBMETA}:/sbMeta"
 IMAGE = "sbmeta"
 SCRIPT_DIR = "/sbMeta/script"
@@ -8,24 +9,44 @@ DATA_DIR = "/sbMeta/data"
 
 namespace :umakadata do
 
-  desc "Create relations between endpoints"
-  task :create_relations_csv => :environment do |task, args|
-    Rake::Task["umakadata:export_prefixes"].execute(Rake::TaskArguments.new([:output_path], ["#{DATA_DIR}/all_prefixes.csv"]))
-    Rake::Task["sbmeta:find_seeAlso_and_sameAs"].execute(Rake::TaskArguments.new([:name, :prefix_path], ["", "#{DATA_DIR}/all_prefixes.csv"]))
-    Rake::Task["umakadata:seeAlso_sameAs"].execute(Rake::TaskArguments.new([:csv], ["#{DATA_DIR}/bulkdownloads_relation.csv"]))
+  desc "Create relations between endpoints for all endpoints"
+  task :create_relations_csv_for_all_endpoints => :environment do |task, args|
+    all_prefixes_file = "#{SBMETA}/data/all_prefixes.csv"
+    Rake::Task["umakadata:export_prefixes"].execute(Rake::TaskArguments.new([:output_path], [all_prefixes_file]))
+    Endpoint.pluck(:name).each do |name|
+      Rake::Task["sbmeta:create_relations_csv"].execute(Rake::TaskArguments.new([:name, :id], [name]))
+    end
+  end
+
+  desc "Create relations between endpoints for an endpoint"
+  task :create_relations_csv, ['name'] => :environment do |task, args|
+    directory_path = "#{SBMETA}/data/bulkdownloads/#{args[:name]}/downloads"
+    endpoint = Endpoint.where(:name => args[:name]).take
+    if !endpoint.nil? && File.exist?(directory_path)
+      Rake::Task["sbmeta:extract"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
+      Rake::Task["sbmeta:find_seeAlso_and_sameAs"].execute(Rake::TaskArguments.new([:name, :prefix_path, :id], [args[:name], "#{DATA_DIR}/all_prefixes.csv", endpoint.id]))
+      Rake::Task["sbmeta:remove_extractions"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
+      Rake::Task["umakadata:seeAlso_sameAs"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
+    else
+      puts "#{args[:name]} dose not have bulkdownload files"
+    end
   end
 
   desc "import seeAlso and sameAs data from CSV file"
-  task :seeAlso_sameAs, ['csv'] => :environment do |task, args|
-    Relation.delete_all
-    CSV.foreach(args[:csv]) do |row|
-      Relation.create(:endpoint_id => row[0], :dst_id => row[1], :name => row[2])
+  task :seeAlso_sameAs, ['name'] => :environment do |task, args|
+    endpoint = Endpoint.where(:name => args[:name]).take
+    file_path = "#{SBMETA}/data/bulkdownloads/#{args[:name]}_relation.csv"
+    if !endpoint.nil? && File.exist?(file_path)
+      endpoint.prefix_filters.destroy_all
+      CSV.foreach(file_path, {:headers => true}) do |row|
+        Relation.create(:endpoint_id => row[0], :src_id => row[1], :dst_id => row[2], :name => row[3])
+      end
     end
   end
 
   desc "export all prefixes to csv file"
   task :export_prefixes, ['output_path'] => :environment do |task, args|
-    path = %W(#{Dir.pwd} all_prefixes.csv).join('/') unless path = args[:output_path]
+    path = args[:output_path]
     CSV.open(path, 'w') do |row|
       row << %w(id endpoint_id uri)
       Prefix.all.each {|prefix| row << %W(#{prefix.id} #{prefix.endpoint_id} #{prefix.uri})}
@@ -133,26 +154,39 @@ namespace :sbmeta do
 
   desc "Create prefix list"
   task :create_prefixes_csv_files, ['name'] => :environment do |task, args|
-    Rake::Task["sbmeta:download_and_extract"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
+    Rake::Task["sbmeta:download"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
+    Rake::Task["sbmeta:extract"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
     Rake::Task["sbmeta:find_prefixes"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
   end
 
-  desc "Bulkdownload and extract from each endpoint to bulkdownload directory"
-  task :download_and_extract, ['name'] => :environment do |task, args|
-    command = "/bin/bash #{SCRIPT_DIR}/download_and_extract.sh #{args[:name]}"
-    sh "docker run #{OPTIONS} #{VOLUME} #{IMAGE} #{command}"
+  desc "Bulkdownload from each endpoint to bulkdownload directory"
+  task :download, ['name'] => :environment do |task, args|
+    command = "/bin/bash #{SCRIPT_DIR}/download.sh #{args[:name]}"
+    sh "docker run #{DOCKER_OPTIONS} #{VOLUME} #{IMAGE} #{command}"
+  end
+
+  desc "Extract from each endpoint to bulkdownload directory"
+  task :extract, ['name'] => :environment do |task, args|
+    command = "/bin/bash #{SCRIPT_DIR}/extract.sh #{args[:name]}"
+    sh "docker run #{DOCKER_OPTIONS} #{VOLUME} #{IMAGE} #{command}"
+  end
+
+  desc "remove all extract files"
+  task :remove_extractions, ['name'] => :environment do |task, args|
+    command = "rm -rf #{DATA_DIR}/bulkdownloads/#{args[:name]}/extractions"
+    sh "docker run #{DOCKER_OPTIONS} #{VOLUME} #{IMAGE} #{command}"
   end
 
   desc "Find prefixes in bulkdownload directory and output standardized them in CSV file"
   task :find_prefixes, ['name'] => :environment do |task, args|
-    command = "sbt \"runMain sbmeta.SBMeta #{DATA_DIR}/bulkdownloads/#{args[:name]}\""
-    sh "docker run #{OPTIONS} #{VOLUME} #{IMAGE} #{command}"
+    command = "/bin/bash #{SCRIPT_DIR}/create_prefixes.sh #{args[:name]}"
+    sh "docker run #{DOCKER_OPTIONS} #{VOLUME} #{IMAGE} #{command}"
   end
 
-  desc "Find seeAlso and sameAs in bulkdownload directory and output standardized them in CSV file"
-  task :find_seeAlso_and_sameAs, ['name', 'prefix_path'] => :environment do |task, args|
-    command = "sbt \"runMain sbmeta.SBMetaSeeAlsoAndSameAs #{DATA_DIR}/bulkdownloads/#{args[:name]} #{args[:prefix_path]}\""
-    sh "docker run #{OPTIONS} #{VOLUME} #{IMAGE} #{command}"
+  desc "Find seeAlso and sameAs for an endpoint"
+  task :find_seeAlso_and_sameAs, ['name', 'prefix_path', 'id'] => :environment do |task, args|
+    command = "sbt \"runMain sbmeta.SBMetaSeeAlsoAndSameAs #{DATA_DIR}/bulkdownloads/#{args[:name]} #{args[:prefix_path]} #{args[:id]}\""
+    sh "docker run #{DOCKER_OPTIONS} #{VOLUME} #{IMAGE} #{command}"
   end
 
 end
