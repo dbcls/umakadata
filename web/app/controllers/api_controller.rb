@@ -80,8 +80,10 @@ class ApiController < ApplicationController
   def add_equal_condition_for_prefix_filter(element_type, uri, fragment)
     identifier = "##{fragment}" unless fragment.blank?
     input_uri = "#{uri}#{identifier}"
-    prefix_filters = PrefixFilter.where(element_type: element_type)
-    endpoint_ids = prefix_filters.select{|prefix_filter| input_uri =~ /.*#{prefix_filter.uri}.*/}.map(&:endpoint_id)
+    uri_obj = URI(uri)
+    domain = uri_obj.scheme + "://" + uri_obj.host
+    prefix_filters = PrefixFilter.where(element_type: element_type).where('uri LIKE ?', "#{domain}%")
+    endpoint_ids = prefix_filters.select{|prefix_filter| input_uri =~ /#{prefix_filter.uri}.*/}.map(&:endpoint_id)
     self.add_equal_condition(:id, endpoint_ids)
     self.filter_endpoints_with_sparql_query(element_type, input_uri)
   end
