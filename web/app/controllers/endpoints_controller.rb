@@ -189,7 +189,7 @@ class EndpointsController < ApplicationController
 
   def service_descriptions
     count = { :true => 0, :false => 0 }
-    @endpoints = Endpoint.crawled_at(date_param)
+    @endpoints = Endpoint.retrieved_at(date_param)
     @endpoints.each do |endpoint|
       sd = endpoint.evaluation.service_description
       sd.present? ? count[:true] += 1 : count[:false] += 1
