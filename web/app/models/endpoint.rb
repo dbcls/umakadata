@@ -112,11 +112,11 @@ class Endpoint < ActiveRecord::Base
     end
   end
 
-  def self.score_statistics_from_to(b, e)
-    range = b.beginning_of_day..e.end_of_day
+  def self.score_statistics_lastest_n(date, n)
     data = {}
-    data['average'] = self.joins(:evaluation).where(evaluations: {created_at: range}).group('date(evaluations.created_at)').average('evaluations.score')
-    data['median']  = self.joins(:evaluation).where(evaluations: {created_at: range}).group('date(evaluations.created_at)').median('evaluations.score')
+    data['date'] = self.joins(:evaluation).select('date(evaluations.retrieved_at)').where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).group('date(evaluations.retrieved_at)').order('date(evaluations.retrieved_at) DESC').limit(n).pluck('date(evaluations.retrieved_at)')
+    data['average'] = self.joins(:evaluation).where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).group('date(evaluations.retrieved_at)').limit(n).average('evaluations.score')
+    data['median']  = self.joins(:evaluation).where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).group('date(evaluations.retrieved_at)').limit(n).median('evaluations.score')
     data
   end
 

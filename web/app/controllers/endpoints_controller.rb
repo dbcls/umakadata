@@ -200,21 +200,23 @@ class EndpointsController < ApplicationController
 
   def score_statistics
     last_crawled_date = date_param
-    from = 9.days.ago(last_crawled_date)
-
     labels = Array.new
     averages = Array.new
     medians = Array.new
+    points = 10
 
-    time_series = Endpoint.score_statistics_from_to(from, last_crawled_date)
+    time_series = Endpoint.score_statistics_lastest_n(last_crawled_date, points)
+    dates = time_series['date'].reverse
+    while dates.size < points
+      dates.unshift(dates.first - 1)
+    end
     average = time_series['average']
     median = time_series['median']
-    (from.to_datetime..last_crawled_date.to_datetime).each {|datetime|
-      date = datetime.strftime('%Y-%m-%d')
+    dates.each do |date|
       labels.push date
-      averages.push average.fetch(Date.parse(date), 0).round(1)
-      medians.push median.fetch(Date.parse(date), 0)
-    }
+      averages.push average.fetch(date, 0).round(1)
+      medians.push median.fetch(date, 0)
+    end
 
     render :json => {
       :labels => labels,
