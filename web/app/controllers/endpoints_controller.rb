@@ -101,12 +101,12 @@ class EndpointsController < ApplicationController
     rank = Array.new
 
     target_evaluation = Evaluation.lookup(params[:id], params[:evaluation_id])
-    to =  1.days.ago(target_evaluation.created_at.to_datetime())
+    to =  1.days.ago(target_evaluation.created_at.to_datetime)
     from = 28.days.ago(to)
     (from..to).each {|date|
       labels.push(date.strftime('%Y-%m-%d'))
-      day_begin = DateTime.new(date.year, date.mon, date.day, 0, 0, 0, date.offset)
-      day_end = DateTime.new(date.year, date.mon, date.day, 23, 59, 59, date.offset)
+      day_begin = Time.zone.local(date.year, date.mon, date.day, 0, 0, 0)
+      day_end = Time.zone.local(date.year, date.mon, date.day, 23, 59, 59)
       evaluation = Evaluation.where(created_at: day_begin..day_end, endpoint_id: params[:id]).first || Evaluation.new
       rates = Evaluation.calc_rates(evaluation)
       availability.push(rates[0])
@@ -322,7 +322,7 @@ class EndpointsController < ApplicationController
           date = evaluation.created_at
         end
       else
-        date = Time.parse(input_date)
+        date = Time.zone.parse(input_date)
       end
     end
 
