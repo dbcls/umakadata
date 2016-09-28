@@ -692,7 +692,7 @@ ASK {}
 ....
 
 [[query_for_list_of_graphs]]
-.Listing 24. A Query for retrieving a number of class
+.Listing 24. A Query for retrieving the number of classes
 ....
 SELECT DISTINCT
   (COUNT(?class) AS ?c)
