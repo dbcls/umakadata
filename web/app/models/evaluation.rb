@@ -253,7 +253,10 @@ class Evaluation < ActiveRecord::Base
     rates[4] += 20.0 if eval.contains_links
 
     #performance
-    rates[5] = 100.0 * (1.0 - eval.execution_time) unless eval.execution_time.blank?
+    if eval.execution_time.present? && eval.number_of_statements.present? && eval.number_of_statements > 0
+      second = (eval.execution_time / eval.number_of_statements) * 1000000
+      rates[5] = 100.0 * (1.0 - second)
+    end
     rates[5] = 0.0 if rates[5] < 0.0 || 100.0 < rates[5]
 
     return rates.map{ |v| v.to_i }
