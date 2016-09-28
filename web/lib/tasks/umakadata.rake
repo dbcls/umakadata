@@ -54,16 +54,19 @@ namespace :umakadata do
   end
 
   desc "import prefix filters for all endpoints from CSV file"
-  task :import_prefix_filters_for_all_endpoints => :environment do
+  task :import_prefix_filters_for_all_endpoints, ['directory_path'] => :environment do |task, args|
     names = Endpoint.pluck(:name)
-    names.each {|name| Rake::Task["umakadata:import_prefix_filters"].execute(Rake::TaskArguments.new([:name], [name]))}
+    names.each do |name|
+      file_path = args[:directory_path].blank? ? nil : "#{args[:directory_path]}/#{name}_subject_and_object_prefix.csv"
+      Rake::Task["umakadata:import_prefix_filters"].execute(Rake::TaskArguments.new([:name, :file_path], [name, file_path]))}
+    end
   end
 
   desc "import prefix filters from CSV file"
-  task :import_prefix_filters, ['name'] => :environment do |task, args|
+  task :import_prefix_filters, ['name', 'file_path'] => :environment do |task, args|
     name = args[:name]
     endpoint = Endpoint.where(:name => name).take
-    file_path = "#{SBMETA}/data/bulkdownloads/#{name}_subject_and_object_prefix.csv"
+    file_path = args[:file_path].blank? ? "#{SBMETA}/data/bulkdownloads/#{name}_subject_and_object_prefix.csv" : args[:file_path]
     if !endpoint.nil? && File.exist?(file_path)
       endpoint.prefix_filters.destroy_all
       CSV.foreach(file_path, {:headers => true}) do |row|
