@@ -126,6 +126,15 @@ namespace :umakadata do
     end
   end
 
+  desc "Fill retrieved_at column in evaluations table"
+  task :fill_retrieved_at => :environment do
+    Evaluation.all.each do |evaluation|
+      if evaluation.retrieved_at.nil?
+        evaluation.update_column(:retrieved_at, evaluation.created_at.beginning_of_day)
+      end
+    end
+  end
+
   desc "create issue_id to all endpoints"
   task :create_issue_ids => :environment do
     Endpoint.all.each do |endpoint|
