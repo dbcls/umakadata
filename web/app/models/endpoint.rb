@@ -94,10 +94,12 @@ class Endpoint < ActiveRecord::Base
     data
   end
 
-  def self.sd_statistics_from_to(b, e)
-    range = b.beginning_of_day..e.end_of_day
-    percentage_of_sd = '(count(evaluations.created_at) * 1.0) / (select count(endpoints.id) from endpoints) * 100'
-    self.joins(:evaluation).where(evaluations: {created_at: range}).where.not('evaluations.service_description': [nil,'']).group('date(evaluations.created_at)').pluck("date(evaluations.created_at),#{percentage_of_sd}").to_h
+  def self.sd_statistics_latest_n(date, n)
+    data = {}
+    data['date'] = self.joins(:evaluation).select('date(evaluations.retrieved_at)').where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).group('date(evaluations.retrieved_at)').order('date(evaluations.retrieved_at) DESC').limit(n).pluck('date(evaluations.retrieved_at)')
+    percentage_of_sd = '(count(evaluations.retrieved_at) * 1.0) / (select count(endpoints.id) from endpoints) * 100'
+    data['sd'] = self.joins(:evaluation).where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).where.not('evaluations.service_description': [nil,'']).group('date(evaluations.retrieved_at)').limit(n).pluck("date(evaluations.retrieved_at),#{percentage_of_sd}").to_h
+    data
   end
 
   def self.get_last_crawled_date

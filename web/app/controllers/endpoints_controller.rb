@@ -264,16 +264,19 @@ class EndpointsController < ApplicationController
 
   def service_description_statistics
     last_crawled_date = date_param
-    from = 9.days.ago(last_crawled_date)
-
     labels = Array.new
     have_data = Array.new
+    points = 10
 
-    time_series = Endpoint.sd_statistics_from_to(from, last_crawled_date)
-    (from.to_datetime..last_crawled_date.to_datetime).each do |datetime|
-      date = datetime.strftime('%Y-%m-%d')
+    time_series = Endpoint.sd_statistics_latest_n(last_crawled_date, points)
+    dates = time_series['date'].reverse
+    while dates.size < points
+      dates.unshift(dates.first - 1)
+    end
+    sd = time_series['sd']
+    dates.each do |date|
       labels.push date
-      have_data.push time_series.fetch(Date.parse(date), 0).round(1)
+      have_data.push sd.fetch(date, 0).round(1)
     end
 
     render :json => {
