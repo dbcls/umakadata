@@ -179,7 +179,7 @@ class EndpointsController < ApplicationController
 
   def alive
     count = { :alive => 0, :dead => 0 }
-    @endpoints = Endpoint.crawled_at(date_param)
+    @endpoints = Endpoint.retrieved_at(date_param)
     @endpoints.each do |endpoint|
       alive = endpoint.evaluation.alive
       alive ? count[:alive] += 1 : count[:dead] += 1
