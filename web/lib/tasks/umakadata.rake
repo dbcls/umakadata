@@ -58,7 +58,7 @@ namespace :umakadata do
     names = Endpoint.pluck(:name)
     names.each do |name|
       file_path = args[:directory_path].blank? ? nil : "#{args[:directory_path]}/#{name}_subject_and_object_prefix.csv"
-      Rake::Task["umakadata:import_prefix_filters"].execute(Rake::TaskArguments.new([:name, :file_path], [name, file_path]))}
+      Rake::Task["umakadata:import_prefix_filters"].execute(Rake::TaskArguments.new([:name, :file_path], [name, file_path]))
     end
   end
 
