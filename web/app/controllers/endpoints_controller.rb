@@ -99,15 +99,25 @@ class EndpointsController < ApplicationController
     validity = Array.new
     performance = Array.new
     rank = Array.new
+    points = 30
 
     target_evaluation = Evaluation.lookup(params[:id], params[:evaluation_id])
-    to =  1.days.ago(target_evaluation.created_at.to_datetime)
-    from = 28.days.ago(to)
-    (from..to).each {|date|
-      labels.push(date.strftime('%Y-%m-%d'))
-      day_begin = Time.zone.local(date.year, date.mon, date.day, 0, 0, 0)
-      day_end = Time.zone.local(date.year, date.mon, date.day, 23, 59, 59)
-      evaluation = Evaluation.where(created_at: day_begin..day_end, endpoint_id: params[:id]).first || Evaluation.new
+    target_time = target_evaluation.retrieved_at.end_of_day
+    evaluations = Evaluation.where(Evaluation.arel_table[:retrieved_at].lteq(target_time))
+                            .where(endpoint_id: params[:id])
+                            .order(retrieved_at: :desc)
+                            .limit(points)
+    dates = Evaluation.where(Evaluation.arel_table[:retrieved_at].lteq(target_time))
+                      .group('date(retrieved_at)')
+                      .order('date(retrieved_at) DESC')
+                      .limit(points)
+                      .pluck('date(retrieved_at)')
+                      .reverse
+    dates.each do |date|
+      day_begin = Time.zone.local(date.year, date.month, date.day, 0, 0, 0)
+      day_end = Time.zone.local(date.year, date.month, date.day, 23, 59, 59)
+      evaluation = evaluations.where(retrieved_at: day_begin..day_end).first
+      next if evaluation.nil?
       rates = Evaluation.calc_rates(evaluation)
       availability.push(rates[0])
       freshness.push(rates[1])
@@ -116,17 +126,21 @@ class EndpointsController < ApplicationController
       validity.push(rates[4])
       performance.push(rates[5])
       rank.push(evaluation.score.presence || 0)
-    }
+      labels.push date
+    end
 
-    labels.push(target_evaluation.created_at.strftime('%Y-%m-%d'))
-    rates = Evaluation.calc_rates(target_evaluation)
-    availability.push(rates[0])
-    freshness.push(rates[1])
-    operation.push(rates[2])
-    usefulness.push(rates[3])
-    validity.push(rates[4])
-    performance.push(rates[5])
-    rank.push(target_evaluation.score.presence || 0)
+    while labels.size < points
+      evaluation = Evaluation.new
+      rates = Evaluation.calc_rates(evaluation)
+      availability.unshift(rates[0])
+      freshness.unshift(rates[1])
+      operation.unshift(rates[2])
+      usefulness.unshift(rates[3])
+      validity.unshift(rates[4])
+      performance.unshift(rates[5])
+      rank.unshift(0)
+      labels.unshift(labels.first - 1)
+    end
 
     render :json => {
       :labels => labels,
