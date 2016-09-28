@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160927065455) do
+ActiveRecord::Schema.define(version: 20160928030206) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -112,6 +112,7 @@ ActiveRecord::Schema.define(version: 20160927065455) do
     t.text     "linksets"
     t.text     "license"
     t.text     "publisher"
+    t.datetime "retrieved_at"
   end
 
   add_index "evaluations", ["created_at"], name: "index_evaluations_on_created_at", using: :btree
