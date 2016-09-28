@@ -236,16 +236,19 @@ class EndpointsController < ApplicationController
 
   def alive_statistics
     last_crawled_date = date_param
-    from = 9.days.ago(last_crawled_date)
-
     labels = Array.new
     alive_data = Array.new
+    points = 10
 
-    time_series = Endpoint.alive_statistics_from_to(from, last_crawled_date)
-    (from.to_datetime..last_crawled_date.to_datetime).each do |datetime|
-      date = datetime.strftime('%Y-%m-%d')
+    time_series = Endpoint.alive_statistics_latest_n(last_crawled_date, points)
+    dates = time_series['date'].reverse
+    while dates.size < points
+      dates.unshift(dates.first - 1)
+    end
+    alive = time_series['alive']
+    dates.each do |date|
       labels.push date
-      alive_data.push time_series.fetch(Date.parse(date), 0).round(1)
+      alive_data.push alive.fetch(date, 0).round(1)
     end
 
     render :json => {

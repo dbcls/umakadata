@@ -86,10 +86,12 @@ class Endpoint < ActiveRecord::Base
     self.joins(:evaluation).eager_load(:evaluation).where(evaluations: {retrieved_at: date.beginning_of_day..date.end_of_day})
   end
 
-  def self.alive_statistics_from_to(b, e)
-    range = b.beginning_of_day..e.end_of_day
-    percentage_of_alive = '(count(evaluations.created_at) * 1.0) / (select count(endpoints.id) from endpoints) * 100'
-    self.joins(:evaluation).where(evaluations: {created_at: range, alive: true}).group('date(evaluations.created_at)').pluck("date(evaluations.created_at),#{percentage_of_alive}").to_h
+  def self.alive_statistics_latest_n(date, n)
+    data = {}
+    data['date'] = self.joins(:evaluation).select('date(evaluations.retrieved_at)').where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).group('date(evaluations.retrieved_at)').order('date(evaluations.retrieved_at) DESC').limit(n).pluck('date(evaluations.retrieved_at)')
+    percentage_of_alive = '(count(evaluations.retrieved_at) * 1.0) / (select count(endpoints.id) from endpoints) * 100'
+    data['alive'] = self.joins(:evaluation).where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).where(evaluations: {alive: true}).group('date(evaluations.retrieved_at)').limit(n).pluck("date(evaluations.retrieved_at),#{percentage_of_alive}").to_h
+    data
   end
 
   def self.sd_statistics_from_to(b, e)
