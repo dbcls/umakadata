@@ -1,0 +1,8 @@
+URI,count,type
+http://eagle-i.org/ont/app/1.0/,125,subject
+http://eagle-i.org/ont/repo/1.0/,88,subject
+http://eaglei.nimhgenetics.org/i/,890,subject
+http://purl.obolibrary.org/obo/,447,subject
+http://eagle-i.org/ont/repo/1.0/,40,object
+http://eaglei.nimhgenetics.org/i/,233,object
+http://purl.obolibrary.org/obo/,146,object
