@@ -383,7 +383,7 @@ h1.page-header = @endpoint.name
               | Execution Time
               span.medium
                 | This value represents the calculation performance.
-                | It is calculated as a difference of the response time of ASK{} query and listing graph query.
+                | It is calculated as a difference of the response time of ASK{} query and retrieving the number of classes query.
           td.performance
             = (@evaluation.execution_time.nil? ? 'N/A' : @evaluation.execution_time).to_s
             '
