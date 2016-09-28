@@ -24,7 +24,7 @@ namespace :umakadata do
     endpoint = Endpoint.where(:name => args[:name]).take
     if !endpoint.nil? && File.exist?(directory_path)
       Rake::Task["sbmeta:extract"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
-      Rake::Task["sbmeta:find_seeAlso_and_sameAs"].execute(Rake::TaskArguments.new([:name, :prefix_path, :id], [args[:name], "#{DATA_DIR}/all_prefixes.csv", endpoint.id]))
+      Rake::Task["sbmeta:find_seeAlso_and_sameAs"].execute(Rake::TaskArguments.new([:name, :prefix_path], [args[:name], "#{DATA_DIR}/all_prefixes.csv"]))
       Rake::Task["sbmeta:remove_extractions"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
       Rake::Task["umakadata:seeAlso_sameAs"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
     else
@@ -39,7 +39,7 @@ namespace :umakadata do
     if !endpoint.nil? && File.exist?(file_path)
       endpoint.prefix_filters.destroy_all
       CSV.foreach(file_path, {:headers => true}) do |row|
-        Relation.create(:endpoint_id => row[0], :src_id => row[1], :dst_id => row[2], :name => row[3])
+        Relation.create(:endpoint_id => endpoint.id, :src_id => row[0], :dst_id => row[1], :name => row[2])
       end
     end
   end
@@ -184,8 +184,8 @@ namespace :sbmeta do
   end
 
   desc "Find seeAlso and sameAs for an endpoint"
-  task :find_seeAlso_and_sameAs, ['name', 'prefix_path', 'id'] => :environment do |task, args|
-    command = "sbt \"runMain sbmeta.SBMetaSeeAlsoAndSameAs #{DATA_DIR}/bulkdownloads/#{args[:name]} #{args[:prefix_path]} #{args[:id]}\""
+  task :find_seeAlso_and_sameAs, ['name', 'prefix_path'] => :environment do |task, args|
+    command = "sbt \"runMain sbmeta.SBMetaSeeAlsoAndSameAs #{DATA_DIR}/bulkdownloads/#{args[:name]} #{args[:prefix_path]}\""
     sh "docker run #{DOCKER_OPTIONS} #{VOLUME} #{IMAGE} #{command}"
   end
 
