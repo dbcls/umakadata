@@ -82,6 +82,10 @@ class Endpoint < ActiveRecord::Base
     self.joins(:evaluation).eager_load(:evaluation).where(evaluations: { id: evaluation_ids })
   end
 
+  def self.retrieved_at(date)
+    self.joins(:evaluation).eager_load(:evaluation).where(evaluations: {retrieved_at: date.beginning_of_day..date.end_of_day})
+  end
+
   def self.alive_statistics_from_to(b, e)
     range = b.beginning_of_day..e.end_of_day
     percentage_of_alive = '(count(evaluations.created_at) * 1.0) / (select count(endpoints.id) from endpoints) * 100'
