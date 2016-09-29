@@ -1,0 +1,17 @@
+URI,count,type
+http://eagle-i.org/ont/app/1.0/,702,subject
+http://eagle-i.org/ont/repo/1.0/,50,subject
+http://global.eagle-i.net/i/,18260,subject
+http://purl.obolibrary.org/obo/,2044,subject
+http://vivoweb.org/ontology/core#,10,subject
+http://www.w3.org/2002/07/owl#,75,subject
+http://xmlns.com/foaf/0.1/,12,subject
+http://alaska.eagle-i.net/i/,1,object
+http://dartmouth.eagle-i.net/i/,1,object
+http://dbpedia.org/resource/,73,object
+http://eagle-i.org/ont/repo/1.0/,2245,object
+http://global.eagle-i.net/i/,5149,object
+http://harvard.eagle-i.net/i/,1,object
+http://purl.obolibrary.org/obo/,1190,object
+http://vivoweb.org/ontology/core#,1049,object
+http://xmlns.com/foaf/0.1/,6,object

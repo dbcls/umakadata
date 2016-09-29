@@ -1,0 +1,10 @@
+URI,count,type
+http://eagle-i.fhcrc.org/i/,3240,subject
+http://eagle-i.fredhutch.org/i/,3280,subject
+http://eagle-i.org/ont/repo/1.0/,1161,subject
+http://eagle-i.fhcrc.org/i/,869,object
+http://eagle-i.fredhutch.org/i/,663,object
+http://eagle-i.org/ont/repo/1.0/,579,object
+http://purl.obolibrary.org/obo/,425,object
+http://vivoweb.org/ontology/core#,60,object
+http://xmlns.com/foaf/0.1/,94,object
