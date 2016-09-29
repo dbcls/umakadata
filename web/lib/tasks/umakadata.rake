@@ -10,32 +10,33 @@ DATA_DIR = "/sbMeta/data"
 namespace :umakadata do
 
   desc "Create relations between endpoints for all endpoints"
-  task :create_relations_csv_for_all_endpoints => :environment do |task, args|
+  task :create_relations_csv_for_all_endpoints, ['directory_path'] => :environment do |task, args|
     all_prefixes_file = "#{SBMETA}/data/all_prefixes.csv"
+    directory_path = args[:directory_path].blank? ? "#{SBMETA}/data/bulkdownloads" : args[:directory_path]
     Rake::Task["umakadata:export_prefixes"].execute(Rake::TaskArguments.new([:output_path], [all_prefixes_file]))
     Endpoint.pluck(:name).each do |name|
-      Rake::Task["umakadata:create_relations_csv"].execute(Rake::TaskArguments.new([:name, :id], [name]))
+      Rake::Task["umakadata:create_relations_csv"].execute(Rake::TaskArguments.new([:name, :directory_path], [name, directory_path]))
     end
   end
 
   desc "Create relations between endpoints for an endpoint"
-  task :create_relations_csv, ['name'] => :environment do |task, args|
-    directory_path = "#{SBMETA}/data/bulkdownloads/#{args[:name]}/downloads"
+  task :create_relations_csv, ['name', 'directory_path'] => :environment do |task, args|
     endpoint = Endpoint.where(:name => args[:name]).take
-    if !endpoint.nil? && File.exist?(directory_path)
+    directory_path = args[:directory_path].blank? ? "#{SBMETA}/data/bulkdownloads" : args[:directory_path]
+    if !endpoint.nil? && File.exist?(directory_path + "/" + args[:name])
       Rake::Task["sbmeta:extract"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
       Rake::Task["sbmeta:find_seeAlso_and_sameAs"].execute(Rake::TaskArguments.new([:name, :prefix_path], [args[:name], "#{DATA_DIR}/all_prefixes.csv"]))
       Rake::Task["sbmeta:remove_extractions"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
-      Rake::Task["umakadata:seeAlso_sameAs"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
+      Rake::Task["umakadata:seeAlso_sameAs"].execute(Rake::TaskArguments.new([:name, :directory_path], [args[:name], directory_path]))
     else
       puts "#{args[:name]} dose not have bulkdownload files"
     end
   end
 
   desc "import seeAlso and sameAs data from CSV file"
-  task :seeAlso_sameAs, ['name'] => :environment do |task, args|
+  task :seeAlso_sameAs, ['name', 'directory_path'] => :environment do |task, args|
     endpoint = Endpoint.where(:name => args[:name]).take
-    file_path = "#{SBMETA}/data/bulkdownloads/#{args[:name]}_relation.csv"
+    file_path = args[:directory_path].blank? ? "#{SBMETA}/data/bulkdownloads/#{args[:name]}_relation.csv" : "#{args[:directory_path]}/#{args[:name]}_relation.csv"
     if !endpoint.nil? && File.exist?(file_path)
       endpoint.prefix_filters.destroy_all
       CSV.foreach(file_path, {:headers => true}) do |row|
