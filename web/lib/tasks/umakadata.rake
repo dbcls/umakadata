@@ -14,7 +14,7 @@ namespace :umakadata do
     all_prefixes_file = "#{SBMETA}/data/all_prefixes.csv"
     Rake::Task["umakadata:export_prefixes"].execute(Rake::TaskArguments.new([:output_path], [all_prefixes_file]))
     Endpoint.pluck(:name).each do |name|
-      Rake::Task["sbmeta:create_relations_csv"].execute(Rake::TaskArguments.new([:name, :id], [name]))
+      Rake::Task["umakadata:create_relations_csv"].execute(Rake::TaskArguments.new([:name, :id], [name]))
     end
   end
 
