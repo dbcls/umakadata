@@ -88,9 +88,23 @@ class Evaluation < ActiveRecord::Base
       eval.metadata_log = logger.as_json
 
       unless metadata.empty?
+        list_of_ontologies_log = Umakadata::Logging::Log.new
+        list_of_ontologies = retriever.list_ontologies(metadata, logger: list_of_ontologies_log)
+
+        score_ontologies_for_endpoints_log = Umakadata::Logging::Log.new
+        score_ontologies_for_endpoints_log.push list_of_ontologies_log
         logger = Umakadata::Logging::Log.new
-        eval.ontology_score = retriever.score_ontologies(metadata, logger: logger)
+        logger.push score_ontologies_for_endpoints_log
+
+        score = retriever.score_ontologies_for_endpoints(list_of_ontologies, rdf_prefixes, logger: score_ontologies_for_endpoints_log)
+        logger.result = "Ontology score is #{score}"
+        eval.ontology_score = score
         eval.ontology_log = logger.as_json
+        RdfPrefix.delete_all(endpoint_id: endpoint.id)
+        list_of_ontologies.each do |ontology|
+          rdf_prefix = RdfPrefix.new(endpoint_id: endpoint.id, uri: ontology)
+          rdf_prefix.save
+        end
       end
 
       logger = Umakadata::Logging::Log.new
