@@ -1,17 +1,7 @@
 = stylesheet_link_tag 'bootstrap-datepicker3.min'
 = stylesheet_link_tag 'umakadata/calendar'
 = javascript_include_tag 'bootstrap-datepicker.min'
-
-javascript:
-  $(function(){
-    $('#calendar').datepicker({
-      autoclose: true,
-      startDate: "#{@start_date}",
-      endDate: new Date(),
-      format: 'yyyy-mm-dd',
-      todayHighlight: true
-    });
-  });
+= javascript_include_tag 'calendar'
 
 .form-group
   input.form-control#calendar[readonly='readonly' name='date' value=@date.strftime('%Y-%m-%d')]
