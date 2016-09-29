@@ -56,7 +56,7 @@ class Evaluation < ActiveRecord::Base
       eval.support_graph_clause = retriever.support_graph_clause
       self.retrieve_service_description(retriever, eval)
       self.retrieve_void(retriever, eval)
-      if eval.endpoint.prefixes.present?
+      if endpoint.prefixes.present?
         self.retrieve_linked_data_rules(retriever, eval)
       end
 
