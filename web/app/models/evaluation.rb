@@ -32,17 +32,17 @@ class Evaluation < ActiveRecord::Base
     self.where('id > ?', evaluation_id).where(endpoint_id: endpoint_id).order('id ASC').first
   end
 
-  def self.record(endpoint, retriever)
+  def self.record(endpoint, retriever, rdf_prefixes)
     self.transaction do
       self.where(endpoint_id: endpoint.id).update_all("latest = false")
-      self.retrieve_and_record endpoint, retriever
+      self.retrieve_and_record endpoint, retriever, rdf_prefixes
     end
     rescue => e
     puts e.message
     puts e.backtrace
   end
 
-  def self.retrieve_and_record(endpoint, retriever)
+  def self.retrieve_and_record(endpoint, retriever, rdf_prefixes)
     eval = Evaluation.new
     eval.endpoint_id = endpoint.id
 

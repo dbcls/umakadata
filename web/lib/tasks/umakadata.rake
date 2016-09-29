@@ -77,11 +77,17 @@ namespace :umakadata do
 
   desc "check endpoint liveness (argument: ASC, DESC)"
   task :crawl, ['order'] => :environment do |task, args|
+    rdf_prefixes = RdfPrefix.all.pluck(:id, :endpoint_id, :uri)
     Endpoint.all.order("id #{args[:order]}").each do |endpoint|
+      rdf_prefixes_candidates = Array.new
+      rdf_prefixes.each do |rdf_prefix|
+        prefix = rdf_prefix[1] != endpoint.id ? rdf_prefix[2] : nil
+        rdf_prefixes_candidates.push prefix unless prefix.nil?
+      end
       puts endpoint.name
       begin
         retriever = Umakadata::Retriever.new endpoint.url
-        Evaluation.record(endpoint, retriever)
+        Evaluation.record(endpoint, retriever, rdf_prefixes_candidates)
       rescue => e
         puts e.message
         puts e.backtrace
@@ -91,10 +97,16 @@ namespace :umakadata do
 
   desc "test for checking endpoint liveness"
   task :test_crawl, ['name'] => :environment do |task, args|
+    rdf_prefixes = RdfPrefix.all.pluck(:id, :endpoint_id, :uri)
     endpoint = Endpoint.where("name LIKE ?", "%#{args[:name]}%").first
     puts endpoint.name
+    rdf_prefixes_candidates = Array.new
+    rdf_prefixes.each do |rdf_prefix|
+      prefix = rdf_prefix[1] != endpoint.id ? rdf_prefix[2] : nil
+      rdf_prefixes_candidates.push prefix unless prefix.nil?
+    end
     retriever = Umakadata::Retriever.new endpoint.url
-    Evaluation.record(endpoint, retriever)
+    Evaluation.record(endpoint, retriever, rdf_prefixes_candidates)
   end
 
   desc "test for checking retriever method all endpoints"
