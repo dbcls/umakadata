@@ -71,7 +71,7 @@ class EndpointsController < ApplicationController
 
   def scores
     count = {1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0}
-    @endpoints = Endpoint.crawled_at(date_param)
+    @endpoints = Endpoint.retrieved_at(date_param)
     @endpoints.each do |endpoint|
       rank = endpoint.evaluation.rank
       count[rank] += 1
@@ -99,15 +99,25 @@ class EndpointsController < ApplicationController
     validity = Array.new
     performance = Array.new
     rank = Array.new
+    points = 30
 
     target_evaluation = Evaluation.lookup(params[:id], params[:evaluation_id])
-    to =  1.days.ago(target_evaluation.created_at.to_datetime)
-    from = 28.days.ago(to)
-    (from..to).each {|date|
-      labels.push(date.strftime('%Y-%m-%d'))
-      day_begin = Time.zone.local(date.year, date.mon, date.day, 0, 0, 0)
-      day_end = Time.zone.local(date.year, date.mon, date.day, 23, 59, 59)
-      evaluation = Evaluation.where(created_at: day_begin..day_end, endpoint_id: params[:id]).first || Evaluation.new
+    target_time = target_evaluation.retrieved_at.end_of_day
+    evaluations = Evaluation.where(Evaluation.arel_table[:retrieved_at].lteq(target_time))
+                            .where(endpoint_id: params[:id])
+                            .order(retrieved_at: :desc)
+                            .limit(points)
+    dates = Evaluation.where(Evaluation.arel_table[:retrieved_at].lteq(target_time))
+                      .group('date(retrieved_at)')
+                      .order('date(retrieved_at) DESC')
+                      .limit(points)
+                      .pluck('date(retrieved_at)')
+                      .reverse
+    dates.each do |date|
+      day_begin = Time.zone.local(date.year, date.month, date.day, 0, 0, 0)
+      day_end = Time.zone.local(date.year, date.month, date.day, 23, 59, 59)
+      evaluation = evaluations.where(retrieved_at: day_begin..day_end).first
+      next if evaluation.nil?
       rates = Evaluation.calc_rates(evaluation)
       availability.push(rates[0])
       freshness.push(rates[1])
@@ -116,17 +126,21 @@ class EndpointsController < ApplicationController
       validity.push(rates[4])
       performance.push(rates[5])
       rank.push(evaluation.score.presence || 0)
-    }
+      labels.push date
+    end
 
-    labels.push(target_evaluation.created_at.strftime('%Y-%m-%d'))
-    rates = Evaluation.calc_rates(target_evaluation)
-    availability.push(rates[0])
-    freshness.push(rates[1])
-    operation.push(rates[2])
-    usefulness.push(rates[3])
-    validity.push(rates[4])
-    performance.push(rates[5])
-    rank.push(target_evaluation.score.presence || 0)
+    while labels.size < points
+      evaluation = Evaluation.new
+      rates = Evaluation.calc_rates(evaluation)
+      availability.unshift(rates[0])
+      freshness.unshift(rates[1])
+      operation.unshift(rates[2])
+      usefulness.unshift(rates[3])
+      validity.unshift(rates[4])
+      performance.unshift(rates[5])
+      rank.unshift(0)
+      labels.unshift(labels.first - 1)
+    end
 
     render :json => {
       :labels => labels,
@@ -165,7 +179,7 @@ class EndpointsController < ApplicationController
 
   def alive
     count = { :alive => 0, :dead => 0 }
-    @endpoints = Endpoint.crawled_at(date_param)
+    @endpoints = Endpoint.retrieved_at(date_param)
     @endpoints.each do |endpoint|
       alive = endpoint.evaluation.alive
       alive ? count[:alive] += 1 : count[:dead] += 1
@@ -175,7 +189,7 @@ class EndpointsController < ApplicationController
 
   def service_descriptions
     count = { :true => 0, :false => 0 }
-    @endpoints = Endpoint.crawled_at(date_param)
+    @endpoints = Endpoint.retrieved_at(date_param)
     @endpoints.each do |endpoint|
       sd = endpoint.evaluation.service_description
       sd.present? ? count[:true] += 1 : count[:false] += 1
@@ -186,21 +200,23 @@ class EndpointsController < ApplicationController
 
   def score_statistics
     last_crawled_date = date_param
-    from = 9.days.ago(last_crawled_date)
-
     labels = Array.new
     averages = Array.new
     medians = Array.new
+    points = 10
 
-    time_series = Endpoint.score_statistics_from_to(from, last_crawled_date)
+    time_series = Endpoint.score_statistics_lastest_n(last_crawled_date, points)
+    dates = time_series['date'].reverse
+    while dates.size < points
+      dates.unshift(dates.first - 1)
+    end
     average = time_series['average']
     median = time_series['median']
-    (from.to_datetime..last_crawled_date.to_datetime).each {|datetime|
-      date = datetime.strftime('%Y-%m-%d')
+    dates.each do |date|
       labels.push date
-      averages.push average.fetch(Date.parse(date), 0).round(1)
-      medians.push median.fetch(Date.parse(date), 0)
-    }
+      averages.push average.fetch(date, 0).round(1)
+      medians.push median.fetch(date, 0)
+    end
 
     render :json => {
       :labels => labels,
@@ -220,16 +236,19 @@ class EndpointsController < ApplicationController
 
   def alive_statistics
     last_crawled_date = date_param
-    from = 9.days.ago(last_crawled_date)
-
     labels = Array.new
     alive_data = Array.new
+    points = 10
 
-    time_series = Endpoint.alive_statistics_from_to(from, last_crawled_date)
-    (from.to_datetime..last_crawled_date.to_datetime).each do |datetime|
-      date = datetime.strftime('%Y-%m-%d')
+    time_series = Endpoint.alive_statistics_latest_n(last_crawled_date, points)
+    dates = time_series['date'].reverse
+    while dates.size < points
+      dates.unshift(dates.first - 1)
+    end
+    alive = time_series['alive']
+    dates.each do |date|
       labels.push date
-      alive_data.push time_series.fetch(Date.parse(date), 0).round(1)
+      alive_data.push alive.fetch(date, 0).round(1)
     end
 
     render :json => {
@@ -245,16 +264,19 @@ class EndpointsController < ApplicationController
 
   def service_description_statistics
     last_crawled_date = date_param
-    from = 9.days.ago(last_crawled_date)
-
     labels = Array.new
     have_data = Array.new
+    points = 10
 
-    time_series = Endpoint.sd_statistics_from_to(from, last_crawled_date)
-    (from.to_datetime..last_crawled_date.to_datetime).each do |datetime|
-      date = datetime.strftime('%Y-%m-%d')
+    time_series = Endpoint.sd_statistics_latest_n(last_crawled_date, points)
+    dates = time_series['date'].reverse
+    while dates.size < points
+      dates.unshift(dates.first - 1)
+    end
+    sd = time_series['sd']
+    dates.each do |date|
       labels.push date
-      have_data.push time_series.fetch(Date.parse(date), 0).round(1)
+      have_data.push sd.fetch(date, 0).round(1)
     end
 
     render :json => {
