@@ -977,7 +977,9 @@ WHERE{
 <p>Ontology Score</p>
 <div class="paragraph">
 <p>Ontology Score, which is calculated based on metadata, represents how
-much common ontologies data in the endpoint use.</p>
+much ontologies data used among endpoints handled in the UmakaData system
+or used in Linked Open Vocabularies (LOV).
+We can obtain ontologies in LOV via <a href="http://lov.okfn.org/dataset/lov/api/v2/vocabulary/list">LOV API</a>.</p>
 </div>
 <div class="paragraph">
 <p>Ontology Score is calculated as follows:</p>
@@ -986,77 +988,22 @@ much common ontologies data in the endpoint use.</p>
 <div class="content">
 <div class="paragraph">
 <p>Ontology Score =
-\(\frac{\displaystyle \sum_{graphs}^{g}o(g)}{N}\)</p>
+\(50.0 * \frac{\displaystyle NOE}{\displaystyle NO} + 50.0 * \frac{\displaystyle NOLOV}{\displaystyle NO}\)</p>
 </div>
 <div class="paragraph">
 <p>where</p>
 </div>
 <div class="paragraph">
-<p>\(N\) = Number of Graphs</p>
-</div>
-<div class="paragraph">
-<p>\(o(g)\) = \(\frac{NCO}{NO}\)</p>
-</div>
-<div class="paragraph">
 <p>\(NO\) = Number of Ontologies used for Properties</p>
 </div>
 <div class="paragraph">
-<p>\(NCO\) = Number of Ontologies used for Properties in Table
-<a href="#list_of_common_ontologies">3</a></p>
+<p>\(NOE\) = Number of Ontologies used for Properties among other endpoints</p>
+</div>
+<div class="paragraph">
+<p>\(NOLOV\) = Number of Ontologies used for Properties in LOV</p>
 </div>
 </div>
 </div>
-<table id="list_of_common_ontologies" class="tableblock frame-all grid-all spread">
-<caption class="title">Table 3. List of Common Ontologies</caption>
-<colgroup>
-<col style="width: 100%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Ontology URI</th>
-</tr>
-</thead>
-<tfoot>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://www.w3.org/2004/02/skos/core" class="bare">http://www.w3.org/2004/02/skos/core</a></p></td>
-</tr>
-</tfoot>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://www.w3.org/2000/01/rdf-schema" class="bare">http://www.w3.org/2000/01/rdf-schema</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://www.w3.org/1999/02/22-rdf-syntax-ns" class="bare">http://www.w3.org/1999/02/22-rdf-syntax-ns</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://www.socrata.com/rdf/terms" class="bare">http://www.socrata.com/rdf/terms</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://www.w3.org/2003/01/geo/wgs84_pos" class="bare">http://www.w3.org/2003/01/geo/wgs84_pos</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://xmlns.com/foaf/0.1/" class="bare">http://xmlns.com/foaf/0.1/</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://www.w3.org/2002/07/owl" class="bare">http://www.w3.org/2002/07/owl</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://purl.org/dc/elements/1.1/" class="bare">http://purl.org/dc/elements/1.1/</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://purl.org/dc/terms/" class="bare">http://purl.org/dc/terms/</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://www.w3.org/2000/10/swap/pim/usps" class="bare">http://www.w3.org/2000/10/swap/pim/usps</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://dublincore.org/documents/dcmi-box/" class="bare">http://dublincore.org/documents/dcmi-box/</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://www.territorio.provincia.tn.it/geodati/ontology/" class="bare">http://www.territorio.provincia.tn.it/geodati/ontology/</a></p></td>
-</tr>
-</tbody>
-</table>
 <div class="paragraph">
 <p>At last, we evaluate Usefulness Score as follows:</p>
 </div>
@@ -1390,7 +1337,7 @@ catalogue for modelling, publishing, and consuming linked data.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-09-30 09:00:05 JST
+Last updated 2016-09-30 10:58:23 JST
 </div>
 </div>
 <script type="text/x-mathjax-config">
