@@ -431,45 +431,25 @@ latexmath:[d(g) = \left\{
 * Ontology Score
 +
 Ontology Score, which is calculated based on metadata, represents how
-much common ontologies data in the endpoint use.
+much ontologies data used among endpoints handled in the UmakaData system
+or used in Linked Open Vocabularies (LOV).
+We can obtain ontologies in LOV via http://lov.okfn.org/dataset/lov/api/v2/vocabulary/list[LOV API].
 +
 Ontology Score is calculated as follows:
 +
 [.text-center]
 =====================================================================
 Ontology Score =
-latexmath:[\frac{\displaystyle \sum_{graphs}^{g}o(g)}{N}]
+latexmath:[50.0 * \frac{\displaystyle NOE}{\displaystyle NO} + 50.0 * \frac{\displaystyle NOLOV}{\displaystyle NO}]
 
 where
 
-latexmath:[N] = Number of Graphs
-
-latexmath:[o(g)] = latexmath:[\frac{NCO}{NO}]
-
 latexmath:[NO] = Number of Ontologies used for Properties
 
-latexmath:[NCO] = Number of Ontologies used for Properties in Table
-<<list_of_common_ontologies, 3>>
+latexmath:[NOE] = Number of Ontologies used for Properties among other endpoints
+
+latexmath:[NOLOV] = Number of Ontologies used for Properties in LOV
 =====================================================================
-+
-[[list_of_common_ontologies]]
-.List of Common Ontologies
-[cols="<",options="header,footer"]
-|=======================================================
-|Ontology URI
-|http://www.w3.org/2000/01/rdf-schema
-|http://www.w3.org/1999/02/22-rdf-syntax-ns
-|http://www.socrata.com/rdf/terms
-|http://www.w3.org/2003/01/geo/wgs84_pos
-|http://xmlns.com/foaf/0.1/
-|http://www.w3.org/2002/07/owl
-|http://purl.org/dc/elements/1.1/
-|http://purl.org/dc/terms/
-|http://www.w3.org/2000/10/swap/pim/usps
-|http://dublincore.org/documents/dcmi-box/
-|http://www.territorio.provincia.tn.it/geodati/ontology/
-|http://www.w3.org/2004/02/skos/core
-|=======================================================
 +
 At last, we evaluate Usefulness Score as follows:
 +
