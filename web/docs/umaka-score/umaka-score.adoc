@@ -3,7 +3,7 @@
 [.text-center]
 == Umaka Score
 
-September 2, 2016
+September 30, 2016
 
 *Abstract*
 
@@ -23,7 +23,7 @@ from these aspects. Then Umaka Score is average of these score:
 
 [.text-center]
 =====================================================================
-Umaka Score = latexmath:[\frac{\displaystyle \sum_{aspects}score}{6}]
+Umaka Score = latexmath:[\frac{\displaystyle \sum_{aspects}score}{\displaystyle 6}]
 
 where
 
@@ -394,7 +394,7 @@ We evaluate Metadata score as follows:
 [.text-center]
 =====================================================================
 Metadata Score =
-latexmath:[\frac{\displaystyle \sum_{graphs}^{g}(c(g) + l(g) + p(g) + d(g))}{N}]
+latexmath:[\frac{\displaystyle \sum_{graphs}^{g}(c(g) + l(g) + p(g) + d(g))}{\displaystyle N}]
 
 where
 
