@@ -9,6 +9,29 @@ DATA_DIR = "/sbMeta/data"
 
 namespace :umakadata do
 
+  desc "import prefix for all endpoints from CSV file"
+  task :import_prefix_for_all_endpoints, ['directory_path'] => :environment do |task, args|
+    names = Endpoint.pluck(:name)
+    directory_path = args[:directory_path].blank? ? "#{SBMETA}/data/bulkdownloads" : args[:directory_path]
+    names.each {|name| Rake::Task["umakadata:import_prefix"].execute(Rake::TaskArguments.new([:name, :directory_path], [name, directory_path]))}
+  end
+
+  desc "import prefix from CSV file"
+  task :import_prefix, ['name', 'directory_path'] => :environment do |task, args|
+    name = args[:name]
+    endpoint = Endpoint.where(:name => name).take
+    file_path = args[:directory_path].blank? ? "#{SBMETA}/data/bulkdownloads/#{args[:name]}_prefix.csv" : "#{args[:directory_path]}/#{args[:name]}_prefix.csv"
+    if !endpoint.nil? && File.exist?(file_path)
+      puts file_path
+      endpoint.prefixes.destroy_all
+      CSV.foreach(file_path, {:headers => true}) do |row|
+        Prefix.create(:endpoint_id => endpoint.id, :uri => row[0])
+      end
+    else
+      puts endpoint.name
+    end
+  end
+
   desc "Create relations between endpoints for all endpoints"
   task :create_relations_csv_for_all_endpoints, ['directory_path'] => :environment do |task, args|
     all_prefixes_file = "#{SBMETA}/data/all_prefixes.csv"
