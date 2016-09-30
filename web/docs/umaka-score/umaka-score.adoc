@@ -479,15 +479,6 @@ latexmath:[\begin{array}{lll}
   {\rm Usefulness} & = & 50.0 * {\rm Metadata~Score} \\
                    & + & 50.0 * {\rm Ontology~Score}
   \end{array}]
-
-where
-
-latexmath:[f10(x) = \left\{
-    \begin{array}{ll}
-      10 & {\rm if}~x>10 \\
-      x  & {\rm Otherwise}
-    \end{array}
-  \right.]
 =====================================================================
 
 [[validity]]
