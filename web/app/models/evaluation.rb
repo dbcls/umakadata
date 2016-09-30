@@ -105,6 +105,21 @@ class Evaluation < ActiveRecord::Base
           rdf_prefix = RdfPrefix.new(endpoint_id: endpoint.id, uri: ontology)
           rdf_prefix.save
         end
+
+        list_of_ontologies_in_LOV_log = Umakadata::Logging::Log.new
+        list_of_ontologies_in_LOV = retriever.list_ontologies_in_LOV(metadata, logger: list_of_ontologies_in_LOV_log)
+
+        score_ontologies_for_LOV_log = Umakadata::Logging::Log.new
+        score_ontologies_for_LOV_log.push list_of_ontologies_in_LOV_log
+        logger.push score_ontologies_for_LOV_log
+
+        score_LOV = retriever.score_ontologies_for_LOV(list_of_ontologies, list_of_ontologies_in_LOV, logger: score_ontologies_for_LOV_log)
+
+        score += score_LOV
+
+        logger.result = "Ontology score is #{score}"
+        eval.ontology_score = score
+        eval.ontology_log = logger.as_json
       end
 
       logger = Umakadata::Logging::Log.new
