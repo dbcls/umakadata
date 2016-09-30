@@ -1,0 +1,16 @@
+URI,count,type
+ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/rdf/,334,subject
+http://purl.uniprot.org,173907779,subject
+http://www.uniprot.org/help/about#,7,subject
+ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/rdf/,334,object
+http://purl.uniprot.org,-289977609,object
+http://sparql.uniprot.org/,1,object
+http://www.uniprot.org/,2,object
+http://www.uniprot.org/diseases/,1,object
+http://www.uniprot.org/docs/,1,object
+http://www.uniprot.org/faq/,3,object
+http://www.uniprot.org/help/,5,object
+http://www.uniprot.org/help/about#,675,object
+http://www.uniprot.org/locations/,1,object
+http://www.uniprot.org/manual/,81,object
+http://www.uniprot.org/uniref/,1,object
