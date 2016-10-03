@@ -200,22 +200,17 @@ class EndpointsController < ApplicationController
 
   def score_statistics
     last_crawled_date = date_param
-    labels = Array.new
-    averages = Array.new
-    medians = Array.new
     points = 10
 
     time_series = Endpoint.score_statistics_lastest_n(last_crawled_date, points)
-    dates = time_series['date'].reverse
-    while dates.size < points
-      dates.unshift(dates.first - 1)
-    end
-    average = time_series['average']
-    median = time_series['median']
-    dates.each do |date|
-      labels.push date
-      averages.push average.fetch(date, 0).round(1)
-      medians.push median.fetch(date, 0)
+    labels = time_series['date'].reverse
+    averages = time_series['average'].values.reverse
+    medians = time_series['median'].values.reverse
+
+    while labels.size < points
+      labels.unshift(labels.first - 1)
+      averages.unshift(0.0)
+      medians.unshift(0.0)
     end
 
     render :json => {
@@ -223,7 +218,7 @@ class EndpointsController < ApplicationController
       :datasets => [
         {
           :label => 'Average',
-          :data => averages
+          :data => averages.map{|average| average.round(1)}
         },
         {
           :label => 'Median',
@@ -236,19 +231,15 @@ class EndpointsController < ApplicationController
 
   def alive_statistics
     last_crawled_date = date_param
-    labels = Array.new
-    alive_data = Array.new
     points = 10
 
     time_series = Endpoint.alive_statistics_latest_n(last_crawled_date, points)
-    dates = time_series['date'].reverse
-    while dates.size < points
-      dates.unshift(dates.first - 1)
-    end
-    alive = time_series['alive']
-    dates.each do |date|
-      labels.push date
-      alive_data.push alive.fetch(date, 0).round(1)
+    labels = time_series['date'].reverse
+    alive_data = time_series['alive'].values.reverse
+
+    while labels.size < points
+      labels.unshift(labels.first - 1)
+      alive_data.unshift(0.0)
     end
 
     render :json => {
@@ -256,7 +247,7 @@ class EndpointsController < ApplicationController
       :datasets => [
         {
           label: 'Alive',
-          data: alive_data
+          data: alive_data.map{|alive| alive.round(1)}
         }
       ]
     }
@@ -264,19 +255,15 @@ class EndpointsController < ApplicationController
 
   def service_description_statistics
     last_crawled_date = date_param
-    labels = Array.new
-    have_data = Array.new
     points = 10
 
     time_series = Endpoint.sd_statistics_latest_n(last_crawled_date, points)
-    dates = time_series['date'].reverse
-    while dates.size < points
-      dates.unshift(dates.first - 1)
-    end
-    sd = time_series['sd']
-    dates.each do |date|
-      labels.push date
-      have_data.push sd.fetch(date, 0).round(1)
+    labels = time_series['date'].reverse
+    have_data = time_series['sd'].values.reverse
+
+    while labels.size < points
+      labels.unshift(labels.first - 1)
+      have_data.unshift(0.0)
     end
 
     render :json => {
@@ -284,7 +271,7 @@ class EndpointsController < ApplicationController
       :datasets => [
         {
           label: 'Have',
-          data: have_data
+          data: have_data.map{|sd_score| sd_score.round(1)}
         }
       ]
     }

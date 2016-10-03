@@ -13,6 +13,8 @@ class Endpoint < ActiveRecord::Base
 
   scope :created_at, ->(date) { where('evaluations.created_at': date) }
 
+  RETRIEVED_DATE = 'date(evaluations.retrieved_at)'.freeze
+
   def self.rdf_graph
     endpoints = self.thin_out_attributes
     UmakaRDF.build(endpoints)
@@ -71,17 +73,17 @@ class Endpoint < ActiveRecord::Base
 
   def self.alive_statistics_latest_n(date, n)
     data = {}
-    data['date'] = self.joins(:evaluation).select('date(evaluations.retrieved_at)').where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).group('date(evaluations.retrieved_at)').order('date(evaluations.retrieved_at) DESC').limit(n).pluck('date(evaluations.retrieved_at)')
+    data['date'] = self.joins(:evaluation).select(RETRIEVED_DATE).where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).group(RETRIEVED_DATE).order("#{RETRIEVED_DATE} DESC").limit(n).pluck(RETRIEVED_DATE)
     percentage_of_alive = '(count(evaluations.retrieved_at) * 1.0) / (select count(endpoints.id) from endpoints) * 100'
-    data['alive'] = self.joins(:evaluation).where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).where(evaluations: {alive: true}).group('date(evaluations.retrieved_at)').limit(n).pluck("date(evaluations.retrieved_at),#{percentage_of_alive}").to_h
+    data['alive'] = self.joins(:evaluation).where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).group(RETRIEVED_DATE).where(evaluations: {alive: true}).order("#{RETRIEVED_DATE} DESC").limit(n).pluck("#{RETRIEVED_DATE},#{percentage_of_alive}").to_h
     data
   end
 
   def self.sd_statistics_latest_n(date, n)
     data = {}
-    data['date'] = self.joins(:evaluation).select('date(evaluations.retrieved_at)').where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).group('date(evaluations.retrieved_at)').order('date(evaluations.retrieved_at) DESC').limit(n).pluck('date(evaluations.retrieved_at)')
+    data['date'] = self.joins(:evaluation).select(RETRIEVED_DATE).where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).group(RETRIEVED_DATE).order("#{RETRIEVED_DATE} DESC").limit(n).pluck(RETRIEVED_DATE)
     percentage_of_sd = '(count(evaluations.retrieved_at) * 1.0) / (select count(endpoints.id) from endpoints) * 100'
-    data['sd'] = self.joins(:evaluation).where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).where.not('evaluations.service_description': [nil,'']).group('date(evaluations.retrieved_at)').limit(n).pluck("date(evaluations.retrieved_at),#{percentage_of_sd}").to_h
+    data['sd'] = self.joins(:evaluation).where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).group(RETRIEVED_DATE).where.not('evaluations.service_description': [nil,'']).order("#{RETRIEVED_DATE} DESC").limit(n).pluck("#{RETRIEVED_DATE},#{percentage_of_sd}").to_h
     data
   end
 
@@ -101,9 +103,9 @@ class Endpoint < ActiveRecord::Base
 
   def self.score_statistics_lastest_n(date, n)
     data = {}
-    data['date'] = self.joins(:evaluation).select('date(evaluations.retrieved_at)').where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).group('date(evaluations.retrieved_at)').order('date(evaluations.retrieved_at) DESC').limit(n).pluck('date(evaluations.retrieved_at)')
-    data['average'] = self.joins(:evaluation).where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).group('date(evaluations.retrieved_at)').limit(n).average('evaluations.score')
-    data['median']  = self.joins(:evaluation).where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).group('date(evaluations.retrieved_at)').limit(n).median('evaluations.score')
+    data['date'] = self.joins(:evaluation).select(RETRIEVED_DATE).where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).group(RETRIEVED_DATE).order("#{RETRIEVED_DATE} DESC").limit(n).pluck(RETRIEVED_DATE)
+    data['average'] = self.joins(:evaluation).where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).group(RETRIEVED_DATE).order("#{RETRIEVED_DATE} DESC").limit(n).average('evaluations.score')
+    data['median']  = self.joins(:evaluation).where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).group(RETRIEVED_DATE).order("#{RETRIEVED_DATE} DESC").limit(n).median('evaluations.score')
     data
   end
 
