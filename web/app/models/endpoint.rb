@@ -13,7 +13,7 @@ class Endpoint < ActiveRecord::Base
 
   scope :created_at, ->(date) { where('evaluations.created_at': date) }
 
-  RETRIEVED_DATE = 'date(evaluations.retrieved_at)'
+  RETRIEVED_DATE = 'date(evaluations.retrieved_at)'.freeze
 
   def self.rdf_graph
     endpoints = self.thin_out_attributes
