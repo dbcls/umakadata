@@ -65,23 +65,6 @@ class Endpoint < ActiveRecord::Base
     self.includes(:evaluation).created_at(day_begin..day_end).references(:evaluation)
   end
 
-  def self.crawled_before(date)
-    sql = <<-SQL
-    SELECT id
-    FROM evaluations AS l
-    WHERE id = (
-      SELECT id
-      FROM evaluations AS r
-      WHERE (l.endpoint_id = r.endpoint_id)
-      AND (r.created_at <= '#{date.end_of_day}')
-      ORDER BY r.created_at DESC
-      LIMIT 1
-    );
-    SQL
-    evaluation_ids = Evaluation.find_by_sql(sql).map(&:id)
-    self.joins(:evaluation).eager_load(:evaluation).where(evaluations: { id: evaluation_ids })
-  end
-
   def self.retrieved_at(date)
     self.joins(:evaluation).eager_load(:evaluation).where(evaluations: {retrieved_at: date.beginning_of_day..date.end_of_day})
   end
