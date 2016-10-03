@@ -255,19 +255,15 @@ class EndpointsController < ApplicationController
 
   def service_description_statistics
     last_crawled_date = date_param
-    labels = Array.new
-    have_data = Array.new
     points = 10
 
     time_series = Endpoint.sd_statistics_latest_n(last_crawled_date, points)
-    dates = time_series['date'].reverse
-    while dates.size < points
-      dates.unshift(dates.first - 1)
-    end
-    sd = time_series['sd']
-    dates.each do |date|
-      labels.push date
-      have_data.push sd.fetch(date, 0).round(1)
+    labels = time_series['date'].reverse
+    have_data = time_series['sd'].values.reverse
+
+    while labels.size < points
+      labels.unshift(labels.first - 1)
+      have_data.unshift(0.0)
     end
 
     render :json => {
@@ -275,7 +271,7 @@ class EndpointsController < ApplicationController
       :datasets => [
         {
           label: 'Have',
-          data: have_data
+          data: have_data.map{|sd_score| sd_score.round(1)}
         }
       ]
     }
