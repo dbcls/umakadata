@@ -12,7 +12,7 @@ class EndpointsController < ApplicationController
 
   def top
     @date = date_param
-    @endpoints = Endpoint.crawled_at(@date).order(endpointlist_param)
+    @endpoints = Endpoint.retrieved_at(@date).order(endpointlist_param)
   end
 
   def search
@@ -278,7 +278,7 @@ class EndpointsController < ApplicationController
   end
 
   def score_ranking
-    render json: Endpoint.crawled_at(date_param).order(endpointlist_param).pluck(:id, 'evaluations.id', :name, :url, :score)
+    render json: Endpoint.retrieved_at(date_param).order(endpointlist_param).pluck(:id, 'evaluations.id', :name, :url, :score)
   end
 
   private
@@ -328,7 +328,7 @@ class EndpointsController < ApplicationController
           date = Endpoint.get_last_crawled_date
         else
           evaluation = Evaluation.lookup(params[:id], params[:evaluation_id])
-          date = evaluation.created_at
+          date = evaluation.retrieved_at
         end
       else
         date = Time.zone.parse(input_date)
@@ -337,8 +337,8 @@ class EndpointsController < ApplicationController
 
     def set_start_date
       evaluations = params[:id].nil? ? Evaluation.all : Evaluation.where(:endpoint_id => params[:id])
-      oldest_evaluation = evaluations.order('created_at ASC').first
-      @start_date = oldest_evaluation.created_at.strftime('%Y-%m-%d')
+      oldest_evaluation = evaluations.order('retrieved_at ASC').first
+      @start_date = oldest_evaluation.retrieved_at.strftime('%Y-%m-%d')
     end
 
     def endpointlist_param

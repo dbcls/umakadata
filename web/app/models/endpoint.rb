@@ -61,14 +61,8 @@ class Endpoint < ActiveRecord::Base
     GithubHelper.close_issue(self.issue_id) unless self.issue_id.nil?
   end
 
-  def self.crawled_at(date)
-    day_begin = Time.zone.local(date.year, date.month, date.day, 0, 0, 0)
-    day_end = Time.zone.local(date.year, date.mon, date.day, 23, 59, 59)
-    self.joins(:evaluation).eager_load(:evaluation).created_at(day_begin..day_end)
-  end
-
   def self.retrieved_at(date)
-    self.joins(:evaluation).eager_load(:evaluation).where(evaluations: {retrieved_at: date.beginning_of_day..date.end_of_day})
+    self.joins(:evaluation).eager_load(:evaluation).where(evaluations: {retrieved_at: date.all_day})
   end
 
   def self.alive_statistics_latest_n(date, n)
@@ -88,15 +82,15 @@ class Endpoint < ActiveRecord::Base
   end
 
   def self.get_last_crawled_date
+    endpoint_id_min = self.minimum(:id)
+    endpoint_id_max = self.maximum(:id)
     endpoints = self.joins(:evaluation)
-    start_or_end_datetime = endpoints.first.evaluations.order('created_at DESC').first.created_at
-    end_or_start_datetime = endpoints.last.evaluations.order('created_at DESC').first.created_at
-    start_or_end_date = start_or_end_datetime.strftime('%Y-%m-%d')
-    end_or_start_date = end_or_start_datetime.strftime('%Y-%m-%d')
+    start_or_end_date = endpoints.where(id: endpoint_id_min).order('evaluations.retrieved_at DESC').limit(1).pluck('date(retrieved_at)').first
+    end_or_start_date = endpoints.where(id: endpoint_id_max).order('evaluations.retrieved_at DESC').limit(1).pluck('date(retrieved_at)').first
     if start_or_end_date == end_or_start_date
-      Time.zone.parse(start_or_end_date)
+      Time.zone.parse(start_or_end_date.to_s)
     else
-      date = endpoints.select('date(evaluations.created_at)').group('date(evaluations.created_at)').order('date(evaluations.created_at) DESC').limit(2)[1].date
+      date = endpoints.group('date(evaluations.retrieved_at)').order('date(evaluations.retrieved_at) DESC').limit(2).pluck('date(retrieved_at)').second
       Time.zone.parse(date.to_s)
     end
   end
