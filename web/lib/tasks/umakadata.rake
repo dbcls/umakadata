@@ -102,6 +102,7 @@ namespace :umakadata do
   desc "check endpoint liveness (argument: ASC, DESC)"
   task :crawl, ['order'] => :environment do |task, args|
     rdf_prefixes = RdfPrefix.all.pluck(:id, :endpoint_id, :uri)
+    time = Time.zone.now
     Endpoint.all.order("id #{args[:order]}").each do |endpoint|
       rdf_prefixes_candidates = Array.new
       rdf_prefixes.each do |rdf_prefix|
@@ -110,7 +111,7 @@ namespace :umakadata do
       end
       puts endpoint.name
       begin
-        retriever = Umakadata::Retriever.new endpoint.url
+        retriever = Umakadata::Retriever.new endpoint.url, time
         Evaluation.record(endpoint, retriever, rdf_prefixes_candidates)
       rescue => e
         puts e.message
@@ -129,7 +130,7 @@ namespace :umakadata do
       prefix = rdf_prefix[1] != endpoint.id ? rdf_prefix[2] : nil
       rdf_prefixes_candidates.push prefix unless prefix.nil?
     end
-    retriever = Umakadata::Retriever.new endpoint.url
+    retriever = Umakadata::Retriever.new endpoint.url, Time.zone.now
     Evaluation.record(endpoint, retriever, rdf_prefixes_candidates)
   end
 
@@ -137,7 +138,7 @@ namespace :umakadata do
   task :retriever_method, ['method_name'] => :environment do |task, args|
     puts "endpoint_name|dead/alive|result|log"
     Endpoint.all.each do |endpoint|
-      retriever = Umakadata::Retriever.new endpoint.url
+      retriever = Umakadata::Retriever.new endpoint.url, Time.zone.now
 
       if retriever.alive?
         logger = Umakadata::Logging::Log.new
@@ -152,7 +153,7 @@ namespace :umakadata do
   task :test_retriever_method, ['name', 'method_name'] => :environment do |task, args|
     puts "endpoint_name|dead/alive|result|log"
     endpoint = Endpoint.where("name LIKE ?", "%#{args[:name]}%").first
-    retriever = Umakadata::Retriever.new endpoint.url
+    retriever = Umakadata::Retriever.new endpoint.url, Time.zone.now
 
     if retriever.alive?
       logger = Umakadata::Logging::Log.new

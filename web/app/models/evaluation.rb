@@ -45,6 +45,7 @@ class Evaluation < ActiveRecord::Base
   def self.retrieve_and_record(endpoint, retriever, rdf_prefixes)
     eval = Evaluation.new
     eval.endpoint_id = endpoint.id
+    eval.retrieved_at = retriever.retrieved_at
 
     eval.latest = true
 
