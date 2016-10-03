@@ -59,12 +59,6 @@ class Endpoint < ActiveRecord::Base
     GithubHelper.close_issue(self.issue_id) unless self.issue_id.nil?
   end
 
-  def self.crawled_at(date)
-    day_begin = Time.zone.local(date.year, date.month, date.day, 0, 0, 0)
-    day_end = Time.zone.local(date.year, date.mon, date.day, 23, 59, 59)
-    self.joins(:evaluation).eager_load(:evaluation).created_at(day_begin..day_end)
-  end
-
   def self.retrieved_at(date)
     self.joins(:evaluation).eager_load(:evaluation).where(evaluations: {retrieved_at: date.beginning_of_day..date.end_of_day})
   end
