@@ -60,7 +60,7 @@ class ApiController < ApplicationController
   def add_date_condition(value)
     begin
       date = Time.zone.parse(value)
-      @endpoints = @endpoints.crawled_at(date)
+      @endpoints = @endpoints.retrieved_at(date)
     rescue
     end
   end
