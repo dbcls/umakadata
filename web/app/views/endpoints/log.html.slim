@@ -32,8 +32,8 @@ javascript:
       }
     });
 
-    let JSON_REGEXP = /.*[\{|\[](.*)\{|\[$/;
-    let XML_REGEXP = /.*<\?xml(.*)>/;
+    var JSON_REGEXP = /.*[\{|\[](.*)\{|\[$/;
+    var XML_REGEXP = /.*<\?xml(.*)>/;
     $("tr td:first-child").each(function(i, bodyKey) {
       if (!$(bodyKey).text().match(/body/)) {
         return;
