@@ -165,10 +165,9 @@ namespace :umakadata do
 
   desc "Fill retrieved_at column in evaluations table"
   task :fill_retrieved_at => :environment do
-    Evaluation.all.each do |evaluation|
-      if evaluation.retrieved_at.nil?
-        evaluation.update_column(:retrieved_at, evaluation.created_at.beginning_of_day)
-      end
+    Evaluation.where.not(:retrieved_at => nil).find_each do |evaluation|
+      puts evaluation.id
+      evaluation.update_column(:retrieved_at, evaluation.created_at.beginning_of_day)
     end
   end
 
