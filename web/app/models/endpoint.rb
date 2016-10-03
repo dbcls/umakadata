@@ -62,7 +62,7 @@ class Endpoint < ActiveRecord::Base
   def self.crawled_at(date)
     day_begin = Time.zone.local(date.year, date.month, date.day, 0, 0, 0)
     day_end = Time.zone.local(date.year, date.mon, date.day, 23, 59, 59)
-    self.includes(:evaluation).created_at(day_begin..day_end).references(:evaluation)
+    self.joins(:evaluation).eager_load(:evaluation).created_at(day_begin..day_end)
   end
 
   def self.retrieved_at(date)
