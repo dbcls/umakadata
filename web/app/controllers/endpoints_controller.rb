@@ -12,7 +12,7 @@ class EndpointsController < ApplicationController
 
   def top
     @date = date_param
-    @endpoints = Endpoint.crawled_before(@date).order(endpointlist_param)
+    @endpoints = Endpoint.crawled_at(@date).order(endpointlist_param)
   end
 
   def search
@@ -291,7 +291,7 @@ class EndpointsController < ApplicationController
   end
 
   def score_ranking
-    render json: Endpoint.crawled_before(date_param).order(endpointlist_param).pluck(:id, 'evaluations.id', :name, :url, :score)
+    render json: Endpoint.crawled_at(date_param).order(endpointlist_param).pluck(:id, 'evaluations.id', :name, :url, :score)
   end
 
   private
