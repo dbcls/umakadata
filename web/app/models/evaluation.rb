@@ -189,7 +189,7 @@ class Evaluation < ActiveRecord::Base
     today = Time.zone.now
     first = 29.days.ago(Time.zone.local(today.year, today.month, today.day, 0, 0, 0))
     last = 1.days.ago(Time.zone.local(today.year, today.month, today.day, 23, 59, 59))
-    count = self.where(endpoint_id: eval.endpoint_id, created_at: first..last).group(:alive).count
+    count = self.where(endpoint_id: eval.endpoint_id, retrieved_at: first..last).group(:alive).count
     count[true] ||= 0
     count[false] ||= 0
     total = count[true] + count[false] + 1.0
