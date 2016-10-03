@@ -60,7 +60,7 @@ class Endpoint < ActiveRecord::Base
   end
 
   def self.retrieved_at(date)
-    self.joins(:evaluation).eager_load(:evaluation).where(evaluations: {retrieved_at: date.beginning_of_day..date.end_of_day})
+    self.joins(:evaluation).eager_load(:evaluation).where(evaluations: {retrieved_at: date.all_day})
   end
 
   def self.alive_statistics_latest_n(date, n)
