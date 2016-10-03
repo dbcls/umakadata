@@ -30,25 +30,28 @@ function showRadar(endpoint_id, evaluation_id) {
       options: {
         responsive: true
       }
+    });
+    setScoresOnLabels(labels, data)
   });
+}
 
-    var status;
-    for (var i = 0; i < 6; ++i) {
-      $('#' + labels[i] + '_score').text('(' + data[i] + ')');
-      if (data[i] < 20) {
-        status = 'poor';
-      } else if (data[i] < 40) {
-        status = 'below_average'
-      } else if (data[i] < 60) {
-        status = 'average'
-      } else if (data[i] < 80) {
-        status = 'good'
-      } else {
-        status = 'excellent';
-      }
-      $('.' + labels[i]).addClass(status)
+function setScoresOnLabels(labels, data) {
+  var status;
+  for (var i = 0; i < 6; ++i) {
+    $('#' + labels[i] + '_score').text('(' + data[i] + ')');
+    if (data[i] < 20) {
+      status = 'poor';
+    } else if (data[i] < 40) {
+      status = 'below_average'
+    } else if (data[i] < 60) {
+      status = 'average'
+    } else if (data[i] < 80) {
+      status = 'good'
+    } else {
+      status = 'excellent';
     }
-  });
+    $('.' + labels[i]).addClass(status)
+  }
 }
 
 function appendOptions(datasets) {
