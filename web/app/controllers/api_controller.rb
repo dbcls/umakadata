@@ -11,7 +11,7 @@ class ApiController < ApplicationController
     @endpoints = @endpoints.includes(:prefixes) unless params['prefix'].blank?
     self.add_like_condition_for_name_url(params['name']) if !params['name'].blank?
     self.add_like_condition_for_prefix(params['prefix']) if !params['prefix'].blank?
-    self.add_date_condition(params['date']) if !params['date'].blank?
+    self.add_date_condition(params['date'].blank? ? Time.zone.now.to_s : params['date'])
     self.add_range_condition('evaluations.score', params['score_lower'], params['score_upper'])
     self.add_range_condition('evaluations.alive_rate', params['alive_rate_lower'], params['alive_rate_upper'])
     self.add_rank_condition('evaluations.rank', params['rank']) if !params['rank'].blank?
