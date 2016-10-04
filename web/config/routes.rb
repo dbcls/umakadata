@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
@@ -22,6 +23,8 @@ Rails.application.routes.draw do
   get  'api/endpoints/:id/created_at' => 'api#evaluation_id'
 
   get  'api/specifications' => 'api#specifications'
+
+  get  '/policy' => 'homes#policy'
 
   get 'inquiries' => 'inquiries#form'
   post 'inquiries' => 'inquiries#send_inquiry'
