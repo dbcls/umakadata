@@ -30,7 +30,7 @@ ActiveAdmin.register Endpoint do
     column :alive do |endpoint|
       if endpoint.evaluations.exists?
         if endpoint.evaluations.exists?(:alive => true)
-          endpoint.evaluations.where(:alive => true).last.created_at.to_formatted_s(:long)
+          endpoint.evaluations.where(:alive => true).last.retrieved_at.to_formatted_s(:long)
         else
           "Dead"
         end
@@ -41,7 +41,7 @@ ActiveAdmin.register Endpoint do
     column :dead_flag do |endpoint|
       if endpoint.evaluations.exists?
         if endpoint.evaluations.exists?(:alive => true)
-          if endpoint.evaluations.where(:alive => true).last.created_at < 1.month.ago
+          if endpoint.evaluations.where(:alive => true).last.retrieved_at < 1.month.ago
             "True"
           end
         else
