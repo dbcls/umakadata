@@ -199,7 +199,7 @@ function make_sd_statistics_data(labels, datasets) {
 }
 
 function select_max_from_data(data) {
-  var max = Math.max(...data)
+  var max = Math.max.apply(null, data)
   return (max > 100) ? max : 100
 }
 
