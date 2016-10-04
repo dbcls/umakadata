@@ -28,10 +28,9 @@ ActiveAdmin.register Endpoint do
     column :name
     column :url
     column :alive do |endpoint|
-      evaluations = endpoint.evaluations
-      if evaluations.present?
-        if evaluations.where(:alive => true).present?
-          evaluations.where(:alive => true).last.created_at.to_formatted_s(:long)
+      if endpoint.evaluations.exists?
+        if endpoint.evaluations.exists?(:alive => true)
+          endpoint.evaluations.where(:alive => true).last.retrieved_at.to_formatted_s(:long)
         else
           "Dead"
         end
@@ -40,10 +39,9 @@ ActiveAdmin.register Endpoint do
       end
     end
     column :dead_flag do |endpoint|
-      evaluations = endpoint.evaluations
-      if evaluations.present?
-        if evaluations.where(:alive => true).present?
-          if evaluations.where(:alive => true).last.created_at < 1.month.ago
+      if endpoint.evaluations.exists?
+        if endpoint.evaluations.exists?(:alive => true)
+          if endpoint.evaluations.where(:alive => true).last.retrieved_at < 1.month.ago
             "True"
           end
         else
