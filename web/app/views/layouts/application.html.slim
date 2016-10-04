@@ -44,6 +44,6 @@ html[lang="en"]
             li
               = link_to 'Contact Us', {:controller => 'inquiries', :action => 'form'}
             li
-              = link_to 'Policy', 'http://dbcls.rois.ac.jp/en/about/policy'
+              = link_to 'Terms & Conditions', {:controller => 'homes', :action => 'policy'}
         .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
           == yield
