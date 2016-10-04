@@ -71,9 +71,8 @@ class EndpointsController < ApplicationController
 
   def scores
     count = {1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0}
-    @endpoints = Endpoint.retrieved_at(date_param)
-    @endpoints.each do |endpoint|
-      rank = endpoint.evaluation.rank
+    ranks = Endpoint.retrieved_at(date_param).pluck(:rank)
+    ranks.each do |rank|
       count[rank] += 1
     end
     render :json => count
@@ -179,9 +178,8 @@ class EndpointsController < ApplicationController
 
   def alive
     count = { :alive => 0, :dead => 0 }
-    @endpoints = Endpoint.retrieved_at(date_param)
-    @endpoints.each do |endpoint|
-      alive = endpoint.evaluation.alive
+    alives = Endpoint.retrieved_at(date_param).pluck(:alive)
+    alives.each do |alive|
       alive ? count[:alive] += 1 : count[:dead] += 1
     end
     render :json => count
@@ -189,9 +187,8 @@ class EndpointsController < ApplicationController
 
   def service_descriptions
     count = { :true => 0, :false => 0 }
-    @endpoints = Endpoint.retrieved_at(date_param)
-    @endpoints.each do |endpoint|
-      sd = endpoint.evaluation.service_description
+    service_descriptions = Endpoint.retrieved_at(date_param).pluck(:service_description)
+    service_descriptions.each do |sd|
       sd.present? ? count[:true] += 1 : count[:false] += 1
     end
     render :json => count
