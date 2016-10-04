@@ -24,7 +24,7 @@ Rails.application.routes.draw do
 
   get  'api/specifications' => 'api#specifications'
 
-  get  'homes/policy'
+  get  '/policy' => 'homes#policy'
 
   get 'inquiries' => 'inquiries#form'
   post 'inquiries' => 'inquiries#send_inquiry'
