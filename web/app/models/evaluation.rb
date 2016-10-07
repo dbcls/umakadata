@@ -57,9 +57,7 @@ class Evaluation < ActiveRecord::Base
       eval.support_graph_clause = retriever.support_graph_clause
       self.retrieve_service_description(retriever, eval)
       self.retrieve_void(retriever, eval)
-      if endpoint.prefixes.present?
-        self.retrieve_linked_data_rules(retriever, eval)
-      end
+      self.retrieve_linked_data_rules(retriever, eval)
 
       logger = Umakadata::Logging::Log.new
       eval.execution_time = retriever.execution_time(logger: logger)
@@ -177,12 +175,14 @@ class Evaluation < ActiveRecord::Base
     logger = Umakadata::Logging::Log.new
     eval.subject_is_http_uri = retriever.http_subject?(logger: logger)
     eval.subject_is_http_uri_log = logger.as_json
-    logger = Umakadata::Logging::Log.new
-    eval.uri_provides_info = retriever.uri_provides_info?(logger: logger)
-    eval.uri_provides_info_log = logger.as_json
-    logger = Umakadata::Logging::Log.new
-    eval.contains_links = retriever.contains_links?(logger: logger)
-    eval.contains_links_log = logger.as_json
+    if eval.endpoint.prefixes.present?
+      logger = Umakadata::Logging::Log.new
+      eval.uri_provides_info = retriever.uri_provides_info?(logger: logger)
+      eval.uri_provides_info_log = logger.as_json
+      logger = Umakadata::Logging::Log.new
+      eval.contains_links = retriever.contains_links?(logger: logger)
+      eval.contains_links_log = logger.as_json
+    end
   end
 
   def self.calc_alive_rate(eval)
