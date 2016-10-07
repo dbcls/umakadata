@@ -69,7 +69,7 @@ h2.sub-header Score Ranking
       - @endpoints.each do |endpoint|
         tr
           td
-            = link_to endpoint[:name], endpoint_path(endpoint[:id], endpoint[:evaluation])
+            = link_to endpoint[:name], endpoint_path(endpoint[:id], endpoint[:evaluation][:id])
           td
             = link_to endpoint[:url], endpoint[:url]
           td
