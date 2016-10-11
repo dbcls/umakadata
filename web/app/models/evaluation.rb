@@ -181,7 +181,7 @@ class Evaluation < ActiveRecord::Base
       eval.uri_provides_info = retriever.uri_provides_info?(prefixes, logger: logger)
       eval.uri_provides_info_log = logger.as_json
       logger = Umakadata::Logging::Log.new
-      eval.contains_links = retriever.contains_links?(logger: logger)
+      eval.contains_links = retriever.contains_links?(prefixes, logger: logger)
       eval.contains_links_log = logger.as_json
     end
   end
