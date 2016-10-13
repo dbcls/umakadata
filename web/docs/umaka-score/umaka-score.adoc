@@ -3,7 +3,7 @@
 [.text-center]
 == Umaka Score
 
-September 30, 2016
+Octorber 07, 2016
 
 *Abstract*
 
@@ -482,18 +482,10 @@ Cool URI Score is a percentage of the satisfied rules.
 * Linked Data Rule
 +
 Though the endpoints are preferred to be satisfied with the four rules of
-linked data<<2>> listed below, we omit the first of them.
+linked data<<2>>, we omit "1. Use URIs as names for things".
 This is because the first rule is natural for RDF and it is meaningless for umakadata score.
-+
-. Use URIs as names for things
-. Use HTTP URIs so that people can look up those names
-. When someone looks up a URI, provide useful information, using the
-standards (RDF*, SPARQL)
-. Include links to other URIs. so that they can discover more things
-
-+
-.We check above criteria except 1.:
 [start=2]
+.We check the four rules of Linked Data except "1. Use URIs as names for things":
 . Use HTTP URIs so that people can look up those names
 +
 We assume all subjects of statements are things. We search invalid
