@@ -570,7 +570,7 @@ OFFSET 100
 We assume the statement representing the link to other URI uses the
 vocabularies owl:sameAs or rdfs:seeAlso. We think if there are any
 statement of which property is owl:sameAs or rdfs:seeAlso, the endpoint
-is satisfied with the rule. If there is GRAPH clause being applied, we check the feasibility of the rule by
+is satisfied with the rule. We check the feasibility of the rule by
 using queries described in Listing <<query_for_same_as_on_a_graph, 19>>,
 <<query_for_see_also_on_a_graph, 20>> if there is GRAPH clause being applied;
 otherwise Listing <<query_for_same_as_on_background_graph, 21>>,
