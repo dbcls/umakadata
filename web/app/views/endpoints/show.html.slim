@@ -150,8 +150,9 @@ h1.page-header = @endpoint.name
             .umakadata-tooltip
               | Alive (Alive Rate)
               span.medium
-                | The enpoint was alive or not when we cheked the endpoint last time. <br/>
-                  Alive rate shows how much the endpoint was alive in these 30 days.
+                | The enpoint was alive or not when we cheked the endpoint last time.
+                br
+                | Alive rate shows how much the endpoint was alive in these 30 days.
           td.availability
             = @evaluation.alive.to_s + " (" + @evaluation.alive_rate.to_s + "%)"
             '
@@ -166,8 +167,8 @@ h1.page-header = @endpoint.name
               | Last Updated
               span.medium
                 | The last updated date. We decide the date as follows:
-                | Firstly, we try to find the date in Service Description and VoID.
-                | If explicit modifed date can not be found, we compare the number of statements, the fist statement and the last statement with those of yesterday. We assume some data is updated today if there is any differences.
+                  Firstly, we try to find the date in Service Description and VoID.
+                  If explicit modifed date can not be found, we compare the number of statements, the fist statement and the last statement with those of yesterday. We assume some data is updated today if there is any differences.
                 br
                 | NOTE: Virtuoso could not count the statement correctly. So this mechanism does not work well for the endpoint on Virtuoso.
           td.freshness
@@ -206,10 +207,10 @@ h1.page-header = @endpoint.name
         tr
           td.usefulness
             .umakadata-tooltip
-              |  Ontology
+              | Ontology
               span.medium
                 | This value show the how the endpoint use common ontologies.
-                | We calculate the value as the average of the rate of the ontologies used in properties in metadata for each graph.
+                  We calculate the value as the average of the rate of the ontologies used in properties in metadata for each graph.
                 br
                 | Please see also the following pages:
                 br
@@ -225,14 +226,14 @@ h1.page-header = @endpoint.name
         tr
           td.usefulness
             .umakadata-tooltip
-              |  Metadata
+              | Metadata
               span.medium
                 | This value shows how much metadata can be retrieved using the specified SPARQL query.
                 br
                 | 0 if any graph information can be retrieved.
                 br
                 | For each graph, we score the status by retrieving classes, labels, properties and datatypes.
-                | The average of the scores are shown.
+                  The average of the scores are shown.
                 br
                 | Please see the following pages for more details:
                 br
@@ -245,7 +246,7 @@ h1.page-header = @endpoint.name
         tr
           td.usefulness
             .umakadata-tooltip
-              |  Links to Other Dataset
+              | Links to Other Dataset
               span.medium
                 | List of datasets specified by void:Linkset in VoID
           td.usefulness
@@ -266,7 +267,7 @@ h1.page-header = @endpoint.name
         tr
           td.usefulness
             .umakadata-tooltip
-              |  Support for Content Negotiation
+              | Support for Content Negotiation
               span.medium
                 | true if the endpoint returns a response in one of data formats(Turtle, RDF/XML, HTML), otherwise false.
           td.usefulness
@@ -276,7 +277,7 @@ h1.page-header = @endpoint.name
         tr
           td.usefulness
             .umakadata-tooltip
-              |  Support for HTML Data Format
+              | Support for HTML Data Format
               span.medium
                 | true if the endpoint returns a response in HTML format, otherwise false.
           td.usefulness
@@ -286,7 +287,7 @@ h1.page-header = @endpoint.name
         tr
           td.usefulness
             .umakadata-tooltip
-              |  Support for Turtle Data Format
+              | Support for Turtle Data Format
               span.medium
                 | true if the endpoint returns a response in Turtle format, otherwise false.
           td.usefulness
@@ -323,8 +324,7 @@ h1.page-header = @endpoint.name
                   | N/A
                   span.small
                     | We check whether the web site of the endpoint site publishes download data or not.
-                    '
-                    | N/A if the data is not found.
+                      N/A if the data is not found.
             - else
               .item
                 .umakadata-tooltip
@@ -392,7 +392,7 @@ h1.page-header = @endpoint.name
               | Execution Time
               span.medium
                 | This value represents the calculation performance.
-                | It is calculated as a difference of the response time retrieving the number of classes query from its ASK{} query.
+                  It is calculated as a difference of the response time retrieving the number of classes query from its ASK{} query.
           td.performance
             = (@evaluation.execution_time.nil? ? 'N/A' : @evaluation.execution_time).to_s
             '
