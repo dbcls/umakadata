@@ -27,29 +27,17 @@ ActiveAdmin.register Endpoint do
     id_column
     column :name
     column :url
-    column :alive do |endpoint|
-      if endpoint.evaluations.exists?
-        if endpoint.evaluations.exists?(:alive => true)
-          endpoint.evaluations.where(:alive => true).last.retrieved_at.to_formatted_s(:long)
-        else
-          "Dead"
-        end
-      else
+    column :latest_alive_date do |endpoint|
+      latest = endpoint.evaluations.where(:alive => true).last
+      if latest.nil?
         "N/A"
+      else
+        latest.retrieved_at.to_formatted_s(:long)
       end
     end
-    column :dead_flag do |endpoint|
-      if endpoint.evaluations.exists?
-        if endpoint.evaluations.exists?(:alive => true)
-          if endpoint.evaluations.where(:alive => true).last.retrieved_at < 1.month.ago
-            "True"
-          end
-        else
-          "True"
-        end
-      else
-        "N/A"
-      end
+    column :alarm do |endpoint|
+      latest = endpoint.evaluations.where(:alive => true).last
+      "Maybe Dead" if latest.nil? || latest.retrieved_at < 1.month.ago
     end
     actions
   end
