@@ -46,7 +46,7 @@ namespace :umakadata do
   task :create_relations_csv, ['name', 'directory_path'] => :environment do |task, args|
     endpoint = Endpoint.where(:name => args[:name]).take
     directory_path = args[:directory_path].blank? ? "#{SBMETA}/data/bulkdownloads" : args[:directory_path]
-    if !endpoint.nil? && File.exist?(directory_path + "/" + args[:name])
+    if !endpoint.nil? && File.exist?("#{directory_path}/#{args[:name]}_relation.csv")
       Rake::Task["sbmeta:extract"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
       Rake::Task["sbmeta:find_seeAlso_and_sameAs"].execute(Rake::TaskArguments.new([:name, :prefix_path], [args[:name], "#{DATA_DIR}/all_prefixes.csv"]))
       Rake::Task["sbmeta:remove_extractions"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
@@ -61,7 +61,8 @@ namespace :umakadata do
     endpoint = Endpoint.where(:name => args[:name]).take
     file_path = args[:directory_path].blank? ? "#{SBMETA}/data/bulkdownloads/#{args[:name]}_relation.csv" : "#{args[:directory_path]}/#{args[:name]}_relation.csv"
     if !endpoint.nil? && File.exist?(file_path)
-      endpoint.prefix_filters.destroy_all
+      endpoint.relations.destroy_all
+      puts endpoint.name
       CSV.foreach(file_path, {:headers => true}) do |row|
         Relation.create(:endpoint_id => endpoint.id, :src_id => row[0], :dst_id => row[1], :name => row[2])
       end

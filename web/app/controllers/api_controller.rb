@@ -146,6 +146,7 @@ SPARQL
         }
       }
     }
+    edges.reject!{|edge| edge[:data][:source] == edge[:data][:target]}
     render :json => nodes.concat(edges)
   end
 
