@@ -91,7 +91,6 @@ body {
 
 .page-title-header {
   margin-top: 20px;
-  margin-bottom: 30px;
   font-family: Roboto-Medium;
   font-size: 25px;
   color: #73879C;
@@ -126,6 +125,13 @@ body {
   border-radius: 3px;
 }
 
+.rate-board {
+  font-family: Roboto-Medium;
+  font-size: 15px;
+  color: #242323;
+  line-height: 14px;
+}
+
 .see-all-endpoints {
   font-family: Roboto-Bold;
   font-size: 14px;
@@ -154,4 +160,42 @@ body {
 a {
   text-decoration: underline;
   color: #73879C;
+}
+
+.number-of-endpoints {
+  font-family: Roboto-Medium;
+  font-size: 15px;
+  color: #242323;
+  line-height: 14px;
+}
+
+.number-data {
+  font-family: Roboto-Medium;
+  font-size: 40px;
+  color: #73879C;
+  font-weight: bold;
+  line-height: 40px;
+}
+
+ul.rate-endpoints-list {
+  display: table;
+  width: 100%;
+  list-style-type: none;
+  padding-left: 0px;
+  color: #73879C;
+  font-size: 17px;
+}
+
+li.rate-of-endpoints {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+
+li+ li.rate-of-endpoints {
+  border-left: 3px solid #73879C;
+}
+
+.rate-list {
+  padding-bottom: 0px;
 }
