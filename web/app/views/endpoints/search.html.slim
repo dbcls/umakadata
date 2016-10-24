@@ -2,95 +2,97 @@
 = javascript_include_tag 'umakadata/search'
 = stylesheet_link_tag    'umakadata/search'
 
-h1 Endpoint Search
+.row
+  .col-md-12.page-element.page-element
+    h3.page-title-header Endpoint Search
 
-div
-  | You can search endpoints using REST API.
-  | Please see&nbsp;
-  a href="/api/specifications" this document
-  | &nbsp;for more details.
+    div.page-title-body
+      | You can search endpoints using REST API.
+      | Please see&nbsp;
+      a href="/api/specifications" this document
+      | &nbsp;for more details.
 
-hr
+    hr
 
-= form_tag({:action => :search, :controller => :endpoints}, {:id => 'search'})
-  .form-inline.form-group.row
-    label.col-xs-3 Name or URL
-    = text_field_tag :name, "", :class => 'form-control'
-  .form-inline.form-group.row
-    label.col-xs-3 Prefix
-    = text_field_tag :prefix, "", :class => 'form-control'
-  .form-inline.form-group.row
-    label.col-xs-3 URI
-    .form-group
-      label.radio-inline
-        input[name="element_type" type="radio" value="subject"]
-        | Subject
-      label.radio-inline
-        input[name="element_type" type="radio" value="object"]
-        | Object
-  .form-inline.form-group.row
-    label.col-xs-3
-    = text_field_tag :prefix_filter_uri, "", :class =>'form-control form-inline'
-  .form-inline.form-group.row
-    label.col-xs-3 Score (0-100)
-    = text_field_tag :score_lower, "", :class => 'form-control form-inline'
-    span ~
-    = text_field_tag :score_upper, "", :class => 'form-control form-inline'
-  .form-inline.form-group.row
-    label.col-xs-3 Alive Rate (0-100)
-    = text_field_tag :alive_rate_lower, "", :class => 'form-control form-inline'
-    span ~
-    = text_field_tag :alive_rate_upper, "", :class => 'form-control form-inline'
-  .form-inline.form-group.row
-    label.col-xs-3 Rank (A,B,C,D,E)
-    = text_field_tag :rank, "", :class => 'form-control'
-  .form-inline.form-group.row
-    label.col-xs-3 Cool URI Rate (0-100)
-    = text_field_tag :cool_uri_rate_lower, "", :class => 'form-control form-inline'
-    span ~
-    = text_field_tag :cool_uri_rate_upper, "", :class => 'form-control form-inline'
-  .form-inline.form-group.row
-    label.col-xs-3 Ontology (0-100)
-    = text_field_tag :ontology_lower, "", :class => 'form-control form-inline'
-    span ~
-    = text_field_tag :ontology_upper, "", :class => 'form-control form-inline'
-  .form-inline.form-group.row
-    label.col-xs-3 Metadata Coverage (0-100)
-    = text_field_tag :metadata_lower, "", :class => 'form-control form-inline'
-    span ~
-    = text_field_tag :metadata_upper, "", :class => 'form-control form-inline'
+    = form_tag({:action => :search, :controller => :endpoints}, {:id => 'search', :class => 'page-title-body'})
+      .form-inline.form-group.row
+        label.col-xs-3 Name or URL
+        = text_field_tag :name, "", :class => 'form-control'
+      .form-inline.form-group.row
+        label.col-xs-3 Prefix
+        = text_field_tag :prefix, "", :class => 'form-control'
+      .form-inline.form-group.row
+        label.col-xs-3 URI
+        .form-group
+          label.radio-inline
+            input[name="element_type" type="radio" value="subject"]
+            | Subject
+          label.radio-inline
+            input[name="element_type" type="radio" value="object"]
+            | Object
+      .form-inline.form-group.row
+        label.col-xs-3
+        = text_field_tag :prefix_filter_uri, "", :class =>'form-control form-inline'
+      .form-inline.form-group.row
+        label.col-xs-3 Score (0-100)
+        = text_field_tag :score_lower, "", :class => 'form-control form-inline'
+        span ~
+        = text_field_tag :score_upper, "", :class => 'form-control form-inline'
+      .form-inline.form-group.row
+        label.col-xs-3 Alive Rate (0-100)
+        = text_field_tag :alive_rate_lower, "", :class => 'form-control form-inline'
+        span ~
+        = text_field_tag :alive_rate_upper, "", :class => 'form-control form-inline'
+      .form-inline.form-group.row
+        label.col-xs-3 Rank (A,B,C,D,E)
+        = text_field_tag :rank, "", :class => 'form-control'
+      .form-inline.form-group.row
+        label.col-xs-3 Cool URI Rate (0-100)
+        = text_field_tag :cool_uri_rate_lower, "", :class => 'form-control form-inline'
+        span ~
+        = text_field_tag :cool_uri_rate_upper, "", :class => 'form-control form-inline'
+      .form-inline.form-group.row
+        label.col-xs-3 Ontology (0-100)
+        = text_field_tag :ontology_lower, "", :class => 'form-control form-inline'
+        span ~
+        = text_field_tag :ontology_upper, "", :class => 'form-control form-inline'
+      .form-inline.form-group.row
+        label.col-xs-3 Metadata Coverage (0-100)
+        = text_field_tag :metadata_lower, "", :class => 'form-control form-inline'
+        span ~
+        = text_field_tag :metadata_upper, "", :class => 'form-control form-inline'
 
-  .row
-    label.col-xs-3 Attributes
-    .col-xs-9
-      .form-group.row
-        label.checkbox-inline.col-xs-3
-          input[name="service_description" type="checkbox"] Service Description
-        label.checkbox-inline.col-xs-3
-          input[name="void" type="checkbox"] VoID
-        label.checkbox-inline.col-xs-3
-          input[name="content_negtiation" type="checkbox"] Content Negotiation
-      .form-group.row
-        label.checkbox-inline.col-xs-3
-          input[name="html" type="checkbox"] HTML Data Format
-        label.checkbox-inline.col-xs-3
-          input[name="turtle" type="checkbox"] Turtle Data Format
-        label.checkbox-inline.col-xs-3
-          input[name="xml" type="checkbox"] XML Data Format
+      .row
+        label.col-xs-3 Attributes
+        .col-xs-9
+          .form-group.row
+            label.checkbox-inline.col-xs-3
+              input[name="service_description" type="checkbox"] Service Description
+            label.checkbox-inline.col-xs-3
+              input[name="void" type="checkbox"] VoID
+            label.checkbox-inline.col-xs-3
+              input[name="content_negtiation" type="checkbox"] Content Negotiation
+          .form-group.row
+            label.checkbox-inline.col-xs-3
+              input[name="html" type="checkbox"] HTML Data Format
+            label.checkbox-inline.col-xs-3
+              input[name="turtle" type="checkbox"] Turtle Data Format
+            label.checkbox-inline.col-xs-3
+              input[name="xml" type="checkbox"] XML Data Format
 
-  input#search_button.btn.btn-default[type="button" value="Search" data-toggle="modal" data-target="#searching"]
+      input#search_button.btn.btn-default[type="button" value="Search" data-toggle="modal" data-target="#searching"]
 
-  = render partial: "alert_dialog", locals: {id: "searching", title: "Please wait...", body: "Searching endpoints satisfied with the conditions."}
+      = render partial: "alert_dialog", locals: {id: "searching", title: "Please wait...", body: "Searching endpoints satisfied with the conditions."}
 
-hr
+    hr
 
-#result
+    #result
 
-  .table-responsive
-    table.table.table-striped
-      thead
-        tr
-          th Name
-          th URL
-          th Score
-      tbody#result_body
+      .table-responsive
+        table.table.table-striped
+          thead
+            tr
+              th Name
+              th URL
+              th Score
+          tbody#result_body
