@@ -135,8 +135,12 @@ body {
 .see-all-endpoints {
   font-family: Roboto-Bold;
   font-size: 14px;
-  color: #FFFFFF;
   line-height: 18px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  color: #FFFFFF;
+  background: #7FC7AF;
+  text-decoration: none;
 }
 
 .yummydata-logo {
@@ -190,6 +194,7 @@ li.rate-of-endpoints {
   display: table-cell;
   text-align: center;
   vertical-align: middle;
+  padding: 5px;
 }
 
 li+ li.rate-of-endpoints {
