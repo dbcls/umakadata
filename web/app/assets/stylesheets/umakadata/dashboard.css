@@ -133,6 +133,10 @@ body {
   line-height: 18px;
 }
 
+.yummydata-logo {
+  margin-bottom: 20px;
+}
+
 .yummydata-logo-background {
   position: fixed;
   left: 0px;
