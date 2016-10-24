@@ -1,23 +1,23 @@
 .row
-  .col-xs-12.col-sm-12
-  h2.page-header
-    | Logs
-  '
+  .col-xs-12.col-sm-12.page-element
+    h2.page-title-header
+      | Logs
 
-  - if @log.is_a?(Hash)
-      table.table.table-bordered
-        thead
-          tr
-            th.col-xs-5.col-sm-4.col-md-3
-              | Name
-            th
-              | Value
-        tbody
-          = createRowRecursive(nil, @log, 1, nil)
-  - else
-    p.h3
-      | Error
-    p.h4 = @log
+    .page-title-body
+      - if @log.is_a?(Hash)
+          table.table.table-bordered
+            thead
+              tr
+                th.col-xs-5.col-sm-4.col-md-3
+                  | Name
+                th
+                  | Value
+            tbody
+              = createRowRecursive(nil, @log, 1, nil)
+      - else
+        p.h3
+          | Error
+        p.h4 = @log
 
 javascript:
   $(function(){
