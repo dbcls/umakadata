@@ -135,3 +135,7 @@ body {
 .nav-sidebar > li > a {
   text-decoration: none;
 }
+
+.nav-sidebar > li > a:hover {
+  background: #7FC7AF;
+}
