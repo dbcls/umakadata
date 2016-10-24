@@ -17,21 +17,10 @@ html[lang="en"]
     = javascript_include_tag 'jquery.treetable'
     = csrf_meta_tags
   body
-    nav.navbar.navbar-inverse.navbar-fixed-top
-      .container-fluid
-        .navbar-header
-          button.navbar-toggle.collapsed[type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"]
-            span.sr-only Toggle navigation
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-          a.navbar-brand[href="/"] Umaka Data
-        .collapse.navbar-collapse
-          form.navbar-form.navbar-right
-            == yield :calendar
     .container-fluid
       .row
         .col-sm-3.col-md-2.sidebar
+          = image_tag 'yummydata-logo.png'
           ul.nav.nav-sidebar
             li
               = link_to 'Overview',  "/"
@@ -45,5 +34,6 @@ html[lang="en"]
               = link_to 'Contact Us', {:controller => 'inquiries', :action => 'form'}
             li
               = link_to 'Terms & Conditions', {:controller => 'homes', :action => 'policy'}
+        = image_tag('yummydata-logo-background.png', :class => 'yummydata-logo-background')
         .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
           == yield
