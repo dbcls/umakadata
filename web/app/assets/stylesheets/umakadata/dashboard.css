@@ -152,5 +152,6 @@ body {
 }
 
 a {
+  text-decoration: underline;
   color: #73879C;
 }
