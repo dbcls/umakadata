@@ -19,28 +19,38 @@ javascript:
     h3.page-title-header
       | YummyData (in Japanese Umaka Data) is a site that lists and monitors SPARQL endpoints that
         provide data of interest to the biomedical community.
-
     p.page-title-body
       | Sometimes it is difficult to decide which
         endpoint to use. YummyData helps by providing a curated list of endpoints, and by monitoring over time
         their availability, updates rate, standard compliance and other features that are important
-        to data consumers. Beyond this, YummyData provides a forum where consumers and providers of
+        to data consumers.
+    p.page-title-body
+      | Beyond this, YummyData provides a
+      '
+      = link_to 'forum', URI.encode("https://github.com/#{Rails.application.secrets.github_repo}/issues?q=is:open -label:endpoints")
+      '
+      | where consumers and providers of
         biomedical information in RDF can communicate and improve the usability of the web of (bio) data.
-        If you are a provider and want your resource exposed in a curated directory, or if you are a user and
-        have issues with an endpoint, YummyData is here to help.
+    p.page-title-body
+      | If you are a provider and want your resource exposed in a curated directory, or if you are a user and
+        have issues with an endpoint, YummyData is here to
+      '
+      = link_to 'help', {:controller => 'inquiries', :action => 'form'}
+      |.
+    br
 
 br
 .row
   .col-md-12.page-element
-    .div class="site-description"
+    .site-description
       | Days of data collection
-    .div class="site-description"
+    .site-description
       | No. of endpoints
-    .div class="site-description"
+    .site-description
       | Active endpoints endpoints
-    .div class="site-description"
+    .site-description
       | Alive rate
-    .div class="site-description"
+    .site-description
       | Data entries
 
 br

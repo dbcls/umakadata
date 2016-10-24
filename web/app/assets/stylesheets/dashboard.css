@@ -90,7 +90,10 @@ body {
 }
 
 .page-title-header {
+  margin-top: 20px;
+  margin-bottom: 30px;
   font-family: Roboto-Medium;
+  font-size: 25px;
   color: #73879C;
   font-weight: bold;
   line-height: 29px;
