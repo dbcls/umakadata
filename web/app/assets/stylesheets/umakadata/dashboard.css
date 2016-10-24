@@ -150,3 +150,12 @@ body {
 .nav-sidebar > li > a:hover {
   background: #7FC7AF;
 }
+
+.table {
+  font-family: Roboto-Bold;
+  color: #73879C;
+}
+
+a {
+  color: #73879C;
+}
