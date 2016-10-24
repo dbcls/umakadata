@@ -85,13 +85,16 @@ body {
   background: #FFFFFF;
   box-shadow: 0px 0px 0px 1px rgba(63,63,68,0.10), 0px 1px 2px 0px rgba(0,0,0,0.05);
   border-radius: 4px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .page-title-header {
   font-family: Roboto-Medium;
-  font-size: 24px;
   color: #73879C;
+  font-weight: bold;
   line-height: 29px;
+  margin-bottom: 15px;
 }
 
 .page-title-body {
@@ -99,6 +102,7 @@ body {
   font-size: 14px;
   color: #73879C;
   line-height: 19px;
+  margin-bottom: 15px;
 }
 
 .scores-board {
