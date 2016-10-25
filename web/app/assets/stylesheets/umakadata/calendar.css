@@ -2,3 +2,26 @@
   background: none;
   padding: 0%;
 }
+
+.calendar-form {
+  margin-top: 15px;
+  font-size: 12px;
+}
+
+.calendar-title {
+  margin-right: 10px;
+  margin-bottom: 0px;
+}
+
+.date-input {
+  width: 100px;
+  text-align: center;
+  height: 25px;
+  border: 2px #73879C solid;
+}
+
+.go-button {
+  height: 25px;
+  color: #FFFFFF;
+  background: #73879C;
+}

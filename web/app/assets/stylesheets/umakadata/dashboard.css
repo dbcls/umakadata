@@ -211,3 +211,27 @@ li+ li.rate-of-endpoints {
 .rate-list {
   padding-bottom: 0px;
 }
+
+.carousel-indicators {
+  bottom: -60px;
+}
+
+.carousel-inner {
+  margin-bottom: 40px;
+}
+
+.carousel-indicators li {
+  background-color: grey;
+}
+
+.carousel-indicators ol {
+  vertical-align: bottom;
+}
+
+.carousel-indicators .active {
+  background-color: black;
+}
+
+.top-5-endpoints{
+  font-size: 14px;
+}

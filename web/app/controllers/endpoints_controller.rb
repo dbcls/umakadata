@@ -28,14 +28,14 @@ class EndpointsController < ApplicationController
 
   def top
     @date = date_param
-    endpoints = Endpoint.retrieved_at(@date).order(endpointlist_param).pluck(:id, :name, :url, :'evaluations.id', :'evaluations.score')
+    endpoints = Endpoint.retrieved_at(@date).order('evaluations.score DESC').limit(5).pluck(:id, :name, :url, :'evaluations.id', :'evaluations.score')
     @endpoints = endpoints.map do |result|
       {
-        :id   => result[0],
+        :id => result[0],
         :name => result[1],
-        :url  => result[2],
+        :url => result[2],
         :evaluation => {
-          :id    => result[3],
+          :id => result[3],
           :score => result[4]
         }
       }

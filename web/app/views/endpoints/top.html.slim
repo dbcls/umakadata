@@ -2,6 +2,7 @@
 = javascript_include_tag 'Chart.min'
 = javascript_include_tag 'umakadata/chart-helper'
 = javascript_include_tag 'umakadata/twitter-widget'
+= javascript_include_tag 'umakadata/top'
 
 javascript:
   $(function(){
@@ -74,16 +75,41 @@ br
 .row
   .col-md-12.scores-board.page-element
     .row
-      .col-md-2
-        p.page-title-header
+      .col-md-1
+        .page-title-header
           | Scores
-      .col-md-10
-        p.pull-right.page-title-header
-          | Data for the day of
+      .col-md-11
+        == yield :calendar
     .row
       .col-md-9
         .scores-board-element
-          | AAA
+          .carousel.slide#score-chart[data-ride="carousel1"]
+            ol.carousel-indicators
+              li.active data-target="#score-chart" data-slide-to="0"
+              li data-target="#score-chart" data-slide-to="1"
+            .carousel-inner role="listbox"
+              .item.active
+                | SPARQL Score
+                canvas#score[width=700 height=220]
+              .item
+                | Top 5 endpoints, by SPARQL score
+                .table-responsive[width=700 height=220]
+                  table.table.table-striped.top-5-endpoints
+                    thead
+                      tr
+                        th Score
+                        th Name
+                        th URL
+                    tbody
+                      - @endpoints.each do |endpoint|
+                        tr
+                          td
+                            = endpoint[:evaluation][:score]
+                          td
+                            = link_to endpoint[:name], endpoint_path(endpoint[:id], endpoint[:evaluation][:id])
+                          td
+                            = link_to endpoint[:url], endpoint[:url]
+
       .col-md-3
         .scores-board-element
           | SPARQL score:
