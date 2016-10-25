@@ -1,0 +1,68 @@
+= stylesheet_link_tag 'umakadata/top'
+= javascript_include_tag 'Chart.min'
+= javascript_include_tag 'umakadata/chart-helper'
+= javascript_include_tag 'umakadata/top'
+
+javascript:
+  $(function(){
+    $('#jump-button').on("click", function() {
+      var input_date = $("#calendar").val();
+      var param = (input_date == '') ? '' : '?date=' + input_date;
+      location.href = "/" + param
+    });
+  });
+
+- content_for(:calendar)
+  == render "calendar"
+
+.row
+  .col-md-12.page-element
+    .h3.page-title-header Scores
+    .scores-board-element
+      h3.page-title-header SPARQLE SCORE
+      .row.placeholders
+        .col-xs-6.col-sm-4.placeholder
+          canvas#score[width="200" height="200"]
+          h4 Scores
+          span.text-muted Total Scores
+        .col-xs-6.col-sm-4.placeholder
+          canvas#alive[width="200" height="200"]
+          h4 Alive
+          span.text-muted Alive
+        .col-xs-6.col-sm-4.placeholder
+          canvas#sd[width="200" height="200"]
+          h4 Service Descriptions
+          span.text-muted Service Descriptions
+      .row.placeholders
+        .col-xs-6.col-sm-4.placeholder
+          canvas#score_statistics[width="200" height="200"]
+          h4 Score Statistics
+          span.text-muted Total Scores Statistics
+        .col-xs-6.col-sm-4.placeholder
+          canvas#alive_statistics[width="200" height="200"]
+          h4 Alive Statistics
+          span.text-muted Alive Statistics
+        .col-xs-6.col-sm-4.placeholder
+          canvas#sd_statistics[width="200" height="200"]
+          h4 Service Description Statistics
+          span.text-muted Service Description Statistics
+
+    .scores-board-element
+      h3.page-title-header Score Ranking
+      .table-responsive
+        table.table.table-striped
+          thead
+            tr
+              th.column Name
+              th.column URL
+              th.column Score
+          tbody#result_body
+
+            - @endpoints.each do |endpoint|
+              tr
+                td
+                  = link_to endpoint[:name], endpoint_path(endpoint[:id], endpoint[:evaluation][:id])
+                td
+                  = link_to endpoint[:url], endpoint[:url]
+                td
+                  = endpoint[:evaluation][:score]

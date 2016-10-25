@@ -8,7 +8,23 @@ class EndpointsController < ApplicationController
   include Umakadata::DataFormat
 
   before_action :set_endpoint, only: [:show]
-  before_action :set_start_date, only: [:top, :show]
+  before_action :set_start_date, only: [:index, :top, :show]
+
+  def index
+    @date = date_param
+    endpoints = Endpoint.retrieved_at(@date).order(endpointlist_param).pluck(:id, :name, :url, :'evaluations.id', :'evaluations.score')
+    @endpoints = endpoints.map do |result|
+      {
+        :id   => result[0],
+        :name => result[1],
+        :url  => result[2],
+        :evaluation => {
+          :id    => result[3],
+          :score => result[4]
+        }
+      }
+    end
+  end
 
   def top
     @date = date_param
