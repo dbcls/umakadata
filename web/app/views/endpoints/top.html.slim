@@ -95,29 +95,35 @@ br
               We also rank the ebdpoints on a scale of A to E according to the Umaka score.
 
     .row
-      .col-md-6
+      .col-md-6.col-sm-12
         .scores-board-element
           .page-title-header
-            | Endpoint discussions
-          .page-title-body
-            | Do you want to ask something abount an endpoint?
-            br
-            | You can use the Yummydata forum on Github.
-            br
-            | You will find a issue page for each one of the endpoints we are
-            br
-            | monitoring, feel free to add to the discussion.
-          = link_to("See all discussions", '/', :class => 'btn see-all-endpoints')
-      .col-md-6
-        .scores-board-element
-          .page-title-header
-            | About
-          .page-title-body
-            | Yummydata is a project conceived by [...], realized by [...] and maintained by [..]
-              Please fill with the relevant infos.
-            br
-            | Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            br
-            | Praesent cursus lectus ac nisi ullamcorper, In auctor velit lacinia.
-            | Duis dolor turpis, lacinia sit amet molestie at, lobortis at arcu.
-          = link_to("See all discussions", '/', :class => 'btn see-all-endpoints')
+            | #yummydata news from Twitter
+      .col-md-6.col-sm-12
+        .row
+          .col-md-12.col-sm-6.col-xs-12
+            .scores-board-element
+              .page-title-header
+                | Endpoint discussions
+              .page-title-body
+                | Do you want to ask something abount an endpoint?
+                br
+                | You can use the Yummydata forum on Github.
+                br
+                | You will find a issue page for each one of the endpoints we are
+                br
+                | monitoring, feel free to add to the discussion.
+              = link_to("See all discussions", '/', :class => 'btn see-all-endpoints')
+          .col-md-12.col-sm-6.col-xs-12
+            .scores-board-element
+              .page-title-header
+                | About
+              .page-title-body
+                | Yummydata is a project conceived by [...], realized by [...] and maintained by [..]
+                  Please fill with the relevant infos.
+                br
+                | Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                br
+                | Praesent cursus lectus ac nisi ullamcorper, In auctor velit lacinia.
+                | Duis dolor turpis, lacinia sit amet molestie at, lobortis at arcu.
+              = link_to("See all discussions", '/', :class => 'btn see-all-endpoints')
