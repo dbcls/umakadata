@@ -1,15 +1,15 @@
 $(function() {
   var input_date = $("#calendar").val();
   var param = (input_date == '') ? '' : '/?date=' + input_date
-  var drawScores = $.getJSON("endpoints/scores" + param, function(json) {
+  var drawScores = $.getJSON("/endpoints/scores" + param, function(json) {
     data = make_score_data(json)
     showPie("#score", data);
   });
-  var drawAlive = $.getJSON("endpoints/alive" + param, function(json) {
+  var drawAlive = $.getJSON("/endpoints/alive" + param, function(json) {
     data = make_alive_data(json)
     showPie("#alive", data);
   });
-  var drawSd = $.getJSON("endpoints/service_descriptions" + param, function(json) {
+  var drawSd = $.getJSON("/endpoints/service_descriptions" + param, function(json) {
     data = make_sd_data(json)
     showPie("#sd", data);
   });
@@ -18,7 +18,7 @@ $(function() {
   setTimeout(function(){ drawAlive.abort(); }, 10000);
   setTimeout(function(){ drawSd.abort(); }, 10000);
 
-  var drawScoreStatistics = $.getJSON("endpoints/score_statistics" + param, function(json) {
+  var drawScoreStatistics = $.getJSON("/endpoints/score_statistics" + param, function(json) {
     var labels = json['labels'];
     var datasets = json['datasets'];
     data = make_score_statistics_data(labels, datasets)
@@ -26,7 +26,7 @@ $(function() {
     var lineChart = showLine(canvas_id, data, make_scale_options());
     addGraphClickEvent(canvas_id, lineChart, labels, location.pathname);
   });
-  var drawAliveStatistics = $.getJSON("endpoints/alive_statistics" + param, function(json) {
+  var drawAliveStatistics = $.getJSON("/endpoints/alive_statistics" + param, function(json) {
     var labels = json['labels'];
     var datasets = json['datasets'];
     data = make_alive_statistics_data(labels, datasets)
@@ -35,7 +35,7 @@ $(function() {
     var lineChart = showLine(canvas_id, data, make_scale_options());
     addGraphClickEvent(canvas_id, lineChart, labels, location.pathname);
   });
-  var drawSdStatistics = $.getJSON("endpoints/service_description_statistics" + param, function(json) {
+  var drawSdStatistics = $.getJSON("/endpoints/service_description_statistics" + param, function(json) {
     var labels = json['labels'];
     var datasets = json['datasets'];
     data = make_sd_statistics_data(labels, datasets)
@@ -62,7 +62,7 @@ $(function() {
     hash['direction'] = type;
     var params = createParams(hash);
     var query = '/?' + params;
-    var score_ranking = $.getJSON("endpoints/score_ranking" + query, function(data) {
+    var score_ranking = $.getJSON("/endpoints/score_ranking" + query, function(data) {
       $("#result_body").empty();
       for (var i = 0; i < data.length; i++) {
         var endpoint = data[i];
