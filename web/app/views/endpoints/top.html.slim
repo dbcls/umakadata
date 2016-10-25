@@ -1,6 +1,7 @@
 = stylesheet_link_tag 'umakadata/top'
 = javascript_include_tag 'Chart.min'
 = javascript_include_tag 'umakadata/chart-helper'
+= javascript_include_tag 'umakadata/twitter-widget'
 
 javascript:
   $(function(){
@@ -99,6 +100,10 @@ br
         .scores-board-element
           .page-title-header
             | #yummydata news from Twitter
+          .scores-board-element
+            .row
+              .col-md-12
+                a.twitter-timeline href="https://twitter.com/hashtag/yummydata" data-widget-id="788049961984389121" width="100%" data-chrome="noheader nofooter"
       .col-md-6.col-sm-12
         .row
           .col-md-12.col-sm-6.col-xs-12
