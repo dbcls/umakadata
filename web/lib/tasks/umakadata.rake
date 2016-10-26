@@ -107,9 +107,15 @@ namespace :umakadata do
 
   desc "check endpoint liveness (argument: ASC, DESC)"
   task :crawl, ['order'] => :environment do |task, args|
+    crawl_log = CrawlLog.create(started_at: Time.zone.now)
     rdf_prefixes = RdfPrefix.all.pluck(:id, :endpoint_id, :uri)
     time = Time.zone.now
     Endpoint.all.order("id #{args[:order]}").each do |endpoint|
+      date = Time.zone.now
+      day_begin = Time.zone.local(date.year, date.month, date.day, 0, 0, 0)
+      day_end = Time.zone.local(date.year, date.mon, date.day, 23, 59, 59)
+      endpoint.evaluations.where(created_at: day_begin..day_end).delete_all
+
       rdf_prefixes_candidates = Array.new
       rdf_prefixes.each do |rdf_prefix|
         prefix = rdf_prefix[1] != endpoint.id ? rdf_prefix[2] : nil
@@ -118,12 +124,14 @@ namespace :umakadata do
       puts endpoint.name
       begin
         retriever = Umakadata::Retriever.new endpoint.url, time
-        Evaluation.record(endpoint, retriever, rdf_prefixes_candidates)
+        evaluation = Evaluation.record(endpoint, retriever, rdf_prefixes_candidates)
+        evaluation.update_column(:crawl_log_id, crawl_log.id)
       rescue => e
         puts e.message
         puts e.backtrace
       end
     end
+    crawl_log.update_column(:finished_at, Time.zone.now)
   end
 
   desc "test for checking endpoint liveness"
