@@ -58,11 +58,11 @@ javascript:
               th.column Score
           tbody#result_body
 
-            - @endpoints.each do |endpoint|
+            - @evaluations.each do |evaluation|
               tr
                 td
-                  = link_to endpoint[:name], endpoint_path(endpoint[:id], endpoint[:evaluation][:id])
+                  = link_to evaluation[:endpoint][:name], endpoint_path(evaluation[:endpoint][:id], evaluation[:id])
                 td
-                  = link_to endpoint[:url], endpoint[:url]
+                  = link_to evaluation[:endpoint][:url], evaluation[:endpoint][:url]
                 td
-                  = endpoint[:evaluation][:score]
+                  = evaluation[:score]

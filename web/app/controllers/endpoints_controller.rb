@@ -12,15 +12,15 @@ class EndpointsController < ApplicationController
 
   def index
     @date = date_param
-    endpoints = Endpoint.retrieved_at(@date).order(endpointlist_param).pluck(:id, :name, :url, :'evaluations.id', :'evaluations.score')
-    @endpoints = endpoints.map do |result|
+    evaluations = CrawlLog.started_at(@date).evaluations.joins(:endpoint).order(endpointlist_param).pluck(:id, :score, :'endpoints.id', :'endpoints.name', :'endpoints.url')
+    @evaluations = evaluations.map do |result|
       {
         :id   => result[0],
-        :name => result[1],
-        :url  => result[2],
-        :evaluation => {
-          :id    => result[3],
-          :score => result[4]
+        :score => result[1],
+        :endpoint => {
+          :id   => result[2],
+          :name => result[3],
+          :url  => result[4]
         }
       }
     end
@@ -28,15 +28,15 @@ class EndpointsController < ApplicationController
 
   def top
     @date = date_param
-    endpoints = Endpoint.retrieved_at(@date).order('evaluations.score DESC').limit(5).pluck(:id, :name, :url, :'evaluations.id', :'evaluations.score')
+    endpoints = CrawlLog.started_at(@date).evaluations.joins(:endpoint).order(endpointlist_param).limit(5).pluck(:id, :score, :'endpoints.id', :'endpoints.name', :'endpoints.url')
     @endpoints = endpoints.map do |result|
       {
-        :id => result[0],
-        :name => result[1],
-        :url => result[2],
+        :id   => result[0],
+        :score => result[1],
         :evaluation => {
-          :id => result[3],
-          :score => result[4]
+          :id   => result[2],
+          :name => result[3],
+          :url  => result[4]
         }
       }
     end
@@ -349,10 +349,10 @@ class EndpointsController < ApplicationController
       input_date = params[:date]
       if input_date.blank?
         if params[:id].blank?
-          date = Endpoint.get_last_crawled_date
+          date = CrawlLog.latest.started_at
         else
           evaluation = Evaluation.lookup(params[:id], params[:evaluation_id])
-          date = evaluation.retrieved_at
+          date = evaluation.crawl_log.started_at
         end
       else
         date = Time.zone.parse(input_date)
