@@ -103,14 +103,14 @@ br
                         th Name
                         th URL
                     tbody
-                      - @endpoints.each do |endpoint|
+                      - @evaluations.each do |evaluation|
                         tr
                           td
-                            = endpoint[:evaluation][:score]
+                            = evaluation[:score]
                           td
-                            = link_to endpoint[:name], endpoint_path(endpoint[:id], endpoint[:evaluation][:id])
+                            = link_to evaluation[:endpoint][:name], endpoint_path(evaluation[:endpoint][:id], evaluation[:id])
                           td
-                            = link_to endpoint[:url], endpoint[:url]
+                            = link_to evaluation[:endpoint][:url], evaluation[:endpoint][:url]
 
       .col-md-3
         .scores-board-element

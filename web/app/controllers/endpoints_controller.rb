@@ -28,12 +28,12 @@ class EndpointsController < ApplicationController
 
   def top
     @date = date_param
-    endpoints = CrawlLog.started_at(@date).evaluations.joins(:endpoint).order(endpointlist_param).limit(5).pluck(:id, :score, :'endpoints.id', :'endpoints.name', :'endpoints.url')
-    @endpoints = endpoints.map do |result|
+    evaluations = CrawlLog.started_at(@date).evaluations.joins(:endpoint).order("score DESC").limit(5).pluck(:id, :score, :'endpoints.id', :'endpoints.name', :'endpoints.url')
+    @evaluations = evaluations.map do |result|
       {
         :id   => result[0],
         :score => result[1],
-        :evaluation => {
+        :endpoint => {
           :id   => result[2],
           :name => result[3],
           :url  => result[4]
