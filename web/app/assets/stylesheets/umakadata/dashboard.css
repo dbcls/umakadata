@@ -236,6 +236,20 @@ li+ li.rate-of-endpoints {
   background-color: black;
 }
 
-.top-5-endpoints{
+.top-5-endpoints {
   font-size: 14px;
+}
+
+.table-striped > thead > tr > th {
+  color: #9A9A9A;
+  border-style: none;
+  font-weight: normal;
+}
+
+.table-striped > tbody > tr > td > a {
+  color: #000000;
+}
+
+.table-striped > tbody > tr:nth-of-type(even) {
+  background-color: #FFFFFF;
 }
