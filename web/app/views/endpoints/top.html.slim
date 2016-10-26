@@ -83,17 +83,19 @@ br
     .row
       .col-md-9
         .scores-board-element
-          .carousel.slide#score-chart[data-ride="carousel1"]
+          .carousel.slide#chart-carousel[data-ride="carousel"]
             ol.carousel-indicators
-              li.active data-target="#score-chart" data-slide-to="0"
-              li data-target="#score-chart" data-slide-to="1"
+              li.active data-target="#chart-carousel" data-slide-to="0"
+              li data-target="#chart-carousel" data-slide-to="1"
             .carousel-inner role="listbox"
               .item.active
-                | SPARQL Score
-                canvas#score[width=700 height=220]
+                .page-title-header
+                  | SPARQL Score
+                canvas#score[height=205 width=600]
               .item
-                | Top 5 endpoints, by SPARQL score
-                .table-responsive[width=700 height=220]
+                .page-title-header
+                  | Top 5 endpoints, by SPARQL score
+                .table-responsive
                   table.table.table-striped.top-5-endpoints
                     thead
                       tr
