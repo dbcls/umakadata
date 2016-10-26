@@ -127,9 +127,13 @@ body {
 }
 
 .more-button {
+  font-family: Roboto-Medium;
+  font-size: 5px;
+  color: #FFFFFF;
   background: #7FC7AF;
   border: 1px solid #3FB8AF;
   border-radius: 3px;
+  text-decoration: none;
 }
 
 .rate-board {
