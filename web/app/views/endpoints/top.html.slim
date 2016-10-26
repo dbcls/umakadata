@@ -139,14 +139,14 @@ br
               .page-title-header
                 | Endpoint discussions
               .page-title-body
-                | Do you want to ask something abount an endpoint?
+                | Do you want to ask something about an endpoint?
                 br
                 | You can use the Yummydata forum on Github.
                 br
                 | You will find a issue page for each one of the endpoints we are
                 br
                 | monitoring, feel free to add to the discussion.
-              = link_to("See all discussions", '/', :class => 'btn see-all-endpoints')
+              = link_to("See all discussions", URI.encode("https://github.com/#{Rails.application.secrets.github_repo}/issues?q=is:open+label:endpoints"), :class => 'btn see-all-endpoints')
           .col-md-12.col-sm-6.col-xs-12
             .scores-board-element
               .page-title-header
