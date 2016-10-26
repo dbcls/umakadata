@@ -12,34 +12,45 @@ class EndpointsController < ApplicationController
 
   def index
     @date = date_param
-    evaluations = CrawlLog.started_at(@date).evaluations.joins(:endpoint).order(endpointlist_param).pluck(:id, :score, :'endpoints.id', :'endpoints.name', :'endpoints.url')
-    @evaluations = evaluations.map do |result|
-      {
-        :id   => result[0],
-        :score => result[1],
-        :endpoint => {
-          :id   => result[2],
-          :name => result[3],
-          :url  => result[4]
+    crawl_log = CrawlLog.started_at(@date)
+    if crawl_log.blank?
+      @evaluations = Array.new
+    else
+      evaluations = crawl_log.evaluations.joins(:endpoint).order(endpointlist_param).pluck(:id, :score, :'endpoints.id', :'endpoints.name', :'endpoints.url')
+      @evaluations = evaluations.map do |result|
+        {
+          :id   => result[0],
+          :score => result[1],
+          :endpoint => {
+            :id   => result[2],
+            :name => result[3],
+            :url  => result[4]
+          }
         }
-      }
+      end
     end
   end
 
   def top
     @date = date_param
-    evaluations = CrawlLog.started_at(@date).evaluations.joins(:endpoint).order("score DESC").limit(5).pluck(:id, :score, :'endpoints.id', :'endpoints.name', :'endpoints.url')
-    @evaluations = evaluations.map do |result|
-      {
-        :id   => result[0],
-        :score => result[1],
-        :endpoint => {
-          :id   => result[2],
-          :name => result[3],
-          :url  => result[4]
+    crawl_log = CrawlLog.started_at(@date)
+    if crawl_log.blank?
+      @evaluations = Array.new
+    else
+      evaluations = crawl_log.evaluations.joins(:endpoint).order("score DESC").limit(5).pluck(:id, :score, :'endpoints.id', :'endpoints.name', :'endpoints.url')
+      @evaluations = evaluations.map do |result|
+        {
+          :id   => result[0],
+          :score => result[1],
+          :endpoint => {
+            :id   => result[2],
+            :name => result[3],
+            :url  => result[4]
+          }
         }
-      }
+      end
     end
+
   end
 
   def search
@@ -205,20 +216,30 @@ class EndpointsController < ApplicationController
 
   def alive
     count = { :alive => 0, :dead => 0 }
-    alives = Endpoint.retrieved_at(date_param).pluck(:alive)
-    alives.each do |alive|
-      alive ? count[:alive] += 1 : count[:dead] += 1
+    crawl_log = CrawlLog.started_at(date_param)
+    if crawl_log.blank?
+      render :json => {}
+    else
+      alives = crawl_log.evaluations.pluck(:alive)
+      alives.each do |alive|
+        alive ? count[:alive] += 1 : count[:dead] += 1
+      end
+      render :json => count
     end
-    render :json => count
   end
 
   def service_descriptions
     count = { :true => 0, :false => 0 }
-    service_descriptions = Endpoint.retrieved_at(date_param).pluck(:service_description)
-    service_descriptions.each do |sd|
-      sd.present? ? count[:true] += 1 : count[:false] += 1
+    crawl_log = CrawlLog.started_at(date_param)
+    if crawl_log.blank?
+      render :json => {}
+    else
+      service_descriptions = crawl_log.evaluations.pluck(:service_description)
+      service_descriptions.each do |sd|
+        sd.present? ? count[:true] += 1 : count[:false] += 1
+      end
+      render :json => count
     end
-    render :json => count
   end
 
 
@@ -302,7 +323,12 @@ class EndpointsController < ApplicationController
   end
 
   def score_ranking
-    render json: CrawlLog.started_at(date_param).evaluations.joins(:endpoint).order(endpointlist_param).pluck(:id, :'endpoints.id', :'endpoints.name', :'endpoints.url', :score)
+    crawl_log = CrawlLog.started_at(date_param)
+    if crawl_log.blank?
+      render :json => {}
+    else
+      render json: crawl_log.evaluations.joins(:endpoint).order(endpointlist_param).pluck(:id, :'endpoints.id', :'endpoints.name', :'endpoints.url', :score)
+    end
   end
 
   private
