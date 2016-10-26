@@ -114,10 +114,7 @@ namespace :umakadata do
     end
     rdf_prefixes = RdfPrefix.all.pluck(:id, :endpoint_id, :uri)
     Endpoint.all.order("id #{args[:order]}").each do |endpoint|
-      date = Time.zone.now
-      day_begin = Time.zone.local(date.year, date.month, date.day, 0, 0, 0)
-      day_end = Time.zone.local(date.year, date.mon, date.day, 23, 59, 59)
-      endpoint.evaluations.where(created_at: day_begin..day_end).delete_all
+      crawl_log.evaluations.where(endpoint_id: endpoint.id).delete_all
 
       rdf_prefixes_candidates = Array.new
       rdf_prefixes.each do |rdf_prefix|
