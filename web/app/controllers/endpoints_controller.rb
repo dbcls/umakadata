@@ -302,7 +302,7 @@ class EndpointsController < ApplicationController
   end
 
   def score_ranking
-    render json: Endpoint.retrieved_at(date_param).order(endpointlist_param).pluck(:id, 'evaluations.id', :name, :url, :score)
+    render json: CrawlLog.started_at(date_param).evaluations.joins(:endpoint).order(endpointlist_param).pluck(:id, :'endpoints.id', :'endpoints.name', :'endpoints.url', :score)
   end
 
   private
