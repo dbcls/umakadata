@@ -107,9 +107,12 @@ namespace :umakadata do
 
   desc "check endpoint liveness (argument: ASC, DESC)"
   task :crawl, ['order'] => :environment do |task, args|
-    crawl_log = CrawlLog.create(started_at: Time.zone.now)
-    rdf_prefixes = RdfPrefix.all.pluck(:id, :endpoint_id, :uri)
     time = Time.zone.now
+    crawl_log = CrawlLog.where(started_at: time.all_day).take
+    if crawl_log.blank?
+      crawl_log = CrawlLog.create(started_at: time)
+    end
+    rdf_prefixes = RdfPrefix.all.pluck(:id, :endpoint_id, :uri)
     Endpoint.all.order("id #{args[:order]}").each do |endpoint|
       date = Time.zone.now
       day_begin = Time.zone.local(date.year, date.month, date.day, 0, 0, 0)
