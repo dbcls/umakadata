@@ -114,14 +114,15 @@ br
 
       .col-md-3
         .scores-board-element
-          | SPARQL score:
-          br
-          | what it is ?
+          .page-title-header
+            | SPARQL score:
+              what it is ?
           .page-title-body
             | SPARQL Scores represents how valuable endpoints are.
-              Umaka Score is calculated on the basis of the evaluation from the 6 aspects,
-              Availability, Freshness, Operation, Usefulness, Validity and Performance.
-              We also rank the ebdpoints on a scale of A to E according to the Umaka score.
+            | Umaka Score is calculated on the basis of the evaluation from the 6 aspects,
+            | Availability, Freshness, Operation, Usefulness, Validity and Performance.
+            | We also rank the ebdpoints on a scale of A to E according to the Umaka score.
+          = link_to 'More', 'umaka-score.html', {:class => 'btn btn-xs more-button', 'data-no-turbolink' => true}
 
     .row
       .col-md-6.col-sm-12
@@ -159,4 +160,4 @@ br
                 br
                 | Praesent cursus lectus ac nisi ullamcorper, In auctor velit lacinia.
                 | Duis dolor turpis, lacinia sit amet molestie at, lobortis at arcu.
-              = link_to 'More', {:controller => 'homes', :action => 'about'}, {:class => 'btn see-all-endpoints'}
+              = link_to 'More', {:controller => 'homes', :action => 'about'}, {:class => 'btn btn-xs more-button'}
