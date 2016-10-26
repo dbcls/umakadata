@@ -185,6 +185,19 @@ namespace :umakadata do
     end
   end
 
+  desc "Create crawl log records and fill crawl_log_id to evaluations"
+  task :create_crawl_log_and_fill_crawl_log_id => :environment do
+    group_by_day = Evaluation.select("date(created_at)").group("date(created_at)").order("date(created_at)")
+    group_by_day.each do |group|
+      CrawlLog.create(:started_at => group.date, :finished_at => group.date)
+    end
+
+    CrawlLog.all.each do |crawl_log|
+      evaluations = Evaluation.where(:created_at => crawl_log.started_at.all_day)
+      evaluations.update_all(:crawl_log_id => crawl_log.id)
+    end
+  end
+
   desc "create issue_id to all endpoints"
   task :create_issue_ids => :environment do
     Endpoint.all.each do |endpoint|
