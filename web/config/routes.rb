@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   root 'endpoints#top'
 
-  get  'endpoints/index'
+  get  'endpoints' => 'endpoints#index'
   get  'endpoints/search'
   get  'api/endpoints/search'  => 'api#endpoints_search'
   get  'endpoints/graph'
