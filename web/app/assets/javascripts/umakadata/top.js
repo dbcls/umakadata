@@ -41,8 +41,7 @@ function showBar(id, data) {
             display: false,
           },
           ticks: {
-            min: 0,
-            max: 100
+            min: 0
           }
         }]
       }
