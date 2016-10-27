@@ -253,3 +253,11 @@ li+ li.rate-of-endpoints {
 .table-striped > tbody > tr:nth-of-type(even) {
   background-color: #FFFFFF;
 }
+
+.minus_variation {
+  color: #FF9E9D;
+}
+
+.plus_variation {
+  color: #3FB8AF;
+}
