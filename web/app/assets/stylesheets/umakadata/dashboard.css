@@ -254,6 +254,15 @@ li+ li.rate-of-endpoints {
   background-color: #FFFFFF;
 }
 
+.table-striped > tbody > tr > td {
+   padding-top: 15px;
+}
+
+.table-striped > tbody > tr {
+   height: 50px;
+}
+
+
 .minus_variation {
   color: #FF9E9D;
 }
