@@ -5,8 +5,7 @@ ul.rate-endpoints-list
     .number-data
       | #{@metrics[:data_collection][:count]}
     span
-      | #{sprintf("%d", @metrics[:data_collection][:variation])}
-        days without data
+      | #{sprintf("%d", @metrics[:data_collection][:variation])} days without data
 
   li.rate-of-endpoints
     span
@@ -23,13 +22,13 @@ ul.rate-endpoints-list
         - attribute = 'plus_variation'
       span[class="#{attribute}"]
         = sprintf("%+d", @metrics[:no_of_endpoints][:variation])
-    span
+    span.temp-footer
       '
       | from last week
 
   li.rate-of-endpoints
     span
-      | Active endpoints endpoints
+      | Active endpoints today
     .number-data
       | #{@metrics[:active_endpoints][:count]}
     - if @metrics[:active_endpoints][:variation] == 0
@@ -73,11 +72,14 @@ ul.rate-endpoints-list
         | Unch.
     - else
       - if @metrics[:data_entries][:variation] < 0
+        - mark = '-'
         - attribute = 'minus_variation'
       - else
+        - mark = '+'
         - attribute = 'plus_variation'
       span[class="#{attribute}"]
-        = number_to_human(@metrics[:data_entries][:variation], :units => {:million => "M", :billion => "G", :trillion => "T", :quadrillion => "P"})
+          = mark
+          = number_to_human(@metrics[:data_entries][:variation], :format => '%n%u', :units => {:thousand => 'k', :million => "M", :billion => "G", :trillion => "T", :quadrillion => "P"})
     span
       '
       | from yesterday

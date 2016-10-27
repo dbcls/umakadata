@@ -128,7 +128,7 @@ body {
 
 .more-button {
   font-family: Roboto-Medium;
-  font-size: 5px;
+  font-size: 10px;
   color: #FFFFFF;
   background: #7FC7AF;
   border: 1px solid #3FB8AF;
@@ -185,11 +185,11 @@ a {
 }
 
 .number-data {
+  padding-top: 5px;
   font-family: Roboto-Medium;
-  font-size: 40px;
+  font-size: 30px;
   color: #73879C;
   font-weight: bold;
-  line-height: 40px;
 }
 
 ul.rate-endpoints-list {
@@ -204,7 +204,6 @@ ul.rate-endpoints-list {
 li.rate-of-endpoints {
   display: table-cell;
   text-align: center;
-  vertical-align: middle;
   padding: 5px;
 }
 
