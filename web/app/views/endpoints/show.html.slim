@@ -9,8 +9,11 @@
 
 .row
   .col-md-12.page-element
-    h1.page-title-header = @endpoint.name
-
+    .row
+      .col-md-9
+        .page-title-header = @endpoint.name
+      .col-md-3
+        == yield :calendar
     .page-title-body
       - if !@prev_evaluation.nil?
         a href="/endpoints/#{@endpoint.id}/#{@prev_evaluation[:id]}"

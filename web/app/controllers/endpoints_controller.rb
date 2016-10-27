@@ -389,7 +389,7 @@ class EndpointsController < ApplicationController
     def set_start_date
       evaluations = params[:id].nil? ? Evaluation.all : Evaluation.where(:endpoint_id => params[:id])
       oldest_evaluation = evaluations.order('retrieved_at ASC').first
-      @start_date = oldest_evaluation.retrieved_at.strftime('%Y-%m-%d')
+      @start_date = oldest_evaluation.retrieved_at.strftime('%d-%m-%Y')
     end
 
     def endpointlist_param
