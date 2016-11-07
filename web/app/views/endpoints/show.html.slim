@@ -10,9 +10,10 @@
 .row
   .col-md-12.page-element
     .row
-      .col-md-9
+      .col-md-12
         .page-title-header = @endpoint.name
-      .col-md-3
+    .row
+      .col-md-12
         == yield :calendar
     .page-title-body
       - if !@prev_evaluation.nil?
