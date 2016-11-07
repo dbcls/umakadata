@@ -410,6 +410,7 @@ class EndpointsController < ApplicationController
         data_entries: {count: 0, variation: 0}
       }
       metrics[:data_collection][:count] = CrawlLog.where.not(finished_at: nil).count
+      metrics[:data_collection][:variation] = ((Time.zone.now - date) / 3600 / 24).round(0)
       number_of_endpoints_last_week = Endpoint.where.not('created_at >= ?', date.ago(7.days).beginning_of_day).count
       metrics[:no_of_endpoints][:count] = Endpoint.count
       metrics[:no_of_endpoints][:variation] = metrics[:no_of_endpoints][:count] - number_of_endpoints_last_week

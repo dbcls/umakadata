@@ -72,14 +72,14 @@ ul.rate-endpoints-list
         | Unch.
     - else
       - if @metrics[:data_entries][:variation] < 0
-        - mark = '-'
+        - mark = ''
         - attribute = 'minus_variation'
       - else
         - mark = '+'
         - attribute = 'plus_variation'
       span[class="#{attribute}"]
           = mark
-          = number_to_human(@metrics[:data_entries][:variation], :format => '%n%u', :units => {:thousand => 'k', :million => "M", :billion => "G", :trillion => "T", :quadrillion => "P"})
+          = number_to_human(@metrics[:data_entries][:variation], :units => {:thousand => 'k', :million => "M", :billion => "G", :trillion => "T", :quadrillion => "P"})
     span
       '
       | from yesterday
