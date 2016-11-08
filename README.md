@@ -41,6 +41,7 @@ docker-compose exec web /bin/bash
 bundle exec rake db:create
 bundle exec rake db:migrate
 bundle exec rake db:seed
+bundle exec rake umakadata:active_median
 ```
 
 ### Linux
@@ -90,6 +91,7 @@ docker exec -it umakadata_web /bin/bash
 bundle exec rake db:create
 bundle exec rake db:migrate
 bundle exec rake db:seed
+bundle exec rake umakadata:active_median
 ```
 
 ## Usage

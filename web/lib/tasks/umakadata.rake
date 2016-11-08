@@ -9,6 +9,11 @@ DATA_DIR = "/sbMeta/data"
 
 namespace :umakadata do
 
+  desc "Add the median function to the database"
+  task :active_median => :environment do
+    ActiveMedian.create_function
+  end
+
   desc "import prefix for all endpoints from CSV file"
   task :import_prefix_for_all_endpoints, ['directory_path'] => :environment do |task, args|
     names = Endpoint.pluck(:name)
