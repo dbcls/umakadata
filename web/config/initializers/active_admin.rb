@@ -266,4 +266,13 @@ ActiveAdmin.setup do |config|
   # of those filters by default here.
   #
   # config.include_default_association_filters = true
+
+  config.namespace :admin do |admin|
+    admin.build_menu :utility_navigation do |menu|
+      menu.add label: "Visit Site", url: '/'
+      admin.add_current_user_to_menu  menu
+      admin.add_logout_button_to_menu menu
+    end
+  end
+
 end
