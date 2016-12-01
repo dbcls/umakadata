@@ -11,6 +11,7 @@ class Evaluation < ActiveRecord::Base
   extend Umakadata::DataFormat
 
   belongs_to :endpoint
+  belongs_to :crawl_log
   scope :created_at, ->(date) { where('created_at': date) }
 
   def self.lookup(endpoint_id, evaluation_id)

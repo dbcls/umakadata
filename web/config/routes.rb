@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   root 'endpoints#top'
 
+  get  'endpoints' => 'endpoints#index'
   get  'endpoints/search'
   get  'api/endpoints/search'  => 'api#endpoints_search'
   get  'endpoints/graph'
@@ -24,6 +25,7 @@ Rails.application.routes.draw do
 
   get  'api/specifications' => 'api#specifications'
 
+  get  '/about' => 'homes#about'
   get  '/policy' => 'homes#policy'
 
   get 'inquiries' => 'inquiries#form'

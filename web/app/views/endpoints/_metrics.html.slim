@@ -1,0 +1,85 @@
+ul.rate-endpoints-list
+  li.rate-of-endpoints
+    span
+      | Days of data collection
+    .number-data
+      | #{@metrics[:data_collection][:count]}
+    span
+      | #{sprintf("%d", @metrics[:data_collection][:variation])} days without data
+
+  li.rate-of-endpoints
+    span
+      | No. of endpoints
+    .number-data
+      | #{@metrics[:no_of_endpoints][:count]}
+    - if @metrics[:no_of_endpoints][:variation] == 0
+      span
+        | Unch.
+    - else
+      - if @metrics[:no_of_endpoints][:variation] < 0
+        - attribute = 'minus_variation'
+      - else
+        - attribute = 'plus_variation'
+      span[class="#{attribute}"]
+        = sprintf("%+d", @metrics[:no_of_endpoints][:variation])
+    span.temp-footer
+      '
+      | from last week
+
+  li.rate-of-endpoints
+    span
+      | Active endpoints today
+    .number-data
+      | #{@metrics[:active_endpoints][:count]}
+    - if @metrics[:active_endpoints][:variation] == 0
+      span
+        | Unch.
+    - else
+      - if @metrics[:active_endpoints][:variation] < 0
+        - attribute = 'minus_variation'
+      - else
+        - attribute = 'plus_variation'
+      span[class="#{attribute}"]
+        = sprintf("%+d", @metrics[:active_endpoints][:variation])
+    span
+      '
+      | from yesterday
+
+  li.rate-of-endpoints
+    span
+      | Alive rate
+    .number-data
+      | #{@metrics[:alive_rates][:count]}%
+    - if @metrics[:alive_rates][:variation] == 0
+      | Unch.
+    - else
+      - if @metrics[:alive_rates][:variation] < 0
+        - attribute = 'minus_variation'
+      - else
+        - attribute = 'plus_variation'
+      span[class="#{attribute}"]
+        | #{sprintf("%+d", @metrics[:alive_rates][:variation])}%
+    span
+      '
+      | from last week
+
+  li.rate-of-endpoints
+    | Data entries
+    .number-data
+      = number_to_human(@metrics[:data_entries][:count], :units => {:thousand => "K", :million => "M", :billion => "G", :trillion => "T", :quadrillion => "P"})
+    - if @metrics[:data_entries][:variation] == 0
+      span
+        | Unch.
+    - else
+      - if @metrics[:data_entries][:variation] < 0
+        - mark = ''
+        - attribute = 'minus_variation'
+      - else
+        - mark = '+'
+        - attribute = 'plus_variation'
+      span[class="#{attribute}"]
+          = mark
+          = number_to_human(@metrics[:data_entries][:variation], :units => {:thousand => 'k', :million => "M", :billion => "G", :trillion => "T", :quadrillion => "P"})
+    span
+      '
+      | from yesterday

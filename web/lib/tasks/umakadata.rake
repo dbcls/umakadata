@@ -107,9 +107,15 @@ namespace :umakadata do
 
   desc "check endpoint liveness (argument: ASC, DESC)"
   task :crawl, ['order'] => :environment do |task, args|
-    rdf_prefixes = RdfPrefix.all.pluck(:id, :endpoint_id, :uri)
     time = Time.zone.now
+    crawl_log = CrawlLog.where(started_at: time.all_day).take
+    if crawl_log.blank?
+      crawl_log = CrawlLog.create(started_at: time)
+    end
+    rdf_prefixes = RdfPrefix.all.pluck(:id, :endpoint_id, :uri)
     Endpoint.all.order("id #{args[:order]}").each do |endpoint|
+      crawl_log.evaluations.where(endpoint_id: endpoint.id).delete_all
+
       rdf_prefixes_candidates = Array.new
       rdf_prefixes.each do |rdf_prefix|
         prefix = rdf_prefix[1] != endpoint.id ? rdf_prefix[2] : nil
@@ -118,12 +124,14 @@ namespace :umakadata do
       puts endpoint.name
       begin
         retriever = Umakadata::Retriever.new endpoint.url, time
-        Evaluation.record(endpoint, retriever, rdf_prefixes_candidates)
+        evaluation = Evaluation.record(endpoint, retriever, rdf_prefixes_candidates)
+        evaluation.update_column(:crawl_log_id, crawl_log.id)
       rescue => e
         puts e.message
         puts e.backtrace
       end
     end
+    crawl_log.update_column(:finished_at, Time.zone.now)
   end
 
   desc "test for checking endpoint liveness"
@@ -174,6 +182,19 @@ namespace :umakadata do
     Evaluation.where(:retrieved_at => nil).each do |evaluation|
       puts evaluation.id
       evaluation.update_column(:retrieved_at, evaluation.created_at.beginning_of_day)
+    end
+  end
+
+  desc "Create crawl log records and fill crawl_log_id to evaluations"
+  task :create_crawl_log_and_fill_crawl_log_id => :environment do
+    group_by_day = Evaluation.select("date(created_at)").group("date(created_at)").order("date(created_at)")
+    group_by_day.each do |group|
+      CrawlLog.create(:started_at => group.date, :finished_at => group.date)
+    end
+
+    CrawlLog.all.each do |crawl_log|
+      evaluations = Evaluation.where(:created_at => crawl_log.started_at.all_day)
+      evaluations.update_all(:crawl_log_id => crawl_log.id)
     end
   end
 

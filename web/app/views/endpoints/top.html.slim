@@ -1,6 +1,7 @@
 = stylesheet_link_tag 'umakadata/top'
 = javascript_include_tag 'Chart.min'
 = javascript_include_tag 'umakadata/chart-helper'
+= javascript_include_tag 'umakadata/twitter-widget'
 = javascript_include_tag 'umakadata/top'
 
 javascript:
@@ -15,62 +16,122 @@ javascript:
 - content_for(:calendar)
   == render "calendar"
 
-h1#about.page-header Umaka Data
 .row
-  .col-md-12
-    p
-    | YummyData (in Japanese Umaka Data) is a site that lists and monitors SPARQL endpoints that
-      provide data of interest to the biomedical community. Sometimes it is difficult to decide which
-      endpoint to use. YummyData helps by providing a curated list of endpoints, and by monitoring over time
-      their availability, updates rate, standard compliance and other features that are important
-      to data consumers. Beyond this, YummyData provides a forum where consumers and providers of
-      biomedical information in RDF can communicate and improve the usability of the web of (bio) data.
-      If you are a provider and want your resource exposed in a curated directory, or if you are a user and
-      have issues with an endpoint, YummyData is here to help.
+  .col-md-12.page-element
+    #site-description.page-title-header
+      | YummyData (in Japanese Umaka Data) is a site that lists and monitors SPARQL endpoints that
+        provide data of interest to the biomedical community.
+    .page-title-body
+      p
+        | Sometimes it is difficult to decide which
+          endpoint to use. YummyData helps by providing a curated list of endpoints, and by monitoring over time
+          their availability, updates rate, standard compliance and other features that are important
+          to data consumers.
+      p
+        | Beyond this, YummyData provides a
+        '
+        = link_to 'forum', URI.encode("https://github.com/#{Rails.application.secrets.github_repo}/issues?q=is:open -label:endpoints")
+        '
+        | where consumers and providers of
+          biomedical information in RDF can communicate and improve the usability of the web of (bio) data.
+      p
+        | If you are a provider and want your resource exposed in a curated directory, or if you are a user and
+          have issues with an endpoint, YummyData is here to
+        '
+        = link_to 'help', {:controller => 'inquiries', :action => 'form'}
+        |.
 
-h1.page-header Dashboard
-.row.placeholders
-  .col-xs-6.col-sm-4.placeholder
-    canvas#score[width="200" height="200"]
-    h4 Scores
-    span.text-muted Total Scores
-  .col-xs-6.col-sm-4.placeholder
-    canvas#alive[width="200" height="200"]
-    h4 Alive
-    span.text-muted Alive
-  .col-xs-6.col-sm-4.placeholder
-    canvas#sd[width="200" height="200"]
-    h4 Service Descriptions
-    span.text-muted Service Descriptions
-.row.placeholders
-  .col-xs-6.col-sm-4.placeholder
-    canvas#score_statistics[width="200" height="200"]
-    h4 Score Statistics
-    span.text-muted Total Scores Statistics
-  .col-xs-6.col-sm-4.placeholder
-    canvas#alive_statistics[width="200" height="200"]
-    h4 Alive Statistics
-    span.text-muted Alive Statistics
-  .col-xs-6.col-sm-4.placeholder
-    canvas#sd_statistics[width="200" height="200"]
-    h4 Service Description Statistics
-    span.text-muted Service Description Statistics
+br
+.row
+  .col-md-12.page-element.rate-list
+    = render :partial => 'metrics', :locals => { :metrics => @metrics }
 
-h2.sub-header Score Ranking
-.table-responsive
-  table.table.table-striped
-    thead
-      tr
-        th.column Name
-        th.column URL
-        th.column Score
-    tbody#result_body
+br
+.row
+  .col-md-12.page-element
+    .row
+      .col-md-1
+        .page-title-header
+          | Scores
+      .col-md-11
+        == yield :calendar
+    .row
+      .col-md-9
+        .scores-board-element
+          .carousel.slide#chart-carousel[data-ride="carousel"]
+            ol.carousel-indicators
+              li.active data-target="#chart-carousel" data-slide-to="0"
+              li data-target="#chart-carousel" data-slide-to="1"
+            .carousel-inner role="listbox"
+              .item.active
+                .page-title-header
+                  | SPARQL Score
+                canvas#score[height=350 width=750]
+              .item
+                .page-title-header
+                  | Top 5 endpoints, by SPARQL score
+                .table-responsive
+                  table.table.table-striped.top-5-endpoints
+                    thead
+                      tr
+                        th Score
+                        th Name
+                        th URL
+                    tbody
+                      - @evaluations.each do |evaluation|
+                        tr
+                          td
+                            = evaluation[:score]
+                          td
+                            = link_to evaluation[:endpoint][:name], endpoint_path(evaluation[:endpoint][:id], evaluation[:id])
+                          td
+                            = link_to evaluation[:endpoint][:url], evaluation[:endpoint][:url]
 
-      - @endpoints.each do |endpoint|
-        tr
-          td
-            = link_to endpoint[:name], endpoint_path(endpoint[:id], endpoint[:evaluation][:id])
-          td
-            = link_to endpoint[:url], endpoint[:url]
-          td
-            = endpoint[:evaluation][:score]
+      .col-md-3
+        .scores-board-element
+          .page-title-header
+            | SPARQL score:
+              what it is ?
+          .page-title-body
+            | SPARQL Scores represents how valuable endpoints are.
+            | Umaka Score is calculated on the basis of the evaluation from the 6 aspects,
+            | Availability, Freshness, Operation, Usefulness, Validity and Performance.
+            | We also rank the ebdpoints on a scale of A to E according to the Umaka score.
+          = link_to 'More', 'umaka-score.html', {:class => 'btn btn-xs more-button', 'data-no-turbolink' => true}
+
+    .row
+      .col-md-6.col-sm-12
+        .scores-board-element
+          .page-title-header
+            | #yummydata news from Twitter
+          .row
+            .col-md-12
+              a.twitter-timeline href="https://twitter.com/hashtag/yummydata" data-widget-id="788049961984389121" width="100%" data-chrome="noheader nofooter"
+      .col-md-6.col-sm-12
+        .row
+          .col-md-12.col-sm-6.col-xs-12
+            .scores-board-element
+              .page-title-header
+                | Endpoint discussions
+              .page-title-body
+                | Do you want to ask something about an endpoint?
+                br
+                | You can use the Yummydata forum on Github.
+                br
+                | You will find a issue page for each one of the endpoints we are
+                br
+                | monitoring, feel free to add to the discussion.
+              = link_to("See all discussions", URI.encode("https://github.com/#{Rails.application.secrets.github_repo}/issues?q=is:open+label:endpoints"), :class => 'btn see-all-endpoints')
+          .col-md-12.col-sm-6.col-xs-12
+            .scores-board-element
+              .page-title-header
+                | About
+              .page-title-body
+                | Yummydata is a project conceived by [...], realized by [...] and maintained by [..]
+                  Please fill with the relevant infos.
+                br
+                | Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                br
+                | Praesent cursus lectus ac nisi ullamcorper, In auctor velit lacinia.
+                | Duis dolor turpis, lacinia sit amet molestie at, lobortis at arcu.
+              = link_to 'More', {:controller => 'homes', :action => 'about'}, {:class => 'btn btn-xs more-button'}

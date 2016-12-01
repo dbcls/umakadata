@@ -8,22 +8,50 @@ class EndpointsController < ApplicationController
   include Umakadata::DataFormat
 
   before_action :set_endpoint, only: [:show]
-  before_action :set_start_date, only: [:top, :show]
+  before_action :set_start_date, only: [:index, :top, :show]
+
+  def index
+    @date = date_param
+    crawl_log = CrawlLog.started_at(@date)
+    if crawl_log.blank?
+      @evaluations = Array.new
+    else
+      evaluations = crawl_log.evaluations.joins(:endpoint).order(endpointlist_param).pluck(:id, :score, :'endpoints.id', :'endpoints.name', :'endpoints.url')
+      @evaluations = evaluations.map do |result|
+        {
+          :id   => result[0],
+          :score => result[1],
+          :endpoint => {
+            :id   => result[2],
+            :name => result[3],
+            :url  => result[4]
+          }
+        }
+      end
+    end
+  end
 
   def top
     @date = date_param
-    endpoints = Endpoint.retrieved_at(@date).order(endpointlist_param).pluck(:id, :name, :url, :'evaluations.id', :'evaluations.score')
-    @endpoints = endpoints.map do |result|
-      {
-        :id   => result[0],
-        :name => result[1],
-        :url  => result[2],
-        :evaluation => {
-          :id    => result[3],
-          :score => result[4]
+    @metrics = set_metrics
+    crawl_log = CrawlLog.started_at(@date)
+    if crawl_log.blank?
+      @evaluations = Array.new
+    else
+      evaluations = crawl_log.evaluations.joins(:endpoint).order("score DESC").limit(5).pluck(:id, :score, :'endpoints.id', :'endpoints.name', :'endpoints.url')
+      @evaluations = evaluations.map do |result|
+        {
+          :id   => result[0],
+          :score => result[1],
+          :endpoint => {
+            :id   => result[2],
+            :name => result[3],
+            :url  => result[4]
+          }
         }
-      }
+      end
     end
+
   end
 
   def search
@@ -189,20 +217,30 @@ class EndpointsController < ApplicationController
 
   def alive
     count = { :alive => 0, :dead => 0 }
-    alives = Endpoint.retrieved_at(date_param).pluck(:alive)
-    alives.each do |alive|
-      alive ? count[:alive] += 1 : count[:dead] += 1
+    crawl_log = CrawlLog.started_at(date_param)
+    if crawl_log.blank?
+      render :json => {}
+    else
+      alives = crawl_log.evaluations.pluck(:alive)
+      alives.each do |alive|
+        alive ? count[:alive] += 1 : count[:dead] += 1
+      end
+      render :json => count
     end
-    render :json => count
   end
 
   def service_descriptions
     count = { :true => 0, :false => 0 }
-    service_descriptions = Endpoint.retrieved_at(date_param).pluck(:service_description)
-    service_descriptions.each do |sd|
-      sd.present? ? count[:true] += 1 : count[:false] += 1
+    crawl_log = CrawlLog.started_at(date_param)
+    if crawl_log.blank?
+      render :json => {}
+    else
+      service_descriptions = crawl_log.evaluations.pluck(:service_description)
+      service_descriptions.each do |sd|
+        sd.present? ? count[:true] += 1 : count[:false] += 1
+      end
+      render :json => count
     end
-    render :json => count
   end
 
 
@@ -286,7 +324,12 @@ class EndpointsController < ApplicationController
   end
 
   def score_ranking
-    render json: Endpoint.retrieved_at(date_param).order(endpointlist_param).pluck(:id, 'evaluations.id', :name, :url, :score)
+    crawl_log = CrawlLog.started_at(date_param)
+    if crawl_log.blank?
+      render :json => {}
+    else
+      render json: crawl_log.evaluations.joins(:endpoint).order(endpointlist_param).pluck(:id, :'endpoints.id', :'endpoints.name', :'endpoints.url', :score)
+    end
   end
 
   private
@@ -333,10 +376,10 @@ class EndpointsController < ApplicationController
       input_date = params[:date]
       if input_date.blank?
         if params[:id].blank?
-          date = Endpoint.get_last_crawled_date
+          date = CrawlLog.latest.started_at
         else
           evaluation = Evaluation.lookup(params[:id], params[:evaluation_id])
-          date = evaluation.retrieved_at
+          date = evaluation.crawl_log.started_at
         end
       else
         date = Time.zone.parse(input_date)
@@ -346,7 +389,7 @@ class EndpointsController < ApplicationController
     def set_start_date
       evaluations = params[:id].nil? ? Evaluation.all : Evaluation.where(:endpoint_id => params[:id])
       oldest_evaluation = evaluations.order('retrieved_at ASC').first
-      @start_date = oldest_evaluation.retrieved_at.strftime('%Y-%m-%d')
+      @start_date = oldest_evaluation.retrieved_at.strftime('%d-%m-%Y')
     end
 
     def endpointlist_param
@@ -357,4 +400,26 @@ class EndpointsController < ApplicationController
       column + ' ' + direction
     end
 
+    def set_metrics
+      date = CrawlLog.latest.started_at
+      metrics = {
+        data_collection: {count: 0, variation: 0},
+        no_of_endpoints: {count: 0, variation: 0},
+        active_endpoints: {count: 0, variation: 0},
+        alive_rates: {count: 0, variation: 0},
+        data_entries: {count: 0, variation: 0}
+      }
+      metrics[:data_collection][:count] = CrawlLog.where.not(finished_at: nil).count
+      metrics[:data_collection][:variation] = ((Time.zone.now - date) / 3600 / 24).round(0)
+      number_of_endpoints_last_week = Endpoint.where.not('created_at >= ?', date.ago(7.days).beginning_of_day).count
+      metrics[:no_of_endpoints][:count] = Endpoint.count
+      metrics[:no_of_endpoints][:variation] = metrics[:no_of_endpoints][:count] - number_of_endpoints_last_week
+      metrics[:active_endpoints][:count] = Evaluation.where(created_at: date.all_day, alive: true).count(:endpoint_id)
+      metrics[:active_endpoints][:variation] = metrics[:active_endpoints][:count] - Evaluation.where(created_at: date.ago(1.days).all_day, alive: true).count(:endpoint_id)
+      metrics[:alive_rates][:count] = ((metrics[:active_endpoints][:count].to_f / metrics[:no_of_endpoints][:count].to_f) * 100).round(0)
+      metrics[:alive_rates][:variation] = metrics[:alive_rates][:count] - ((Evaluation.where(created_at: date.ago(7.days).all_day, alive: true).count(:endpoint_id).to_f / number_of_endpoints_last_week.to_f) * 100).round(0)
+      metrics[:data_entries][:count] = Evaluation.where(created_at: date.all_day).sum(:number_of_statements)
+      metrics[:data_entries][:variation] = metrics[:data_entries][:count] - Evaluation.where(created_at: date.ago(1.days).all_day).sum(:number_of_statements)
+      metrics
+    end
 end
