@@ -1,13 +1,12 @@
 URI,count
 http://bio2rdf.org,1057997690
 http://chebi.bio2rdf.org/,3
-http://chem2bio2rdf.org/,6
-http://chem2bio2rdf.org/chem2bio2rdf.owl#,1296
+http://chem2bio2rdf.org/,1302
 http://clinicaltrials.bio2rdf.org/,1
 http://cu.affymetrix.bio2rdf.org/fct/,1
 http://cu.biomodels.bio2rdf.org/fct/,1
-http://download.bio2rdf.org/release/3/pharmgkb/,16
-http://download.bio2rdf.org/release/4,15154
+http://download.bio2df.org/release/4/sider/,45
+http://download.bio2rdf.org/release/,15170
 http://drugbank.bio2rdf.org/fct/,1
 http://go.bio2rdf.org/,3
 http://hgnc.bio2rdf.org/,1
