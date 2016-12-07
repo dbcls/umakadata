@@ -23,11 +23,11 @@ html[lang="en"]
           = image_tag('yummydata-logo.png', :class => 'yummydata-logo')
           ul.nav.nav-sidebar
             li
-              = link_to 'DASHBOARD',  "/"
+              = link_to 'DASHBOARD', '/', {'data-no-turbolink' => true}
             li
               = link_to 'ABOUT', {:controller => 'homes', :action => 'about'}
             li
-              = link_to 'RANKED ENDPOINTS', {:controller => 'endpoints', :action => 'index'}
+              = link_to 'RANKED ENDPOINTS', {:controller => 'endpoints', :action => 'index'}, {'data-no-turbolink' => true}
             li
               = link_to 'ENDPOINT SEARCH',  {:controller => 'endpoints', :action => 'search'}
             li
