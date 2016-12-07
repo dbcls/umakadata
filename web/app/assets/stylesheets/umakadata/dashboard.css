@@ -104,6 +104,16 @@ body {
   margin-bottom: 15px;
 }
 
+.page-title-sub-header {
+  margin-top: 10px;
+  font-family: Roboto-Medium;
+  font-size: 18px;
+  color: #73879C;
+  font-weight: bold;
+  line-height: 29px;
+  margin-bottom: 15px;
+}
+
 .page-title-body {
   font-family: Roboto-Regular;
   font-size: 14px;

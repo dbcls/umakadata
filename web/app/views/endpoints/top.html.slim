@@ -127,11 +127,17 @@ br
               .page-title-header
                 | About
               .page-title-body
-                | Yummydata is a project conceived by [...], realized by [...] and maintained by [..]
-                  Please fill with the relevant infos.
-                br
-                | Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                br
-                | Praesent cursus lectus ac nisi ullamcorper, In auctor velit lacinia.
-                | Duis dolor turpis, lacinia sit amet molestie at, lobortis at arcu.
+                p
+                  | YummyData is a system that monitors SPARQL endpoints
+                    (and in general RDF datasets) relevant for biomedical
+                    research. It provides information such as their compliance
+                    to standards and their performance.
+                p
+                  | Examples of features that YummyData
+                    inspects are the presence of a VoID descriptor, the presence
+                    of license information, support of SPARQL1.1 or support for CORS.
+                p
+                  | Examples of the information that YummyData monitors are the
+                    endpoint uptime, the number of statements, and some measure of
+                    the amount of ontology constructs in use.
               = link_to 'More', {:controller => 'homes', :action => 'about'}, {:class => 'btn btn-xs more-button'}
