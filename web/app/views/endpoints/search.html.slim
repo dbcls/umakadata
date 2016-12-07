@@ -16,13 +16,13 @@
 
     = form_tag({:action => :search, :controller => :endpoints}, {:id => 'search', :class => 'page-title-body'})
       .form-inline.form-group.row
-        label.col-xs-3 Name or URL
+        label.col-xs-3 Endpoint name or URL
         = text_field_tag :name, "", :class => 'form-control'
       .form-inline.form-group.row
         label.col-xs-3 Prefix
         = text_field_tag :prefix, "", :class => 'form-control'
       .form-inline.form-group.row
-        label.col-xs-3 URI
+        label.col-xs-3 Contained URI
         .form-group
           label.radio-inline
             input[name="element_type" type="radio" value="subject"]
