@@ -55,6 +55,8 @@ class EndpointsController < ApplicationController
   end
 
   def search
+    @date = date_param
+    @start_date = Evaluation.first.retrieved_at.strftime('%d-%m-%Y')
   end
 
   def show
