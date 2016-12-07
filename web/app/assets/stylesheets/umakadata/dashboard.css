@@ -114,6 +114,16 @@ body {
   margin-bottom: 15px;
 }
 
+.page-title-subsub-header {
+  margin-top: 10px;
+  font-family: Roboto-Medium;
+  font-size: 16px;
+  color: #73879C;
+  font-weight: bold;
+  line-height: 29px;
+  margin-bottom: 15px;
+}
+
 .page-title-body {
   font-family: Roboto-Regular;
   font-size: 14px;
@@ -270,7 +280,6 @@ li+ li.rate-of-endpoints {
 .table-striped > tbody > tr {
    height: 50px;
 }
-
 
 .minus_variation {
   color: #FF9E9D;
