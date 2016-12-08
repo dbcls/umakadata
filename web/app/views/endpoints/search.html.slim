@@ -1,5 +1,6 @@
 = javascript_include_tag 'jquery.validate'
 = javascript_include_tag 'umakadata/search'
+= javascript_include_tag 'bootstrap-datepicker.min'
 = stylesheet_link_tag    'umakadata/search'
 
 .row
@@ -33,6 +34,17 @@
       .form-inline.form-group.row
         label.col-xs-3
         = text_field_tag :prefix_filter_uri, "", :class =>'form-control form-inline'
+      .form-inline.form-group.row
+        label.col-xs-3 For the day of
+        = text_field_tag :date, "#{@date.strftime('%d-%m-%Y')}", :class => 'form-control form-inline form-datepicker'
+        javascript:
+          $('.form-datepicker').datepicker({
+            autoclose: true,
+            startDate: "#{@start_date}",
+            endDate: new Date(),
+            format: 'dd-mm-yyyy',
+            todayHighlight: true
+          });
       .form-inline.form-group.row
         label.col-xs-3 Score (0-100)
         = text_field_tag :score_lower, "", :class => 'form-control form-inline'
