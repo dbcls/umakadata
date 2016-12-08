@@ -23,6 +23,12 @@ $(document).ready(function() {
 $(function() {
   $("#result").hide();
 
+  $("#search").keypress(function(e){
+    if (e.which == 13) {
+      $("#search_button").click();
+    }
+  });
+
   $("#search_button").on("click", function() {
     if(!$("form#search").valid()){
       $('#searching').modal('hide');
