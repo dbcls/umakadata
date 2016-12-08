@@ -71,3 +71,5 @@ gem 'json-ld'
 gem 'simple_form'
 
 gem 'active_median'
+
+gem 'google-analytics-rails'

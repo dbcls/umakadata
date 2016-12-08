@@ -44,4 +44,5 @@ Rails.application.configure do
     Hirb.enable
   end
 
+  GA.tracker = 'UA-88681113-1'
 end
