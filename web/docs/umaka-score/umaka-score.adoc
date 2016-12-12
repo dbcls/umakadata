@@ -518,9 +518,7 @@ LIMIT 1
 SELECT
   *
 WHERE {
-  filter (!regex(?s, "^http://", "i") && !isBLANK(?s) && ?g NOT IN (
-    <http://www.openlinksw.com/schemas/virtrdf#>
-  ))
+  filter (!regex(?s, "^http://", "i") && !isBLANK(?s))
 }
 LIMIT 1
 ....
@@ -558,9 +556,7 @@ OFFSET 100
 SELECT
   ?s
 WHERE {
-  filter (isURI(?s) && ?g NOT IN (
-    <http://www.openlinksw.com/schemas/virtrdf#>
-  ))
+  filter (isURI(?s))
 }
 LIMIT 1
 OFFSET 100
