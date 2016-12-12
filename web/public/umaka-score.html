@@ -1100,9 +1100,7 @@ LIMIT 1</pre>
 <pre>SELECT
   *
 WHERE {
-  filter (!regex(?s, "^http://", "i") &amp;&amp; !isBLANK(?s) &amp;&amp; ?g NOT IN (
-    &lt;http://www.openlinksw.com/schemas/virtrdf#&gt;
-  ))
+  filter (!regex(?s, "^http://", "i") &amp;&amp; !isBLANK(?s))
 }
 LIMIT 1</pre>
 </div>
@@ -1144,9 +1142,7 @@ OFFSET 100</pre>
 <pre>SELECT
   ?s
 WHERE {
-  filter (isURI(?s) &amp;&amp; ?g NOT IN (
-    &lt;http://www.openlinksw.com/schemas/virtrdf#&gt;
-  ))
+  filter (isURI(?s))
 }
 LIMIT 1
 OFFSET 100</pre>
@@ -1326,7 +1322,7 @@ catalogue for modelling, publishing, and consuming linked data.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-10-07 15:00:26 JST
+Last updated 2016-12-12 12:46:58 JST
 </div>
 </div>
 <script type="text/x-mathjax-config">
