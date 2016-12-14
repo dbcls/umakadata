@@ -1087,7 +1087,7 @@ graph which contains invalid statements.</p>
   *
 WHERE {
   GRAPH ?g { ?s ?p ?o } .
-  filter (!regex(?s, "^http://", "i") &amp;&amp; !isBLANK(?s) &amp;&amp; ?g NOT IN (
+  filter (!regex(STR(?s), "^http://", "i") &amp;&amp; !isBLANK(?s) &amp;&amp; ?g NOT IN (
     &lt;http://www.openlinksw.com/schemas/virtrdf#&gt;
   ))
 }
@@ -1100,7 +1100,7 @@ LIMIT 1</pre>
 <pre>SELECT
   *
 WHERE {
-  filter (!regex(?s, "^http://", "i") &amp;&amp; !isBLANK(?s))
+  filter (!regex(STR(?s), "^http://", "i") &amp;&amp; !isBLANK(?s))
 }
 LIMIT 1</pre>
 </div>
@@ -1128,7 +1128,7 @@ graph which contains invalid statements.</p>
   ?s
 WHERE {
   GRAPH ?g { ?s ?p ?o } .
-  filter (isURI(?s) &amp;&amp; ?g NOT IN (
+  filter (isURI(?s) &amp;&amp; !regex(STR(?s), "^http://localhost", "i") &amp;&amp; ?g NOT IN (
     &lt;http://www.openlinksw.com/schemas/virtrdf#&gt;
   ))
 }
@@ -1142,7 +1142,8 @@ OFFSET 100</pre>
 <pre>SELECT
   ?s
 WHERE {
-  filter (isURI(?s))
+  { ?s ?p ?o } .
+  filter (isURI(?s) &amp;&amp; !regex(STR(?s), "^http://localhost", "i") &amp;&amp; !regex (STR(?s), "^http://www.openlinksw.com", "i"))
 }
 LIMIT 1
 OFFSET 100</pre>
@@ -1322,7 +1323,7 @@ catalogue for modelling, publishing, and consuming linked data.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-12-12 12:46:58 JST
+Last updated 2016-12-14 13:36:55 JST
 </div>
 </div>
 <script type="text/x-mathjax-config">
