@@ -114,6 +114,8 @@ namespace :umakadata do
     end
     rdf_prefixes = RdfPrefix.all.pluck(:id, :endpoint_id, :uri)
     Endpoint.all.order("id #{args[:order]}").each do |endpoint|
+      next if endpoint.id == 56  # UniProt
+      next if endpoint.id == 115 # BioPortal
       crawl_log.evaluations.where(endpoint_id: endpoint.id).delete_all
 
       rdf_prefixes_candidates = Array.new
