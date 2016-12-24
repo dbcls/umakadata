@@ -1,8 +1,4 @@
-require 'json'
-require 'sparql/client'
 require 'umakadata/error_helper'
-require 'umakadata/http_helper'
-require 'umakadata/sparql_helper'
 require 'umakadata/logging/log'
 
 
@@ -17,8 +13,6 @@ module Umakadata
       SKIP_GRAPH_LIST = [
         'http://www.openlinksw.com/schemas/virtrdf#'
       ]
-
-      LOV_VOCABULARY = 'http://lov.okfn.org/dataset/lov/api/v2/vocabulary/list'.freeze
 
       def metadata(uri, logger: nil)
         graphs_log = Umakadata::Logging::Log.new
@@ -149,7 +143,7 @@ module Umakadata
           end
         end
         score = ((used_ontologies.to_f / ontologies.count.to_f) * 100) / 2
-        log.result = "#{used_ontologies} / #{ontologies.count} ontologies match vocabularies on LOV"
+        log.result = "#{used_ontologies} / #{ontologies.count} ontologies match vocabularies in LOV"
         logger.result = "Ontology score (Linked Open Vocabularies) is #{score}" unless logger.nil?
         score < 0 ? 0 : score
       end
@@ -176,36 +170,7 @@ module Umakadata
       end
 
       def list_ontologies_in_LOV(metadata, logger: nil)
-        list = Array.new
-
-        log = Umakadata::Logging::Log.new
-        logger.push log unless logger.nil?
-        args = {:logger => log}
-
-        response = http_get(LOV_VOCABULARY, args)
-
-        if !response.is_a?(Net::HTTPSuccess)
-          log.result = "HTTP response is not 2xx Success"
-          logger.result = "Vocabulary list on LOV is not fetchable" unless logger.nil?
-          return list
-        end
-
-        if response.body.empty?
-          log.result = "LOV API does not return any data"
-          logger.result = "Vocabulary list on LOV is not fetchable" unless logger.nil?
-          return list
-        end
-
-        log.result = 'LOV returns 200 HTTP response'
-
-        json = JSON.parse(response.body)
-        list_ontologies = json.map do |elm|
-          uri = elm['uri']
-          uri.include?('#') ? uri.split('#')[0] : uri
-        end
-        list_ontologies.uniq!
-        logger.result = "#{list_ontologies.count} ontologies are found in LOV" unless logger.nil?
-        list_ontologies
+        return Umakadata::LinkedOpenVocabularies.instance.get(logger: logger)
       end
 
       def ontologies(properties)
