@@ -61,6 +61,14 @@ namespace :umakadata do
     end
   end
 
+  desc "import seeAlso and sameAs data for all endpoints"
+  task :seeAlso_sameAs_for_all_endpoints, ['directory_path'] => :environment do |task, args|
+    directory_path = args[:directory_path].blank? ? "#{SBMETA}/data/bulkdownloads" : args[:directory_path]
+    Endpoint.pluck(:name).each do |name|
+      Rake::Task["umakadata:seeAlso_sameAs"].execute(Rake::TaskArguments.new([:name, :directory_path], [name, directory_path]))
+    end
+  end
+
   desc "import seeAlso and sameAs data from CSV file"
   task :seeAlso_sameAs, ['name', 'directory_path'] => :environment do |task, args|
     endpoint = Endpoint.where(:name => args[:name]).take
