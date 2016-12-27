@@ -34,6 +34,7 @@ $(function() {
       $('#searching').modal('hide');
       return false;
     }
+    $('#collapse').collapse('hide');
     var values = getInputValues();
     var params = createParams(values);
     var url = "/api/endpoints/search/?" + params;
