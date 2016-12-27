@@ -14,11 +14,17 @@ ActiveAdmin.register Endpoint do
 # end
 
   permit_params do
-    permitted = [:name, :url, :description_url]
+    permitted = [:name, :url, :description_url, :disable_crawling]
+  end
+
+  scope 'All', :all, :default => true
+  scope :disable_crawling do |endpoints|
+    endpoints.where(:disable_crawling => true)
   end
 
   filter :name
   filter :url
+  filter :disable_crawling
   filter :created_at
   filter :updated_at
 
@@ -27,6 +33,7 @@ ActiveAdmin.register Endpoint do
     id_column
     column :name
     column :url
+    column :disable_crawling
     column :latest_alive_date do |endpoint|
       latest = endpoint.evaluations.where(:alive => true).last
       if latest.nil?
@@ -49,6 +56,7 @@ ActiveAdmin.register Endpoint do
         row :name
         row :url
         row :description_url
+        row :disable_crawling
         row :created_at
         row :updated_at
         row :issue_id

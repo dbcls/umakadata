@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161025080528) do
+ActiveRecord::Schema.define(version: 20161222152552) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,10 +57,11 @@ ActiveRecord::Schema.define(version: 20161025080528) do
   create_table "endpoints", force: :cascade do |t|
     t.string   "name"
     t.string   "url"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.integer  "issue_id"
     t.string   "description_url"
+    t.boolean  "disable_crawling", default: false, null: false
   end
 
   add_index "endpoints", ["name"], name: "index_endpoints_on_name", unique: true, using: :btree
