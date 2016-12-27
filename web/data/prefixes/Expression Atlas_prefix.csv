@@ -1,12 +1,4 @@
 URI,count
-http://rdf.ebi.ac.uk/resource/expressionatlas,78507810
-http://rdf.ebi.ac.uk/terms/expressionatlas/,8772904
-http://rdf.ebi.ac.uk/dataset/atlas-arrays/,21
-http://rdf.ebi.ac.uk/dataset/atlas-xrefs/,36
-http://rdf.ebi.ac.uk/dataset/atlas/,7062
-http://rdf.ebi.ac.uk/dataset/atlas/13.05/,1
-http://rdf.ebi.ac.uk/dataset/atlas/13.07/,1
-http://rdf.ebi.ac.uk/resource/atlas,993588752
-http://rdf.ebi.ac.uk/terms/atlas/,81478115
-http://rdf.ebi.ac.uk/terms/atlas/dbXref/,925032
-http://www.ebi.ac.uk/fgpt/atlasrdf/,15
+http://rdf.ebi.ac.uk/,1173259637
+http://www.ebi.ac.uk/,594781801
+ftp://ftp.ebi.ac.uk/,16

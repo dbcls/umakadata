@@ -1,11 +1,5 @@
 URI,count
-ftp://ftp.ebi.ac.uk/pub/databases/chembl/,1
-ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBL-RDF/21.0/,16
-http://rdf.ebi.ac.uk/dataset/chembl/,5
-http://rdf.ebi.ac.uk/dataset/chembl/20.0/void.ttl#,2
-http://rdf.ebi.ac.uk/dataset/chembl/21.0/void.ttl#,259
-http://rdf.ebi.ac.uk/resource/chembl,582857611
-http://rdf.ebi.ac.uk/terms/chembl#,21394284
-http://www.ebi.ac.uk/rdf/services/chembl/,1
-https://www.ebi.ac.uk/chembl/compound/displayimage_large/,4776573
-https://www.surechembl.org/chemical/,877869
+http://rdf.ebi.ac.uk/,604252170
+https://www.ebi.ac.uk/,4776577
+http://www.ebi.ac.uk/,76212
+ftp://ftp.ebi.ac.uk/pub/databases/,19
