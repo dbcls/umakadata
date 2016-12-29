@@ -1,3 +1,29 @@
 label.control-label {
   margin-left: 10px;
 }
+
+.panel-default > .panel-heading {
+  background: #F7F7F7;
+}
+
+.panel-collapse {
+  background-color: #F7F7F7;
+  padding: 20px;
+  border-top: 0;
+}
+
+.panel-title > a {
+  cursor: pointer;
+}
+
+.accordion-toggle a:after {
+  content: "\0025b2";
+  float: right;
+  color: inherit;
+}
+
+.accordion-toggle a.collapsed:after {
+  content: "\0025bc";
+  float: right;
+  color: inherit;
+}
