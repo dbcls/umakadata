@@ -177,11 +177,12 @@ class Evaluation < ActiveRecord::Base
     eval.subject_is_http_uri = retriever.http_subject?(logger: logger)
     eval.subject_is_http_uri_log = logger.as_json
     if eval.endpoint.prefixes.present?
+      prefixes = Prefix.where(endpoint_id: eval.endpoint_id).pluck(:uri)
       logger = Umakadata::Logging::Log.new
-      eval.uri_provides_info = retriever.uri_provides_info?(logger: logger)
+      eval.uri_provides_info = retriever.uri_provides_info?(prefixes, logger: logger)
       eval.uri_provides_info_log = logger.as_json
       logger = Umakadata::Logging::Log.new
-      eval.contains_links = retriever.contains_links?(logger: logger)
+      eval.contains_links = retriever.contains_links?(prefixes, logger: logger)
       eval.contains_links_log = logger.as_json
     end
   end
