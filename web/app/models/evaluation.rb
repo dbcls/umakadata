@@ -68,19 +68,7 @@ class Evaluation < ActiveRecord::Base
       eval.cool_uri_rate = retriever.cool_uri_rate(logger: logger)
       eval.cool_uri_rate_log = logger.as_json
 
-      logger = Umakadata::Logging::Log.new
-      eval.support_turtle_format = retriever.check_content_negotiation(Umakadata::DataFormat::TURTLE, logger: logger)
-      eval.support_turtle_format_log = logger.as_json
-      logger = Umakadata::Logging::Log.new
-      eval.support_xml_format    = retriever.check_content_negotiation(Umakadata::DataFormat::RDFXML, logger: logger)
-      eval.support_content_negotiation_log = logger.as_json
-      logger = Umakadata::Logging::Log.new
-      eval.support_html_format   = retriever.check_content_negotiation(Umakadata::DataFormat::HTML, logger: logger)
-      eval.support_html_format_log = logger.as_json
-
-      eval.support_content_negotiation = eval.support_turtle_format ||
-                                         eval.support_xml_format ||
-                                         eval.support_html_format
+      check_content_negotiation(endpoint, eval, retriever)
 
       logger = Umakadata::Logging::Log.new
       metadata = retriever.metadata(logger: logger)
@@ -138,6 +126,49 @@ class Evaluation < ActiveRecord::Base
     eval.update_interval = Evaluation.calc_update_interval(eval)
 
     return eval if eval.save!
+  end
+
+  def self.check_content_negotiation(endpoint, eval, retriever)
+    log_content_negotiation = Umakadata::Logging::Log.new
+
+    if Prefix.where(endpoint_id: endpoint.id).count == 0
+      eval.support_content_negotiation = false
+      log_content_negotiation.result = "We could not check the support of content negotiation since the prefixes are not registered."
+      eval.support_content_negotiation_log = log_content_negotiation.as_json
+      return
+    end
+
+    log_turtle = Umakadata::Logging::Log.new
+    log_content_negotiation.push log_turtle
+    log_xml = Umakadata::Logging::Log.new
+    log_content_negotiation.push log_xml
+    log_html = Umakadata::Logging::Log.new
+    log_content_negotiation.push log_html
+
+    eval.support_turtle_format = true
+    eval.support_xml_format = true
+    eval.support_html_format = true
+
+    Prefix.where(endpoint_id: endpoint.id).each do |prefix|
+      logger = Umakadata::Logging::Log.new
+      log_turtle.push logger
+      eval.support_turtle_format &= retriever.check_content_negotiation(prefix.uri, Umakadata::DataFormat::TURTLE, logger: logger)
+
+      logger = Umakadata::Logging::Log.new
+      log_xml.push logger
+      eval.support_xml_format &= retriever.check_content_negotiation(prefix.uri, Umakadata::DataFormat::RDFXML, logger: logger)
+
+      logger = Umakadata::Logging::Log.new
+      log_html.push logger
+      eval.support_html_format &= retriever.check_content_negotiation(prefix.uri, Umakadata::DataFormat::HTML, logger: logger)
+    end
+
+    log_turtle.result = "Some URI #{eval.support_turtle_format ? "" : "does not "}support content negotiation with #{Umakadata::DataFormat::TURTLE}"
+    log_xml.result = "Some URI #{eval.support_xml_format ? "" : "does not "}support content negotiation with #{Umakadata::DataFormat::RDFXML}"
+    log_html.result = "Some URI #{eval.support_html_format ? "" : "does not "}support content negotiation with #{Umakadata::DataFormat::HTML}"
+    eval.support_content_negotiation = (eval.support_turtle_format || eval.support_xml_format || eval.support_html_format)
+    log_content_negotiation.result = "The endpoint #{eval.support_content_negotiation ? "" : "does not"} support content negotiation"
+    eval.support_content_negotiation_log = log_content_negotiation.as_json
   end
 
   def self.retrieve_service_description(retriever, eval)
