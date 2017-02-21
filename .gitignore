@@ -16,6 +16,7 @@
 !/web/log/.keep
 /web/tmp
 /web/vendor/bundle
+/web/vendor/bundler
 
 #
 # For core library
@@ -43,3 +44,5 @@
 /web/lib/core/.bundle/
 /web/lib/core/vendor/bundle
 /web/lib/core/lib/bundler/man/
+
+/.idea

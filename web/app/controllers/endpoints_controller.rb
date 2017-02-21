@@ -378,9 +378,11 @@ class EndpointsController < ApplicationController
       input_date = params[:date]
       if input_date.blank?
         if params[:id].blank?
+          return Time.now if CrawlLog.latest.empty?
           date = CrawlLog.latest.started_at
         else
           evaluation = Evaluation.lookup(params[:id], params[:evaluation_id])
+          return Time.now if evaluation.nil?
           date = evaluation.crawl_log.started_at
         end
       else
@@ -391,6 +393,7 @@ class EndpointsController < ApplicationController
     def set_start_date
       evaluations = params[:id].nil? ? Evaluation.all : Evaluation.where(:endpoint_id => params[:id])
       oldest_evaluation = evaluations.order('retrieved_at ASC').first
+      return if oldest_evaluation.nil?
       @start_date = oldest_evaluation.retrieved_at.strftime('%d-%m-%Y')
     end
 
@@ -403,7 +406,6 @@ class EndpointsController < ApplicationController
     end
 
     def set_metrics
-      date = CrawlLog.latest.started_at
       metrics = {
         data_collection: {count: 0, variation: 0},
         no_of_endpoints: {count: 0, variation: 0},
@@ -411,6 +413,9 @@ class EndpointsController < ApplicationController
         alive_rates: {count: 0, variation: 0},
         data_entries: {count: 0, variation: 0}
       }
+      return metrics if CrawlLog.latest.empty?
+      date = CrawlLog.latest.started_at
+
       metrics[:data_collection][:count] = CrawlLog.where.not(finished_at: nil).count
       metrics[:data_collection][:variation] = ((Time.zone.now - date) / 3600 / 24).round(0)
       number_of_endpoints_last_week = Endpoint.where.not('created_at >= ?', date.ago(7.days).beginning_of_day).count
