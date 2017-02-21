@@ -56,7 +56,9 @@ class EndpointsController < ApplicationController
 
   def search
     @date = date_param
-    @start_date = Evaluation.first.retrieved_at.strftime('%d-%m-%Y')
+    evaluation = Evaluation.first
+    return nil if evaluation.nil?
+    @start_date = evaluation.retrieved_at.strftime('%d-%m-%Y')
   end
 
   def show
@@ -382,7 +384,7 @@ class EndpointsController < ApplicationController
           date = CrawlLog.latest.started_at
         else
           evaluation = Evaluation.lookup(params[:id], params[:evaluation_id])
-          return Time.now if evaluation.nil?
+          return Time.now if evaluation.nil? or evaluation.crawl_log.nil?
           date = evaluation.crawl_log.started_at
         end
       else
