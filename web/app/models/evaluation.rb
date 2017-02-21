@@ -204,9 +204,32 @@ class Evaluation < ActiveRecord::Base
 
   def self.retrieve_linked_data_rules(retriever, eval)
     eval.subject_is_uri = true
+
     logger = Umakadata::Logging::Log.new
-    eval.subject_is_http_uri = retriever.http_subject?(logger: logger)
-    eval.subject_is_http_uri_log = logger.as_json
+    if PrefixFilter.where(endpoint_id: eval.endpoint_id).count > 0
+      invalid = []
+      PrefixFilter.where(endpoint_id: eval.endpoint_id, element_type: 'subject').each do |prefix_filter|
+        invalid.push prefix_filter[:uri] unless prefix_filter[:uri].start_with?('http')
+      end
+
+      if invlaid.empty?
+        eval.subject_is_http_uri = true
+        logger.result = "All prefixes are HTTP/HTTPS URI"
+      else
+        eval.subject_is_http_uri = false
+        invalid.each do |uri|
+          log = Umakdata::Logging::Log.new
+          log.result = "Prefix #{uri} is not HTTP/HTTPS URI"
+          logger.push log
+        end
+        logger.result = "#{invalid.count} preixes are not HTTP/HTTPS URI"
+      end
+      eval.subject_is_http_uri_log = logger.as_json
+    else
+      eval.subject_is_http_uri = retriever.http_subject?(logger: logger)
+      eval.subject_is_http_uri_log = logger.as_json
+    end
+
     if eval.endpoint.prefixes.present?
       prefixes = Prefix.where(endpoint_id: eval.endpoint_id).pluck(:uri)
       logger = Umakadata::Logging::Log.new
