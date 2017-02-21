@@ -11,3 +11,10 @@ Rails.application.config.assets.version = '1.0'
 # Rails.application.config.assets.precompile += %w( search.js )
 
 # Rails.application.config.assets.precompile += %w( active_admin/* )
+Rails.application.config.assets.precompile += %w( umakadata/* )
+Rails.application.config.assets.precompile += %w( Chart.min.js )
+Rails.application.config.assets.precompile += %w( bootstrap-datepicker.min.js )
+Rails.application.config.assets.precompile += %w( jquery.treetable.css )
+Rails.application.config.assets.precompile += %w( jquery.treetable.theme.default.css )
+
+Rails.application.config.assets.precompile += %w( jquery.treetable.js )
