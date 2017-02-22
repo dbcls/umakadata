@@ -380,7 +380,7 @@ class EndpointsController < ApplicationController
       input_date = params[:date]
       if input_date.blank?
         if params[:id].blank?
-          return Time.now if CrawlLog.latest.empty?
+          return Time.now if CrawlLog.latest.blank?
           date = CrawlLog.latest.started_at
         else
           evaluation = Evaluation.lookup(params[:id], params[:evaluation_id])
@@ -415,7 +415,7 @@ class EndpointsController < ApplicationController
         alive_rates: {count: 0, variation: 0},
         data_entries: {count: 0, variation: 0}
       }
-      return metrics if CrawlLog.latest.empty?
+      return metrics if CrawlLog.latest.blank?
       date = CrawlLog.latest.started_at
 
       metrics[:data_collection][:count] = CrawlLog.where.not(finished_at: nil).count
