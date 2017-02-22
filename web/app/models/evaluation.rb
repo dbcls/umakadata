@@ -56,9 +56,10 @@ class Evaluation < ActiveRecord::Base
 
     if eval.alive
       eval.support_graph_clause = retriever.support_graph_clause
-      self.retrieve_service_description(retriever, eval)
-      self.retrieve_void(retriever, eval)
-      self.retrieve_linked_data_rules(retriever, eval)
+      retrieve_service_description(retriever, eval)
+      retrieve_void(retriever, eval)
+      check_number_of_statements(eval, retriever)
+      retrieve_linked_data_rules(retriever, eval)
 
       logger = Umakadata::Logging::Log.new
       eval.execution_time = retriever.execution_time(logger: logger)
@@ -111,13 +112,8 @@ class Evaluation < ActiveRecord::Base
       end
 
       logger = Umakadata::Logging::Log.new
-      eval.number_of_statements = retriever.number_of_statements(logger: logger)
-      eval.number_of_statements_log = logger.as_json
-
-      logger = Umakadata::Logging::Log.new
       self.check_update(retriever, eval, logger: logger)
       eval.last_updated_log = logger.as_json
-
     end
 
     eval.alive_rate = Evaluation.calc_alive_rate(eval)
@@ -126,6 +122,38 @@ class Evaluation < ActiveRecord::Base
     eval.update_interval = Evaluation.calc_update_interval(eval)
 
     return eval if eval.save!
+  end
+
+  def self.check_number_of_statements(eval, retriever)
+    number_of_statements_log = Umakadata::Logging::Log.new
+
+    unless eval.void_ttl.empty?
+      log = Umakadata::Logging::Log.new
+      number_of_statements_log.push log
+
+      void_triples = triples(eval.void_ttl)
+      if void_triples.nil?
+        eval.number_of_statements = nil
+      else
+        void_triples.each do |_, predicate, object|
+          if predicate =~ %r|void#triples|
+            eval.number_of_statements = object.to_s.to_i
+            break
+          end
+        end
+      end
+
+      log.result = "#{eval.number_of_statements.nil? ? "Failed" : "Successed"} to find nubmer of statements from VoID"
+    end
+
+    if eval.number_of_statements.nil?
+      log = Umakadata::Logging::Log.new
+      number_of_statements_log.push log
+      eval.number_of_statements = retriever.number_of_statements(logger: log)
+    end
+
+    number_of_statements_log.result = "#{eval.number_of_statements.nil? ? "Failed" : "Successed"} to find nubmer of statements"
+    eval.number_of_statements_log = number_of_statements_log.as_json
   end
 
   def self.check_content_negotiation(endpoint, eval, retriever)
@@ -204,9 +232,32 @@ class Evaluation < ActiveRecord::Base
 
   def self.retrieve_linked_data_rules(retriever, eval)
     eval.subject_is_uri = true
+
     logger = Umakadata::Logging::Log.new
-    eval.subject_is_http_uri = retriever.http_subject?(logger: logger)
-    eval.subject_is_http_uri_log = logger.as_json
+    if PrefixFilter.where(endpoint_id: eval.endpoint_id).count > 0
+      invalid = []
+      PrefixFilter.where(endpoint_id: eval.endpoint_id, element_type: 'subject').each do |prefix_filter|
+        invalid.push prefix_filter[:uri] unless prefix_filter[:uri].start_with?('http')
+      end
+
+      if invalid.empty?
+        eval.subject_is_http_uri = true
+        logger.result = "All prefixes are HTTP/HTTPS URI"
+      else
+        eval.subject_is_http_uri = false
+        invalid.each do |uri|
+          log = Umakdata::Logging::Log.new
+          log.result = "Prefix #{uri} is not HTTP/HTTPS URI"
+          logger.push log
+        end
+        logger.result = "#{invalid.count} preixes are not HTTP/HTTPS URI"
+      end
+      eval.subject_is_http_uri_log = logger.as_json
+    else
+      eval.subject_is_http_uri = retriever.http_subject?(eval.number_of_statements, logger: logger)
+      eval.subject_is_http_uri_log = logger.as_json
+    end
+
     if eval.endpoint.prefixes.present?
       prefixes = Prefix.where(endpoint_id: eval.endpoint_id).pluck(:uri)
       logger = Umakadata::Logging::Log.new
