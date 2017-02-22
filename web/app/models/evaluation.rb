@@ -110,14 +110,11 @@ class Evaluation < ActiveRecord::Base
         eval.ontology_log = logger.as_json
       end
 
-      logger = Umakadata::Logging::Log.new
-      eval.number_of_statements = retriever.number_of_statements(logger: logger)
-      eval.number_of_statements_log = logger.as_json
+      check_number_of_statements(eval, retriever)
 
       logger = Umakadata::Logging::Log.new
       self.check_update(retriever, eval, logger: logger)
       eval.last_updated_log = logger.as_json
-
     end
 
     eval.alive_rate = Evaluation.calc_alive_rate(eval)
@@ -126,6 +123,38 @@ class Evaluation < ActiveRecord::Base
     eval.update_interval = Evaluation.calc_update_interval(eval)
 
     return eval if eval.save!
+  end
+
+  def self.check_number_of_statements(eval, retriever)
+    number_of_statements_log = Umakadata::Logging::Log.new
+
+    unless eval.void_ttl.empty?
+      log = Umakadata::Logging::Log.new
+      number_of_statements_log.push log
+
+      void_triples = triples(eval.void_ttl)
+      if void_triples.nil?
+        eval.number_of_statements = nil
+      else
+        void_triples.each do |_, predicate, object|
+          if predicate =~ %r|void#triples|
+            eval.number_of_statements = object.to_s.to_i
+            break
+          end
+        end
+      end
+
+      log.result = "#{eval.number_of_statements.nil? ? "Failed" : "Successed"} to find nubmer of statements from VoID"
+    end
+
+    if eval.number_of_statements.nil?
+      log = Umakadata::Logging::Log.new
+      number_of_statements_log.push log
+      eval.number_of_statements = retriever.number_of_statements(logger: log)
+    end
+
+    number_of_statements_log.result = "#{eval.number_of_statements.nil? ? "Failed" : "Successed"} to find nubmer of statements"
+    eval.number_of_statements_log = number_of_statements_log.as_json
   end
 
   def self.check_content_negotiation(endpoint, eval, retriever)
