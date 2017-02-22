@@ -56,9 +56,10 @@ class Evaluation < ActiveRecord::Base
 
     if eval.alive
       eval.support_graph_clause = retriever.support_graph_clause
-      self.retrieve_service_description(retriever, eval)
-      self.retrieve_void(retriever, eval)
-      self.retrieve_linked_data_rules(retriever, eval)
+      retrieve_service_description(retriever, eval)
+      retrieve_void(retriever, eval)
+      check_number_of_statements(eval, retriever)
+      retrieve_linked_data_rules(retriever, eval)
 
       logger = Umakadata::Logging::Log.new
       eval.execution_time = retriever.execution_time(logger: logger)
@@ -109,8 +110,6 @@ class Evaluation < ActiveRecord::Base
         eval.ontology_score = score
         eval.ontology_log = logger.as_json
       end
-
-      check_number_of_statements(eval, retriever)
 
       logger = Umakadata::Logging::Log.new
       self.check_update(retriever, eval, logger: logger)
@@ -241,7 +240,7 @@ class Evaluation < ActiveRecord::Base
         invalid.push prefix_filter[:uri] unless prefix_filter[:uri].start_with?('http')
       end
 
-      if invlaid.empty?
+      if invalid.empty?
         eval.subject_is_http_uri = true
         logger.result = "All prefixes are HTTP/HTTPS URI"
       else
@@ -255,7 +254,7 @@ class Evaluation < ActiveRecord::Base
       end
       eval.subject_is_http_uri_log = logger.as_json
     else
-      eval.subject_is_http_uri = retriever.http_subject?(logger: logger)
+      eval.subject_is_http_uri = retriever.http_subject?(eval.number_of_statements, logger: logger)
       eval.subject_is_http_uri_log = logger.as_json
     end
 
