@@ -19,7 +19,7 @@ function create_relations_all_endpoints() {
 
 function create_relations_endpoint() {
     echo "<<<$1"
-    /bin/bash "$PROJECT_DIR/script/extract.sh" "$1"
+    /bin/bash "$UMAKA_WEB_DIR/script/extract.sh" "$1"
     sbt "runMain sbmeta.SBMetaSeeAlsoAndSameAs \"$BULKDOWNLOADS_DIR/$1\" \"$ALL_PREFIX_CSV_PATH\""
     rm -rf "$BULKDOWNLOADS_DIR/$1/extractions"
     echo "<<<$1"
