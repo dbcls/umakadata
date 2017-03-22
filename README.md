@@ -18,7 +18,7 @@ Getting started with docker, Umakadata requires these packages installed.
 
     - Docker-engine (1.7.1 comfirmed)
 
-If you already get another version of Docker running, it may be used as alternative environment. 
+If you already get another version of Docker running, it may be used as alternative environment.
 
 ## Installation
 
@@ -36,12 +36,15 @@ docker-compose up -d
 
 ```bash
 # Enter to web container's shell
-docker-compose exec web /bin/bash
+docker-compose run web /bin/bash
 # Now you are in the container
 bundle exec rake db:create
 bundle exec rake db:migrate
 bundle exec rake db:seed
 bundle exec rake umakadata:active_median
+bundle exec rake umakadata:import_prefix_for_all_endpoints[./data/prefixes]
+bundle exec rake umakadata:import_prefix_filters_for_all_endpoints[./data/prefix_filters]
+bundle exec rake umakadata:seeAlso_sameAs_for_all_endpoints[./data/relations]
 ```
 
 ### Linux
@@ -52,6 +55,8 @@ Pull the PostgreSQL image from official repository.
 ```bash
 docker pull postgres
 ```
+
+Modify web/config/database.yml and set the docker host as 'host'.
 
 Build Ruby and RoR environment.
 ```bash
@@ -92,6 +97,9 @@ bundle exec rake db:create
 bundle exec rake db:migrate
 bundle exec rake db:seed
 bundle exec rake umakadata:active_median
+bundle exec rake umakadata:import_prefix_for_all_endpoints[./data/prefixes]
+bundle exec rake umakadata:import_prefix_filters_for_all_endpoints[./data/prefix_filters]
+bundle exec rake umakadata:seeAlso_sameAs_for_all_endpoints[./data/relations]
 ```
 
 ## Usage
@@ -104,4 +112,3 @@ bundle exec rake umakadata:active_median
 
 
 ## License
-

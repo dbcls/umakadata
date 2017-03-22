@@ -19,3 +19,5 @@ Rails.application.config.assets.precompile += %w( jquery.treetable.theme.default
 
 Rails.application.config.assets.precompile += %w( jquery.treetable.js )
 Rails.application.config.assets.precompile += %w( jquery.validate.js )
+
+Rails.application.config.assets.precompile += %w( cytoscape.min.js )
