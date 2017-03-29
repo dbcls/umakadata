@@ -350,8 +350,8 @@ class EndpointsController < ApplicationController
          render_404
          return
       end
-      @prev_evaluation = Evaluation.previous(@endpoint[:id], @evaluation[:id])
-      @next_evaluation = Evaluation.next(@endpoint[:id], @evaluation[:id])
+      @prev_evaluation = Evaluation.previous(@endpoint[:id], @evaluation[:retrieved_at])
+      @next_evaluation = Evaluation.next(@endpoint[:id], @evaluation[:retrieved_at])
 
       @cors = false
       if !@evaluation.response_header.blank?

@@ -25,12 +25,12 @@ class Evaluation < ActiveRecord::Base
     return evaluation
   end
 
-  def self.previous(endpoint_id, evaluation_id)
-    self.where('id < ?', evaluation_id).where(endpoint_id: endpoint_id).order('id DESC').first
+  def self.previous(endpoint_id, retrieved_at)
+    self.where('retrieved_at < ?', retrieved_at).where(endpoint_id: endpoint_id).order('retrieved_at DESC').first
   end
 
-  def self.next(endpoint_id, evaluation_id)
-    self.where('id > ?', evaluation_id).where(endpoint_id: endpoint_id).order('id ASC').first
+  def self.next(endpoint_id, retrieved_at)
+    self.where('retrieved_at > ?', retrieved_at).where(endpoint_id: endpoint_id).order('retrieved_at ASC').first
   end
 
   def self.record(endpoint, retriever, rdf_prefixes)
