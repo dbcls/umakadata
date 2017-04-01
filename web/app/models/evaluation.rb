@@ -246,7 +246,7 @@ class Evaluation < ActiveRecord::Base
       else
         eval.subject_is_http_uri = false
         invalid.each do |uri|
-          log = Umakdata::Logging::Log.new
+          log = Umakadata::Logging::Log.new
           log.result = "Prefix #{uri} is not HTTP/HTTPS URI"
           logger.push log
         end
