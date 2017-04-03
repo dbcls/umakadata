@@ -217,7 +217,7 @@ namespace :umakadata do
   desc "Fix difference between endpoint_ids and issue_ids in forum"
   task :fix_different_issue_id => :environment do
     ignore_id_min = 103
-    GithubHelper.list_issues.each {|issue|
+    GithubHelper.list_issues({:state => 'all'}).each {|issue|
       issue_id = issue[:number]
       next if issue_id >= ignore_id_min
       endpoint = Endpoint.where(name: issue[:title]).take

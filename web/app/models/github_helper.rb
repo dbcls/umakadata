@@ -23,10 +23,10 @@ class GithubHelper
     call_github_api {|client, github_repo| client.close_issue(github_repo, number)}
   end
 
-  def self.list_issues
+  def self.list_issues(options = {})
     call_github_api do |client, github_repo|
       client.auto_paginate = true
-      client.list_issues(github_repo, {:state => 'all'})
+      client.list_issues(github_repo, options)
     end
   end
 
