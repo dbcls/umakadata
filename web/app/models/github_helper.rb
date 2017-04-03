@@ -15,6 +15,10 @@ class GithubHelper
     call_github_api {|client, github_repo| client.update_issue(github_repo, number, title)}
   end
 
+  def self.labels_for_issue(number, options = {})
+    call_github_api {|client, github_repo| client.labels_for_issue(github_repo, number, options)}
+  end
+
   def self.add_labels_to_an_issue(number, labels)
     call_github_api {|client, github_repo| client.add_labels_to_an_issue(github_repo, number, labels)}
   end
@@ -32,6 +36,10 @@ class GithubHelper
 
   def self.add_label(label, color)
     call_github_api {|client, github_repo| client.add_label(github_repo, label, color)}
+  end
+
+  def self.update_label(label, options)
+    call_github_api {|client, github_repo| client.update_label(github_repo, label, options)}
   end
 
   def self.call_github_api

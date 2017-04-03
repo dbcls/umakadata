@@ -238,6 +238,7 @@ namespace :umakadata do
     Endpoint.all.each_with_index do |endpoint, index|
       label_name = endpoint.name.gsub(",", "")
       label = GithubHelper.add_label(label_name, Color.get_color(endpoint.id))
+      endpoint.update_column(:label_id, label[:id])
     end
   end
 
