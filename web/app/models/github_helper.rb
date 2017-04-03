@@ -30,6 +30,10 @@ class GithubHelper
     end
   end
 
+  def self.add_label(label, color)
+    call_github_api {|client, github_repo| client.add_label(github_repo, label, color)}
+  end
+
   def self.call_github_api
     if Rails.application.secrets.github_token.blank? || Rails.application.secrets.github_repo.blank?
       p "GitHub API configuration is not enough"

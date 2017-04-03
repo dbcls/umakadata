@@ -232,6 +232,16 @@ namespace :umakadata do
       end
     }
   end
+
+  desc "Create label for each endpoint"
+  task :create_label_for_each_endpoint => :environment do
+    colors = Color.all
+    Endpoint.all.each_with_index do |endpoint, index|
+      label = endpoint.name.gsub(",", "")
+      GithubHelper.add_label(label, colors[index])
+    end
+  end
+
 end
 
 namespace :sbmeta do
