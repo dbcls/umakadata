@@ -242,6 +242,20 @@ namespace :umakadata do
     end
   end
 
+  desc "Add label to exsiting issues"
+  task :add_label_to_exsiting_issues => :environment do
+    GithubHelper.list_issues({:state => 'all', :label => "endpoints"}).each do |issue|
+      endpoint = Endpoint.where(name: issue[:title]).take
+
+      if endpoint.nil?
+        puts endpoint.name
+        next
+      end
+      label = endpoint.name.gsub(",", "")
+      GithubHelper.add_labels_to_an_issue(issue[:number], [label])
+    end
+  end
+
 end
 
 namespace :sbmeta do
