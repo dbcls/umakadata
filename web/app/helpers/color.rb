@@ -143,8 +143,9 @@ module Color
     "7b68ee"  #mediumslateblue
   ]
 
-  def self.all
-   @@colors
+  def self.get_color(endpoint_id)
+    index = (endpoint_id - 1) % @@colors.size
+    @@colors[index]
   end
 
 end
