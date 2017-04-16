@@ -15,6 +15,10 @@ class GithubHelper
     call_github_api {|client, github_repo| client.update_issue(github_repo, number, title)}
   end
 
+  def self.labels_for_issue(number, options = {})
+    call_github_api {|client, github_repo| client.labels_for_issue(github_repo, number, options)}
+  end
+
   def self.add_labels_to_an_issue(number, labels)
     call_github_api {|client, github_repo| client.add_labels_to_an_issue(github_repo, number, labels)}
   end
@@ -23,11 +27,19 @@ class GithubHelper
     call_github_api {|client, github_repo| client.close_issue(github_repo, number)}
   end
 
-  def self.list_issues
+  def self.list_issues(options = {})
     call_github_api do |client, github_repo|
       client.auto_paginate = true
-      client.list_issues(github_repo, {:state => 'all'})
+      client.list_issues(github_repo, options)
     end
+  end
+
+  def self.add_label(label, color)
+    call_github_api {|client, github_repo| client.add_label(github_repo, label, color)}
+  end
+
+  def self.update_label(label, options)
+    call_github_api {|client, github_repo| client.update_label(github_repo, label, options)}
   end
 
   def self.call_github_api
