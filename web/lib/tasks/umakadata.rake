@@ -61,6 +61,22 @@ namespace :umakadata do
     end
   end
 
+  desc "Import relation CSV for an endpoint"
+  task :import_relation_csv_for_an_endpoint, ['name', 'file_path'] => :environment do |task, args|
+    endpoint = Endpoint.where(:name => args[:name]).take
+    next puts "#{args[:name]}: No such endpoint endpoint in database." if endpoint.nil?
+    next puts "#{args[:file_path]}: No such file of directory." unless File.exist?(args[:file_path])
+
+    endpoint.relations.destroy_all
+    CSV.foreach(args[:file_path], {:headers => true}) do |row|
+      src_endpoint = Endpoint.where(:name => row[0]).take
+      dst_endpoint = Endpoint.where(:name => row[1]).take
+      next puts "#{row[0]}: No such endpoint in database." if src_endpoint.nil?
+      next puts "#{row[1]}: No such endpoint in database." if dst_endpoint.nil?
+      Relation.create(:endpoint_id => endpoint.id, :src_id => src_endpoint.id, :dst_id => dst_endpoint.id, :name => "any")
+    end
+  end
+
   desc "import seeAlso and sameAs data for all endpoints"
   task :seeAlso_sameAs_for_all_endpoints, ['directory_path'] => :environment do |task, args|
     directory_path = args[:directory_path].blank? ? "#{SBMETA}/data/bulkdownloads" : args[:directory_path]
