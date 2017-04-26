@@ -21,7 +21,6 @@ $(function() {
         {
           selector: 'edge',
           style: {
-            'label': 'data(label)',
             'width': 3,
             'line-color': '#ccc'
           }
