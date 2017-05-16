@@ -135,10 +135,11 @@ class Evaluation < ActiveRecord::Base
       if void_triples.nil?
         eval.number_of_statements = nil
       else
+        eval.number_of_statements = nil
         void_triples.each do |_, predicate, object|
           if predicate =~ %r|void#triples|
-            eval.number_of_statements = object.to_s.to_i
-            break
+            num = object.to_s.to_i
+            eval.number_of_statements = num if eval.number_of_statements.nil? or eval.number_of_statements < num
           end
         end
       end
