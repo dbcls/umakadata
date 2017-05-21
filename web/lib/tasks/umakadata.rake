@@ -150,7 +150,7 @@ namespace :umakadata do
       begin
         retriever = Umakadata::Retriever.new endpoint.url, time
         evaluation = Evaluation.record(endpoint, retriever, rdf_prefixes_candidates)
-        evaluation.update_column(:crawl_log_id, crawl_log.id)
+        evaluation.update_column(:crawl_log_id, crawl_log.id) unless evaluation.nil?
       rescue => e
         puts e.message
         puts e.backtrace
