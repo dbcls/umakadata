@@ -63,6 +63,8 @@ class EndpointsController < ApplicationController
 
   def show
     @date = date_param
+    count = PrefixFilter.where(endpoint_id: @endpoint[:id]).count()
+    @uri_indexed = count > 0
   end
 
   def log
