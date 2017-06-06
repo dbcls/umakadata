@@ -395,10 +395,12 @@ class EndpointsController < ApplicationController
     end
 
     def set_start_date
+      yesterday = Time.current.yesterday
+      target = Time.mktime(yesterday.year, yesterday.month, yesterday.day)
       evaluations = params[:id].nil? ? Evaluation.all : Evaluation.where(:endpoint_id => params[:id])
-      oldest_evaluation = evaluations.order('retrieved_at ASC').first
-      return if oldest_evaluation.nil?
-      @start_date = oldest_evaluation.retrieved_at.strftime('%d-%m-%Y')
+      newest_evaluation = evaluations.where('retrieved_at < ?', target).order('retrieved_at ASC').first
+      return if newest_evaluation.nil?
+      @start_date = newest_evaluation.retrieved_at.strftime('%d-%m-%Y')
     end
 
     def endpointlist_param
