@@ -1,0 +1,21 @@
+= stylesheet_link_tag 'umakadata/bootstrap-datepicker3.min'
+= stylesheet_link_tag 'umakadata/calendar'
+= javascript_include_tag 'bootstrap-datepicker.min'
+
+javascript:
+  $(function(){
+    $('#calendar').datepicker({
+      autoclose: true,
+      startDate: "#{@start_date}",
+      endDate: new Date(),
+      format: 'dd-M-yyyy',
+      todayHighlight: true,
+    });
+  });
+
+
+.form-inline.calendar-form.pull-right
+  .form-group
+    label.calendar-title Data for the day of 
+    input.date-input#calendar[readonly='readonly' name='date' value=@date.strftime('%d-%b-%Y')]
+    input.go-button#jump-button[type='button' value='GO']

@@ -1,0 +1,15 @@
+URI,count,type
+http://eagle-i.org/ont/app/1.0/,43,subject
+http://eagle-i.org/ont/repo/1.0/,3,subject
+http://purl.obolibrary.org/obo/,172,subject
+http://tuskegee.eagle-i.net/i/,535,subject
+http://vivoweb.org/ontology/core#,2,subject
+http://www.ebi.ac.uk/swo/license/,1,subject
+http://xmlns.com/foaf/0.1/,2,subject
+http://eagle-i.org/ont/repo/1.0/,38,object
+http://global.eagle-i.net/i/,23,object
+http://purl.obolibrary.org/obo/,64,object
+http://tuskegee.eagle-i.net/i/,190,object
+http://vivoweb.org/ontology/core#,4,object
+http://www.ebi.ac.uk/swo/license/,6,object
+http://xmlns.com/foaf/0.1/,1,object

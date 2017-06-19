@@ -1,0 +1,78 @@
+name,url
+Pathway Commons @Malaga,http://150.214.214.5/pathwaycommons/
+Pathway Commmons @BaderLab (Experimental),http://webservice.baderlab.org:3030/pc2/
+Linked Life Data,http://linkedlifedata.com/sparql
+National Center for Biomedical Ontologies,http://sparql.bioontology.org
+Allie,http://data.allie.dbcls.jp/sparql
+HCLS DERI,http://hcls.deri.org/sparql
+Neurocommons,http://sparql.neurocommons.org/sparql
+BioGateway,http://www.semantic-systems-biology.org/biogateway/endpoint
+TaxonConcepts,http://lsd.taxonconcept.org/sparql
+STITCH @FU Berlin,http://www4.wiwiss.fu-berlin.de/stitch/sparql
+Diseaseome @FU Berlin,http://www4.wiwiss.fu-berlin.de/diseasome/sparql
+DrugBank @FU Berlin,http://www4.wiwiss.fu-berlin.de/drugbank/sparql
+MyExperiment,http://rdf.myexperiment.org/sparql/
+FlyBase,http://www.open-biomed.org.uk/sparql/endpoint/flybase
+LinkedCT,http://data.linkedct.org/sparql/
+CiteSeer,http://citeseer.rkbexplorer.com/sparql/
+Chembl @Uppsala,http://rdf.farmbio.uu.se/chembl/sparql
+WikiPathways,http://sparql.wikipathways.org
+Life Science Dictionary,http://lsd.dbcls.jp/sparql
+Expression Atlas,http://www.ebi.ac.uk/rdf/services/atlas/sparql
+BioModels,http://www.ebi.ac.uk/rdf/services/biomodels/sparql
+BioSamples,http://www.ebi.ac.uk/rdf/services/biosamples/sparql
+ChEMBL,http://www.ebi.ac.uk/rdf/services/chembl/sparql
+Reactome,http://www.ebi.ac.uk/rdf/services/reactome/sparql
+UniProt,http://sparql.uniprot.org/sparql/
+OpenLifeData,http://sparql.openlifedata.org/
+NBDC RDF Portal,http://integbio.jp/rdf/sparql
+Centrally Curated Resources,https://global.eagle-i.net/sparqler/sparql
+Charles R. Drew University of Medicine and Science,https://cdrewu.eagle-i.net/sparqler/sparql
+"City College of New York, CUNY",https://ccny-cuny.eagle-i.net/sparqler/sparql
+Clark Atlanta University,https://cau.eagle-i.net/sparqler/sparql
+Dartmouth College,https://dartmouth.eagle-i.net/sparqler/sparql
+Florida Agricultural and Mechanical University,https://famu.eagle-i.net/sparqler/sparql
+Fred Hutchinson Cancer Research Center,https://eagle-i.fredhutch.org/sparqler/sparql
+Harvard University Immunology Collection,https://immunology.harvard.eagle-i.net/sparqler/sparql
+Harvard University,https://harvard.eagle-i.net/sparqler/sparql
+Howard University,https://howard.eagle-i.net/sparqler/sparql
+"Hunter College, CUNY",https://hunter-cuny.eagle-i.net/sparqler/sparql
+ITHS Regional Directory,https://eagle-i.iths.org/sparqler/sparql
+Jackson State University,https://jsu.eagle-i.net/sparqler/sparql
+Meharry Medical College,https://meharry.eagle-i.net/sparqler/sparql
+Michigan State University,https://eagle-i.ctsi.msu.edu/sparqler/sparql
+Montana State University,https://montana.eagle-i.net/sparqler/sparql
+Morehouse School of Medicine,https://msm.eagle-i.net/sparqler/sparql
+Oregon Health and Science University,https://ohsu.eagle-i.net/sparqler/sparql
+Ponce School of Medicine and Health Sciences,https://psm.eagle-i.net/sparqler/sparql
+Special Collections,https://shared.eagle-i.net/sparqler/sparql
+Texas Southern University,https://tsu.eagle-i.net/sparqler/sparql
+The Ohio State University,https://eagle-i.rf.ohio-state.edu/sparqler/sparql
+Tuskegee University,https://tuskegee.eagle-i.net/sparqler/sparql
+Universidad Central del Caribe,https://uccaribe.eagle-i.net/sparqler/sparql
+University of Alaska Fairbanks,https://alaska.eagle-i.net/sparqler/sparql
+University of Hawai'i Manoa,https://hawaii.eagle-i.net/sparqler/sparql
+University of Pennsylvania,https://eagle-i.itmat.upenn.edu/sparqler/sparql
+University of Puerto Rico,https://upr.eagle-i.net/sparqler/sparql
+University of Texas at El Paso,https://utep.eagle-i.net/sparqler/sparql
+University of Texas at San Antonio,https://utsa.eagle-i.net/sparqler/sparql
+Washington State University Spokane,https://eagle-i.spokane.wsu.edu/sparqler/sparql
+Washington University NIMH Genetics,https://eaglei.nimhgenetics.org/sparqler/sparql
+Xavier University of Louisiana,https://xula.eagle-i.net/sparqler/sparql
+Medical Subject Headings (MeSH) RDF Linked Data,https://id.nlm.nih.gov/mesh/sparql
+Ensembl,https://www.ebi.ac.uk/rdf/services/ensembl/sparql
+Microbial Genome Database for Comparative Analysis (MBGD),http://sparql.nibb.ac.jp/sparql
+Identifiers.org,http://identifiers.org/services/servlet/query
+MIcrobeDB.jp,http://genome.microbedb.jp/sparql
+LinkDB,http://www.genome.jp/sparql/linkdb
+Colil,http://colil.dbcls.jp/sparql
+FirstAuthor Navigation,http://navi.first.lifesciencedb.jp/fanavi/sparql
+DisGeNET,http://rdf.disgenet.org/sparql/
+WikiData,https://query.wikidata.org/sparql
+OrphaData,http://www.orpha.net/sparql
+Pathway Commons,http://rdf.pathwaycommons.org/sparql/
+Bio2RDF,http://bio2rdf.org/sparql
+Organic.Edunet,http://data.organic-edunet.eu/sparql
+LODAC BDLS,http://lod.ac/bdls/sparql
+DrugBank @ Universität Mannheim,http://wifo5-03.informatik.uni-mannheim.de/drugbank/sparql
+HealthData.gov Platform (HDP),http://healthdata.tw.rpi.edu/sparql

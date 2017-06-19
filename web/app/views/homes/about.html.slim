@@ -1,0 +1,90 @@
+.row
+  .col-md-12.page-element
+    h3.page-title-header About
+    h4.page-title-sub-header What is yummy data ?
+    #policy.page-title-body
+      p
+        | YummyData is a system that monitors SPARQL endpoints
+          (and in general RDF datasets) relevant for biomedical
+          research. It provides information such as their compliance
+          to standards and their performance.
+      p
+        | Examples of features that YummyData
+          inspects are the presence of a VoID descriptor, the presence
+          of license information, support of SPARQL1.1 or support for CORS.
+      p
+        | Examples of the information that YummyData monitors are the
+          endpoint uptime, the number of statements, and some measure of
+          the amount of ontology constructs in use.
+      p
+        | Overall these values are combined in the following six metrics:
+      ul
+        li Availability (of an endpoint)
+        li Performance
+        li Operation (compliance to service provision standards)
+        li Validity (compliance to data provision standards)
+        li Freshness
+        li Usefulness (richness in metadata and use of standard vocabularies)
+      p
+        | An overall "umaka score" provides a synthetic view on the
+          "quality" of a SPARQL endpoint and its content.
+    h4.page-title-sub-header Why did we make it?
+    #policy.page-title-body
+      p
+        | When relying on information resources published as linked-data,
+          a typical problems of computational researchers is the difficult
+          to determine which SPARQL endpoint to choose for a given type
+          of information.
+      p
+        | First, the same "dataset" can be provided by multiple SPARQL
+          endpoints, not all of which are kept up to date or are compliant
+          to recent standards. It is hard to know which endpoint is the
+          most reliable without some evidence of its performance or some
+          tracking of its data content.
+      p
+        | In addition, the same "data" can be part of multiple integrated
+          datasets, where the same data can be cleansed or enriched and
+          integrated with other information.
+      p
+        | In YummyData we try to solve this problems as follows:
+      ul
+        li
+          | We provide a curated list of SPARQL endpoints, that are
+            relevant for biomedical research
+        li
+          | We continuously monitor such endpoints, as to detect whether
+            they are reliable and kept up to date
+        li
+          | We collect some measures that can be proxies for the "quality"
+            of the representation (e.g., usage of standard ontologies)
+      p
+        | Finally, we provide a space for discussion where, in relation
+          to a given endpoint, data consumers can request
+          improvements/corrections to data providers.
+    h4.page-title-sub-header How does it work ?
+    #policy.page-title-body
+      p
+        | YummyData periodically sends queries to a list of endpoints
+          to measure their performance and the characteristic of data
+          provided. It logs responses (or the lack of) and uses this
+          information to compute its scores. YummyData takes specific
+          measures to provide a score. When the data size makes content
+          analysis via queries impractical, YummyData can dowload the
+          data and it can analyze it offline.
+      p
+        | YummyData provides both a list of endpoint, that can be ordered
+          or filtered on specific features, or a per-endpoint view.
+          The same information that is presented via the website is also
+          available via APIs for programmatic access.
+    h4.page-title-sub-header Who are we ?
+    #policy.page-title-body
+      p
+        | YummyData has been developed by BioHackathon participants and
+          maintained by DBCLS. The original idea was born and grown at
+          the BioHackathon 2012 where Andrea Splendiani, Johan Nystroem,
+          and Yasunori Yamamoto collaborated. Then, Atsuko Yamaguchi and
+          Yasunori began to develop a service based on YummyData in 2015,
+          and the name was UmakaData. Umaka means yummy in a dialect of
+          Japanese. After that, at the BioHackathon 2016, the former members
+          joined and the two projects were merged. Atsuko and Yasunori work
+          for DBCLS. Johan and Andrea work for private companies, respectively.

@@ -1,0 +1,290 @@
+/*
+ * Base structure
+ */
+
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  background: #D4ECE4;
+  padding: 15px;
+}
+
+/*
+ * Global add-ons
+ */
+
+.sub-header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/*
+ * Top navigation
+ * Hide default border to remove 1px line.
+ */
+.navbar-fixed-top {
+  border: 0;
+}
+
+/*
+ * Sidebar
+ */
+
+/* Hide for mobile, show later */
+.sidebar {
+  display: none;
+  /*margin-right: 100px;*/
+}
+@media (min-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  }
+}
+
+/* Sidebar navigation */
+.nav-sidebar {
+  margin-right: -21px; /* 20px padding + 1px border */
+  margin-bottom: 20px;
+  margin-left: -20px;
+}
+.nav-sidebar > li > a {
+  padding-right: 20px;
+  padding-left: 20px;
+}
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+  color: #fff;
+  background-color: #428bca;
+}
+
+
+/*
+ * Main content
+ */
+
+.main {}
+@media (min-width: 768px) {
+  .main {
+    padding-right: 40px;
+    padding-left: 10px;
+  }
+}
+.main .page-header {
+  margin-top: 0;
+}
+
+#site-description {
+  margin-top: 20px;
+  margin-bottom: 35px;
+}
+
+.page-element {
+  background: #FFFFFF;
+  box-shadow: 0px 0px 0px 1px rgba(63,63,68,0.10), 0px 1px 2px 0px rgba(0,0,0,0.05);
+  border-radius: 4px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.page-title-header {
+  margin-top: 10px;
+  font-family: Roboto-Medium;
+  font-size: 24px;
+  color: #73879C;
+  font-weight: bold;
+  line-height: 29px;
+  margin-bottom: 15px;
+}
+
+.page-title-sub-header {
+  margin-top: 10px;
+  font-family: Roboto-Medium;
+  font-size: 18px;
+  color: #73879C;
+  font-weight: bold;
+  line-height: 29px;
+  margin-bottom: 15px;
+}
+
+.page-title-subsub-header {
+  margin-top: 10px;
+  font-family: Roboto-Medium;
+  font-size: 16px;
+  color: #73879C;
+  font-weight: bold;
+  line-height: 29px;
+  margin-bottom: 15px;
+}
+
+.page-title-body {
+  font-family: Roboto-Regular;
+  font-size: 14px;
+  color: #73879C;
+  line-height: 19px;
+  margin-bottom: 15px;
+}
+
+.scores-board {
+  font-family: Roboto-Bold;
+  font-size: 22px;
+  color: #73879C;
+}
+
+.scores-board-element {
+  background: #F7F7F7;
+  box-shadow: 0px 0px 0px 1px rgba(63,63,68,0.10), 0px 1px 2px 0px rgba(0,0,0,0.05);
+  border-radius: 4px;
+  margin-bottom: 30px;
+  padding: 15px;
+}
+
+.more-button {
+  font-family: Roboto-Medium;
+  font-size: 10px;
+  color: #FFFFFF;
+  background: #7FC7AF;
+  border: 1px solid #3FB8AF;
+  border-radius: 3px;
+  text-decoration: none;
+}
+
+.rate-board {
+  font-family: Roboto-Medium;
+  font-size: 15px;
+  color: #242323;
+  line-height: 14px;
+}
+
+.see-all-endpoints {
+  font-family: Roboto-Bold;
+  font-size: 14px;
+  line-height: 18px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  color: #FFFFFF;
+  background: #7FC7AF;
+  text-decoration: none;
+}
+
+.yummydata-logo {
+  margin-bottom: 20px;
+}
+
+.yummydata-logo-background {
+  position: fixed;
+  left: 0px;
+  bottom: 0px;
+}
+
+.nav-sidebar > li > a {
+  text-decoration: none;
+}
+
+.nav-sidebar > li > a:hover {
+  background: #7FC7AF;
+}
+
+a {
+  text-decoration: underline;
+  color: #73879C;
+}
+
+.number-of-endpoints {
+  font-family: Roboto-Medium;
+  font-size: 15px;
+  color: #242323;
+  line-height: 14px;
+}
+
+.number-data {
+  padding-top: 5px;
+  font-family: Roboto-Medium;
+  font-size: 30px;
+  color: #73879C;
+  font-weight: bold;
+}
+
+ul.rate-endpoints-list {
+  display: table;
+  width: 100%;
+  list-style-type: none;
+  padding-left: 0px;
+  color: #73879C;
+  font-size: 17px;
+}
+
+li.rate-of-endpoints {
+  display: table-cell;
+  text-align: center;
+  padding: 5px;
+}
+
+li+ li.rate-of-endpoints {
+  border-left: 3px solid #73879C;
+}
+
+.rate-list {
+  padding-bottom: 0px;
+}
+
+.carousel-indicators {
+  bottom: -60px;
+}
+
+.carousel-inner {
+  margin-bottom: 40px;
+}
+
+.carousel-indicators li {
+  background-color: grey;
+}
+
+.carousel-indicators ol {
+  vertical-align: bottom;
+}
+
+.carousel-indicators .active {
+  background-color: black;
+}
+
+.top-5-endpoints {
+  font-size: 14px;
+}
+
+.table-striped > thead > tr > th {
+  color: #9A9A9A;
+  border-style: none;
+  font-weight: normal;
+}
+
+.table-striped > tbody > tr > td > a {
+  color: #000000;
+}
+
+.table-striped > tbody > tr:nth-of-type(even) {
+  background-color: #FFFFFF;
+}
+
+.table-striped > tbody > tr > td {
+   padding-top: 15px;
+}
+
+.table-striped > tbody > tr {
+   height: 50px;
+}
+
+.minus_variation {
+  color: #FF9E9D;
+}
+
+.plus_variation {
+  color: #3FB8AF;
+}

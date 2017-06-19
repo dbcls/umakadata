@@ -1,0 +1,22 @@
+<h1><%= Endpoint.find(@endpoint_id).name %></h1>
+
+<%= form_for :endpoint, :url => {:action => "prefixes"}, :html => {:multipart => true} do |f| %>
+<fieldset class="inputs">
+  <ol>
+    <li>
+      <%= f.label :file, "File" %>
+      <%= f.file_field :file %>
+    </li>
+  </ol>
+</fieldset>
+<fieldset class="actions">
+  <ol>
+    <li class="action input_action ">
+      <%= submit_tag 'Submit' %>
+    </li>
+    <li class="cancel">
+      <%= link_to "Cancel", "/admin/endpoints/#{@endpoint_id}" %>
+    </li>
+  </ol>
+</fieldset>
+<% end %>

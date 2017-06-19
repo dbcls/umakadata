@@ -1,0 +1,9 @@
+URI,count
+http://rdf.ebi.ac.uk/dataset/ensembl/,138
+http://rdf.ebi.ac.uk/dataset/ensembl/85/,138
+http://rdf.ebi.ac.uk/resource/ensembl,796680979
+http://rdf.ebi.ac.uk/resource/ensembl.exon/,142479928
+http://rdf.ebi.ac.uk/resource/ensembl.protein/,67088040
+http://rdf.ebi.ac.uk/resource/ensembl.transcript,125816282
+http://rdf.ebi.ac.uk/resource/ensembl.transcript/,4244958
+http://rdf.ebi.ac.uk/terms/ensembl/,52642634

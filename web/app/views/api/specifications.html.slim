@@ -1,0 +1,161 @@
+= stylesheet_link_tag 'umakadata/specifications'
+
+.row
+  .col-md-12.page-element
+    h3.page-title-header Umaka REST API
+    .page-title-body
+      p Umaka Data provides information about Linked Data endpoints.
+      p We can access the information via REST API.
+      p This document shows how we can retrieve the data.
+    h4.page-title-sub-header Endpoint Search
+    .page-title-body
+      p
+        | API can be accessed over HTTP from 'http://d.umaka.dbcls.jp/',
+          and API returns data as JSON.
+    h5.page-title-subsub-header Retrieve Information of All Endpoints
+    .page-title-body
+      p You can retrieve information of all endpoints as follows:
+      pre
+        code.command
+          | curl -i http://d.umaka.dbcls.jp/api/endpoints/search
+      p This return the list of information of endpoints as follows:
+      pre
+        code.json
+          | [
+               {
+                  "id": 1,
+                  "name": "Allie",
+                  "url": "http://data.allie.dbcls.jp/sparql",
+                  "created_at": "2016-03-23T12:13:39.547+09:00",
+                  "updated_at": "2016-03-23T12:13:39.547+09:00",
+                  "issue_id": 5,
+                  "description_url": null,
+                  "evaluation": {
+                    "id": 1,
+                    "endpoint_id": 1,
+                    "latest": true,
+                    "alive": true,
+                    "alive_rate": 100.0,
+                    "response_header": "date: Tue, 29 Mar 2016 13:03:43 GMT\n --snip-- ",
+                    "service_description": "@prefix rdf:\t .\n@prefix ns1:\t .\n --snip-- ",
+                    "void_uri": "http://data.allie.dbcls.jp/.well-known/void",
+                    "void_ttl": "@prefix dc:    <http://purl.org/dc/elements/1.1/> .\n --snip-- .\n",
+                    "subject_is_uri": true,
+                    "subject_is_http_uri": true,
+                    "uri_provides_info": true,
+                    "contains_links": true,
+                    "score": 77,
+                    "rank": 4,
+                    "created_at": "2016-03-29T22:08:26.700+09:00",
+                    "updated_at": "2016-03-29T22:08:26.700+09:00",
+                    "cool_uri_rate": 75,
+                    "support_content_negotiation": true,
+                    "support_turtle_format": true,
+                    "support_xml_format": false,
+                    "support_html_format": true,
+                    "execution_time": 0.06357,
+                    "metadata_score": 25.5952380952381,
+                    "ontology_score": 28.5034013605442,
+                    "last_updated": "2016-03-29",
+                    "last_updated_source": "Adhoc",
+                    "update_interval": 6,
+                    "number_of_statements": 143196406,
+                    "support_graph_clause": true,
+                    "supported_language": "[\"SPARQL11Query\"]",
+                    "linksets": "[\"http://dbpedia.org\", \"http://lifesciencedb.jp/bdls/\", \"http://lsd.dbcls.jp/portal/\"]",
+                    "license": "[\"http://creativecommons.org/licenses/by/2.1/jp/\"]",
+                    "publisher": "[\"http://uri.dbcls.rois.ac.jp/\"]",
+                    "retrieved_at": "2016-03-23T00:00:00.547+09:00",
+                    "crawl_log_id": 1
+                  }
+                },
+                ...
+              ]
+    h5.page-title-subsub-header Retrieve Information of Filtered Endpoints
+    .page-title-body
+      p We can specify the conditions using URL parameters. Please see the table below for all parameters.
+      p Example: Retrieve information of endpoints which name contains "Life" as follows:
+      pre
+        code.command
+          | curl -i http://d.umaka.dbcls.jp/api/endpoints/search?name=Life
+      p Example: Retrieve information of endpoints which Umaka score is between 50 and 70 as follows:
+      pre
+        code.command
+          | curl -i http://d.umaka.dbcls.jp/api/endpoints/search?score_lower=50&score_upper=70
+      p Example: Retrieve information of endpoints which alive rate is more than 75% as follows:
+      pre
+        code.command
+          | curl -i http://d.umaka.dbcls.jp/api/endpoints/search?alive_rate_lower=75
+      p Example: Retrieve information of endpoints which has service description as follows:
+      pre
+        code.command
+          | curl -i http://d.umaka.dbcls.jp/api/endpoints/search?service_description=1
+    table.table.table-striped
+      thead
+        tr
+          th Parameter Name
+          th Description
+      tbody
+        tr
+          td name
+          td Endpoint which name contains the specified string.
+        tr
+          td prefix
+          td Endpoint which prefix contains the specified string.
+        tr
+          td prefix_filter_uri
+          td Endpoint which prefix_filter_uri contains the specified string as the following element_type.
+        tr
+          td element_type
+          td element_type is subject or object.
+        tr
+          td date
+          td The result of searching is as of date specified %d-%m-%Y string.
+        tr
+          td score_lower
+          td Endpoint which Umaka score is more than or equal to the specified value.
+        tr
+          td score_upper
+          td Endpoint which Umaka score is less than or equal to the specified value.
+        tr
+          td alive_rate_lower
+          td Endpoint which alive rate is more than or equal to the specified value.
+        tr
+          td alive_rate_upper
+          td Endpoint which alive rate is less than or equal to the specified value.
+        tr
+          td rank
+          td Endpoint which rank is specified value. This value must be one of A, B, C, D and E. Otherwise this conidition is ignored.
+        tr
+          td cool_uri_rate_lower
+          td Endpoint which Cool URI rate is more than or equal to the specified value.
+        tr
+          td cool_uri_rate_upper
+          td Endpoint which Cool URI rate is less than or equal to the specified value.
+        tr
+          td ontology_lower
+          td Endpoint which ontology score rate is more than or equal to the specified value.
+        tr
+          td ontology_upper
+          td Endpoint which ontology score rate is less than or equal to the specified value.
+        tr
+          td metadata_lower
+          td Endpoint which metadata score rate is more than or equal to the specified value.
+        tr
+          td metadata_upper
+          td Endpoint which metadata score rate is less than or equal to the specified value.
+        tr
+          td service_description
+          td Endpoint which has service description will be shown if this value is 1
+        tr
+          td content_negotiation
+          td Endpoint which supports content negotiation will be shown if this value is 1
+        tr
+          td html
+          td Endpoint which supports HTML format will be shown if this value is 1
+        tr
+          td turtle
+          td Endpoint which supports Turtle format will be shown if this value is 1
+        tr
+          td xml
+          td Endpoint which supports RDF+XML format will be shown if this value is 1

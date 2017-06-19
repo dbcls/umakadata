@@ -1,0 +1,14 @@
+development:
+  'http://sparql.uniprot.org/sparql/':
+    - 'datatypes'
+    - 'triples'
+
+test:
+  'http://sparql.uniprot.org/sparql/':
+    - 'datatypes'
+    - 'triples'
+
+production:
+  'http://sparql.uniprot.org/sparql/':
+    - 'datatypes'
+    - 'triples'

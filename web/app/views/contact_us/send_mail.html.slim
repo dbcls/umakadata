@@ -1,0 +1,22 @@
+| Hello Umaka Data owner.
+br
+br
+| #{@inquiry.name} has requested an inquiry regarding Umaka Data below.
+br
+br
+hr
+div
+  | Name:
+  '
+  = @inquiry.name
+div
+  | Email:
+  '
+  = @inquiry.email
+div
+  | Message:
+  '
+  br
+  div
+    = simple_format(h(@inquiry.message))
+hr

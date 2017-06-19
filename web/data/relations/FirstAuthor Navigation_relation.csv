@@ -1,0 +1,5 @@
+src_id,dst_id,name
+50,50,sameAs
+99,99,sameAs
+50,99,sameAs
+99,50,sameAs
