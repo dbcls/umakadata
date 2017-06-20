@@ -55,14 +55,26 @@ var dataLoader = (function ($) {
             raderLoaded = false;
             scoreLoaded = false;
             waitingDialog.show('Loading Endpoint Information...');
-            dataLoader.showRadar(endpoint_id, evaluation_id);
-            dataLoader.showScoreHistory(endpoint_id, evaluation_id);
+            dataLoader.showInfo(endpoint_id, evaluation_id);
         },
 
         done: function() {
             if (raderLoaded && scoreLoaded) {
                 waitingDialog.hide();
             }
+        },
+
+        showInfo: function(endpoint_id, evaluation_id) {
+            $.ajax({
+                type: "GET",
+                url: "/endpoints/" + endpoint_id + "/" + evaluation_id + "/info",
+                success: function (element) {
+                    var html = $.parseHTML(element);
+                    $("#endpoint_info").html(html);
+                    dataLoader.showRadar(endpoint_id, evaluation_id);
+                    dataLoader.showScoreHistory(endpoint_id, evaluation_id);
+                }
+            });
         },
 
         showRadar: function (endpoint_id, evaluation_id) {
@@ -213,8 +225,8 @@ var dataLoader = (function ($) {
 
 
 $(function () {
-    var endpoint_id = $('#radar').attr('data-endpoint-id');
-    var evaluation_id = $('#radar').attr('data-evaluation-id');
+    var endpoint_id = $('#endpoint_id').text().trim();
+    var evaluation_id = $('#evaluation_id').text().trim();
 
     dataLoader.load(endpoint_id, evaluation_id);
 
