@@ -61,6 +61,19 @@ var dataLoader = (function ($) {
         done: function() {
             if (raderLoaded && scoreLoaded) {
                 waitingDialog.hide();
+
+                $('#jump-button').on("click", function () {
+                    var input_date = $("#calendar").val();
+                    var param = (input_date == '') ? '' : '?date=' + input_date;
+                    $.getJSON("/api/endpoints/" + endpoint_id + "/created_at" + param, function (json) {
+                        var evaluation_id = json['evaluation_id'];
+                        if (evaluation_id == '') {
+                            $('#get_evaluation_id').modal();
+                        } else {
+                            location.href = "/endpoints/" + endpoint_id + "/" + evaluation_id + param
+                        }
+                    });
+                });
             }
         },
 
@@ -229,17 +242,4 @@ $(function () {
     var evaluation_id = $('#evaluation_id').text().trim();
 
     dataLoader.load(endpoint_id, evaluation_id);
-
-    $('#jump-button').on("click", function () {
-        var input_date = $("#calendar").val();
-        var param = (input_date == '') ? '' : '?date=' + input_date;
-        $.getJSON("/api/endpoints/" + endpoint_id + "/created_at" + param, function (json) {
-            var evaluation_id = json['evaluation_id'];
-            if (evaluation_id == '') {
-                $('#get_evaluation_id').modal();
-            } else {
-                location.href = "/endpoints/" + endpoint_id + "/" + evaluation_id + param
-            }
-        });
-    });
 });
