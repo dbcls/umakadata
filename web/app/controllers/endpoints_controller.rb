@@ -7,7 +7,7 @@ class EndpointsController < ApplicationController
 
   include Umakadata::DataFormat
 
-  before_action :set_endpoint, only: [:show]
+  before_action :set_endpoint, only: [:info]
   before_action :set_start_date, only: [:index, :top, :show]
 
   def index
@@ -62,9 +62,15 @@ class EndpointsController < ApplicationController
   end
 
   def show
+    @endpoint_id = params[:id]
+    @evaluation_id = params[:evaluation_id]
+  end
+
+  def info
     @date = date_param
     count = PrefixFilter.where(endpoint_id: @endpoint[:id]).count()
     @uri_indexed = count > 0
+    render layout: false
   end
 
   def log
