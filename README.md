@@ -112,5 +112,4 @@ bundle exec rake umakadata:seeAlso_sameAs_for_all_endpoints[./data/relations]
 
 
 ## License
-
 MIT
