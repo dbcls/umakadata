@@ -1,11 +1,28 @@
 = stylesheet_link_tag 'umakadata/show'
+= javascript_include_tag 'bootstrap-datepicker.min'
 = javascript_include_tag 'umakadata/chart-helper'
 = javascript_include_tag 'umakadata/show'
+
+.modal.fade#dialog data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true" style="padding-top:15%; overflow-y:visible;"
+    .modal-dialog.modal-m
+        .modal-content
+            .modal-header
+                h3 style="margin:0;"
+            .modal-body
+                .progress.progress-striped.active style="margin-bottom:0;"
+                    .progress-bar style="width: 100%"
 
 #endpoint_id.hidden
   = @endpoint_id
 #evaluation_id.hidden
   = @evaluation_id
+#start_date.hidden
+  = @start_date
+
+javascript:
+    $(function () {
+        dataLoader.load("#{@endpoint_id}", "#{@evaluation_id}", "#{@start_date}");
+    });
 
 #endpoint_info
 

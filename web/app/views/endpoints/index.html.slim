@@ -1,16 +1,25 @@
 = stylesheet_link_tag 'umakadata/index'
 = javascript_include_tag 'Chart.min'
+= javascript_include_tag 'bootstrap-datepicker.min'
 = javascript_include_tag 'umakadata/chart-helper'
 = javascript_include_tag 'umakadata/index'
 
 javascript:
-  $(function(){
-    $('#jump-button').on("click", function() {
-      var input_date = $("#calendar").val();
-      var param = (input_date == '') ? '' : '?date=' + input_date;
-      location.href = "/endpoints/" + param
+    $(function () {
+        $('#jump-button').on("click", function () {
+            var input_date = $("#calendar").val();
+            var param = (input_date == '') ? '' : '?date=' + input_date;
+            location.href = "/endpoints/" + param
+        });
+
+        $('#calendar').datepicker({
+            autoclose: true,
+            startDate: "#{@start_date}",
+            endDate: new Date(),
+            format: 'dd-M-yyyy',
+            todayHighlight: true,
+        });
     });
-  });
 
 - content_for(:calendar)
   == render "calendar"
