@@ -240,4 +240,3 @@ $(function() {
     var start_date = $("#start_date").text().trim();
     dataLoader.load(endpoint_id, evaluation_id, start_date);
 });
-
