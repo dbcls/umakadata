@@ -38,15 +38,17 @@ var waitingDialog = waitingDialog || (function ($) {
     })(jQuery);
 
 var dataLoader = (function ($) {
+    var endpointId = null;
     var raderLoaded = false;
     var scoreLoaded = false;
     var startDate = '';
     return {
         load: function (endpoint_id, evaluation_id, start_date) {
+            endpointId = endpoint_id;
             raderLoaded = false;
             scoreLoaded = false;
             waitingDialog.show('Loading Endpoint Information...');
-            dataLoader.showInfo(endpoint_id, evaluation_id);
+            dataLoader.showInfo(endpointId, evaluation_id);
             startDate = start_date;
         },
 
@@ -56,12 +58,12 @@ var dataLoader = (function ($) {
                 $('#jump-button').on("click", function () {
                     var input_date = $("#calendar").val();
                     var param = (input_date == '') ? '' : '?date=' + input_date;
-                    $.getJSON("/api/endpoints/" + endpoint_id + "/created_at" + param, function (json) {
+                    $.getJSON("/api/endpoints/" + endpointId + "/created_at" + param, function (json) {
                         var evaluation_id = json['evaluation_id'];
                         if (evaluation_id == '') {
                             $('#get_evaluation_id').modal();
                         } else {
-                            location.href = "/endpoints/" + endpoint_id + "/" + evaluation_id + param
+                            location.href = "/endpoints/" + endpointId + "/" + evaluation_id + param
                         }
                     });
                 });
