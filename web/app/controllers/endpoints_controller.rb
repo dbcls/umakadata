@@ -151,12 +151,12 @@ class EndpointsController < ApplicationController
     rank = Array.new
     points = 30
 
-    target_evaluation = Evaluation.lookup(params[:id], params[:evaluation_id])
-    target_time = target_evaluation.retrieved_at.end_of_day
+    target_time = Evaluation.rigth_end_date_of_history_graph(params, points)
     evaluations = Evaluation.where(Evaluation.arel_table[:retrieved_at].lteq(target_time))
                             .where(endpoint_id: params[:id])
                             .order(retrieved_at: :desc)
                             .limit(points)
+
     dates = Evaluation.where(Evaluation.arel_table[:retrieved_at].lteq(target_time))
                       .group('date(retrieved_at)')
                       .order('date(retrieved_at) DESC')

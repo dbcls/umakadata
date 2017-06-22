@@ -25,6 +25,33 @@ class Evaluation < ActiveRecord::Base
     return evaluation
   end
 
+  def self.rigth_end_date_of_history_graph(params, history_range)
+    target_evaluation = Evaluation.lookup(params[:id], params[:evaluation_id])
+    target_time = target_evaluation.retrieved_at.end_of_day
+    evaluations_before_target_time = Evaluation.where(Evaluation.arel_table[:retrieved_at].lteq(target_time))
+                            .select(:retrieved_at)
+                            .where(endpoint_id: params[:id])
+                            .order(retrieved_at: :desc)
+                            .limit(history_range)
+
+    evaluations_after_target_time = Evaluation.where(Evaluation.arel_table[:retrieved_at].gt(target_time))
+                            .select(:retrieved_at)
+                            .where(endpoint_id: params[:id])
+                            .order(retrieved_at: :asc)
+                            .limit(history_range).reverse
+    next_index = 0
+    if evaluations_before_target_time.size + evaluations_after_target_time.size > history_range && evaluations_before_target_time.size >= evaluations_after_target_time.size
+      if  evaluations_before_target_time.size >= history_range / 2
+        next_index = history_range / 2
+      else
+        next_index = evaluations_before_target_time.size
+      end
+    end
+
+    evaluations_before_target_time.each {|eval| evaluations_after_target_time.push(eval)}
+    evaluations_after_target_time[next_index].retrieved_at
+  end
+
   def self.previous(endpoint_id, retrieved_at)
     self.where('retrieved_at < ?', retrieved_at).where(endpoint_id: endpoint_id).order('retrieved_at DESC').first
   end
