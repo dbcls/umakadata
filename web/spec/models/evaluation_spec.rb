@@ -13,7 +13,7 @@ RSpec.describe Evaluation, type: :model do
 
   it 'calculate alive rate by 1 evaluation is dead' do
     eval = Evaluation.new(:latest => true, :alive => false)
-    
+
     alive_rate = Evaluation.calc_alive_rate(eval)
 
     expect(alive_rate).to eq 0.0 # 0 / 1
@@ -21,7 +21,7 @@ RSpec.describe Evaluation, type: :model do
 
   it 'calculate alive rate by 1 evaluation is alive' do
     eval = Evaluation.new(:latest => true, :alive => true)
-    
+
     alive_rate = Evaluation.calc_alive_rate(eval)
 
     expect(alive_rate).to eq 100.0 # 1 / 1
@@ -31,7 +31,7 @@ RSpec.describe Evaluation, type: :model do
     endpoint_id = 1
     create(:evaluation, :endpoint_id => endpoint_id, :latest => false, :alive => true)
     eval = Evaluation.new(:endpoint_id => endpoint_id, :latest => true, :alive => false)
-    
+
     alive_rate = Evaluation.calc_alive_rate(eval)
 
     expect(alive_rate).to eq 50.0 # 1 / 2
@@ -41,7 +41,7 @@ RSpec.describe Evaluation, type: :model do
     endpoint_id = 1
     create(:evaluation, :endpoint_id => endpoint_id, :latest => false, :alive => false)
     eval = Evaluation.new(:endpoint_id => endpoint_id, :latest => true, :alive => true)
-    
+
     alive_rate = Evaluation.calc_alive_rate(eval)
 
     expect(alive_rate).to eq 50.0 # 1 / 2
@@ -51,7 +51,7 @@ RSpec.describe Evaluation, type: :model do
     endpoint_id = 1
     create_list(:evaluation, 29, :endpoint_id => endpoint_id, :latest => false, :alive => true)
     eval = Evaluation.new(:endpoint_id => endpoint_id, :latest => true, :alive => false)
-    
+
     alive_rate = Evaluation.calc_alive_rate(eval)
 
     expect(alive_rate).to eq 96.7 # 29 / 30
@@ -61,10 +61,10 @@ RSpec.describe Evaluation, type: :model do
     endpoint_id = 1
     create_list(:evaluation, 29, :endpoint_id => endpoint_id, :latest => false, :alive => false)
     eval = Evaluation.new(:endpoint_id => endpoint_id, :latest => true, :alive => true)
-    
+
     alive_rate = Evaluation.calc_alive_rate(eval)
 
-    expect(alive_rate).to eq 3.3 # 1 / 30 
+    expect(alive_rate).to eq 3.3 # 1 / 30
   end
 
   it 'calculate alive rate by 30 evaluation that last 15 evaluations are alive and the others are dead' do
@@ -144,6 +144,55 @@ RSpec.describe Evaluation, type: :model do
     update_interval = Evaluation.calc_update_interval(eval)
 
     expect(update_interval).to eq 1 # counts / 6 spans of intervals
+  end
+
+  it 'adjust_range should return all of data if the number of data is less than required' do
+    before = Range.new(3, 5).to_a
+    target = 6
+    after = Range.new(7, 9).to_a
+
+    results = Evaluation.adjust_range(before, target, after, 10)
+
+    expect(results.size).to eq 7
+    expect(results[0]).to eq 3
+    expect(results[6]).to eq 9
+  end
+
+  it 'adjust_range should return an array of requested size which includes all of after data if after is less than half of required' do
+    before = Range.new(1, 9).to_a
+    target = 10
+    after = Range.new(11, 13).to_a
+
+    results = Evaluation.adjust_range(before, target, after, 10)
+
+    expect(results.size).to eq 10
+    expect(results[0]).to eq 4
+    expect(results[9]).to eq 13
+  end
+
+  it 'adjust_range should return an array of requested size which includes all of before data if before is less than half of required' do
+    before = Range.new(8, 9).to_a
+    target = 10
+    after = Range.new(11, 20).to_a
+
+    results = Evaluation.adjust_range(before, target, after, 10)
+
+    expect(results.size).to eq 10
+    expect(results[0]).to eq 8
+    expect(results[9]).to eq 17
+  end
+
+  it 'adjust_range should return an array whose center is target value if before and after have enough size' do
+    before = Range.new(1, 14).to_a
+    target = 15
+    after = Range.new(16, 30).to_a
+
+    results = Evaluation.adjust_range(before, target, after, 10)
+
+    expect(results.size).to eq 10
+    expect(results[0]).to eq 11
+    expect(results[4]).to eq 15
+    expect(results[9]).to eq 20
   end
 
 end
