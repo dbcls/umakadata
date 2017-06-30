@@ -102,6 +102,62 @@ bundle exec rake umakadata:import_prefix_filters_for_all_endpoints[./data/prefix
 bundle exec rake umakadata:seeAlso_sameAs_for_all_endpoints[./data/relations]
 ```
 
+### Web application without Docker
+
+You can execute this system without docker as follows:
+
+#### 1. Prepare Database
+
+In this document, we use docker container for DB for the convenience.
+
+##### Pull the PostgreSQL image from official repository.
+
+```bash
+docker pull postgres
+```
+
+##### Invoke docker container
+
+```bash
+# Make directory to mount into container
+mkdir pgdata
+docker run -d -v /path/to/pgdata:/var/lib/postgresql/data -p 5432:5432 --name umakadata_db postgres
+```
+
+### 2. Configure a web application
+
+#### Configure Database settings
+
+Modify </path/to/umakadata>/web/config/database.yml.
+
+#### Initialize
+
+```bash
+cd </path/to/umakadata>/web
+bundle exec rake db:create
+bundle exec rake db:migrate
+bundle exec rake db:seed
+bundle exec rake umakadata:active_median
+bundle exec rake umakadata:import_prefix_for_all_endpoints[./data/prefixes]
+bundle exec rake umakadata:import_prefix_filters_for_all_endpoints[./data/prefix_filters]
+bundle exec rake umakadata:seeAlso_sameAs_for_all_endpoints[./data/relations]
+```
+
+### 3. Run a web application
+
+```bash
+cd </path/to/umakadata>/web
+bundle exec rails s -d --bind=0.0.0.0'
+```
+
+If you want to change the listening port, for example 10081, execute the following command:
+
+```bash
+cd </path/to/umakadata>/web
+bundle exec rails s -d -p 10081 --bind=0.0.0.0'
+```
+
+
 ## Usage
 
 
