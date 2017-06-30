@@ -40,7 +40,8 @@ class Evaluation < ActiveRecord::Base
                             .order(retrieved_at: :asc)
                             .limit(history_range).reverse
     next_index = 0
-    if evaluations_before_target_time.size + evaluations_after_target_time.size > history_range && evaluations_before_target_time.size >= evaluations_after_target_time.size
+    if evaluations_before_target_time.size + evaluations_after_target_time.size > history_range &&
+       evaluations_before_target_time.size >= evaluations_after_target_time.size
       if  evaluations_before_target_time.size >= history_range / 2
         next_index = history_range / 2
       else
@@ -50,6 +51,35 @@ class Evaluation < ActiveRecord::Base
 
     evaluations_before_target_time.each {|eval| evaluations_after_target_time.push(eval)}
     evaluations_after_target_time[next_index].retrieved_at
+  end
+
+  def self.history(params, size)
+    if params[:evaluation_id].nil?
+      target = CrawlLog.where('finished_at IS NOT NULL').order('started_at': 'DESC').first
+    else
+      evaluation = Evaluation.where({'endpoint_id': params[:id],'id': params[:evaluation_id] })
+      target = CrawlLog.find(evaluation.first.crawl_log_id)
+    end
+    before = CrawlLog.where('started_at < ?', target.started_at).where('finished_at IS NOT NULL').order('started_at': 'DESC').limit(size - 1).reverse
+    after = CrawlLog.where('started_at > ?', target.started_at).where('finished_at IS NOT NULL').order('started_at': 'ASC').limit(size - 1)
+
+    logs = self.adjust_range(before, target, after, size)
+    log_ids = logs.each { |log| log.id }
+    return self.includes(:crawl_log).where({'endpoint_id': params[:id], 'crawl_log_id': log_ids }).order('crawl_logs.started_at').all
+  end
+
+  def self.adjust_range(before, target, after, size)
+    results = Array.new
+    if ((after.size + before.size + 1) < size)
+      results = before + [target] + after
+    elsif (after.size > (size / 2 - 1) && before.size > size / 2)
+      results = before.slice(before.size - size / 2 + 1, before.size - 1) + [target] + after.slice(0, size / 2)
+    elsif (after.size < size / 2)
+      results = before.slice(before.size + after.size - size + 1, size - after.size - 1) + [target] + after
+    elsif (before.size < size / 2)
+      results = before + [target] + after.slice(0, size - before.size - 1)
+    end
+    return results
   end
 
   def self.previous(endpoint_id, retrieved_at)

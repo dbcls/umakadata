@@ -81,12 +81,14 @@ var dataLoader = (function ($) {
             $.ajax({
                 type: "GET",
                 url: "/endpoints/" + endpoint_id + "/" + evaluation_id + "/info",
-                success: function (element) {
-                    var html = $.parseHTML(element);
-                    $("#endpoint_info").html(html);
-                    dataLoader.showRadar(endpoint_id, evaluation_id);
-                    dataLoader.showScoreHistory(endpoint_id, evaluation_id);
-                }
+            }).done(function(element) {
+                var html = $.parseHTML(element);
+                $("#endpoint_info").html(html);
+                dataLoader.showRadar(endpoint_id, evaluation_id);
+                dataLoader.showScoreHistory(endpoint_id, evaluation_id);
+            }).fail(function(element) {
+                alert('Failed to load Endpoint Information.');
+                waitingDialog.hide();
             });
         },
 

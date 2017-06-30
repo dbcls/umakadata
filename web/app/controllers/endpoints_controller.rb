@@ -151,23 +151,9 @@ class EndpointsController < ApplicationController
     rank = Array.new
     points = 30
 
-    target_time = Evaluation.rigth_end_date_of_history_graph(params, points)
-    evaluations = Evaluation.where(Evaluation.arel_table[:retrieved_at].lteq(target_time))
-                            .where(endpoint_id: params[:id])
-                            .order(retrieved_at: :desc)
-                            .limit(points)
-
-    dates = Evaluation.where(Evaluation.arel_table[:retrieved_at].lteq(target_time))
-                      .group('date(retrieved_at)')
-                      .order('date(retrieved_at) DESC')
-                      .limit(points)
-                      .pluck('date(retrieved_at)')
-                      .reverse
-    dates.each do |date|
-      day_begin = Time.zone.local(date.year, date.month, date.day, 0, 0, 0)
-      day_end = Time.zone.local(date.year, date.month, date.day, 23, 59, 59)
-      evaluation = evaluations.where(retrieved_at: day_begin..day_end).first
-      next if evaluation.nil?
+    evaluations = Evaluation.history(params, points)
+    evaluations.each do |evaluation|
+      date = evaluation.crawl_log.started_at
       rates = Evaluation.calc_rates(evaluation)
       availability.push(rates[0])
       freshness.push(rates[1])
