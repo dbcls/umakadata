@@ -157,8 +157,9 @@ SPARQL
         date = Time.zone.parse(params['date'])
         day_begin = Time.zone.local(date.year, date.month, date.day, 0, 0, 0)
         day_end = Time.zone.local(date.year, date.mon, date.day, 23, 59, 59)
-        evaluations = Evaluation.where(:endpoint_id => params[:id]).created_at(day_begin..day_end)
-        evaluation_id = evaluations.take.id
+        crawlLog = CrawlLog.where('started_at': [day_begin..day_end]).order(['started_at ASC']).first
+        evaluation = Evaluation.where(:endpoint_id => params[:id], 'crawl_log_id' => crawlLog.id).first
+        evaluation_id = evaluation.id unless evaluation.nil?
       rescue
       end
     end
