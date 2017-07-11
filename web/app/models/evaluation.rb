@@ -410,9 +410,10 @@ class Evaluation < ActiveRecord::Base
     rates[0] += eval.alive_rate unless eval.alive_rate.blank?
 
     #freshness
-    rates[1] = 100.0 if eval.update_interval < 30
-    rates[1] = 100.0 -  100.0 * ( eval.update_interval - 30 ) / 335
-    rates[1] = 0.0 if eval.update_interval > 365
+    rates[1] = 50.0
+    #rates[1] = 100.0 if eval.update_interval < 30
+    #rates[1] = 100.0 -  100.0 * ( eval.update_interval - 30 ) / 335
+    #rates[1] = 0.0 if eval.update_interval > 365
 
     #operation
     rates[2] += 50.0 unless eval.service_description.blank?
