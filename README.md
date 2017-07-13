@@ -147,14 +147,14 @@ bundle exec rake umakadata:seeAlso_sameAs_for_all_endpoints[./data/relations]
 
 ```bash
 cd </path/to/umakadata>/web
-bundle exec rails s -d --bind=0.0.0.0'
+bundle exec rails s -d --bind=0.0.0.0
 ```
 
 If you want to change the listening port, for example 10081, execute the following command:
 
 ```bash
 cd </path/to/umakadata>/web
-bundle exec rails s -d -p 10081 --bind=0.0.0.0'
+bundle exec rails s -d -p 10081 --bind=0.0.0.0
 ```
 
 
