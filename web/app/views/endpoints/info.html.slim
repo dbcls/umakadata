@@ -259,7 +259,9 @@
                     span.medium
                       | List of datasets specified by void:Linkset in VoID
                 td.usefulness
-                  - unless @linksets.nil?
+                  - if @linksets.nil? || @linksets.empty?
+                    = 'N/A'
+                  - else
                     - @linksets.each do |linkset|
                       = linkset
                       br
