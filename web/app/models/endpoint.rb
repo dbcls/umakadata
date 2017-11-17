@@ -10,6 +10,7 @@ class Endpoint < ActiveRecord::Base
   validates :url, uniqueness: true
   validates :url, format: /\A#{URI::regexp(%w(http https))}\z/, if: 'url.present?'
   validates :description_url, format: /\A#{URI::regexp(%w(http https))}\z/, if: 'description_url.present?'
+  validates :viewer_url, format: /\A#{URI::regexp(%w(http https))}\z/, if: 'viewer_url.present?'
 
   scope :created_at, ->(date) { where('evaluations.created_at': date) }
 
