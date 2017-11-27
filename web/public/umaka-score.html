@@ -426,17 +426,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="_umaka_score">Umaka Score</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Octorber 07, 2016</p>
+<p>August 22, 2017</p>
 </div>
 <div class="paragraph">
 <p><strong>Abstract</strong></p>
 </div>
 <div class="paragraph">
-<p>Umaka Scores represents how valuable endpoints are. Umaka Score
-is calculated on the basis of the evaluation from the 6 aspects, Availability,
+<p>Umaka Score is an index to help assess the datasets and SPARQL endpoints.
+Umaka Score is calculated on the basis of the evaluation from the 6 aspects; Availability,
 Freshness, Operation, Usefulness, Validity and Performance.
-We also rank the endpoints on a scale of A to E according to the
-Umaka score.
+We also rank the endpoints on a scale of A to E according to the Umaka score.
 In this document, we show how to calculate Umaka score.</p>
 </div>
 </div>
@@ -629,14 +628,18 @@ endpoint.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>Even though we would like to score freshness on the basis of the Update
-Interval, we give up to score and set 50 for all endpoints since the
-adhoc approach does not work well for Virtuoso.</p>
+<p>Currently, freshness score takes value from 30 to 100 as follows.</p>
 </div>
 <div class="exampleblock text-center">
 <div class="content">
 <div class="paragraph">
-<p>Freshness = 50</p>
+<p>
+  <table>
+  <tr><td>Freshness</td><td> = </td><td>30 if update interval is N/A or more than 365</td></tr>
+  <tr><td></td>      <td> = </td><td>100 if update interval is less than 30</td></tr>
+  <tr><td></td>      <td> = </td><td>100 - 70 * (update interval -30) / 335 otherwise </td></tr>
+  </table>
+  </p>
 </div>
 </div>
 </div>
@@ -1323,7 +1326,7 @@ catalogue for modelling, publishing, and consuming linked data.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-12-14 13:36:55 JST
+Last update 2017-8-22
 </div>
 </div>
 <script type="text/x-mathjax-config">

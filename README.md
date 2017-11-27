@@ -147,19 +147,34 @@ bundle exec rake umakadata:seeAlso_sameAs_for_all_endpoints[./data/relations]
 
 ```bash
 cd </path/to/umakadata>/web
-bundle exec rails s -d --bind=0.0.0.0'
+bundle exec rails s -d --bind=0.0.0.0
 ```
 
 If you want to change the listening port, for example 10081, execute the following command:
 
 ```bash
 cd </path/to/umakadata>/web
-bundle exec rails s -d -p 10081 --bind=0.0.0.0'
+bundle exec rails s -d -p 10081 --bind=0.0.0.0
 ```
 
 
 ## Usage
 
+Collecting data from a given list of endpoints.
+```bash
+cd /opt/services/umaka/umakadata/web; rake umakadata:crawl[$1]
+```
+
+The argument tells the order of accessing to endpoints; either ASC or DESC needs to be given.
+Below is an example of cronjobs.
+```
+0  9 * * * [ $(expr $(date +\%j) \% 6) -eq 0 ] && /opt/services/umaka/umakadata/crawl.sh 'ASC'
+0  9 * * * [ $(expr $(date +\%j) \% 6) -eq 1 ] && /opt/services/umaka/umakadata/crawl.sh 'DESC'
+0 15 * * * [ $(expr $(date +\%j) \% 6) -eq 2 ] && /opt/services/umaka/umakadata/crawl.sh 'ASC'
+0 15 * * * [ $(expr $(date +\%j) \% 6) -eq 3 ] && /opt/services/umaka/umakadata/crawl.sh 'DESC'
+0 21 * * * [ $(expr $(date +\%j) \% 6) -eq 4 ] && /opt/services/umaka/umakadata/crawl.sh 'ASC'
+0 21 * * * [ $(expr $(date +\%j) \% 6) -eq 5 ] && /opt/services/umaka/umakadata/crawl.sh 'DESC'
+```
 
 ## Development
 

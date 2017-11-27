@@ -410,8 +410,16 @@ class Evaluation < ActiveRecord::Base
     rates[0] += eval.alive_rate unless eval.alive_rate.blank?
 
     #freshness
-    rates[1] = 50.0
-
+    # max =100, min = 30 to avoid being 0 point for all endpoints which does not have VoID
+    if eval.update_interval.nil?
+      rates[1] = 30.0
+    else
+      rates[1] = 100.0 if eval.update_interval < 30
+      #rates[1] = 100.0 -  100.0 * ( eval.update_interval - 30 ) / 335 if eval.update_interval >= 30
+      rates[1] = 100.0 -  70.0 * ( eval.update_interval - 30 ) / 335 if eval.update_interval >= 30
+      rates[1] = 30.0 if eval.update_interval > 365
+    end
+    
     #operation
     rates[2] += 50.0 unless eval.service_description.blank?
     rates[2] += 50.0 unless eval.void_ttl.blank?

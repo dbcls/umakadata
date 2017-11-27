@@ -14,7 +14,7 @@ ActiveAdmin.register Endpoint do
 # end
 
   permit_params do
-    permitted = [:name, :url, :description_url, :disable_crawling]
+    permitted = [:name, :url, :description_url, :disable_crawling, :viewer_url]
   end
 
   scope 'All', :all, :default => true
@@ -56,6 +56,7 @@ ActiveAdmin.register Endpoint do
         row :name
         row :url
         row :description_url
+        row :viewer_url
         row :disable_crawling
         row :created_at
         row :updated_at
