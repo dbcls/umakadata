@@ -16,6 +16,7 @@ Rails.application.config.assets.precompile += %w( Chart.min.js )
 Rails.application.config.assets.precompile += %w( bootstrap-datepicker.min.js )
 Rails.application.config.assets.precompile += %w( jquery.treetable.css )
 Rails.application.config.assets.precompile += %w( jquery.treetable.theme.default.css )
+Rails.application.config.assets.precompile += %w( jquery.treetable.theme.css )
 
 Rails.application.config.assets.precompile += %w( jquery.treetable.js )
 Rails.application.config.assets.precompile += %w( jquery.validate.js )

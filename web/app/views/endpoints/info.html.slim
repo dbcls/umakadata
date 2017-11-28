@@ -131,6 +131,11 @@
                   | Last Checked
                 td
                   = @evaluation.created_at.getutc
+              tr
+                td
+                  | Class Structure
+                td
+                  = link_to @endpoint.viewer_url, @endpoint.viewer_url unless @endpoint.viewer_url.nil?
           | Please see&nbsp;
           a href="/umaka-score.html" data-no-turbolink=true this document
           | &nbsp;for more details about Umaka Score.
