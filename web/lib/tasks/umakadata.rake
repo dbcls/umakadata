@@ -272,6 +272,14 @@ namespace :umakadata do
     end
   end
 
+  desc "Export all endpoints information as csv foramt"
+  task :export_endpoints => :environment do
+    puts "endpoint_id,name,url,download_url"
+    Endpoint.all.each_with_index do |endpoint, index|
+      puts ('%d,"%s","%s",' % [endpoint.id, endpoint.name, endpoint.url])
+    end
+  end
+
 end
 
 namespace :sbmeta do
