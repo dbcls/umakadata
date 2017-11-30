@@ -54,10 +54,13 @@ class Endpoint < ActiveRecord::Base
       self.update_column(:issue_id, issue[:number]) unless issue.nil?
 
       label = GithubHelper.add_label(self.name.gsub(",", ""), Color.get_color(self.id))
+
+      next if issue.nil? || label.nil?
+
       GithubHelper.add_labels_to_an_issue(issue[:number], [label[:name]])
       self.update_column(:label_id, label[:id]) unless label.nil?
     else
-      issue = GithubHelper.edit_issue(self.issue_id, self.name)
+      GithubHelper.edit_issue(self.issue_id, self.name)
 
       labels = GithubHelper.labels_for_issue(self.issue_id)
       label = labels.select {|label| label[:id] == self.label_id}.first
