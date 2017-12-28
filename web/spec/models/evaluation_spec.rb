@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-include FactoryGirl::Syntax::Methods
+include FactoryBot::Syntax::Methods
 
 #RSpec.describe Evaluation, type: :model do
 #  pending "add some examples to (or delete) #{__FILE__}"
@@ -8,7 +8,7 @@ include FactoryGirl::Syntax::Methods
 
 RSpec.describe Evaluation, type: :model do
   after do
-    FactoryGirl.reload
+    FactoryBot.reload
   end
 
   it 'calculate alive rate by 1 evaluation is dead' do

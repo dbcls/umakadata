@@ -11,8 +11,8 @@ RSpec.describe "Endpoints", type: :request do
   describe "GET /api/endpoints/graph" do
 
     before do
-      FactoryGirl.create_list(:endpoint, 100)
-      FactoryGirl.create_list(:relation, 50)
+      FactoryBot.create_list(:endpoint, 100)
+      FactoryBot.create_list(:relation, 50)
     end
 
     it "works! (now write some real specs)" do

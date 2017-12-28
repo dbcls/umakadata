@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :liked_data_rule do
     
   end

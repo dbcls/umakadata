@@ -37,7 +37,7 @@ module UmakadataUi
       g.stylesheets false
       g.template_engine :slim
       g.test_framework :rspec, view_specs: false, fixture: true
-      g.fixture_replacement :factory_girl, dir: 'spec/factories'
+      g.fixture_replacement :factory_bot, dir: 'spec/factories'
     end
 
     # config.time_zone = 'Tokyo'

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :relation do
     endpoint_id {rand(1..Endpoint.all.count)}
     dst_id {
