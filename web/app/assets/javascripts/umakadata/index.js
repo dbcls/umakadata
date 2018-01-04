@@ -232,7 +232,7 @@ function addGraphClickEvent(context, lineChart, labels, pathname) {
     var index = activePoints[0]['_index'];
     var datestring = labels[index];
     var clickedDate = new Date(datestring);
-    var clickedDateFormat = clickedDate.getFullYear() + "-" + ("0" + (clickedDate.getMonth() + 1)).slice(-2) + "-" + ("0" + (clickedDate.getDate())).slice(-2);
+    var clickedDateFormat = clickedDate.getUTCFullYear() + "-" + ("0" + (clickedDate.getUTCMonth() + 1)).slice(-2) + "-" + ("0" + (clickedDate.getUTCDate())).slice(-2);
     location.href = location.protocol + "//" + location.host + pathname + "?date=" + clickedDateFormat;
   });
 
