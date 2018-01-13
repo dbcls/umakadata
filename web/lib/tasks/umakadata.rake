@@ -179,12 +179,12 @@ namespace :umakadata do
     Endpoint.all.each do |endpoint|
       retriever = Umakadata::Retriever.new endpoint.url, Time.zone.now
 
-      if retriever.alive?
+      #if retriever.alive?
         logger = Umakadata::Logging::Log.new
         puts endpoint.name + "|alive|" + retriever.send(args[:method_name], logger: logger).to_s + "|" + logger.as_json.to_s
-      else
-        puts endpoint.name + "|dead|x|x|"
-      end
+      #else
+      #  puts endpoint.name + "|dead|x|x|"
+      #end
     end
   end
 
@@ -194,12 +194,12 @@ namespace :umakadata do
     endpoint = Endpoint.where("name LIKE ?", "%#{args[:name]}%").first
     retriever = Umakadata::Retriever.new endpoint.url, Time.zone.now
 
-    if retriever.alive?
+    #if retriever.alive?
       logger = Umakadata::Logging::Log.new
       puts endpoint.name + "|alive|" + retriever.send(args[:method_name], logger: logger).to_s + "|" + logger.as_json.to_s
-    else
-      puts endpoint.name + "|dead|x|x|"
-    end
+    #else
+    #  puts endpoint.name + "|dead|x|x|"
+    #end
   end
 
   desc "Fill retrieved_at column in evaluations table"
