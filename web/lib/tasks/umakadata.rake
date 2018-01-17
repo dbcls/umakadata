@@ -159,6 +159,58 @@ namespace :umakadata do
     crawl_log.update_column(:finished_at, Time.zone.now)
   end
 
+  namespace :crawler do
+    desc "crawl an endpoint"
+    task :run, %w[endpoint_id crawl_log_id start_time] => :environment do |task, args|
+      endpoint_id  = args[:endpoint_id] || raise(ArgumentError, 'endpoint_id is nil')
+      crawl_log_id = args[:crawl_log_id] || raise(ArgumentError, 'crawl_log_id is nil')
+      start_time = args[:start_time] || raise(ArgumentError, 'start_time is nil')
+
+      endpoint = Endpoint.find(endpoint_id.to_i)
+      next if endpoint.disable_crawling
+
+      puts endpoint.name
+
+      crawl_log = CrawlLog.find(crawl_log_id.to_i)
+      crawl_log.evaluations.where(endpoint_id: endpoint.id).delete_all
+
+      rdf_prefixes_candidates = RdfPrefix.where.not(endpoint_id: endpoint.id).pluck(:uri)
+
+      begin
+        retriever  = Umakadata::Retriever.new endpoint.url, Time.zone.parse(start_time)
+        evaluation = Evaluation.record(endpoint, retriever, rdf_prefixes_candidates)
+        evaluation.update_column(:crawl_log_id, crawl_log.id) unless evaluation.nil?
+      rescue => e
+        puts e.message
+        puts e.backtrace
+      end
+    end
+
+    namespace :endpoint do
+      desc "list endpoint IDs"
+      task :list, ['order'] => :environment do |task, args|
+        puts Endpoint.all.order("id #{args[:order]}").pluck(:id).join("\n")
+      end
+    end
+
+    namespace :crawl_log do
+      desc "create a crawl log and return crawl log ID and current time"
+      task create: :environment do
+        time      = Time.zone.now
+        crawl_log = CrawlLog.create(started_at: time)
+        puts crawl_log.id, time
+      end
+
+      desc "terminate crawl log"
+      task :terminate, ['crawl_log_id'] => :environment do |task, args|
+        crawl_log_id = (n = args[:crawl_log_id]).present? ? n.to_i : raise(ArgumentError, 'crawl_log_id is nil')
+
+        crawl_log = CrawlLog.find(crawl_log_id)
+        crawl_log.update_column(:finished_at, Time.zone.now)
+      end
+    end
+  end
+
   desc "test for checking endpoint liveness"
   task :test_crawl, ['name'] => :environment do |task, args|
     rdf_prefixes = RdfPrefix.all.pluck(:id, :endpoint_id, :uri)
