@@ -1,3 +1,6 @@
+STDOUT.sync = true
+STDERR.sync = true
+
 MYAPP = "change path depending on your environment"
 
 SBMETA         = "change path depending on your environment"
