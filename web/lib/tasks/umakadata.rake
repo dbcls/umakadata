@@ -1,11 +1,14 @@
+STDOUT.sync = true
+STDERR.sync = true
+
 MYAPP = "change path depending on your environment"
 
-SBMETA = "change path depending on your environment"
+SBMETA         = "change path depending on your environment"
 DOCKER_OPTIONS = "-it"
-VOLUME = "-v #{SBMETA}:/sbMeta"
-IMAGE = "sbmeta"
-SCRIPT_DIR = "/sbMeta/script"
-DATA_DIR = "/sbMeta/data"
+VOLUME         = "-v #{SBMETA}:/sbMeta"
+IMAGE          = "sbmeta"
+SCRIPT_DIR     = "/sbMeta/script"
+DATA_DIR       = "/sbMeta/data"
 
 namespace :umakadata do
 
@@ -16,20 +19,20 @@ namespace :umakadata do
 
   desc "import prefix for all endpoints from CSV file"
   task :import_prefix_for_all_endpoints, ['directory_path'] => :environment do |task, args|
-    names = Endpoint.pluck(:name)
+    names          = Endpoint.pluck(:name)
     directory_path = args[:directory_path].blank? ? "#{SBMETA}/data/bulkdownloads" : args[:directory_path]
-    names.each {|name| Rake::Task["umakadata:import_prefix"].execute(Rake::TaskArguments.new([:name, :directory_path], [name, directory_path]))}
+    names.each { |name| Rake::Task["umakadata:import_prefix"].execute(Rake::TaskArguments.new([:name, :directory_path], [name, directory_path])) }
   end
 
   desc "import prefix from CSV file"
   task :import_prefix, ['name', 'directory_path'] => :environment do |task, args|
-    name = args[:name]
-    endpoint = Endpoint.where(:name => name).take
+    name      = args[:name]
+    endpoint  = Endpoint.where(:name => name).take
     file_path = args[:directory_path].blank? ? "#{SBMETA}/data/bulkdownloads/#{args[:name]}_prefix.csv" : "#{args[:directory_path]}/#{args[:name]}_prefix.csv"
     if !endpoint.nil? && File.exist?(file_path)
       puts file_path
       endpoint.prefixes.destroy_all
-      CSV.foreach(file_path, {:headers => true}) do |row|
+      CSV.foreach(file_path, { :headers => true }) do |row|
         Prefix.create(:endpoint_id => endpoint.id, :uri => row[0])
       end
     else
@@ -40,7 +43,7 @@ namespace :umakadata do
   desc "Create relations between endpoints for all endpoints"
   task :create_relations_csv_for_all_endpoints, ['directory_path'] => :environment do |task, args|
     all_prefixes_file = "#{SBMETA}/data/all_prefixes.csv"
-    directory_path = args[:directory_path].blank? ? "#{SBMETA}/data/bulkdownloads" : args[:directory_path]
+    directory_path    = args[:directory_path].blank? ? "#{SBMETA}/data/bulkdownloads" : args[:directory_path]
     Rake::Task["umakadata:export_prefixes"].execute(Rake::TaskArguments.new([:output_path], [all_prefixes_file]))
     Endpoint.pluck(:name).each do |name|
       Rake::Task["umakadata:create_relations_csv"].execute(Rake::TaskArguments.new([:name, :directory_path], [name, directory_path]))
@@ -49,7 +52,7 @@ namespace :umakadata do
 
   desc "Create relations between endpoints for an endpoint"
   task :create_relations_csv, ['name', 'directory_path'] => :environment do |task, args|
-    endpoint = Endpoint.where(:name => args[:name]).take
+    endpoint       = Endpoint.where(:name => args[:name]).take
     directory_path = args[:directory_path].blank? ? "#{SBMETA}/data/bulkdownloads" : args[:directory_path]
     if !endpoint.nil? && File.exist?("#{directory_path}/#{args[:name]}_relation.csv")
       Rake::Task["sbmeta:extract"].execute(Rake::TaskArguments.new([:name], [args[:name]]))
@@ -68,7 +71,7 @@ namespace :umakadata do
     next puts "#{args[:file_path]}: No such file of directory." unless File.exist?(args[:file_path])
 
     endpoint.relations.destroy_all
-    CSV.foreach(args[:file_path], {:headers => true}) do |row|
+    CSV.foreach(args[:file_path], { :headers => true }) do |row|
       src_endpoint = Endpoint.where(:name => row[0]).take
       dst_endpoint = Endpoint.where(:name => row[1]).take
       next puts "#{row[0]}: No such endpoint in database." if src_endpoint.nil?
@@ -87,12 +90,12 @@ namespace :umakadata do
 
   desc "import seeAlso and sameAs data from CSV file"
   task :seeAlso_sameAs, ['name', 'directory_path'] => :environment do |task, args|
-    endpoint = Endpoint.where(:name => args[:name]).take
+    endpoint  = Endpoint.where(:name => args[:name]).take
     file_path = args[:directory_path].blank? ? "#{SBMETA}/data/bulkdownloads/#{args[:name]}_relation.csv" : "#{args[:directory_path]}/#{args[:name]}_relation.csv"
     if !endpoint.nil? && File.exist?(file_path)
       endpoint.relations.destroy_all
       puts endpoint.name
-      CSV.foreach(file_path, {:headers => true}) do |row|
+      CSV.foreach(file_path, { :headers => true }) do |row|
         Relation.create(:endpoint_id => endpoint.id, :src_id => row[0], :dst_id => row[1], :name => row[2])
       end
     end
@@ -103,7 +106,7 @@ namespace :umakadata do
     path = args[:output_path]
     CSV.open(path, 'w') do |row|
       row << %w(id endpoint_id uri)
-      Prefix.all.each {|prefix| row << %W(#{prefix.id} #{prefix.endpoint_id} #{prefix.uri})}
+      Prefix.all.each { |prefix| row << %W(#{prefix.id} #{prefix.endpoint_id} #{prefix.uri}) }
     end
   end
 
@@ -118,12 +121,12 @@ namespace :umakadata do
 
   desc "import prefix filters from CSV file"
   task :import_prefix_filters, ['name', 'file_path'] => :environment do |task, args|
-    name = args[:name]
-    endpoint = Endpoint.where(:name => name).take
+    name      = args[:name]
+    endpoint  = Endpoint.where(:name => name).take
     file_path = args[:file_path].blank? ? "#{SBMETA}/data/bulkdownloads/#{name}_subject_and_object_prefix.csv" : args[:file_path]
     if !endpoint.nil? && File.exist?(file_path)
       endpoint.prefix_filters.destroy_all
-      CSV.foreach(file_path, {:headers => true}) do |row|
+      CSV.foreach(file_path, { :headers => true }) do |row|
         PrefixFilter.create(:endpoint_id => endpoint.id, :uri => row[0], :element_type => row[2])
       end
     end
@@ -131,7 +134,7 @@ namespace :umakadata do
 
   desc "check endpoint liveness (argument: ASC, DESC)"
   task :crawl, ['order'] => :environment do |task, args|
-    time = Time.zone.now
+    time      = Time.zone.now
     crawl_log = CrawlLog.where(started_at: time.all_day).take
     if crawl_log.blank?
       crawl_log = CrawlLog.create(started_at: time)
@@ -148,7 +151,7 @@ namespace :umakadata do
       end
       puts endpoint.name
       begin
-        retriever = Umakadata::Retriever.new endpoint.url, time
+        retriever  = Umakadata::Retriever.new endpoint.url, time
         evaluation = Evaluation.record(endpoint, retriever, rdf_prefixes_candidates)
         evaluation.update_column(:crawl_log_id, crawl_log.id) unless evaluation.nil?
       rescue => e
@@ -159,10 +162,62 @@ namespace :umakadata do
     crawl_log.update_column(:finished_at, Time.zone.now)
   end
 
+  namespace :crawler do
+    desc "crawl an endpoint"
+    task :run, %w[endpoint_id crawl_log_id start_time] => :environment do |task, args|
+      endpoint_id  = args[:endpoint_id] || raise(ArgumentError, 'endpoint_id is nil')
+      crawl_log_id = args[:crawl_log_id] || raise(ArgumentError, 'crawl_log_id is nil')
+      start_time = args[:start_time] || raise(ArgumentError, 'start_time is nil')
+
+      endpoint = Endpoint.find(endpoint_id.to_i)
+      next if endpoint.disable_crawling
+
+      puts endpoint.name
+
+      crawl_log = CrawlLog.find(crawl_log_id.to_i)
+      crawl_log.evaluations.where(endpoint_id: endpoint.id).delete_all
+
+      rdf_prefixes_candidates = RdfPrefix.where.not(endpoint_id: endpoint.id).pluck(:uri)
+
+      begin
+        retriever  = Umakadata::Retriever.new endpoint.url, Time.zone.parse(start_time)
+        evaluation = Evaluation.record(endpoint, retriever, rdf_prefixes_candidates)
+        evaluation.update_column(:crawl_log_id, crawl_log.id) unless evaluation.nil?
+      rescue => e
+        puts e.message
+        puts e.backtrace
+      end
+    end
+
+    namespace :endpoint do
+      desc "list endpoint IDs"
+      task :list, ['order'] => :environment do |task, args|
+        puts Endpoint.all.order("id #{args[:order]}").pluck(:id).join("\n")
+      end
+    end
+
+    namespace :crawl_log do
+      desc "create a crawl log and return crawl log ID and current time"
+      task create: :environment do
+        time      = Time.zone.now
+        crawl_log = CrawlLog.create(started_at: time)
+        puts crawl_log.id, time
+      end
+
+      desc "terminate crawl log"
+      task :terminate, ['crawl_log_id'] => :environment do |task, args|
+        crawl_log_id = (n = args[:crawl_log_id]).present? ? n.to_i : raise(ArgumentError, 'crawl_log_id is nil')
+
+        crawl_log = CrawlLog.find(crawl_log_id)
+        crawl_log.update_column(:finished_at, Time.zone.now)
+      end
+    end
+  end
+
   desc "test for checking endpoint liveness"
   task :test_crawl, ['name'] => :environment do |task, args|
     rdf_prefixes = RdfPrefix.all.pluck(:id, :endpoint_id, :uri)
-    endpoint = Endpoint.where("name LIKE ?", "%#{args[:name]}%").first
+    endpoint     = Endpoint.where("name LIKE ?", "%#{args[:name]}%").first
     puts endpoint.name
     rdf_prefixes_candidates = Array.new
     rdf_prefixes.each do |rdf_prefix|
@@ -179,27 +234,27 @@ namespace :umakadata do
     Endpoint.all.each do |endpoint|
       retriever = Umakadata::Retriever.new endpoint.url, Time.zone.now
 
-      #if retriever.alive?
+      if retriever.alive?
         logger = Umakadata::Logging::Log.new
         puts endpoint.name + "|alive|" + retriever.send(args[:method_name], logger: logger).to_s + "|" + logger.as_json.to_s
-      #else
-      #  puts endpoint.name + "|dead|x|x|"
-      #end
+      else
+        puts endpoint.name + "|dead|x|x|"
+      end
     end
   end
 
   desc "test for checking retriever method"
   task :test_retriever_method, ['name', 'method_name'] => :environment do |task, args|
     puts "endpoint_name|dead/alive|result|log"
-    endpoint = Endpoint.where("name LIKE ?", "%#{args[:name]}%").first
+    endpoint  = Endpoint.where("name LIKE ?", "%#{args[:name]}%").first
     retriever = Umakadata::Retriever.new endpoint.url, Time.zone.now
 
-    #if retriever.alive?
-      logger = Umakadata::Logging::Log.new
-      puts endpoint.name + "|alive|" + retriever.send(args[:method_name], logger: logger).to_s + "|" + logger.as_json.to_s
-    #else
-    #  puts endpoint.name + "|dead|x|x|"
-    #end
+    # if retriever.alive?
+    logger = Umakadata::Logging::Log.new
+    puts endpoint.name + "|alive|" + retriever.send(args[:method_name], logger: logger).to_s + "|" + logger.as_json.to_s
+    # else
+    #   puts endpoint.name + "|dead|x|x|"
+    # end
   end
 
   desc "Fill retrieved_at column in evaluations table"
@@ -233,7 +288,7 @@ namespace :umakadata do
   desc "Fix difference between endpoint_ids and issue_ids in forum"
   task :fix_different_issue_id => :environment do
     ignore_id_min = 103
-    GithubHelper.list_issues({:state => 'all'}).each {|issue|
+    GithubHelper.list_issues({ :state => 'all' }).each { |issue|
       issue_id = issue[:number]
       next if issue_id >= ignore_id_min
       endpoint = Endpoint.where(name: issue[:title]).take
@@ -253,14 +308,14 @@ namespace :umakadata do
   task :create_label_for_each_endpoint => :environment do
     Endpoint.all.each_with_index do |endpoint, index|
       label_name = endpoint.name.gsub(",", "")
-      label = GithubHelper.add_label(label_name, Color.get_color(endpoint.id))
+      label      = GithubHelper.add_label(label_name, Color.get_color(endpoint.id))
       endpoint.update_column(:label_id, label[:id])
     end
   end
 
   desc "Add label to exsiting issues"
   task :add_label_to_exsiting_issues => :environment do
-    GithubHelper.list_issues({:state => 'all', :label => "endpoints"}).each do |issue|
+    GithubHelper.list_issues({ :state => 'all', :label => "endpoints" }).each do |issue|
       endpoint = Endpoint.where(name: issue[:title]).take
 
       if endpoint.nil?
