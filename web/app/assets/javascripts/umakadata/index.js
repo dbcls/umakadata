@@ -247,13 +247,13 @@ function drawScoreRanking(hash) {
     result_body.empty();
     for (var i = 0; i < data.length; i++) {
       var endpoint = data[i];
-      var id = endpoint[0];
-      var evaluation_id = endpoint[1];
+      var evaluation_id = endpoint[0];
+      var endpoint_id = endpoint[1];
       var name = endpoint[2];
       var url = endpoint[3];
       var score = endpoint[4];
       var row = $("<tr>");
-      row.append($("<td>").append($("<a>").attr("href", "/endpoints/" + id + "/" + evaluation_id).text(name)));
+      row.append($("<td>").append($("<a>").attr("href", "/endpoints/" + endpoint_id + "/" + evaluation_id).text(name)));
       row.append($("<td>").append($("<a>").attr("href", url).text(url)));
       row.append($("<td>").text(score));
       result_body.append(row);
@@ -270,14 +270,6 @@ $(document).ready(function() {
     var input_date = $("#calendar").val();
     var param = (input_date === '') ? '' : '?date=' + input_date;
     location.href = "/endpoints/" + param
-  });
-
-  $('#calendar').datepicker({
-    autoclose: true,
-    startDate: "#{@start_date}",
-    endDate: new Date(),
-    format: 'dd-M-yyyy',
-    todayHighlight: true
   });
 
   $('.column').on('click', function () {

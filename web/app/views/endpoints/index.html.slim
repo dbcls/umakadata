@@ -1,9 +1,16 @@
 - content_for :header
   = stylesheet_link_tag 'umakadata/index'
   = javascript_include_tag 'umakadata/index'
-
-- content_for :calendar
-  == render "calendar"
+  javascript:
+    $(function () {
+      $('#calendar').datepicker({
+        autoclose: true,
+        startDate: "#{@start_date}",
+        endDate: new Date(),
+        format: 'dd-M-yyyy',
+        todayHighlight: true
+      });
+    });
 
 .row
   .col-md-12.page-element
@@ -11,7 +18,7 @@
       .col-md-6
         .page-title-header Ranked Endpoints
       .col-md-6
-        == yield :calendar
+        == render "calendar"
     .row
       .col-md-12
         .scores-board-element

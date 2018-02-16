@@ -39,9 +39,7 @@ function showBar(id, data) {
 }
 
 function drawScores() {
-  var cal = $('#calendar');
-
-  var input_date = cal.val();
+  var input_date = $('#calendar').val();
   var param = (input_date === '') ? '' : '/?date=' + input_date;
   var f = $.getJSON("/endpoints/scores" + param, function (json) {
     showBar("#score", make_score_data(json));
@@ -59,18 +57,9 @@ $(document).ready(function() {
     location.href = "/" + param
   });
 
-  var cal = $('#calendar');
-  cal.datepicker({
-    autoclose: true,
-    startDate: "#{@start_date}",
-    endDate: new Date(),
-    format: 'dd-M-yyyy',
-    todayHighlight: true
-  });
-
   drawScores();
 
   $('.carousel').carousel({
     interval: 10000
-  })
+  });
 });
