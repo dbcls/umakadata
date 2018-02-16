@@ -1,3 +1,4 @@
+//= require Chart.min
 //= require bootstrap-datepicker.min
 //= require umakadata/chart-helper
 
