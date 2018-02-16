@@ -1,5 +1,5 @@
-- content_for(:calendar)
-== render "calendar"
+- content_for :calendar
+  == render "calendar"
 
 = render partial: "alert_dialog", locals: {id: "get_evaluation_id", title: "The evaluation is not found", body: "Please select another day"}
 

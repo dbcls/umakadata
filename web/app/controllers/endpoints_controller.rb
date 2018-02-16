@@ -372,22 +372,23 @@ class EndpointsController < ApplicationController
 
     def date_param
       input_date = params[:date]
-      date = Time.now.ago(2.days)
-      if input_date.blank?
-        if params[:id].blank?
-          if (!CrawlLog.latest.blank? and CrawlLog.latest.started_at < date)
-            date = CrawlLog.latest.started_at
-          end
-        else
-          evaluation = Evaluation.lookup(params[:id], params[:evaluation_id])
-          if (!evaluation.nil? and !evaluation.crawl_log.nil? and evaluation.crawl_log.started_at < date)
-            date = evaluation.crawl_log.started_at
-          end
+      endpoint_id = params[:id]
+      evaluation_id = params[:evaluation_id]
+
+      return Time.zone.parse(input_date) if input_date.present?
+
+      if endpoint_id.present?
+        evaluation = Evaluation.lookup(endpoint_id, evaluation_id)
+        if evaluation && evaluation.crawl_log && (latest = evaluation.crawl_log.started_at)
+          return latest
         end
-      else
-        date = Time.zone.parse(input_date)
       end
-      return date
+
+      if CrawlLog.latest && (latest = CrawlLog.latest.started_at)
+        return latest
+      end
+
+      Time.now
     end
 
     def set_start_date

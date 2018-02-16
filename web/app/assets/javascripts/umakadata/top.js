@@ -1,18 +1,7 @@
-$(function() {
-  var input_date = $("#calendar").val();
-  var param = (input_date == '') ? '' : '/?date=' + input_date
-  var drawScores = $.getJSON("/endpoints/scores" + param, function(json) {
-    data = make_score_data(json);
-    showBar("#score", data);
-  });
-
-  setTimeout(function(){ drawScores.abort(); }, 10000);
-
-  $('.carousel').carousel({
-    interval: 10000
-  })
-
-});
+//= require bootstrap-datepicker.min
+//= require Chart.min
+//= require umakadata/chart-helper
+//= require umakadata/twitter-widget
 
 function make_score_data(count) {
   return {
@@ -20,7 +9,7 @@ function make_score_data(count) {
     datasets: [
       {
         data: [count[5], count[4], count[3], count[2], count[1]],
-        backgroundColor: ['#FF3D7F', '#3FB8AF', '#7FC7AF', '#FF9E9D', '#DAD8A7'],
+        backgroundColor: ['#FF3D7F', '#3FB8AF', '#7FC7AF', '#FF9E9D', '#DAD8A7']
       }
     ],
     options: {}
@@ -38,7 +27,7 @@ function showBar(id, data) {
       scales: {
         yAxes: [{
           gridLines: {
-            display: false,
+            display: false
           },
           ticks: {
             min: 0
@@ -48,3 +37,29 @@ function showBar(id, data) {
     }
   });
 }
+
+function drawScores() {
+  var input_date = $('#calendar').val();
+  var param = (input_date === '') ? '' : '/?date=' + input_date;
+  var f = $.getJSON("/endpoints/scores" + param, function (json) {
+    showBar("#score", make_score_data(json));
+  });
+
+  setTimeout(function () {
+    f.abort();
+  }, 10000);
+}
+
+$(document).ready(function() {
+  $('#jump-button').on("click", function () {
+    var input_date = $("#calendar").val();
+    var param = (input_date === '') ? '' : '?date=' + input_date;
+    location.href = "/" + param
+  });
+
+  drawScores();
+
+  $('.carousel').carousel({
+    interval: 10000
+  });
+});

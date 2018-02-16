@@ -1,86 +1,6 @@
-$(function() {
-  var input_date = $("#calendar").val();
-  var param = (input_date == '') ? '' : '/?date=' + input_date
-  var drawScores = $.getJSON("/endpoints/scores" + param, function(json) {
-    data = make_score_data(json)
-    showPie("#score", data);
-  });
-  var drawAlive = $.getJSON("/endpoints/alive" + param, function(json) {
-    data = make_alive_data(json)
-    showPie("#alive", data);
-  });
-  var drawSd = $.getJSON("/endpoints/service_descriptions" + param, function(json) {
-    data = make_sd_data(json)
-    showPie("#sd", data);
-  });
-
-  setTimeout(function(){ drawScores.abort(); }, 10000);
-  setTimeout(function(){ drawAlive.abort(); }, 10000);
-  setTimeout(function(){ drawSd.abort(); }, 10000);
-
-  var drawScoreStatistics = $.getJSON("/endpoints/score_statistics" + param, function(json) {
-    var labels = json['labels'];
-    var datasets = json['datasets'];
-    data = make_score_statistics_data(labels, datasets)
-    var canvas_id = "#score_statistics";
-    var lineChart = showLine(canvas_id, data, make_scale_options());
-    addGraphClickEvent(canvas_id, lineChart, labels, location.pathname);
-  });
-  var drawAliveStatistics = $.getJSON("/endpoints/alive_statistics" + param, function(json) {
-    var labels = json['labels'];
-    var datasets = json['datasets'];
-    data = make_alive_statistics_data(labels, datasets)
-    var max = select_max_from_data(datasets[0]['data'])
-    var canvas_id = "#alive_statistics";
-    var lineChart = showLine(canvas_id, data, make_scale_options());
-    addGraphClickEvent(canvas_id, lineChart, labels, location.pathname);
-  });
-  var drawSdStatistics = $.getJSON("/endpoints/service_description_statistics" + param, function(json) {
-    var labels = json['labels'];
-    var datasets = json['datasets'];
-    data = make_sd_statistics_data(labels, datasets)
-    var max = select_max_from_data(datasets[0]['data'])
-    var canvas_id = "#sd_statistics";
-    var lineChart = showLine(canvas_id, data, make_scale_options());
-    addGraphClickEvent(canvas_id, lineChart, labels, location.pathname);
-  });
-
-  setTimeout(function(){ drawScoreStatistics.abort(); }, 10000);
-  setTimeout(function(){ drawAliveStatistics.abort(); }, 10000);
-  setTimeout(function(){ drawSdStatistics.abort(); }, 10000);
-
-  $('.column').on('click', function(){
-    var column = $(this).text().trim().toLowerCase();
-    var direction = $(this).attr('data-direction');
-    var type = direction == undefined ? column == 'score' ? 'ASC'
-                                                          : 'DESC'
-                                      : direction == 'ASC' ? 'DESC'
-                                                           : 'ASC';
-    $(this).attr('data-direction', type);
-    var hash = getDateFromURLQuery(column, type);
-    hash['column'] = column;
-    hash['direction'] = type;
-    var params = createParams(hash);
-    var query = '/?' + params;
-    var score_ranking = $.getJSON("endpoints/score_ranking" + query, function(data) {
-      $("#result_body").empty();
-      for (var i = 0; i < data.length; i++) {
-        var endpoint = data[i];
-        var id = endpoint[0];
-        var evaluation_id = endpoint[1];
-        var name = endpoint[2];
-        var url = endpoint[3];
-        var score = endpoint[4];
-        var row = $("<tr>");
-        row.append($("<td>").append($("<a>").attr("href", "/endpoints/" + id + "/" + evaluation_id).text(name)));
-        row.append($("<td>").append($("<a>").attr("href", url).text(url)));
-        row.append($("<td>").text(score));
-        $("#result_body").append(row);
-      }
-    });
-})
-
-});
+//= require Chart.min
+//= require bootstrap-datepicker.min
+//= require umakadata/chart-helper
 
 function make_score_data(count) {
   return {
@@ -97,6 +17,7 @@ function make_score_data(count) {
     }
   };
 }
+
 function make_alive_data(count) {
   return {
     labels: ['Alive', 'Dead'],
@@ -118,6 +39,7 @@ function make_alive_data(count) {
     ]
   };
 }
+
 function make_sd_data(count) {
   return {
     labels: ['Have', 'Do not have'],
@@ -139,6 +61,7 @@ function make_sd_data(count) {
     ]
   };
 }
+
 function make_score_statistics_data(labels, datasets) {
   return {
     labels: labels.map(formatDate),
@@ -164,6 +87,7 @@ function make_score_statistics_data(labels, datasets) {
     ]
   }
 }
+
 function make_alive_statistics_data(labels, datasets) {
   return {
     labels: labels.map(formatDate),
@@ -198,11 +122,6 @@ function make_sd_statistics_data(labels, datasets) {
   }
 }
 
-function select_max_from_data(data) {
-  var max = Math.max.apply(null, data)
-  return (max > 100) ? max : 100
-}
-
 function showPie(id, data) {
   new Chart($(id), {
     type: 'pie',
@@ -224,9 +143,9 @@ function showLine(context, data, options) {
 }
 
 function addGraphClickEvent(context, lineChart, labels, pathname) {
-  $(context).on("click", function(evt) {
+  $(context).on("click", function (evt) {
     var activePoints = lineChart.getElementsAtEvent(evt);
-    if (activePoints.length == 0) {
+    if (activePoints.length === 0) {
       return
     }
     var index = activePoints[0]['_index'];
@@ -235,17 +154,15 @@ function addGraphClickEvent(context, lineChart, labels, pathname) {
     var clickedDateFormat = clickedDate.getUTCFullYear() + "-" + ("0" + (clickedDate.getUTCMonth() + 1)).slice(-2) + "-" + ("0" + (clickedDate.getUTCDate())).slice(-2);
     location.href = location.protocol + "//" + location.host + pathname + "?date=" + clickedDateFormat;
   });
-
 }
 
-function getDateFromURLQuery(column, type)
-{
-  var hash = new Object();
+function getDateFromURLQuery() {
+  var hash = {};
   var query = window.location.search.substring(1);
   var vars = query.split("&");
   for (var i = 0; i < vars.length; i++) {
     var pair = vars[i].split("=");
-    if (pair[0] == 'date') {
+    if (pair[0] === 'date') {
       hash['date'] = pair[1];
     }
   }
@@ -253,9 +170,121 @@ function getDateFromURLQuery(column, type)
 }
 
 function createParams(values) {
-  var list = new Array();
-  for (key in values) {
+  var list = [];
+  for (var key in values) {
     list.push(key + "=" + values[key]);
   }
   return list.join("&");
 }
+
+function drawUmakaScores() {
+  var input_date = $("#calendar").val();
+  var param = (input_date === '') ? '' : '/?date=' + input_date;
+
+  var drawScores = $.getJSON("/endpoints/scores" + param, function (json) {
+    var data = make_score_data(json);
+    showPie("#score", data);
+  });
+  var drawAlive = $.getJSON("/endpoints/alive" + param, function (json) {
+    var data = make_alive_data(json);
+    showPie("#alive", data);
+  });
+  var drawSd = $.getJSON("/endpoints/service_descriptions" + param, function (json) {
+    var data = make_sd_data(json);
+    showPie("#sd", data);
+  });
+  var drawScoreStatistics = $.getJSON("/endpoints/score_statistics" + param, function (json) {
+    var labels = json['labels'];
+    var datasets = json['datasets'];
+    var data = make_score_statistics_data(labels, datasets);
+    var canvas_id = "#score_statistics";
+    var lineChart = showLine(canvas_id, data, make_scale_options());
+    addGraphClickEvent(canvas_id, lineChart, labels, location.pathname);
+  });
+  var drawAliveStatistics = $.getJSON("/endpoints/alive_statistics" + param, function (json) {
+    var labels = json['labels'];
+    var datasets = json['datasets'];
+    var data = make_alive_statistics_data(labels, datasets);
+    var canvas_id = "#alive_statistics";
+    var lineChart = showLine(canvas_id, data, make_scale_options());
+    addGraphClickEvent(canvas_id, lineChart, labels, location.pathname);
+  });
+  var drawSdStatistics = $.getJSON("/endpoints/service_description_statistics" + param, function (json) {
+    var labels = json['labels'];
+    var datasets = json['datasets'];
+    var data = make_sd_statistics_data(labels, datasets);
+    var canvas_id = "#sd_statistics";
+    var lineChart = showLine(canvas_id, data, make_scale_options());
+    addGraphClickEvent(canvas_id, lineChart, labels, location.pathname);
+  });
+
+  setTimeout(function () {
+    drawScores.abort();
+  }, 10000);
+  setTimeout(function () {
+    drawAlive.abort();
+  }, 10000);
+  setTimeout(function () {
+    drawSd.abort();
+  }, 10000);
+  setTimeout(function () {
+    drawScoreStatistics.abort();
+  }, 10000);
+  setTimeout(function () {
+    drawAliveStatistics.abort();
+  }, 10000);
+  setTimeout(function () {
+    drawSdStatistics.abort();
+  }, 10000);
+}
+
+function drawScoreRanking(hash) {
+  var params = createParams(hash);
+  var query = '/?' + params;
+
+  var score_ranking = $.getJSON("endpoints/score_ranking" + query, function (data) {
+    var result_body = $('#result_body');
+    result_body.empty();
+    for (var i = 0; i < data.length; i++) {
+      var endpoint = data[i];
+      var evaluation_id = endpoint[0];
+      var endpoint_id = endpoint[1];
+      var name = endpoint[2];
+      var url = endpoint[3];
+      var score = endpoint[4];
+      var row = $("<tr>");
+      row.append($("<td>").append($("<a>").attr("href", "/endpoints/" + endpoint_id + "/" + evaluation_id).text(name)));
+      row.append($("<td>").append($("<a>").attr("href", url).text(url)));
+      row.append($("<td>").text(score));
+      result_body.append(row);
+    }
+  });
+
+  setTimeout(function () {
+    score_ranking.abort();
+  }, 10000);
+}
+
+$(document).ready(function() {
+  $('#jump-button').on("click", function () {
+    var input_date = $("#calendar").val();
+    var param = (input_date === '') ? '' : '?date=' + input_date;
+    location.href = "/endpoints/" + param
+  });
+
+  $('.column').on('click', function () {
+    var column = $(this).text().trim().toLowerCase();
+    var dir = $(this).attr('data-direction');
+    var type = dir === undefined ? column === 'score' ? 'ASC' : 'DESC' : dir === 'ASC' ? 'DESC' : 'ASC';
+    $(this).attr('data-direction', type);
+
+    var hash = getDateFromURLQuery();
+    hash['column'] = column;
+    hash['direction'] = type;
+
+    drawScoreRanking(hash);
+  });
+
+  drawUmakaScores();
+  drawScoreRanking();
+});
