@@ -1,6 +1,6 @@
 FROM ruby:2.2.4
 
-RUN apt-get update -qq && apt-get install -y build-essential libpq-dev
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev postgresql-client
 
 # Re-install bundler (Installation for bundler 1.11.2 is performed in the base image, but it is no effect.)
 ENV BUNDLER_VERSION 1.11.2
