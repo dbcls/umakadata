@@ -10,4 +10,9 @@ RUN mkdir /myapp
 ADD . /myapp
 WORKDIR /myapp/web
 
-RUN bundle install
+ADD docker-entrypoint.sh /
+
+EXPOSE 8080
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["bundle", "exec", "foreman", "start"]

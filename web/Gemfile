@@ -73,3 +73,6 @@ gem 'simple_form'
 gem 'active_median'
 
 gem 'google-analytics-rails'
+
+gem 'unicorn'
+gem 'foreman'
