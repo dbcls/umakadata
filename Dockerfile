@@ -15,4 +15,4 @@ ADD docker-entrypoint.sh /
 EXPOSE 8080
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["bundle", "exec", "foreman", "start"]
+CMD ["bundle", "exec", "unicorn", "--env", "${RAILS_ENV:-production}", "-c", "config/unicorn.rb" ]

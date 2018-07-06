@@ -1,16 +1,18 @@
 #!/bin/bash
 
 cd /myapp/web
-mkdir -p log tmp/pids
+
+source ~/.bashrc
+
+mkdir -m 775 -p log tmp/pids
+
+echo "installing dependencies..."
+bundle install -j8 --path vendor/bundle
 
 export SECRET_KEY_BASE=$(bundle exec rake secret)
 
-if [ -e Gemfile ]; then
-  echo "installing dependencies..."
-  bundle install -j8
+echo "precompiling assets..."
+bundle exec rake assets:precompile RAILS_ENV=${RAILS_ENV:-production}
 
-  echo "precompiling assets..."
-  bundle exec rake assets:precompile RAILS_ENV=${RAILS_ENV:-production}
-fi
-
+echo "server will start soon..."
 exec "$@"
