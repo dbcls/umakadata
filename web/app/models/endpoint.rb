@@ -50,21 +50,9 @@ class Endpoint < ActiveRecord::Base
 
   after_save do
     if self.issue_id.nil?
-      issue = GithubHelper.create_issue(self.name)
-      self.update_column(:issue_id, issue[:number]) unless issue.nil?
-
-      label = GithubHelper.add_label(self.name.gsub(",", ""), Color.get_color(self.id))
-
-      next if issue.nil? || label.nil?
-
-      GithubHelper.add_labels_to_an_issue(issue[:number], [label[:name]])
-      self.update_column(:label_id, label[:id]) unless label.nil?
+      self.create_issue(self)
     else
-      GithubHelper.edit_issue(self.issue_id, self.name)
-
-      labels = GithubHelper.labels_for_issue(self.issue_id)
-      label = labels.select {|label| label[:id] == self.label_id}.first
-      GithubHelper.update_label(label[:name], {:name => self.name.gsub(",", "")})
+      self.edit_issue(self)
     end
     GithubHelper.add_labels_to_an_issue(self.issue_id, ['endpoints'])
   end
@@ -113,6 +101,36 @@ class Endpoint < ActiveRecord::Base
     data['average'] = self.joins(:evaluation).where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).group(RETRIEVED_DATE).order("#{RETRIEVED_DATE} DESC").limit(n).average('evaluations.score')
     data['median']  = self.joins(:evaluation).where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).group(RETRIEVED_DATE).order("#{RETRIEVED_DATE} DESC").limit(n).median('evaluations.score')
     data
+  end
+
+  def self.create_issue(endpoint)
+    issue = GithubHelper.create_issue(endpoint.name)
+
+    return false if issue.nil?
+
+    # self.update_column(:issue_id, issue.number) unless issue.nil?
+
+    label = GithubHelper.add_label(endpoint.name.gsub(",", ""), Color.get_color(endpoint.id))
+
+    return false if label.nil?
+
+    result = GithubHelper.add_labels_to_an_issue(issue.number, [label.name])
+
+    return false if result.nil?
+
+    # self.update_column(:label_id, label[:id]) unless label.nil?
+
+    return true
+  end
+
+  def self.edit_issue(endpoint)
+    GithubHelper.edit_issue(endpoint.issue_id, endpoint.name)
+
+    labels = GithubHelper.labels_for_issue(endpoint.issue_id)
+
+    label = labels.select {|label| label[:id] == endpoint.label_id}.first
+
+    GithubHelper.update_label(label[:name], {:name => endpoint.name.gsub(",", "")})
   end
 
 end
