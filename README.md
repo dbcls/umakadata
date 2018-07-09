@@ -35,16 +35,7 @@ docker-compose up -d
 #### 2. Initialize
 
 ```bash
-# Enter to web container's shell
-docker-compose run web /bin/bash
-# Now you are in the container
-bundle exec rake db:create
-bundle exec rake db:migrate
-bundle exec rake db:seed
-bundle exec rake umakadata:active_median
-bundle exec rake umakadata:import_prefix_for_all_endpoints[./data/prefixes]
-bundle exec rake umakadata:import_prefix_filters_for_all_endpoints[./data/prefix_filters]
-bundle exec rake umakadata:seeAlso_sameAs_for_all_endpoints[./data/relations]
+docker-compose run web ./script/initialize_db.sh
 ```
 
 ### Linux
@@ -93,13 +84,7 @@ docker run -d -p 3000:3000 --name umakadata_web umakadata_web bundle exec rails 
 ```bash
 docker exec -it umakadata_web /bin/bash
 # Now you are in the container
-bundle exec rake db:create
-bundle exec rake db:migrate
-bundle exec rake db:seed
-bundle exec rake umakadata:active_median
-bundle exec rake umakadata:import_prefix_for_all_endpoints[./data/prefixes]
-bundle exec rake umakadata:import_prefix_filters_for_all_endpoints[./data/prefix_filters]
-bundle exec rake umakadata:seeAlso_sameAs_for_all_endpoints[./data/relations]
+./script/initialize_db.sh
 ```
 
 ### Web application without Docker
@@ -134,13 +119,7 @@ Modify </path/to/umakadata>/web/config/database.yml.
 
 ```bash
 cd </path/to/umakadata>/web
-bundle exec rake db:create
-bundle exec rake db:migrate
-bundle exec rake db:seed
-bundle exec rake umakadata:active_median
-bundle exec rake umakadata:import_prefix_for_all_endpoints[./data/prefixes]
-bundle exec rake umakadata:import_prefix_filters_for_all_endpoints[./data/prefix_filters]
-bundle exec rake umakadata:seeAlso_sameAs_for_all_endpoints[./data/relations]
+./script/initialize_db.sh
 ```
 
 ### 3. Run a web application

@@ -5,14 +5,16 @@ services:
     image: postgres:9.5
   web:
     build: .
-    env_file: secrets.env
     environment:
-      - SECRET_KEY_BASE=$UMAKA_SECRET  # used only on production
-      - RAILS_ENV=$UMAKA_ENV
-    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+      - RAILS_ENV=production
     volumes:
       - .:/myapp
+      - bundle:/myapp/web/vendor/bundle
     ports:
-      - "3000:3000"
+      - "127.0.0.1:8080:8080"
     links:
       - db
+
+volumes:
+  bundle:
+    driver: local
