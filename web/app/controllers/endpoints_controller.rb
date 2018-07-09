@@ -425,7 +425,7 @@ class EndpointsController < ApplicationController
       metrics[:active_endpoints][:count] = Evaluation.where(created_at: date.all_day, alive: true).count(:endpoint_id)
       metrics[:active_endpoints][:variation] = metrics[:active_endpoints][:count] - Evaluation.where(created_at: date.ago(1.days).all_day, alive: true).count(:endpoint_id)
       metrics[:alive_rates][:count] = ((metrics[:active_endpoints][:count].to_f / metrics[:no_of_endpoints][:count].to_f) * 100).round(0)
-      metrics[:alive_rates][:variation] = metrics[:alive_rates][:count] - ((Evaluation.where(created_at: date.ago(7.days).all_day, alive: true).count(:endpoint_id).to_f / number_of_endpoints_last_week.to_f) * 100).round(0)
+      metrics[:alive_rates][:variation] = metrics[:alive_rates][:count] - ((Evaluation.where(created_at: date.ago(7.days).all_day, alive: true).count(:endpoint_id).to_f / number_of_endpoints_last_week.to_f) * 100).round(0) if number_of_endpoints_last_week > 0
       metrics[:data_entries][:count] = Evaluation.where(created_at: date.all_day).sum(:number_of_statements)
       metrics[:data_entries][:variation] = metrics[:data_entries][:count] - Evaluation.where(created_at: date.ago(1.days).all_day).sum(:number_of_statements)
       metrics
