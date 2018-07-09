@@ -44,7 +44,11 @@ ActiveAdmin.register Endpoint do
     end
     column :alarm do |endpoint|
       latest = endpoint.evaluations.where(:alive => true).last
-      "Probably Dead" if latest.nil? || latest.retrieved_at < 1.month.ago
+      if latest.nil?
+        "Not Evaluated"
+      elsif latest.retrieved_at < 1.month.ago
+        "Probably Dead"
+      end
     end
     actions
   end
