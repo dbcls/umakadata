@@ -116,22 +116,21 @@ class Endpoint < ActiveRecord::Base
   end
 
   def self.create_issue(endpoint)
-    issue = GithubHelper.create_issue(endpoint.name)
-
-    return false if issue.nil?
-
-    endpoint.update_column(:issue_id, issue[:number]) unless issue.nil?
+    return false if GithubHelper.issue_exists?(endpoint.name) || GithubHelper.label_exists?(endpoint.name)
 
     label = GithubHelper.add_label(endpoint.name.gsub(",", ""), Color.get_color(endpoint.id))
+    return false unless label.is_a?(Sawyer::Resource)
 
-    return false if label.nil?
+    issue = GithubHelper.create_issue(endpoint.name)
+    unless issue.is_a?(Sawyer::Resource)
+      GithubHelper.delete_label(label[:name])
+      return false
+    end
 
-    result = GithubHelper.add_labels_to_an_issue(issue[:number], [label[:name]])
+    GithubHelper.add_labels_to_an_issue(issue[:number], [label[:name]])
 
-    return false if result.nil?
-
+    endpoint.update_column(:issue_id, issue[:number]) unless issue.nil?
     endpoint.update_column(:label_id, label[:id]) unless label.nil?
-
     return true
   end
 
