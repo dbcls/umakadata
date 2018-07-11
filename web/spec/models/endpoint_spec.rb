@@ -10,14 +10,14 @@ RSpec.describe Endpoint, type: :model do
   end
 
   describe '::create_issue' do
-    it 'should return false if issue already exists' do
+    it 'should raise exception if issue already exists' do
       endpoint = Endpoint.new(:name => 'Endpoint 1', :url => 'http://www.example.com/sparql')
 
       allow(GithubHelper).to receive(:issue_exists?).and_return(true)
       expect { Endpoint.create_issue(endpoint) }.to raise_exception('issue for Endpoint 1 already exists')
     end
 
-    it 'should return false if label already exists' do
+    it 'should raise exception if label already exists' do
       endpoint = Endpoint.new(:id => 1, :name => 'Endpoint 1', :url => 'http://www.example.com/sparql')
 
       allow(GithubHelper).to receive(:issue_exists?).and_return(false)
@@ -26,7 +26,7 @@ RSpec.describe Endpoint, type: :model do
       expect { Endpoint.create_issue(endpoint) }.to raise_exception(Octokit::ClientError)
     end
 
-    it 'should return true if issue and label do not yet exist' do
+    it 'is Success if issue and label do not yet exist' do
       endpoint = Endpoint.new(:id => 1, :name => 'Endpoint 1', :url => 'http://www.example.com/sparql')
 
       issue   = double(Sawyer::Resource)
@@ -50,7 +50,7 @@ RSpec.describe Endpoint, type: :model do
       expect { Endpoint.create_issue(endpoint) }.not_to raise_exception
     end
 
-    it 'should return false if endpoint.name is too long (maximum is 50 characters)' do
+    it 'should raise exception if endpoint.name is too long (maximum is 50 characters)' do
       endpoint = Endpoint.new(:id => 1, :name => 'Charles R. Drew University of Medicine and Science', :url => 'http://www.example.com/sparql')
 
       allow(GithubHelper).to receive(:issue_exists?).and_return(false)
