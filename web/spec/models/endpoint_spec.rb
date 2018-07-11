@@ -61,6 +61,57 @@ RSpec.describe Endpoint, type: :model do
   end
 
   describe '::edit_issue' do
+    it 'should raise exception if GithubHelper.edit_issue() raise exception' do
+      endpoint = Endpoint.new(:id => 1, :name => 'Endpoint 1', :url => 'http://www.example.com/sparql')
 
+      allow(GithubHelper).to receive(:edit_issue).and_raise(Octokit::ClientError)
+      expect { Endpoint.edit_issue(endpoint) }.to raise_exception(Octokit::ClientError)
+    end
+
+    it 'should raise exception if endpoint.issue_id does not exist' do
+      endpoint = Endpoint.new(:id => 1, :name => 'Endpoint 1', :url => 'http://www.example.com/sparql')
+
+      allow(GithubHelper).to receive(:edit_issue).and_return(true)
+      allow(GithubHelper).to receive(:labels_for_issue).and_raise(Octokit::ClientError)
+
+      expect { Endpoint.edit_issue(endpoint) }.to raise_exception(Octokit::ClientError)
+    end
+
+    it 'should raise exception if GithubHelper.labels_for_issue() returns []' do
+      endpoint = Endpoint.new(:id => 1, :name => 'Endpoint 1', :url => 'http://www.example.com/sparql')
+
+      allow(GithubHelper).to receive(:edit_issue).and_return(true)
+      allow(GithubHelper).to receive(:labels_for_issue).and_return([])
+
+      expect { Endpoint.edit_issue(endpoint) }.to raise_exception("issue for #{endpoint.name} does not have a label")
+    end
+
+    it 'should raise exception if endpoint.name is too long (maximum is 50 characters)' do
+      endpoint = Endpoint.new(:id => 1, :name => 'Endpoint 1', :url => 'http://www.example.com/sparql', :label_id => 1)
+      label    = double(Sawyer::Resource)
+
+      allow(label).to receive(:[]).with(:id).and_return(1)
+      allow(label).to receive(:[]).with(:name).and_return('Endpoint 1')
+
+      allow(GithubHelper).to receive(:edit_issue).and_return(true)
+      allow(GithubHelper).to receive(:labels_for_issue).and_return([label])
+      allow(GithubHelper).to receive(:update_label).and_raise(Octokit::ClientError)
+
+      expect { Endpoint.edit_issue(endpoint) }.to raise_exception(Octokit::ClientError)
+    end
+
+    it 'is Success if there is no problem for endpoint' do
+      endpoint = Endpoint.new(:id => 1, :name => 'Endpoint 1', :url => 'http://www.example.com/sparql', :label_id => 1)
+      label    = double(Sawyer::Resource)
+
+      allow(label).to receive(:[]).with(:id).and_return(1)
+      allow(label).to receive(:[]).with(:name).and_return('Endpoint 1')
+
+      allow(GithubHelper).to receive(:edit_issue).and_return(true)
+      allow(GithubHelper).to receive(:labels_for_issue).and_return([label])
+      allow(GithubHelper).to receive(:update_label).and_return(true)
+
+      expect { Endpoint.edit_issue(endpoint) }.not_to raise_exception
+    end
   end
 end
