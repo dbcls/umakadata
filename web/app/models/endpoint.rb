@@ -108,22 +108,21 @@ class Endpoint < ActiveRecord::Base
   end
 
   def self.create_issue(endpoint)
-    return false if GithubHelper.issue_exists?(endpoint.name) || GithubHelper.label_exists?(endpoint.name)
+    raise("issue for #{endpoint.name} already exists") if GithubHelper.issue_exists?(endpoint.name) || GithubHelper.label_exists?(endpoint.name)
 
     label = GithubHelper.add_label(endpoint.name.gsub(",", ""), Color.get_color(endpoint.id))
-    return false unless label.is_a?(Sawyer::Resource)
 
-    issue = GithubHelper.create_issue(endpoint.name)
-    unless issue.is_a?(Sawyer::Resource)
+    begin
+      issue = GithubHelper.create_issue(endpoint.name)
+    rescue Octokit::ClientError => e
       GithubHelper.delete_label(label[:name])
-      return false
+      raise(e)
     end
 
     GithubHelper.add_labels_to_an_issue(issue[:number], [label[:name]])
 
     endpoint.update_column(:issue_id, issue[:number]) unless issue.nil?
     endpoint.update_column(:label_id, label[:id]) unless label.nil?
-    return true
   end
 
   def self.edit_issue(endpoint)

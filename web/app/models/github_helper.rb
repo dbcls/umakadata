@@ -57,12 +57,8 @@ class GithubHelper
       return
     end
 
-    begin
-      client = Octokit::Client.new(:access_token => Rails.application.secrets.github_token)
-      yield(client, Rails.application.secrets.github_repo)
-    rescue => e
-      p e.message
-    end
+    client = Octokit::Client.new(:access_token => Rails.application.secrets.github_token)
+    yield(client, Rails.application.secrets.github_repo)
   end
 
 end
