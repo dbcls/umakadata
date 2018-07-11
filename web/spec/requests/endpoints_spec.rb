@@ -15,13 +15,7 @@ RSpec.describe "Endpoints", type: :request do
       FactoryBot.create_list(:relation, 50)
     end
 
-    it "works! (now write some real specs)" do
-      get api_endpoints_graph_path
-
-      expect(response).to have_http_status(200)
-    end
-
-    it "returns json data" do
+    it "returns json array with 150 elements" do
       get api_endpoints_graph_path
 
       json = JSON.parse(response.body)
