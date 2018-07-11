@@ -73,6 +73,20 @@ ActiveAdmin.register Endpoint do
     active_admin_comments
   end
 
+  controller do
+    def create
+      @endpoint = Endpoint.new(permitted_params[:endpoint])
+      @endpoint.save
+      if @endpoint.errors.any?
+        flash.now[:error] = @endpoint.errors.full_messages.join('<br>').html_safe
+        @endpoint = Endpoint.new(permitted_params[:endpoint])
+        render :new
+      else
+        redirect_to "/admin/endpoints/#{@endpoint.id}"
+      end
+    end
+  end
+
   member_action :prefixes, method: [:get, :post] do
     if request.post?
       message = Prefix::validates_params(params)

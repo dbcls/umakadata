@@ -49,24 +49,19 @@ class Endpoint < ActiveRecord::Base
   end
 
   after_save do
-    if self.issue_id.nil?
-      issue = GithubHelper.create_issue(self.name)
-      self.update_column(:issue_id, issue[:number]) unless issue.nil?
-
-      label = GithubHelper.add_label(self.name.gsub(",", ""), Color.get_color(self.id))
-
-      next if issue.nil? || label.nil?
-
-      GithubHelper.add_labels_to_an_issue(issue[:number], [label[:name]])
-      self.update_column(:label_id, label[:id]) unless label.nil?
-    else
-      GithubHelper.edit_issue(self.issue_id, self.name)
-
-      labels = GithubHelper.labels_for_issue(self.issue_id)
-      label = labels.select {|label| label[:id] == self.label_id}.first
-      GithubHelper.update_label(label[:name], {:name => self.name.gsub(",", "")})
+    begin
+      if self.issue_id.nil?
+        Endpoint.create_issue(self)
+      else
+        Endpoint.edit_issue(self)
+      end
+      GithubHelper.add_labels_to_an_issue(self.issue_id, ['endpoints'])
+    rescue Octokit::ClientError => e
+      p "Save failed: #{self.name}"
+      p e.message
+      errors.add(:base, "Error occured during saving!\n\n#{e.message}")
+      raise ActiveRecord::Rollback
     end
-    GithubHelper.add_labels_to_an_issue(self.issue_id, ['endpoints'])
   end
 
   after_destroy do
@@ -113,6 +108,35 @@ class Endpoint < ActiveRecord::Base
     data['average'] = self.joins(:evaluation).where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).group(RETRIEVED_DATE).order("#{RETRIEVED_DATE} DESC").limit(n).average('evaluations.score')
     data['median']  = self.joins(:evaluation).where(Evaluation.arel_table[:retrieved_at].lteq(date.end_of_day)).group(RETRIEVED_DATE).order("#{RETRIEVED_DATE} DESC").limit(n).median('evaluations.score')
     data
+  end
+
+  def self.create_issue(endpoint)
+    raise("issue for #{endpoint.name} already exists") if GithubHelper.issue_exists?(endpoint.name)
+
+    label = GithubHelper.add_label(endpoint.name.gsub(",", ""), Color.get_color(endpoint.id))
+
+    begin
+      issue = GithubHelper.create_issue(endpoint.name)
+    rescue Octokit::ClientError => e
+      GithubHelper.delete_label(label[:name])
+      raise(e)
+    end
+
+    GithubHelper.add_labels_to_an_issue(issue[:number], [label[:name]])
+
+    endpoint.update_column(:issue_id, issue[:number]) unless issue.nil?
+    endpoint.update_column(:label_id, label[:id]) unless label.nil?
+  end
+
+  def self.edit_issue(endpoint)
+    labels = GithubHelper.labels_for_issue(endpoint.issue_id)
+
+    label = labels.select {|label| label[:id] == endpoint.label_id}.first
+    raise("issue for #{endpoint.name} does not have a label") if label.nil?
+
+    GithubHelper.update_label(label[:name], {:name => endpoint.name.gsub(",", "")})
+
+    GithubHelper.edit_issue(endpoint.issue_id, endpoint.name)
   end
 
 end

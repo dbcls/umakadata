@@ -294,8 +294,12 @@ namespace :umakadata do
       endpoint = Endpoint.where(name: issue[:title]).take
 
       if endpoint.nil?
-        GithubHelper.close_issue(issue_id)
-        next
+        begin
+          GithubHelper.close_issue(issue_id)
+        rescue => e
+          p e.message
+          next
+        end
       end
       ActiveRecord::Base.transaction do
         # do not return callback after update
@@ -307,9 +311,13 @@ namespace :umakadata do
   desc "Create label for each endpoint"
   task :create_label_for_each_endpoint => :environment do
     Endpoint.all.each_with_index do |endpoint, index|
-      label_name = endpoint.name.gsub(",", "")
-      label      = GithubHelper.add_label(label_name, Color.get_color(endpoint.id))
-      endpoint.update_column(:label_id, label[:id])
+      begin
+        label_name = endpoint.name.gsub(",", "")
+        label      = GithubHelper.add_label(label_name, Color.get_color(endpoint.id))
+        endpoint.update_column(:label_id, label[:id])
+      rescue => e
+        p e.message
+      end
     end
   end
 
@@ -323,7 +331,11 @@ namespace :umakadata do
         next
       end
       label = endpoint.name.gsub(",", "")
-      GithubHelper.add_labels_to_an_issue(issue[:number], [label])
+      begin
+        GithubHelper.add_labels_to_an_issue(issue[:number], [label])
+      rescue => e
+        p e.message
+      end
     end
   end
 

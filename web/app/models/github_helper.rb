@@ -3,12 +3,7 @@ require 'octokit'
 class GithubHelper
 
   def self.create_issue(title)
-    issues = call_github_api {|client, github_repo| client.issues(github_repo)}
-    return if issues.nil?
-    does_not_exist_issue = issues.select {|issue| issue[:title] == title}.empty?
-    if does_not_exist_issue
-      call_github_api {|client, github_repo| client.create_issue(github_repo, title)}
-    end
+    call_github_api {|client, github_repo| client.create_issue(github_repo, title)}
   end
 
   def self.edit_issue(number, title)
@@ -42,18 +37,23 @@ class GithubHelper
     call_github_api {|client, github_repo| client.update_label(github_repo, label, options)}
   end
 
+  def self.delete_label(label)
+    call_github_api {|client, github_repo| client.delete_label!(github_repo, label)}
+  end
+
+  def self.issue_exists?(title)
+    issues = call_github_api { |client, github_repo| client.issues(github_repo) }
+    !issues.select { |issue| issue[:title] == title }.empty?
+  end
+
   def self.call_github_api
     if Rails.application.secrets.github_token.blank? || Rails.application.secrets.github_repo.blank?
       p "GitHub API configuration is not enough"
       return
     end
 
-    begin
-      client = Octokit::Client.new(:access_token => Rails.application.secrets.github_token)
-      yield(client, Rails.application.secrets.github_repo)
-    rescue => e
-      p e.message
-    end
+    client = Octokit::Client.new(:access_token => Rails.application.secrets.github_token)
+    yield(client, Rails.application.secrets.github_repo)
   end
 
 end
