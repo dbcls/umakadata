@@ -46,11 +46,6 @@ class GithubHelper
     !issues.select { |issue| issue[:title] == title }.empty?
   end
 
-  def self.label_exists?(name)
-    labels = call_github_api { |client, github_repo| client.labels(github_repo) }
-    !labels.select { |label| label[:name] == name }.empty?
-  end
-
   def self.call_github_api
     if Rails.application.secrets.github_token.blank? || Rails.application.secrets.github_repo.blank?
       p "GitHub API configuration is not enough"

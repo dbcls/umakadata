@@ -108,7 +108,7 @@ class Endpoint < ActiveRecord::Base
   end
 
   def self.create_issue(endpoint)
-    raise("issue for #{endpoint.name} already exists") if GithubHelper.issue_exists?(endpoint.name) || GithubHelper.label_exists?(endpoint.name)
+    raise("issue for #{endpoint.name} already exists") if GithubHelper.issue_exists?(endpoint.name)
 
     label = GithubHelper.add_label(endpoint.name.gsub(",", ""), Color.get_color(endpoint.id))
 
