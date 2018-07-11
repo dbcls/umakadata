@@ -126,14 +126,14 @@ class Endpoint < ActiveRecord::Base
   end
 
   def self.edit_issue(endpoint)
-    GithubHelper.edit_issue(endpoint.issue_id, endpoint.name)
-
     labels = GithubHelper.labels_for_issue(endpoint.issue_id)
 
     label = labels.select {|label| label[:id] == endpoint.label_id}.first
     raise("issue for #{endpoint.name} does not have a label") if label.nil?
 
     GithubHelper.update_label(label[:name], {:name => endpoint.name.gsub(",", "")})
+
+    GithubHelper.edit_issue(endpoint.issue_id, endpoint.name)
   end
 
 end
