@@ -49,16 +49,19 @@ class Endpoint < ActiveRecord::Base
   end
 
   after_save do
-    if self.issue_id.nil?
-      Endpoint.create_issue(self)
-    else
-      GithubHelper.edit_issue(self.issue_id, self.name)
-
-      labels = GithubHelper.labels_for_issue(self.issue_id)
-      label = labels.select {|label| label[:id] == self.label_id}.first
-      GithubHelper.update_label(label[:name], {:name => self.name.gsub(",", "")})
+    begin
+      if self.issue_id.nil?
+        Endpoint.create_issue(self)
+      else
+        Endpoint.edit_issue(self)
+      end
+      GithubHelper.add_labels_to_an_issue(self.issue_id, ['endpoints'])
+    rescue Octokit::ClientError => e
+      p "Save failed: #{self.name}"
+      p e.message
+      errors.add(:base, "Error occured during saving!\n\n#{e.message}")
+      raise ActiveRecord::Rollback
     end
-    GithubHelper.add_labels_to_an_issue(self.issue_id, ['endpoints'])
   end
 
   after_destroy do
