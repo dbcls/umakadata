@@ -38,7 +38,7 @@ namespace :umakadata do
       puts name
       Endpoint.create(:name => name, :url => url)
     else
-      puts ""
+      puts "Invalid argument: (name or url)"
     end
   end
 
