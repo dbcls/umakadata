@@ -11,6 +11,8 @@ RSpec.describe "Endpoints", type: :request do
   describe "GET /api/endpoints/graph" do
 
     before do
+      allow(Endpoint).to receive(:create_issue).and_return(true)
+
       FactoryBot.create_list(:endpoint, 100)
       FactoryBot.create_list(:relation, 50)
     end
