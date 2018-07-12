@@ -64,11 +64,6 @@ class Endpoint < ActiveRecord::Base
       p message
       errors.add(:base, "Error occured during saving!\n\n#{message}")
       raise ActiveRecord::Rollback
-    rescue StandardError => e
-      p "Save failed: #{self.name}"
-      p e.message
-      errors.add(:base, "Error occured during saving!\n\n#{e.message}")
-      raise ActiveRecord::Rollback
     rescue Octokit::ClientError, Octokit::ServerError=> e
       if (retry_count += 1) > 3
         p "Save failed: #{self.name}"
@@ -80,6 +75,11 @@ class Endpoint < ActiveRecord::Base
         sleep(seconds)
         retry
       end
+    rescue => e
+      p "Save failed: #{self.name}"
+      p e.message
+      errors.add(:base, "Error occured during saving!\n\n#{e.message}")
+      raise ActiveRecord::Rollback
     end
   end
 
