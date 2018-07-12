@@ -10,6 +10,6 @@
         = f.error_notification
         = f.input :title
         = f.input :description, as: :text, input_html: { rows: 10 }
-
-        .form-actions.pull-right
-          = f.button :submit, :value => 'Create', class: 'btn-primary'
+        .modal-footer
+          .form-actions.pull-right
+            = f.button :submit, :value => 'Submit', class: 'btn-primary'
