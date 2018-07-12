@@ -3,11 +3,27 @@ class GithubIssue
   include ActiveModel::Validations
 
   attr_accessor :title, :description
+  attr_reader :id
+
+  define_model_callbacks :save
+
+  before_save {
+    self.valid?
+  }
 
   validates :title , presence: true
 
-  def create(endpoint)
-    raise("issue '#{title}' already exists") if GithubHelper.issue_exists?(title)
-    GithubHelper.create_issue(title, description, labels: [endpoint.name, 'endpoints'])
+  def save(endpoint)
+    if GithubHelper.issue_exists?(title)
+      errors.add(:base, "issue '#{title}'already exists")
+      return
+    end
+
+    begin
+      remote_issue = GithubHelper.create_issue(title, description, labels: [endpoint.name, 'endpoints'])
+      @id = remote_issue[:number]
+    rescue Octokit::ClientError => e
+      errors.add(:base, e.message)
+    end
   end
 end
