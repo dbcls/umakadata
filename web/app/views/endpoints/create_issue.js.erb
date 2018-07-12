@@ -1,4 +1,5 @@
 <% if @success %>
+  $("#user-modal").modal("hide");
   window.location = "<%= @redirect_url %>";
 <% else %>
   alert('<%= raw(@error_message.gsub("\n", "\\n")) %>');
