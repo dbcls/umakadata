@@ -17,6 +17,31 @@ namespace :umakadata do
     ActiveMedian.create_function
   end
 
+  desc "import endpoints from CSV file"
+  task :import_endpoints_from_csv, ['file_path'] => :environment do |task, args|
+    file_path = args[:file_path].blank? ? "./db/seeds_data/endpoints.csv" : args[:file_path]
+    if File.exists?(file_path)
+      puts file_path
+      CSV.foreach(file_path, { :headers => true }) do |row|
+        Rake::Task["umakadata:import_endpoint"].execute(Rake::TaskArguments.new([:name, :url], [row[0], row[1]]))
+      end
+    else
+      puts "#{file_path} is not found"
+    end
+  end
+
+  desc "import endpoint"
+  task :import_endpoint, ['name', 'url'] => :environment do |task, args|
+    name = args[:name].blank? ? nil : args[:name]
+    url  = args[:url].blank? ? nil : args[:url]
+    unless name.nil? || url.nil?
+      puts name
+      Endpoint.create(:name => name, :url => url)
+    else
+      puts ""
+    end
+  end
+
   desc "import prefix for all endpoints from CSV file"
   task :import_prefix_for_all_endpoints, ['directory_path'] => :environment do |task, args|
     names          = Endpoint.pluck(:name)
