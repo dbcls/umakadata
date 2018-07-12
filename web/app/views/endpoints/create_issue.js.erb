@@ -1,0 +1,5 @@
+<% if @success %>
+  window.location = "<%= @redirect_url %>";
+<% else %>
+  alert('<%= @error_message %>');
+<% end %>

@@ -341,11 +341,11 @@ class EndpointsController < ApplicationController
 
     @issue.save(@endpoint)
     if @issue.errors.any?
-      respond_to do |format|
-        format.js { @error_message = @issue.errors.full_messages.join('').gsub("\n", '') }
-      end
+      @success = false
+      @error_message = @issue.errors.full_messages.join('').gsub("\n", '')
     else
-      render :js => "window.location = 'https://github.com/#{Rails.application.secrets.github_repo}/issues/#{@issue.id}'"
+      @success = true
+      @redirect_url = "https://github.com/#{Rails.application.secrets.github_repo}/issues/#{@issue.id}"
     end
   end
 
