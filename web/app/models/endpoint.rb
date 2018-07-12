@@ -49,6 +49,7 @@ class Endpoint < ActiveRecord::Base
   end
 
   after_save do
+    retry_count = 0
     begin
       if self.issue_id.nil?
         Endpoint.create_issue(self)
@@ -56,11 +57,29 @@ class Endpoint < ActiveRecord::Base
         Endpoint.edit_issue(self)
       end
       GithubHelper.add_labels_to_an_issue(self.issue_id, ['endpoints'])
-    rescue Octokit::ClientError => e
+    rescue Octokit::UnprocessableEntity => e
+      p "Save failed: #{self.name}"
+      message = "#{e.errors.first[:resource]} #{e.errors.first[:code]}"
+      message = "#{e.errors.first[:resource]} #{e.errors.first[:message]}" if e.errors.first[:code] == 'custom'
+      p message
+      errors.add(:base, "Error occured during saving!\n\n#{message}")
+      raise ActiveRecord::Rollback
+    rescue StandardError => e
       p "Save failed: #{self.name}"
       p e.message
       errors.add(:base, "Error occured during saving!\n\n#{e.message}")
       raise ActiveRecord::Rollback
+    rescue Octokit::ClientError, Octokit::ServerError=> e
+      if (retry_count += 1) > 3
+        p "Save failed: #{self.name}"
+        p e.message
+        errors.add(:base, "Error occured during saving!\n\n#{e.message}")
+        raise ActiveRecord::Rollback
+      else
+        seconds = 5 * 2**retry_count # [10s, 20s, 40s]
+        sleep(seconds)
+        retry
+      end
     end
   end
 
@@ -111,7 +130,7 @@ class Endpoint < ActiveRecord::Base
   end
 
   def self.create_issue(endpoint)
-    raise("issue for #{endpoint.name} already exists") if GithubHelper.issue_exists?(endpoint.name)
+    raise(StandardError, "issue for #{endpoint.name} already exists") if GithubHelper.issue_exists?(endpoint.name)
 
     label = GithubHelper.add_label(endpoint.name.gsub(",", ""), Color.get_color(endpoint.id))
 
@@ -132,7 +151,7 @@ class Endpoint < ActiveRecord::Base
     labels = GithubHelper.labels_for_issue(endpoint.issue_id)
 
     label = labels.select {|label| label[:id] == endpoint.label_id}.first
-    raise("issue for #{endpoint.name} does not have a label") if label.nil?
+    raise(StandardError, "issue for #{endpoint.name} does not have a label") if label.nil?
 
     GithubHelper.update_label(label[:name], {:name => endpoint.name.gsub(",", "")})
 

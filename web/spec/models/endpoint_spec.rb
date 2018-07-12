@@ -14,16 +14,16 @@ RSpec.describe Endpoint, type: :model do
       endpoint = Endpoint.new(:name => 'Endpoint 1', :url => 'http://www.example.com/sparql')
 
       allow(GithubHelper).to receive(:issue_exists?).and_return(true)
-      expect { Endpoint.create_issue(endpoint) }.to raise_exception('issue for Endpoint 1 already exists')
+      expect { Endpoint.create_issue(endpoint) }.to raise_exception(StandardError)
     end
 
     it 'should raise exception if label already exists' do
       endpoint = Endpoint.new(:id => 1, :name => 'Endpoint 1', :url => 'http://www.example.com/sparql')
 
       allow(GithubHelper).to receive(:issue_exists?).and_return(false)
-      allow(GithubHelper).to receive(:add_label).and_raise(Octokit::ClientError)
+      allow(GithubHelper).to receive(:add_label).and_raise(Octokit::UnprocessableEntity)
 
-      expect { Endpoint.create_issue(endpoint) }.to raise_exception(Octokit::ClientError)
+      expect { Endpoint.create_issue(endpoint) }.to raise_exception(Octokit::UnprocessableEntity)
     end
 
     it 'is Success if issue and label do not yet exist' do
@@ -54,9 +54,9 @@ RSpec.describe Endpoint, type: :model do
       endpoint = Endpoint.new(:id => 1, :name => 'Charles R. Drew University of Medicine and Science', :url => 'http://www.example.com/sparql')
 
       allow(GithubHelper).to receive(:issue_exists?).and_return(false)
-      allow(GithubHelper).to receive(:add_label).and_raise(Octokit::ClientError)
+      allow(GithubHelper).to receive(:add_label).and_raise(Octokit::UnprocessableEntity)
 
-      expect { Endpoint.create_issue(endpoint) }.to raise_exception(Octokit::ClientError)
+      expect { Endpoint.create_issue(endpoint) }.to raise_exception(Octokit::UnprocessableEntity)
     end
   end
 
@@ -64,9 +64,9 @@ RSpec.describe Endpoint, type: :model do
     it 'should raise exception if endpoint.issue_id does not exist' do
       endpoint = Endpoint.new(:id => 1, :name => 'Endpoint 1', :url => 'http://www.example.com/sparql')
 
-      allow(GithubHelper).to receive(:labels_for_issue).and_raise(Octokit::ClientError)
+      allow(GithubHelper).to receive(:labels_for_issue).and_raise(Octokit::UnprocessableEntity)
 
-      expect { Endpoint.edit_issue(endpoint) }.to raise_exception(Octokit::ClientError)
+      expect { Endpoint.edit_issue(endpoint) }.to raise_exception(Octokit::UnprocessableEntity)
     end
 
     it 'should raise exception if GithubHelper.labels_for_issue() returns []' do
@@ -85,9 +85,9 @@ RSpec.describe Endpoint, type: :model do
       allow(label).to receive(:[]).with(:name).and_return('Endpoint 1')
 
       allow(GithubHelper).to receive(:labels_for_issue).and_return([label])
-      allow(GithubHelper).to receive(:update_label).and_raise(Octokit::ClientError)
+      allow(GithubHelper).to receive(:update_label).and_raise(Octokit::UnprocessableEntity)
 
-      expect { Endpoint.edit_issue(endpoint) }.to raise_exception(Octokit::ClientError)
+      expect { Endpoint.edit_issue(endpoint) }.to raise_exception(Octokit::UnprocessableEntity)
     end
 
     it 'should raise exception if GithubHelper.edit_issue() raise exception' do
@@ -99,9 +99,9 @@ RSpec.describe Endpoint, type: :model do
       allow(label).to receive(:[]).with(:name).and_return('Endpoint 1')
 
       allow(GithubHelper).to receive(:labels_for_issue).and_return([label])
-      allow(GithubHelper).to receive(:edit_issue).and_raise(Octokit::ClientError)
+      allow(GithubHelper).to receive(:edit_issue).and_raise(Octokit::UnprocessableEntity)
 
-      expect { Endpoint.edit_issue(endpoint) }.to raise_exception(Octokit::ClientError)
+      expect { Endpoint.edit_issue(endpoint) }.to raise_exception(Octokit::UnprocessableEntity)
     end
 
     it 'is Success if there is no problem for endpoint' do
