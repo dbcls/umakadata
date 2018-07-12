@@ -346,13 +346,13 @@ namespace :umakadata do
     end
   end
 
-  desc "Add label to exsiting issues"
-  task :add_label_to_exsiting_issues => :environment do
+  desc "Add label to existing issues"
+  task :add_label_to_existing_issues => :environment do
     GithubHelper.list_issues({ :state => 'all', :label => "endpoints" }).each do |issue|
       endpoint = Endpoint.where(name: issue[:title]).take
 
       if endpoint.nil?
-        puts endpoint.name
+        puts issue[:title]
         next
       end
       label = endpoint.name.gsub(",", "")
