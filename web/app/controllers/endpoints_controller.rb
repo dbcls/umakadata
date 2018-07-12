@@ -330,6 +330,25 @@ class EndpointsController < ApplicationController
     end
   end
 
+  def issue_form
+    @issue = GithubIssue.new
+    @endpoint = Endpoint.find(params[:id])
+  end
+
+  def create_issue
+    issue = GithubIssue.new(params[:github_issue])
+
+    if issue.valid?
+      begin
+        issue = issue.create(Endpoint.find(params[:id]))
+        flash[:success] = 'Complate to send a message. thank you for your maessage!'
+        redirect_to "https://github.com/#{Rails.application.secrets.github_repo}/issues/#{issue[:number]}"
+      rescue
+        flash[:warning] = 'Sorry, an error occured in server. please wait for a while.'
+      end
+    end
+  end
+
   private
 
     def render_404

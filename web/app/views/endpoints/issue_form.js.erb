@@ -1,0 +1,2 @@
+$("#user-modal").html("<%= escape_javascript(render partial: 'issue_form',  locals: { issue: @issue, endpoint: @endpoint }) %>");
+$("#user-modal").modal("show");
