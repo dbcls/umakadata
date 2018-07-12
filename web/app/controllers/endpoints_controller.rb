@@ -342,7 +342,7 @@ class EndpointsController < ApplicationController
     @issue.save(@endpoint)
     if @issue.errors.any?
       @success = false
-      @error_message = @issue.errors.full_messages.join('').gsub("\n", '')
+      @error_message = @issue.errors.full_messages.join("\n")
     else
       @success = true
       @redirect_url = "https://github.com/#{Rails.application.secrets.github_repo}/issues/#{@issue.id}"

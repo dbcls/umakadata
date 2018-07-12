@@ -5,17 +5,15 @@ class GithubIssue
   attr_accessor :title, :description
   attr_reader :id
 
-  define_model_callbacks :save
-
-  before_save {
-    self.valid?
-  }
-
-  validates :title , presence: true
 
   def save(endpoint)
+    if title.empty?
+      errors.add(:base, 'Title cannot be blank')
+      return
+    end
+
     if GithubHelper.issue_exists?(title)
-      errors.add(:base, "issue '#{title}'already exists")
+      errors.add(:base, "Issue #{title} already exists")
       return
     end
 
