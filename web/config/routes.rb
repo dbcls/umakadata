@@ -21,6 +21,8 @@ Rails.application.routes.draw do
   get  'endpoints/:id(/:evaluation_id)/info' => 'endpoints#info'
   get  'endpoints/:id(/:evaluation_id)/score_history' => 'endpoints#score_history'
   get  'endpoints/:id/:evaluation_id/log/:name' => 'endpoints#log'
+  get  'endpoints/:id(/:evaluation_id)/create_issue' => 'endpoints#issue_form', as: 'endpoints_issue_form'
+  post 'endpoints/:id(/:evaluation_id)/create_issue' => 'endpoints#create_issue', as: 'endpoints_create_issue'
   get  'endpoints/:id(/:evaluation_id)' => 'endpoints#show',  as: 'endpoint'
   get  'api/endpoints/:id/created_at' => 'api#evaluation_id'
 

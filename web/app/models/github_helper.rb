@@ -2,8 +2,8 @@ require 'octokit'
 
 class GithubHelper
 
-  def self.create_issue(title)
-    call_github_api {|client, github_repo| client.create_issue(github_repo, title)}
+  def self.create_issue(title, body = nil, options = {})
+    call_github_api {|client, github_repo| client.create_issue(github_repo, title, body, options)}
   end
 
   def self.edit_issue(number, title)

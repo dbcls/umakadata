@@ -32,6 +32,10 @@
               | Forum
             a href="https://github.com/#{Rails.application.secrets.github_repo}/issues?q=is:open+label:%22#{@endpoint.name.gsub(",", "")}%22"
               = "Discussion About #{@endpoint.name}"
+            br
+            br
+            = link_to "Create Issue About #{@endpoint.name}", endpoints_issue_form_path, remote: true, class: 'btn btn-primary'
+            .modal.fade#user-modal[tabindex="-1" role="dialog" aria-hidden="true"]
           h2.page-title-header
             | Basic Information
           table.table.table-bordered
