@@ -17,6 +17,31 @@ namespace :umakadata do
     ActiveMedian.create_function
   end
 
+  desc "import endpoints from CSV file"
+  task :import_endpoints_from_csv, ['file_path'] => :environment do |task, args|
+    file_path = args[:file_path].blank? ? "./db/seeds_data/endpoints.csv" : args[:file_path]
+    if File.exists?(file_path)
+      puts file_path
+      CSV.foreach(file_path, { :headers => true }) do |row|
+        Rake::Task["umakadata:import_endpoint"].execute(Rake::TaskArguments.new([:name, :url], [row[0], row[1]]))
+      end
+    else
+      puts "#{file_path} is not found"
+    end
+  end
+
+  desc "import endpoint"
+  task :import_endpoint, ['name', 'url'] => :environment do |task, args|
+    name = args[:name].blank? ? nil : args[:name]
+    url  = args[:url].blank? ? nil : args[:url]
+    unless name.nil? || url.nil?
+      puts name
+      Endpoint.create(:name => name, :url => url)
+    else
+      puts "Invalid argument: (name or url)"
+    end
+  end
+
   desc "import prefix for all endpoints from CSV file"
   task :import_prefix_for_all_endpoints, ['directory_path'] => :environment do |task, args|
     names          = Endpoint.pluck(:name)
@@ -321,13 +346,13 @@ namespace :umakadata do
     end
   end
 
-  desc "Add label to exsiting issues"
-  task :add_label_to_exsiting_issues => :environment do
+  desc "Add label to existing issues"
+  task :add_label_to_existing_issues => :environment do
     GithubHelper.list_issues({ :state => 'all', :label => "endpoints" }).each do |issue|
       endpoint = Endpoint.where(name: issue[:title]).take
 
       if endpoint.nil?
-        puts endpoint.name
+        puts issue[:title]
         next
       end
       label = endpoint.name.gsub(",", "")
