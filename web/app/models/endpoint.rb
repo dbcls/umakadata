@@ -52,7 +52,9 @@ class Endpoint < ActiveRecord::Base
     retry_count = 0
     begin
       if self.issue_id.nil?
-        Endpoint.create_issue(self)
+        label = Endpoint.create_label(self)
+        issue = Endpoint.create_issue(self)
+        GithubHelper.add_labels_to_an_issue(issue[:number], [label[:name]]) unless label.nil? && issue.nil?
       else
         Endpoint.edit_issue(self)
       end
@@ -129,32 +131,27 @@ class Endpoint < ActiveRecord::Base
     data
   end
 
+  def self.create_label(endpoint)
+    name = endpoint.name.length > 50 ? endpoint.name[0, 50] : endpoint.name
+    label = GithubHelper.add_label(name.gsub(",", ""), Color.get_color(endpoint.id))
+    endpoint.update_column(:label_id, label[:id]) unless label.nil?
+    label unless label.nil?
+  end
+
   def self.create_issue(endpoint)
     raise(StandardError, "issue for #{endpoint.name} already exists") if GithubHelper.issue_exists?(endpoint.name)
-
-    label = GithubHelper.add_label(endpoint.name.gsub(",", ""), Color.get_color(endpoint.id))
-
-    begin
-      issue = GithubHelper.create_issue(endpoint.name)
-    rescue Octokit::ClientError => e
-      GithubHelper.delete_label(label[:name])
-      raise(e)
-    end
-
-    GithubHelper.add_labels_to_an_issue(issue[:number], [label[:name]])
-
+    issue = GithubHelper.create_issue(endpoint.name)
     endpoint.update_column(:issue_id, issue[:number]) unless issue.nil?
-    endpoint.update_column(:label_id, label[:id]) unless label.nil?
+    issue unless issue.nil?
   end
 
   def self.edit_issue(endpoint)
     labels = GithubHelper.labels_for_issue(endpoint.issue_id)
-
     label = labels.select {|label| label[:id] == endpoint.label_id}.first
     raise(StandardError, "issue for #{endpoint.name} does not have a label") if label.nil?
 
-    GithubHelper.update_label(label[:name], {:name => endpoint.name.gsub(",", "")})
-
+    name = endpoint.name.length > 50 ? endpoint.name[0, 50] : endpoint.name
+    GithubHelper.update_label(label[:name], {:name => name.gsub(",", "")})
     GithubHelper.edit_issue(endpoint.issue_id, endpoint.name)
   end
 
