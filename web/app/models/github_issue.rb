@@ -28,9 +28,10 @@ class GithubIssue
     end
 
     begin
-      client = Octokit::Client.new(:oauth_token => oauth_token)
-      remote_issue = client.create_issue(Rails.application.secrets.github_repo, title, description, labels: [endpoint.name, 'endpoints'])
+      client = Octokit::Client.new(:access_token => oauth_token)
+      remote_issue = client.create_issue(Rails.application.secrets.github_repo, title, description )
       @id = remote_issue[:number]
+      GithubHelper.add_labels_to_an_issue(@id, [endpoint.name, 'endpoints']) # Admin can only add labels
     rescue Octokit::ClientError => e
       errors.add(:base, e.message)
     end
