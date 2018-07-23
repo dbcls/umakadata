@@ -76,3 +76,6 @@ gem 'google-analytics-rails'
 
 gem 'unicorn'
 gem 'foreman'
+
+gem 'omniauth'
+gem 'omniauth-github'

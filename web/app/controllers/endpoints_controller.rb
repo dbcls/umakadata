@@ -339,7 +339,7 @@ class EndpointsController < ApplicationController
     @issue = GithubIssue.new(params[:github_issue])
     @endpoint = Endpoint.find(params[:id])
 
-    @issue.save(@endpoint)
+    @issue.save(@endpoint, session[:username], session[:oauth_token], session[:code])
     if @issue.errors.any?
       @success = false
       @error_message = @issue.errors.full_messages.join("\n")
