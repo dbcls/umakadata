@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
     session[:username]           = auth["info"]["nickname"]
     session[:code]               = request.env['rack.request.query_hash']['code']
 
-    redirect_to root_path
+    redirect_to endpoints_after_authorization_path
   end
 
   def destroy

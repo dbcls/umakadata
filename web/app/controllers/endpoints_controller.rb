@@ -338,14 +338,28 @@ class EndpointsController < ApplicationController
   def create_issue
     @issue = GithubIssue.new(params[:github_issue])
     @endpoint = Endpoint.find(params[:id])
+    session[:issue_title] = @issue.title
+    session[:issue_description] = @issue.description
+    session[:endpoint_name] = @endpoint.name
+    session[:prev_uri] = request.referer
 
-    @issue.save(@endpoint, session[:username], session[:oauth_token], session[:code])
+    redirect_to '/auth/github'
+  end
+
+  def after_authorization
+    @issue = GithubIssue.new(description: session[:issue_description], title: session[:issue_title])
+    @issue.save(session[:endpoint_name], session[:oauth_token])
+
+    prev_uri = session[:prev_uri]
+
+    reset_session
+
     if @issue.errors.any?
       @success = false
-      @error_message = @issue.errors.full_messages.join("\n")
+      redirect_to prev_uri, flash: {failure: "Failure: #{@issue.errors.full_messages.join("\n")}"}
     else
       @success = true
-      @redirect_url = "https://github.com/#{Rails.application.secrets.github_repo}/issues/#{@issue.id}"
+      redirect_to "https://github.com/#{Rails.application.secrets.github_repo}/issues/#{@issue.id}"
     end
   end
 
