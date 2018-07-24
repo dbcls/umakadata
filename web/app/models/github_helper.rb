@@ -33,12 +33,21 @@ class GithubHelper
     call_github_api {|client, github_repo| client.add_label(github_repo, label, color)}
   end
 
+  def self.get_label(name)
+    call_github_api { |client, github_repo| client.label(github_repo, name) }
+  end
+
   def self.update_label(label, options)
     call_github_api {|client, github_repo| client.update_label(github_repo, label, options)}
   end
 
   def self.delete_label(label)
     call_github_api {|client, github_repo| client.delete_label!(github_repo, label)}
+  end
+
+  def self.label_exists?(name)
+    labels = call_github_api { |client, github_repo| client.labels(github_repo) }
+    ! labels.select { |label| label[:name] == name }.empty?
   end
 
   def self.issue_exists?(title)

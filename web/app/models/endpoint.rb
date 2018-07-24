@@ -133,7 +133,11 @@ class Endpoint < ActiveRecord::Base
 
   def self.create_label(endpoint)
     name  = endpoint.name.length > 50 ? endpoint.name[0, 50] : endpoint.name
-    label = GithubHelper.add_label(name.gsub(",", ""), Color.get_color(endpoint.id))
+    label = if GithubHelper.label_exists?(name)
+              GithubHelper.get_label(name)
+            else
+              GithubHelper.add_label(name.gsub(",", ""), Color.get_color(endpoint.id))
+            end
     endpoint.update_column(:label_id, label[:id]) unless label.nil?
     label unless label.nil?
   end

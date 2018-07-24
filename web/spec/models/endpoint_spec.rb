@@ -10,12 +10,16 @@ RSpec.describe Endpoint, type: :model do
   end
 
   describe '::create_label' do
-    it 'should raise exception if label already exists' do
+    it 'should return existing label if label already exists' do
       endpoint = Endpoint.new(:id => 1, :name => 'Endpoint 1', :url => 'http://www.example.com/sparql')
+      label = double(Sawyer::Resource)
 
-      allow(GithubHelper).to receive(:add_label).and_raise(Octokit::UnprocessableEntity)
+      allow(label).to receive(:[]).with(:id).and_return(1)
+      allow(GithubHelper).to receive(:label_exists?).and_return(true)
+      allow(GithubHelper).to receive(:get_label).and_return(label)
+      allow(endpoint).to receive(:update_column).and_return(nil)
 
-      expect { Endpoint.create_label(endpoint) }.to raise_exception(Octokit::UnprocessableEntity)
+      expect(Endpoint.create_label(endpoint) ).to eq(label)
     end
 
     it 'should return the trimmed label if label name is too long (maximum is 50 character)' do
@@ -23,6 +27,7 @@ RSpec.describe Endpoint, type: :model do
       label    = double(Sawyer::Resource)
 
       allow(label).to receive(:[]).with(:id).and_return(1)
+      allow(GithubHelper).to receive(:label_exists?).and_return(false)
       allow(GithubHelper).to receive(:add_label).with('Microbial Genome Database for Comparative Analysis', anything).and_return(label)
       allow(endpoint).to receive(:update_column).and_return(nil)
 
@@ -34,6 +39,7 @@ RSpec.describe Endpoint, type: :model do
       label    = double(Sawyer::Resource)
 
       allow(label).to receive(:[]).with(:id).and_return(1)
+      allow(GithubHelper).to receive(:label_exists?).and_return(nil)
       allow(GithubHelper).to receive(:add_label).with(endpoint.name, anything).and_return(label)
       allow(endpoint).to receive(:update_column).and_return(nil)
 
