@@ -361,7 +361,7 @@ class EndpointsController < ApplicationController
 
     if @issue.errors.any?
       @success = false
-      redirect_to prev_uri, flash: {failure: "Failure: #{@issue.errors.full_messages.join("\n")}"}
+      redirect_to prev_uri, flash: {failure: "Failure on Issue Creation: \n #{@issue.errors.full_messages.join("\n")}"}
     else
       @success = true
       redirect_to "https://github.com/#{Rails.application.secrets.github_repo}/issues/#{@issue.id}"
