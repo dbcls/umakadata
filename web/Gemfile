@@ -72,6 +72,8 @@ gem 'simple_form'
 
 gem 'active_median'
 
+gem 'activerecord-session_store'
+
 gem 'google-analytics-rails'
 
 gem 'unicorn'
