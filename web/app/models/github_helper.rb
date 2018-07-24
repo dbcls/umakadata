@@ -46,6 +46,15 @@ class GithubHelper
     !issues.select { |issue| issue[:title] == title }.empty?
   end
 
+  def self.revoke_oauth_token(token)
+    uri = URI("https://api.github.com/applications/#{Rails.application.secrets.github_client_id}/tokens/#{token}")
+    req = Net::HTTP::Delete.new(uri)
+    req.basic_auth(Rails.application.secrets.github_client_id, Rails.application.secrets.github_client_secret)
+    Net::HTTP.start(uri.host, uri.port, :use_ssl => true) { |http|
+      http.request(req)
+    }
+  end
+
   def self.call_github_api
     if Rails.application.secrets.github_token.blank? || Rails.application.secrets.github_repo.blank?
       p "GitHub API configuration is not enough"

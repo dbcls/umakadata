@@ -22,8 +22,6 @@ class GithubIssue
       return
     end
 
-    p "token: #{oauth_token}"
-
     begin
       client = Octokit::Client.new(:access_token => oauth_token)
       remote_issue = client.create_issue(Rails.application.secrets.github_repo, title, description )

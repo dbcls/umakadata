@@ -355,6 +355,7 @@ class EndpointsController < ApplicationController
     @issue.save(issue_info['endpoint_name'], session[:oauth_token])
     prev_uri = issue_info['prev_uri']
 
+    GithubHelper.revoke_oauth_token(session[:oauth_token])
     session.delete(:issue_info)
     session.delete(:oauth_token)
 
