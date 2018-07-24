@@ -40,12 +40,6 @@
             br
             = link_to "Create Issue About #{@endpoint.name}", endpoints_issue_form_path, remote: true, class: 'p'
             .modal.fade#user-modal[tabindex="-1" role="dialog" aria-hidden="true"]
-            br
-            br
-            - if signed_in?
-              = link_to "Sign out #{current_user}", "/signout"
-            - else
-              = link_to "Sign in with GitHub", "/auth/github"
 
           h2.page-title-header
             | Basic Information
