@@ -74,6 +74,8 @@ gem 'active_median'
 
 gem 'activerecord-session_store'
 
+gem 'whenever'
+
 gem 'google-analytics-rails'
 
 gem 'unicorn'
