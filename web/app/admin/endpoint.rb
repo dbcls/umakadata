@@ -33,6 +33,22 @@ ActiveAdmin.register Endpoint do
     id_column
     column :name
     column :url
+    column :issue_id do |endpoint|
+      issue_id = endpoint.issue_id
+      if issue_id.nil?
+        "N/A"
+      else
+        issue_id
+      end
+    end
+    column :label_id do |endpoint|
+      label_id = endpoint.label_id
+      if label_id.nil?
+        "N/A"
+      else
+        label_id
+      end
+    end
     column :disable_crawling
     column :latest_alive_date do |endpoint|
       latest = endpoint.evaluations.where(:alive => true).last
@@ -65,6 +81,7 @@ ActiveAdmin.register Endpoint do
         row :created_at
         row :updated_at
         row :issue_id
+        row :label_id
         row :prefixes do
           link_to 'import prefixes data from CSV file', "/admin/endpoints/#{endpoint.id}/prefixes"
         end
