@@ -55,7 +55,8 @@ class Endpoint < ActiveRecord::Base
         issue = Endpoint.create_issue(self)
         GithubHelper.add_labels_to_an_issue(issue[:number], [label[:name]]) unless label.nil? && issue.nil?
       else
-        Endpoint.edit_issue(self)
+        Endpoint.sync_label(self)
+        Endpoint.sync_issue(self)
       end
       GithubHelper.add_labels_to_an_issue(self.issue_id, ['endpoints'])
     rescue => e
@@ -128,13 +129,15 @@ class Endpoint < ActiveRecord::Base
     issue
   end
 
-  def self.edit_issue(endpoint)
+  def self.sync_label(endpoint)
     labels = GithubHelper.labels_for_issue(endpoint.issue_id)
     label  = labels.select { |label| label[:id] == endpoint.label_id }.first
     raise(StandardError, "issue for #{endpoint.name} does not have a label") if label.nil?
 
-    name = endpoint.name.length > 50 ? endpoint.name[0, 50] : endpoint.name
-    GithubHelper.update_label(label[:name], { :name => name.gsub(",", "") })
+    GithubHelper.update_label(label[:name], { :name => endpoint.name[0, 50].gsub(",", "") })
+  end
+
+  def self.sync_issue(endpoint)
     GithubHelper.edit_issue(endpoint.issue_id, endpoint.name)
   end
 
