@@ -3,7 +3,7 @@ class SessionsController < ApplicationController
     auth                         = request.env['omniauth.auth']
     session[:oauth_token]        = auth.credentials.token
 
-    redirect_to endpoints_after_authorization_path
+    redirect_to issues_after_authorization_path
   end
 
   def failure
