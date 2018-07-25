@@ -56,13 +56,20 @@ class GithubHelper
   end
 
   def self.call_github_api
-    if Rails.application.secrets.github_token.blank? || Rails.application.secrets.github_repo.blank?
-      p "GitHub API configuration is not enough"
-      return
-    end
+    retry_count = 0
 
-    client = Octokit::Client.new(:access_token => Rails.application.secrets.github_token)
-    yield(client, Rails.application.secrets.github_repo)
+    begin
+      client = Octokit::Client.new(:access_token => Rails.application.secrets.github_token)
+      yield(client, Rails.application.secrets.github_repo)
+    rescue Octokit::UnprocessableEntity => e
+      message = "#{e.errors.first[:resource]} #{e.errors.first[:code]}"
+      message = "#{e.errors.first[:resource]} #{e.errors.first[:message]}" if e.errors.first[:code] == 'custom'
+      raise(Octokit::UnprocessableEntity, message)
+    rescue Octokit::ServiceUnavailable => e
+      raise(Octokit::ServiceUnavailable, e.message) if (retry_count += 1) > 3
+      seconds = 5 * 2 ** retry_count # [10s, 20s, 40s]
+      sleep(seconds)
+    end
   end
 
 end
