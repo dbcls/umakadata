@@ -7,6 +7,6 @@ class SessionsController < ApplicationController
   end
 
   def failure
-    redirect_to session[:prev_uri]
+    redirect_to session[:prev_url] || root_path
   end
 end

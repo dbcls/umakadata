@@ -3,10 +3,6 @@
 
 = render partial: "alert_dialog", locals: {id: "get_evaluation_id", title: "The evaluation is not found", body: "Please select another day"}
 
-- if flash[:failure]
-  .alert.alert-danger
-    = flash[:failure]
-
 .row
   .col-md-12.page-element
     .row

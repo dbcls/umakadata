@@ -38,4 +38,7 @@ html[lang="en"]
               = link_to 'TERMS AND CONDITIONS', {:controller => 'homes', :action => 'policy'}
         = image_tag('yummydata-logo-background.png', :class => 'yummydata-logo-background')
         .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
+          - if flash[:failure]
+            .alert.alert-danger
+              = flash[:failure]
           == yield
