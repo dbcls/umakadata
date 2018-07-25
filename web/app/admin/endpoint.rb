@@ -90,17 +90,29 @@ ActiveAdmin.register Endpoint do
     active_admin_comments
   end
 
+
   controller do
-    def create
-      @endpoint = Endpoint.new(permitted_params[:endpoint])
-      @endpoint.save
-      if @endpoint.errors.any?
+    def after_modification(succeeded)
+      if succeeded
+        if @endpoint.errors.any?
+          flash[:warning] = @endpoint.errors.full_messages.join('<br>').html_safe
+        end
+        redirect_to "/admin/endpoints/#{@endpoint.id}"
+      else
         flash.now[:error] = @endpoint.errors.full_messages.join('<br>').html_safe
         @endpoint = Endpoint.new(permitted_params[:endpoint])
         render :new
-      else
-        redirect_to "/admin/endpoints/#{@endpoint.id}"
       end
+    end
+
+    def create
+      @endpoint = Endpoint.new(permitted_params[:endpoint])
+      after_modification(@endpoint.save)
+    end
+
+    def update
+      @endpoint = Endpoint.find(permitted_params[:id])
+      after_modification(@endpoint.update(permitted_params[:endpoint]))
     end
   end
 
