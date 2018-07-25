@@ -124,26 +124,29 @@ ActiveAdmin.register Endpoint do
   end
 
   batch_action :create_label do |ids|
+    message = 'The endpoints have created labels'
     batch_action_collection.find(ids).each do |endpoint|
       begin
         label = Endpoint.create_label(endpoint)
         next if endpoint.issue_id.nil?
-        GithubHelper.add_labels_to_an_issue(endpoint.issue_id, [label[:name]]) unless label.nil?
+        GithubHelper.add_labels_to_an_issue(endpoint.issue_id, [label[:name], 'endpoint']) unless label.nil?
       rescue => e
-        p e.message
+        message = e.message
       end
     end
-    redirect_to collection_path, alert: 'The endpoints have created labels'
+    redirect_to collection_path, alert: message
   end
 
   batch_action :create_issue do |ids|
+    message = 'The endpoints have created issues'
     batch_action_collection.find(ids).each do |endpoint|
       begin
         Endpoint.create_issue(endpoint)
+        GithubHelper.add_labels_to_an_issue(endpoint.issue_id, ['endpoint'])
       rescue => e
-        p e.message
+        message = e.message
       end
     end
-    redirect_to collection_path, alert: 'The endpoints have created issues'
+    redirect_to collection_path, alert: message
   end
 end
