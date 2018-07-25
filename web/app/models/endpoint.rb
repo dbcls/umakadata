@@ -59,9 +59,8 @@ class Endpoint < ActiveRecord::Base
       end
       GithubHelper.add_labels_to_an_issue(self.issue_id, ['endpoints'])
     rescue => e
-      p "Save failed: #{self.name}"
-      p e.message
-      errors.add(:base, "Error occured during saving!\n\n#{e.message}")
+      p "#{self.name}: #{e.message}"
+      errors.add(:base, "Error occured during using Github API!\n\n#{e.message}")
     end
   end
 
