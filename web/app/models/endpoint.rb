@@ -111,21 +111,21 @@ class Endpoint < ActiveRecord::Base
   end
 
   def self.create_label(endpoint)
-    name  = endpoint.name.length > 50 ? endpoint.name[0, 50] : endpoint.name
+    name  = endpoint.name[0, 50]
     label = if GithubHelper.label_exists?(name)
               GithubHelper.get_label(name)
             else
               GithubHelper.add_label(name.gsub(",", ""), Color.get_color(endpoint.id))
             end
     endpoint.update_column(:label_id, label[:id]) unless label.nil?
-    label unless label.nil?
+    label
   end
 
   def self.create_issue(endpoint)
     raise(StandardError, "issue for #{endpoint.name} already exists") if GithubHelper.issue_exists?(endpoint.name)
     issue = GithubHelper.create_issue(endpoint.name)
     endpoint.update_column(:issue_id, issue[:number]) unless issue.nil?
-    issue unless issue.nil?
+    issue
   end
 
   def self.edit_issue(endpoint)
