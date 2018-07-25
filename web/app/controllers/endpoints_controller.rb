@@ -343,8 +343,9 @@ class EndpointsController < ApplicationController
         'title' => @issue.title,
         'description' => @issue.description,
         'endpoint_name' => @endpoint.name,
-        'prev_uri' => request.referer
     }
+
+    session[:prev_uri] = request.referer
 
     redirect_to '/auth/github'
   end

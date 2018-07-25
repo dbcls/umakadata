@@ -5,4 +5,8 @@ class SessionsController < ApplicationController
 
     redirect_to endpoints_after_authorization_path
   end
+
+  def failure
+    redirect_to session[:prev_uri]
+  end
 end

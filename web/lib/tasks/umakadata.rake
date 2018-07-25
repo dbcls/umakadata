@@ -374,7 +374,7 @@ namespace :umakadata do
 
   desc "Clear expired sessions (more than 1 hour)"
   task :cleanup_sessions => :environment do
-    sql = "DELETE FROM sessions WHERE (updated_at < '#{DateTime.now - 1.hours}')"
+    sql = "DELETE FROM sessions WHERE (updated_at < '#{(DateTime.now - 1.hours).utc}')"
     ActiveRecord::Base.connection.execute(sql)
   end
 

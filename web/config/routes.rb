@@ -35,7 +35,8 @@ Rails.application.routes.draw do
   get 'inquiries' => 'inquiries#form'
   post 'inquiries' => 'inquiries#send_inquiry'
 
-  get '/auth/:provider/callback' => 'sessions#callback'
+  get '/auth/:provider/callback' => 'sessions#callback', as: 'github_callback'
+  get '/auth/failure' => 'sessions#failure'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
