@@ -21,9 +21,6 @@ Rails.application.routes.draw do
   get  'endpoints/:id(/:evaluation_id)/info' => 'endpoints#info'
   get  'endpoints/:id(/:evaluation_id)/score_history' => 'endpoints#score_history'
   get  'endpoints/:id/:evaluation_id/log/:name' => 'endpoints#log'
-  get  'endpoints/:id(/:evaluation_id)/issue_form' => 'endpoints#issue_form', as: 'endpoints_issue_form'
-  post  'endpoints/:id(/:evaluation_id)/create_issue' => 'endpoints#create_issue', as: 'endpoints_create_issue'
-  get  'endpoints/after_authorization' => 'endpoints#after_authorization', as: 'endpoints_after_authorization'
   get  'endpoints/:id(/:evaluation_id)' => 'endpoints#show',  as: 'endpoint'
   get  'api/endpoints/:id/created_at' => 'api#evaluation_id'
 
@@ -35,7 +32,11 @@ Rails.application.routes.draw do
   get 'inquiries' => 'inquiries#form'
   post 'inquiries' => 'inquiries#send_inquiry'
 
-  get '/auth/:provider/callback' => 'sessions#callback', as: 'github_callback'
+  get  'issues/:endpoint_id/form' => 'issues#form', as: 'issues_form'
+  get  'issues/after_authorization'
+  post  'issues/:endpoint_id/create' => 'issues#create', as: 'issues_create'
+
+  get '/auth/:provider/callback' => 'sessions#callback'
   get '/auth/failure' => 'sessions#failure'
 
   # The priority is based upon order of creation: first created -> highest priority.
