@@ -129,7 +129,7 @@ ActiveAdmin.register Endpoint do
       begin
         label = Endpoint.create_label(endpoint)
         next if endpoint.issue_id.nil?
-        GithubHelper.add_labels_to_an_issue(endpoint.issue_id, [label[:name], 'endpoint']) unless label.nil?
+        GithubHelper.add_labels_to_an_issue(endpoint.issue_id, [label[:name], 'endpoints']) unless label.nil?
       rescue => e
         message = e.message
       end
@@ -142,7 +142,7 @@ ActiveAdmin.register Endpoint do
     batch_action_collection.find(ids).each do |endpoint|
       begin
         Endpoint.create_issue(endpoint)
-        GithubHelper.add_labels_to_an_issue(endpoint.issue_id, ['endpoint'])
+        GithubHelper.add_labels_to_an_issue(endpoint.issue_id, ['endpoints'])
       rescue => e
         message = e.message
       end
