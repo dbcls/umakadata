@@ -6,10 +6,9 @@
       h4.modal-title
         = "Create Issue About #{endpoint.name}"
     .modal-body
-      = simple_form_for(issue, url: endpoints_create_issue_path(endpoint), remote: true) do |f|
-        = f.error_notification
-        = f.input :title
-        = f.input :description, as: :text, input_html: { rows: 10 }
+      = simple_form_for(issue, url: issues_create_path(endpoint)) do |f|
+        = f.input :title, input_html: { :maxlength => 256 }
+        = f.input :description, as: :text, input_html: { rows: 10,  :maxlength => 65536 }
         .modal-footer
           .form-actions.pull-right
             = f.button :submit, :value => 'Submit', class: 'btn-primary', data: { disable_with: 'Sending...' }, id: 'issue_submit_button'

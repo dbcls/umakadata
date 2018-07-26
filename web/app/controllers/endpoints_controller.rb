@@ -330,25 +330,6 @@ class EndpointsController < ApplicationController
     end
   end
 
-  def issue_form
-    @issue = GithubIssue.new
-    @endpoint = Endpoint.find(params[:id])
-  end
-
-  def create_issue
-    @issue = GithubIssue.new(params[:github_issue])
-    @endpoint = Endpoint.find(params[:id])
-
-    @issue.save(@endpoint)
-    if @issue.errors.any?
-      @success = false
-      @error_message = @issue.errors.full_messages.join("\n")
-    else
-      @success = true
-      @redirect_url = "https://github.com/#{Rails.application.secrets.github_repo}/issues/#{@issue.id}"
-    end
-  end
-
   private
 
     def render_404

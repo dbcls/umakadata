@@ -85,6 +85,7 @@ docker run -d -p 3000:3000 --name umakadata_web umakadata_web bundle exec rails 
 docker exec -it umakadata_web /bin/bash
 # Now you are in the container
 ./script/initialize_db.sh
+bundle exec whenever --update-crontab
 ```
 
 ### Web application without Docker
@@ -120,6 +121,7 @@ Modify </path/to/umakadata>/web/config/database.yml.
 ```bash
 cd </path/to/umakadata>/web
 ./script/initialize_db.sh
+bundle exec whenever --update-crontab
 ```
 
 ### 3. Run a web application
@@ -135,7 +137,6 @@ If you want to change the listening port, for example 10081, execute the followi
 cd </path/to/umakadata>/web
 bundle exec rails s -d -p 10081 --bind=0.0.0.0
 ```
-
 
 ## Usage
 

@@ -6,9 +6,14 @@ class GithubIssue
   attr_reader :id
 
 
-  def save(endpoint)
+  def save(endpoint_name, oauth_token)
     if title.empty?
       errors.add(:base, 'Title cannot be blank')
+      return
+    end
+
+    unless oauth_token
+      errors.add(:base, 'authorize error')
       return
     end
 
@@ -18,8 +23,10 @@ class GithubIssue
     end
 
     begin
-      remote_issue = GithubHelper.create_issue(title, description, labels: [endpoint.name, 'endpoints'])
+      client = Octokit::Client.new(:access_token => oauth_token)
+      remote_issue = client.create_issue(Rails.application.secrets.github_repo, title, description )
       @id = remote_issue[:number]
+      GithubHelper.add_labels_to_an_issue(@id, [endpoint_name, 'endpoints']) # Only admin can add labels
     rescue Octokit::ClientError => e
       errors.add(:base, e.message)
     end

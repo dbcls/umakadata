@@ -72,7 +72,14 @@ gem 'simple_form'
 
 gem 'active_median'
 
+gem 'activerecord-session_store'
+
+gem 'whenever'
+
 gem 'google-analytics-rails'
 
 gem 'unicorn'
 gem 'foreman'
+
+gem 'omniauth'
+gem 'omniauth-github'
