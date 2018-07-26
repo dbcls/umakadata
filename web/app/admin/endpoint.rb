@@ -33,6 +33,22 @@ ActiveAdmin.register Endpoint do
     id_column
     column :name
     column :url
+    column :issue_id do |endpoint|
+      issue_id = endpoint.issue_id
+      if issue_id.nil?
+        "N/A"
+      else
+        issue_id
+      end
+    end
+    column :label_id do |endpoint|
+      label_id = endpoint.label_id
+      if label_id.nil?
+        "N/A"
+      else
+        label_id
+      end
+    end
     column :disable_crawling
     column :latest_alive_date do |endpoint|
       latest = endpoint.evaluations.where(:alive => true).last
@@ -65,6 +81,7 @@ ActiveAdmin.register Endpoint do
         row :created_at
         row :updated_at
         row :issue_id
+        row :label_id
         row :prefixes do
           link_to 'import prefixes data from CSV file', "/admin/endpoints/#{endpoint.id}/prefixes"
         end
@@ -73,17 +90,29 @@ ActiveAdmin.register Endpoint do
     active_admin_comments
   end
 
+
   controller do
-    def create
-      @endpoint = Endpoint.new(permitted_params[:endpoint])
-      @endpoint.save
-      if @endpoint.errors.any?
+    def after_modification(succeeded)
+      if succeeded
+        if @endpoint.errors.any?
+          flash[:warning] = @endpoint.errors.full_messages.join('<br>').html_safe
+        end
+        redirect_to "/admin/endpoints/#{@endpoint.id}"
+      else
         flash.now[:error] = @endpoint.errors.full_messages.join('<br>').html_safe
         @endpoint = Endpoint.new(permitted_params[:endpoint])
         render :new
-      else
-        redirect_to "/admin/endpoints/#{@endpoint.id}"
       end
+    end
+
+    def create
+      @endpoint = Endpoint.new(permitted_params[:endpoint])
+      after_modification(@endpoint.save)
+    end
+
+    def update
+      @endpoint = Endpoint.find(permitted_params[:id])
+      after_modification(@endpoint.update(permitted_params[:endpoint]))
     end
   end
 
@@ -106,5 +135,30 @@ ActiveAdmin.register Endpoint do
     end
   end
 
+  batch_action :create_label do |ids|
+    message = 'The endpoints have created labels'
+    batch_action_collection.find(ids).each do |endpoint|
+      begin
+        label = Endpoint.create_label(endpoint)
+        next if endpoint.issue_id.nil?
+        GithubHelper.add_labels_to_an_issue(endpoint.issue_id, [label[:name], 'endpoints']) unless label.nil?
+      rescue => e
+        message = e.message
+      end
+    end
+    redirect_to collection_path, alert: message
+  end
 
+  batch_action :create_issue do |ids|
+    message = 'The endpoints have created issues'
+    batch_action_collection.find(ids).each do |endpoint|
+      begin
+        Endpoint.create_issue(endpoint)
+        GithubHelper.add_labels_to_an_issue(endpoint.issue_id, ['endpoints'])
+      rescue => e
+        message = e.message
+      end
+    end
+    redirect_to collection_path, alert: message
+  end
 end
