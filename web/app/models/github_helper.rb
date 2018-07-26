@@ -47,12 +47,9 @@ class GithubHelper
   end
 
   def self.revoke_oauth_token(token)
-    uri = URI("https://api.github.com/applications/#{Rails.application.secrets.github_client_id}/tokens/#{token}")
-    req = Net::HTTP::Delete.new(uri)
-    req.basic_auth(Rails.application.secrets.github_client_id, Rails.application.secrets.github_client_secret)
-    Net::HTTP.start(uri.host, uri.port, :use_ssl => true) { |http|
-      http.request(req)
-    }
+    client = Octokit::Client.new(:client_id     => Rails.application.secrets.github_oauth_client,
+                                 :client_secret => Rails.application.secrets.github_oauth_secret)
+    client.revoke_application_authorization(token)
   end
 
   def self.call_github_api
