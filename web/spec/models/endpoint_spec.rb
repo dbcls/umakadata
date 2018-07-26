@@ -70,7 +70,7 @@ RSpec.describe Endpoint, type: :model do
   end
 
   describe '::sync_label' do
-    it 'should raise exception if endpoint.issue_id does not exist' do
+    it 'should raise exception if GithubHelper.labels_for_issue() raise exception' do
       endpoint = Endpoint.create(:id => 1, :name => 'Endpoint 1', :url => 'http://www.example.com/sparql')
 
       allow(GithubHelper).to receive(:labels_for_issue).and_raise(Octokit::UnprocessableEntity)
@@ -110,16 +110,6 @@ RSpec.describe Endpoint, type: :model do
       allow(GithubHelper).to receive(:update_label).and_return(nil)
 
       expect { Endpoint.sync_label(endpoint) }.not_to raise_exception
-    end
-  end
-
-  describe '::sync_issue' do
-    it 'should raise exception if GithubHelper.edit_issue() raise exception' do
-      endpoint = Endpoint.create(:id => 1, :name => 'Endpoint 1', :url => 'http://www.example.com/sparql', :label_id => 1)
-
-      allow(GithubHelper).to receive(:edit_issue).and_raise(Octokit::UnprocessableEntity)
-
-      expect { Endpoint.sync_issue(endpoint) }.to raise_exception(Octokit::UnprocessableEntity)
     end
   end
 end

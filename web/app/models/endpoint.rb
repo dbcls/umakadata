@@ -56,7 +56,7 @@ class Endpoint < ActiveRecord::Base
         GithubHelper.add_labels_to_an_issue(issue[:number], [label[:name]]) unless label.nil? && issue.nil?
       else
         Endpoint.sync_label(self)
-        Endpoint.sync_issue(self)
+        GithubHelper.update_issue(self.issue_id, self.name)
       end
       GithubHelper.add_labels_to_an_issue(self.issue_id, ['endpoints'])
     rescue => e
@@ -136,9 +136,4 @@ class Endpoint < ActiveRecord::Base
 
     GithubHelper.update_label(label[:name], { :name => endpoint.name[0, 50].gsub(",", "") })
   end
-
-  def self.sync_issue(endpoint)
-    GithubHelper.edit_issue(endpoint.issue_id, endpoint.name)
-  end
-
 end

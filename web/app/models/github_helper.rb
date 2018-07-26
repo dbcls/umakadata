@@ -6,7 +6,7 @@ class GithubHelper
     call_github_api {|client, github_repo| client.create_issue(github_repo, title, body, options)}
   end
 
-  def self.edit_issue(number, title)
+  def self.update_issue(number, title)
     call_github_api {|client, github_repo| client.update_issue(github_repo, number, title)}
   end
 
