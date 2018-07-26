@@ -21,7 +21,6 @@
 
 rails_env = ENV['RAILS_ENV'] || :development
 set :environment, rails_env
-
 set :output, './log/whenever.log'
 
 every 1.days do

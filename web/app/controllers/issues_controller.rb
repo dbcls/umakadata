@@ -7,15 +7,12 @@ class IssuesController < ApplicationController
   def create
     @issue = GithubIssue.new(params[:github_issue])
     @endpoint = Endpoint.find(params[:endpoint_id])
-
     session[:issue_info] = {
         'title' => @issue.title,
         'description' => @issue.description,
         'endpoint_name' => @endpoint.name,
     }
-
     session[:prev_url] = request.referer
-
     redirect_to '/auth/github'
   end
 
