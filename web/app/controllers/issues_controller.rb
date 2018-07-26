@@ -32,10 +32,8 @@ class IssuesController < ApplicationController
     session.delete(:oauth_token)
 
     if @issue.errors.any?
-      @success = false
       redirect_to prev_url, flash: {failure: "Failure on Issue Creation: \n #{@issue.errors.full_messages.join("\n")}"}
     else
-      @success = true
       redirect_to "https://github.com/#{Rails.application.secrets.github_repo}/issues/#{@issue.id}"
     end
   end
