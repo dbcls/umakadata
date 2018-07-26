@@ -46,12 +46,6 @@ class GithubHelper
     !issues.select { |issue| issue[:title] == title }.empty?
   end
 
-  def self.revoke_oauth_token(token)
-    client = Octokit::Client.new(:client_id     => Rails.application.secrets.github_oauth_client,
-                                 :client_secret => Rails.application.secrets.github_oauth_secret)
-    client.revoke_application_authorization(token)
-  end
-
   def self.call_github_api
     if Rails.application.secrets.github_token.blank? || Rails.application.secrets.github_repo.blank?
       p "GitHub API configuration is not enough"
