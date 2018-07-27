@@ -107,70 +107,64 @@ class Evaluation < ActiveRecord::Base
 
     eval.latest = true
 
-    logger = Umakadata::Logging::Log.new
-    eval.alive = retriever.alive?(logger: logger)
-    eval.alive_log = logger.as_json
+    eval.alive_log = logger_with_time { |logger| eval.alive = retriever.alive?(logger: logger) }.as_json
 
     if eval.alive
       eval.support_graph_clause = retriever.support_graph_clause
-      retrieve_service_description(retriever, eval)
-      retrieve_void(retriever, eval)
-      check_number_of_statements(eval, retriever)
+
+      eval.service_description_log  = logger_with_time { |logger| retrieve_service_description(retriever, eval, logger) }.as_json
+      eval.void_ttl_log             = logger_with_time { |logger| retrieve_void(retriever, eval, logger) }.as_json
+      eval.number_of_statements_log = logger_with_time { |logger| check_number_of_statements(eval, retriever, logger) }.as_json
+
       retrieve_linked_data_rules(retriever, eval)
 
-      logger = Umakadata::Logging::Log.new
-      eval.execution_time = retriever.execution_time(logger: logger)
-      eval.execution_time_log = logger.as_json
+      eval.execution_time_log              = logger_with_time { |logger| eval.execution_time = retriever.execution_time(logger: logger) }.as_json
+      eval.cool_uri_rate_log               = logger_with_time { |logger| eval.cool_uri_rate = retriever.cool_uri_rate(logger: logger) }.as_json
+      eval.support_content_negotiation_log = logger_with_time { |logger| check_content_negotiation(endpoint, eval, retriever, logger) }.as_json
 
-      logger = Umakadata::Logging::Log.new
-      eval.cool_uri_rate = retriever.cool_uri_rate(logger: logger)
-      eval.cool_uri_rate_log = logger.as_json
-
-      check_content_negotiation(endpoint, eval, retriever)
-
-      logger = Umakadata::Logging::Log.new
-      metadata = retriever.metadata(logger: logger)
-      eval.metadata_score = retriever.score_metadata(metadata, logger: logger)
-      eval.metadata_log = logger.as_json
+      metadata = nil
+      eval.metadata_log = logger_with_time do |logger|
+        metadata = retriever.metadata(logger: logger)
+        eval.metadata_score = retriever.score_metadata(metadata, logger: logger)
+      end.as_json
 
       unless metadata.empty?
-        list_of_ontologies_log = Umakadata::Logging::Log.new
-        list_of_ontologies = retriever.list_ontologies(metadata, logger: list_of_ontologies_log)
+        eval.ontology_log = logger_with_time do |logger|
+          list_of_ontologies_log = Umakadata::Logging::Log.new
+          list_of_ontologies = retriever.list_ontologies(metadata, logger: list_of_ontologies_log)
 
-        score_ontologies_for_endpoints_log = Umakadata::Logging::Log.new
-        score_ontologies_for_endpoints_log.push list_of_ontologies_log
-        logger = Umakadata::Logging::Log.new
-        logger.push score_ontologies_for_endpoints_log
+          score_ontologies_for_endpoints_log = Umakadata::Logging::Log.new
+          score_ontologies_for_endpoints_log.push list_of_ontologies_log
 
-        score = retriever.score_ontologies_for_endpoints(list_of_ontologies, rdf_prefixes, logger: score_ontologies_for_endpoints_log)
-        logger.result = "Ontology score is #{score}"
-        eval.ontology_score = score
-        eval.ontology_log = logger.as_json
-        RdfPrefix.delete_all(endpoint_id: endpoint.id)
-        list_of_ontologies.each do |ontology|
-          rdf_prefix = RdfPrefix.new(endpoint_id: endpoint.id, uri: ontology)
-          rdf_prefix.save
-        end
+          logger.push score_ontologies_for_endpoints_log
 
-        list_of_ontologies_in_LOV_log = Umakadata::Logging::Log.new
-        list_of_ontologies_in_LOV = retriever.list_ontologies_in_LOV(metadata, logger: list_of_ontologies_in_LOV_log)
+          score = retriever.score_ontologies_for_endpoints(list_of_ontologies, rdf_prefixes, logger: score_ontologies_for_endpoints_log)
+          logger.result = "Ontology score is #{score}"
+          eval.ontology_score = score
+          eval.ontology_log = logger.as_json
+          RdfPrefix.delete_all(endpoint_id: endpoint.id)
+          list_of_ontologies.each do |ontology|
+            rdf_prefix = RdfPrefix.new(endpoint_id: endpoint.id, uri: ontology)
+            rdf_prefix.save
+          end
 
-        score_ontologies_for_LOV_log = Umakadata::Logging::Log.new
-        score_ontologies_for_LOV_log.push list_of_ontologies_in_LOV_log
-        logger.push score_ontologies_for_LOV_log
+          list_of_ontologies_in_LOV_log = Umakadata::Logging::Log.new
+          list_of_ontologies_in_LOV = retriever.list_ontologies_in_LOV(metadata, logger: list_of_ontologies_in_LOV_log)
 
-        score_LOV = retriever.score_ontologies_for_LOV(list_of_ontologies, list_of_ontologies_in_LOV, logger: score_ontologies_for_LOV_log)
+          score_ontologies_for_LOV_log = Umakadata::Logging::Log.new
+          score_ontologies_for_LOV_log.push list_of_ontologies_in_LOV_log
+          logger.push score_ontologies_for_LOV_log
 
-        score += score_LOV
+          score_LOV = retriever.score_ontologies_for_LOV(list_of_ontologies, list_of_ontologies_in_LOV, logger: score_ontologies_for_LOV_log)
 
-        logger.result = "Ontology score is #{score}"
-        eval.ontology_score = score
-        eval.ontology_log = logger.as_json
+          score += score_LOV
+
+          logger.result = "Ontology score is #{score}"
+          eval.ontology_score = score
+        end.as_json
       end
 
-      logger = Umakadata::Logging::Log.new
-      self.check_update(retriever, eval, logger: logger)
-      eval.last_updated_log = logger.as_json
+      eval.last_updated_log = logger_with_time { |logger| self.check_update(retriever, eval, logger: logger) }.as_json
     end
 
     eval.alive_rate = Evaluation.calc_alive_rate(eval)
@@ -181,12 +175,10 @@ class Evaluation < ActiveRecord::Base
     return eval if eval.save!
   end
 
-  def self.check_number_of_statements(eval, retriever)
-    number_of_statements_log = Umakadata::Logging::Log.new
-
+  def self.check_number_of_statements(eval, retriever, logger)
     unless eval.void_ttl.empty?
       log = Umakadata::Logging::Log.new
-      number_of_statements_log.push log
+      logger.push log
 
       void_triples = triples(eval.void_ttl)
       if void_triples.nil?
@@ -206,69 +198,62 @@ class Evaluation < ActiveRecord::Base
 
     if eval.number_of_statements.nil?
       log = Umakadata::Logging::Log.new
-      number_of_statements_log.push log
+      logger.push log
       eval.number_of_statements = retriever.number_of_statements(logger: log)
     end
 
-    number_of_statements_log.result = "#{eval.number_of_statements.nil? ? "Failed" : "Successed"} to find nubmer of statements"
-    eval.number_of_statements_log = number_of_statements_log.as_json
+    logger.result = "#{eval.number_of_statements.nil? ? "Failed" : "Successed"} to find nubmer of statements"
   end
 
-  def self.check_content_negotiation(endpoint, eval, retriever)
-    log_content_negotiation = Umakadata::Logging::Log.new
-
+  def self.check_content_negotiation(endpoint, eval, retriever, logger)
     if Prefix.where(endpoint_id: endpoint.id).count == 0
       eval.support_content_negotiation = false
-      log_content_negotiation.result = "We could not check the support of content negotiation since the prefixes are not registered."
-      eval.support_content_negotiation_log = log_content_negotiation.as_json
+      logger.result = "We could not check the support of content negotiation since the prefixes are not registered."
+      eval.support_content_negotiation_log = logger.as_json
       return
     end
 
     log_turtle = Umakadata::Logging::Log.new
-    log_content_negotiation.push log_turtle
+    logger.push log_turtle
     log_xml = Umakadata::Logging::Log.new
-    log_content_negotiation.push log_xml
+    logger.push log_xml
     log_html = Umakadata::Logging::Log.new
-    log_content_negotiation.push log_html
+    logger.push log_html
 
     eval.support_turtle_format = true
     eval.support_xml_format = true
     eval.support_html_format = true
 
     Prefix.where(endpoint_id: endpoint.id).each do |prefix|
-      logger = Umakadata::Logging::Log.new
-      log_turtle.push logger
-      eval.support_turtle_format &= retriever.check_content_negotiation(prefix.uri, Umakadata::DataFormat::TURTLE, logger: logger)
+      log = Umakadata::Logging::Log.new
+      log_turtle.push log
+      eval.support_turtle_format &= retriever.check_content_negotiation(prefix.uri, Umakadata::DataFormat::TURTLE, logger: log)
 
-      logger = Umakadata::Logging::Log.new
-      log_xml.push logger
-      eval.support_xml_format &= retriever.check_content_negotiation(prefix.uri, Umakadata::DataFormat::RDFXML, logger: logger)
+      log = Umakadata::Logging::Log.new
+      log_xml.push log
+      eval.support_xml_format &= retriever.check_content_negotiation(prefix.uri, Umakadata::DataFormat::RDFXML, logger: log)
 
-      logger = Umakadata::Logging::Log.new
-      log_html.push logger
-      eval.support_html_format &= retriever.check_content_negotiation(prefix.uri, Umakadata::DataFormat::HTML, logger: logger)
+      log = Umakadata::Logging::Log.new
+      log_html.push log
+      eval.support_html_format &= retriever.check_content_negotiation(prefix.uri, Umakadata::DataFormat::HTML, logger: log)
     end
 
     log_turtle.result = "Some URI #{eval.support_turtle_format ? "" : "does not "}support content negotiation with #{Umakadata::DataFormat::TURTLE}"
     log_xml.result = "Some URI #{eval.support_xml_format ? "" : "does not "}support content negotiation with #{Umakadata::DataFormat::RDFXML}"
     log_html.result = "Some URI #{eval.support_html_format ? "" : "does not "}support content negotiation with #{Umakadata::DataFormat::HTML}"
     eval.support_content_negotiation = (eval.support_turtle_format || eval.support_xml_format || eval.support_html_format)
-    log_content_negotiation.result = "The endpoint #{eval.support_content_negotiation ? "" : "does not"} support content negotiation"
-    eval.support_content_negotiation_log = log_content_negotiation.as_json
+    logger.result = "The endpoint #{eval.support_content_negotiation ? "" : "does not"} support content negotiation"
   end
 
-  def self.retrieve_service_description(retriever, eval)
-    logger = Umakadata::Logging::Log.new
+  def self.retrieve_service_description(retriever, eval, logger)
     service_description = retriever.service_description(logger: logger)
-    eval.service_description_log = logger.as_json
     return if service_description.nil?
     eval.response_header     = service_description.response_header
     eval.service_description = service_description.text
     eval.supported_language = retriever.supported_language(service_description)
   end
 
-  def self.retrieve_void(retriever, eval)
-    logger = Umakadata::Logging::Log.new
+  def self.retrieve_void(retriever, eval, logger)
     eval.void_uri = retriever.well_known_uri
     void = retriever.void_on_well_known_uri(logger: logger)
     if !void.nil? && !void.text.nil?
@@ -284,46 +269,42 @@ class Evaluation < ActiveRecord::Base
       end
       eval.void_ttl = void_in_sd
     end
-    eval.void_ttl_log = logger.as_json
     eval.linksets = retriever.linksets(eval.void_ttl)
   end
 
   def self.retrieve_linked_data_rules(retriever, eval)
     eval.subject_is_uri = true
 
-    logger = Umakadata::Logging::Log.new
-    if PrefixFilter.where(endpoint_id: eval.endpoint_id).count > 0
-      invalid = []
-      PrefixFilter.where(endpoint_id: eval.endpoint_id, element_type: 'subject').each do |prefix_filter|
-        invalid.push prefix_filter[:uri] unless prefix_filter[:uri].start_with?('http')
-      end
-
-      if invalid.empty?
-        eval.subject_is_http_uri = true
-        logger.result = "All prefixes are HTTP/HTTPS URI"
-      else
-        eval.subject_is_http_uri = false
-        invalid.each do |uri|
-          log = Umakadata::Logging::Log.new
-          log.result = "Prefix #{uri} is not HTTP/HTTPS URI"
-          logger.push log
+    eval.subject_is_http_uri_log = logger_with_time do |logger|
+      if PrefixFilter.where(endpoint_id: eval.endpoint_id).count > 0
+        invalid = []
+        PrefixFilter.where(endpoint_id: eval.endpoint_id, element_type: 'subject').each do |prefix_filter|
+          invalid.push prefix_filter[:uri] unless prefix_filter[:uri].start_with?('http')
         end
-        logger.result = "#{invalid.count} preixes are not HTTP/HTTPS URI"
+
+        if invalid.empty?
+          eval.subject_is_http_uri = true
+          logger.result = "All prefixes are HTTP/HTTPS URI"
+        else
+          eval.subject_is_http_uri = false
+          invalid.each do |uri|
+            log = Umakadata::Logging::Log.new
+            log.result = "Prefix #{uri} is not HTTP/HTTPS URI"
+            logger.push log
+          end
+          logger.result = "#{invalid.count} preixes are not HTTP/HTTPS URI"
+        end
+        eval.subject_is_http_uri_log = logger.as_json
+      else
+        eval.subject_is_http_uri = retriever.http_subject?(eval.number_of_statements, logger: logger)
+        eval.subject_is_http_uri_log = logger.as_json
       end
-      eval.subject_is_http_uri_log = logger.as_json
-    else
-      eval.subject_is_http_uri = retriever.http_subject?(eval.number_of_statements, logger: logger)
-      eval.subject_is_http_uri_log = logger.as_json
-    end
+    end.as_json
 
     if eval.endpoint.prefixes.present?
       prefixes = Prefix.where(endpoint_id: eval.endpoint_id).pluck(:uri)
-      logger = Umakadata::Logging::Log.new
-      eval.uri_provides_info = retriever.uri_provides_info?(prefixes, logger: logger)
-      eval.uri_provides_info_log = logger.as_json
-      logger = Umakadata::Logging::Log.new
-      eval.contains_links = retriever.contains_links?(prefixes, logger: logger)
-      eval.contains_links_log = logger.as_json
+      eval.uri_provides_info_log = logger_with_time { |logger| eval.uri_provides_info = retriever.uri_provides_info?(prefixes, logger: logger) }.as_json
+      eval.contains_links_log    = logger_with_time { |logger| eval.contains_links = retriever.contains_links?(prefixes, logger: logger) }.as_json
     end
   end
 
@@ -499,6 +480,17 @@ class Evaluation < ActiveRecord::Base
     end
     buffer.close
     buffer.string
+  end
+
+  def self.logger_with_time
+    logger = Umakadata::Logging::Log.new
+    logger.start_time = Time.now
+    return unless block_given?
+
+    yield logger
+    logger.end_time = Time.now
+
+    logger
   end
 
 end
