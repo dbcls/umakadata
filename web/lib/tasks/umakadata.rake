@@ -270,16 +270,12 @@ namespace :umakadata do
 
   desc "test for checking retriever method"
   task :test_retriever_method, ['name', 'method_name'] => :environment do |task, args|
-    puts "endpoint_name|dead/alive|result|log"
+    puts "endpoint_name|result|log"
     endpoint  = Endpoint.where("name LIKE ?", "%#{args[:name]}%").first
     retriever = Umakadata::Retriever.new endpoint.url, Time.zone.now
 
-    # if retriever.alive?
     logger = Umakadata::Logging::Log.new
-    puts endpoint.name + "|alive|" + retriever.send(args[:method_name], logger: logger).to_s + "|" + logger.as_json.to_s
-    # else
-    #   puts endpoint.name + "|dead|x|x|"
-    # end
+    puts "#{endpoint.name}|#{retriever.send(args[:method_name], *args.extras, logger: logger)}|#{logger.as_json.to_s}"
   end
 
   desc "Fill retrieved_at column in evaluations table"
