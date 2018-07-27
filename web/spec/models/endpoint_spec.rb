@@ -1,8 +1,6 @@
 require 'rails_helper'
 require 'sawyer'
 
-include FactoryBot::Syntax::Methods
-
 RSpec.describe Endpoint, type: :model do
 
   after do
