@@ -60,7 +60,7 @@ gem 'cancan' # or cancancan
 gem 'draper'
 gem 'pundit'
 
-gem 'pg'
+gem 'pg', '~> 0.20.0'
 
 gem 'umakadata', :path => './lib/assets/umakadata'
 
