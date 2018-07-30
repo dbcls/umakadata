@@ -5,7 +5,11 @@ require 'uri'
 class Prefix < ActiveRecord::Base
 
   belongs_to :endpoint
-  validates :uri, format: URI::regexp(%w(http https ftp))
+  validates :uri, format: URI::regexp(%w(http https ftp)), allow_blank: true
+  validates :denied_uri, format: URI::regexp(%w(http https ftp)), allow_blank: true
+
+  class FormatError < StandardError
+  end
 
   def self.import_csv(params)
     prefixes = []
@@ -13,12 +17,22 @@ class Prefix < ActiveRecord::Base
       prefix = Prefix.new
       prefix.endpoint_id = params[:id]
       prefix.uri = NKF::nkf("-w", row[0].to_s)
+      prefix.denied_uri = NKF::nkf("-w", row[1].to_s)
+      case_sensitive = NKF::nkf("-w", row[2].to_s)
+      if case_sensitive.present?
+        if %w(true false).include?(case_sensitive)
+          prefix.case_sensitive = case_sensitive
+        else
+          raise FormatError.new("Failed to import: '#{case_sensitive}' is invalid as case sensitiveness. It must be true or false")
+        end
+      end
+
       unless prefix.valid?
-        return "Failed to import. #{prefix.uri} is invalid URI. URI must start with 'http://', 'https://' or 'ftp://'."
+        raise FormatError.new("Failed to import: #{prefix.errors.full_messages} URI must start with 'http://', 'https://' or 'ftp://'.")
       end
       prefixes.push(prefix)
     end
-    prefixes.each{|prefix| prefix.save}
+    prefixes.each{ |prefix| prefix.save }
     nil
   end
 
