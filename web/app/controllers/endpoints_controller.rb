@@ -76,6 +76,7 @@ class EndpointsController < ApplicationController
   def log
     evaluation = Evaluation.where(:id => params[:evaluation_id]).first
     @endpoint_id = evaluation.endpoint_id
+    @evaluation_id = params[:evaluation_id]
     json = nil
     case(params[:name])
       when 'alive' then
