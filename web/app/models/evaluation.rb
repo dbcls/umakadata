@@ -294,10 +294,8 @@ class Evaluation < ActiveRecord::Base
           end
           logger.result = "#{invalid.count} preixes are not HTTP/HTTPS URI"
         end
-        eval.subject_is_http_uri_log = logger.as_json
       else
         eval.subject_is_http_uri = retriever.http_subject?(eval.number_of_statements, logger: logger)
-        eval.subject_is_http_uri_log = logger.as_json
       end
     end.as_json
 
