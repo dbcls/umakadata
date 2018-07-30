@@ -2,7 +2,7 @@ module ApplicationHelper
 
   def showExecutionTime(content)
     if content.is_a?(Hash)
-      content_tag(:p, (content.has_key?('execution_time') ? "#{Time.parse(content['execution_time']['start'])} ~  #{Time.parse(content['execution_time']['end'])}" : ''))
+      content_tag(:p, (content.has_key?('execution_time') ? "#{Time.zone.parse(content['execution_time']['start'])} ~  #{Time.zone.parse(content['execution_time']['end'])}" : ''))
     end
   end
 
