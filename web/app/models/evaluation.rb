@@ -483,7 +483,6 @@ class Evaluation < ActiveRecord::Base
   def self.logger_with_time
     logger = Umakadata::Logging::Log.new
     logger.start_time = Time.now
-    return unless block_given?
 
     yield logger
     logger.end_time = Time.now
