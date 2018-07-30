@@ -1,7 +1,5 @@
 require 'rails_helper'
 
-include FactoryBot::Syntax::Methods
-
 #RSpec.describe Evaluation, type: :model do
 #  pending "add some examples to (or delete) #{__FILE__}"
 #end
