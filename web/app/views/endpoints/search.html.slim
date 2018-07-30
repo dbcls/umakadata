@@ -7,7 +7,7 @@
     h3.page-title-header Endpoint Search
 
     div.page-title-body
-      | You can search endpoints using REST API.
+      | You can search endpoints using REST API.&nbsp;
       | Please see&nbsp;
       a href="/api/specifications" this document
       | &nbsp;for more details.
@@ -25,21 +25,18 @@
                 .form-inline.col-xs-9
                   = text_field_tag :name, "", :class => 'form-control'
               .form-group.row
-                label.col-xs-3 Resource
-                .col-xs-9
-                  .form-group.row
-                    label.col-xs-3 Type
-                    .form-inline.col-xs-6
-                      label.radio-inline
-                        input[name="element_type" type="radio" value="subject" checked="CHECKED"]
-                        | Subject
-                      label.radio-inline
-                        input[name="element_type" type="radio" value="object"]
-                        | Object
-                  .form-group.row
-                    label.col-xs-3 Contained URI
-                    .form-inline.col-xs-6
-                      = text_field_tag :prefix_filter_uri, "", :class =>'form-control'
+                label.col-xs-3 Resource Type
+                .form-inline.col-xs-6
+                  label.radio-inline
+                    input[name="element_type" type="radio" value="subject" checked="CHECKED"]
+                    | Subject
+                  label.radio-inline
+                    input[name="element_type" type="radio" value="object"]
+                    | Object
+              .form-group.row
+                label.col-xs-3 Resource Contained URI
+                .form-inline.col-xs-9
+                  = text_field_tag :prefix_filter_uri, "", :class =>'form-control'
               .form-group.row
                 label.col-xs-3 For the day of
                 .form-inline.col-xs-9
@@ -53,38 +50,38 @@
                       todayHighlight: true
                     });
               .form-group.row
-                label.col-xs-3 Rank (A,B,C,D,E)
+                label.col-xs-3 Rank (A, B, C, D, E)
                 .form-inline.col-xs-9
                   = text_field_tag :rank, "", :class => 'form-control'
               .form-group.row
-                label.col-xs-3 Score (0-100)
+                label.col-xs-3 Score (0–100)
                 .form-inline.col-xs-9
                   = text_field_tag :score_lower, "", :class => 'form-control'
-                  span ~
+                  span –
                   = text_field_tag :score_upper, "", :class => 'form-control'
               .form-group.row
-                label.col-xs-3 Alive Rate (0-100)
+                label.col-xs-3 Alive Rate (0–100)
                 .form-inline.col-xs-9
                   = text_field_tag :alive_rate_lower, "", :class => 'form-control'
-                  span ~
+                  span –
                   = text_field_tag :alive_rate_upper, "", :class => 'form-control'
               .form-group.row
-                label.col-xs-3 Cool URI Rate (0-100)
+                label.col-xs-3 Cool URI Rate (0–100)
                 .form-inline.col-xs-9
                   = text_field_tag :cool_uri_rate_lower, "", :class => 'form-control'
-                  span ~
+                  span –
                   = text_field_tag :cool_uri_rate_upper, "", :class => 'form-control'
               .form-group.row
-                label.col-xs-3 Ontology (0-100)
+                label.col-xs-3 Ontology (0–100)
                 .form-inline.col-xs-9
                   = text_field_tag :ontology_lower, "", :class => 'form-control'
-                  span ~
+                  span –
                   = text_field_tag :ontology_upper, "", :class => 'form-control'
               .form-group.row
-                label.col-xs-3 Metadata Coverage (0-100)
+                label.col-xs-3 Metadata Coverage (0–100)
                 .form-inline.col-xs-9
                   = text_field_tag :metadata_lower, "", :class => 'form-control'
-                  span ~
+                  span –
                   = text_field_tag :metadata_upper, "", :class => 'form-control'
               .form-group.row
                 label.col-xs-3 Attributes
