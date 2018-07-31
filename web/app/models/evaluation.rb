@@ -227,15 +227,15 @@ class Evaluation < ActiveRecord::Base
     Prefix.where(endpoint_id: endpoint.id).each do |prefix|
       log = Umakadata::Logging::Log.new
       log_turtle.push log
-      eval.support_turtle_format &= retriever.check_content_negotiation(prefix.uri, Umakadata::DataFormat::TURTLE, logger: log)
+      eval.support_turtle_format &= retriever.check_content_negotiation(prefix.uri, prefix.denied_uri, prefix.case_sensitive, Umakadata::DataFormat::TURTLE, logger: log)
 
       log = Umakadata::Logging::Log.new
       log_xml.push log
-      eval.support_xml_format &= retriever.check_content_negotiation(prefix.uri, Umakadata::DataFormat::RDFXML, logger: log)
+      eval.support_xml_format &= retriever.check_content_negotiation(prefix.uri, prefix.denied_uri, prefix.case_sensitive, Umakadata::DataFormat::RDFXML, logger: log)
 
       log = Umakadata::Logging::Log.new
       log_html.push log
-      eval.support_html_format &= retriever.check_content_negotiation(prefix.uri, Umakadata::DataFormat::HTML, logger: log)
+      eval.support_html_format &= retriever.check_content_negotiation(prefix.uri, prefix.denied_uri, prefix.case_sensitive, Umakadata::DataFormat::HTML, logger: log)
     end
 
     log_turtle.result = "Some URI #{eval.support_turtle_format ? "" : "does not "}support content negotiation with #{Umakadata::DataFormat::TURTLE}"
