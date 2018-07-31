@@ -27,3 +27,7 @@ label.control-label {
   float: right;
   color: inherit;
 }
+
+.form-group {
+  margin-bottom: 5px;
+}
