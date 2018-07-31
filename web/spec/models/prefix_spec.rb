@@ -60,7 +60,7 @@ http://example1.com,http://denied_example1.com,invalid_as_boolean
       expect(Prefix.all.count).to eq 0
     end
 
-    it 'parses csv whose denied_uri and case_sensitive are omitted ' do
+    it 'parses csv whose denied_uri and case_sensitive are omitted' do
       str = <<-CSV
 URI,DENIED_URI,CASE_SENSITIVE
 http://example1.com
