@@ -12,8 +12,7 @@ class Prefix < ActiveRecord::Base
   end
 
   def self.import_csv(params)
-    prefixes = []
-    CSV.parse(params[:endpoint][:file].read, {headers: true}).each do |row|
+    prefixes = CSV.parse(params[:endpoint][:file].read, {headers: true}).map do |row|
       prefix = Prefix.new
       prefix.endpoint_id = params[:id]
       prefix.uri = NKF::nkf("-w", row[0].to_s)
@@ -30,7 +29,7 @@ class Prefix < ActiveRecord::Base
       unless prefix.valid?
         raise FormatError.new("Failed to import: #{prefix.errors.full_messages} URI must start with 'http://', 'https://' or 'ftp://'.")
       end
-      prefixes.push(prefix)
+      prefix
     end
     prefixes.each{ |prefix| prefix.save }
     nil
