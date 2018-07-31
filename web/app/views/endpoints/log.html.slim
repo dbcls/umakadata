@@ -1,10 +1,12 @@
 - content_for :header do
   = stylesheet_link_tag 'jquery.treetable'
   = stylesheet_link_tag 'jquery.treetable.theme.default'
+  = stylesheet_link_tag 'umakadata/log'
   = javascript_include_tag 'umakadata/log'
 
 .row
   .col-xs-12.col-sm-12.page-element
+    = link_to 'Back to endpoint', endpoint_path(@endpoint_id, @evaluation_id)
     h2.page-title-header
       | Logs
 
