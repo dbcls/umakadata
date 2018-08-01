@@ -11,7 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180801010115) do
+ActiveRecord::Schema.define(version: 20180801023536) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -119,6 +122,8 @@ ActiveRecord::Schema.define(version: 20180801010115) do
     t.text     "publisher"
     t.datetime "retrieved_at"
     t.integer  "crawl_log_id"
+    t.boolean  "support_service_clause"
+    t.text     "support_service_clause_log"
   end
 
   add_index "evaluations", ["created_at"], name: "index_evaluations_on_created_at", using: :btree
