@@ -5,7 +5,7 @@ require 'uri'
 class Prefix < ActiveRecord::Base
 
   belongs_to :endpoint
-  validates :uri, format: URI::regexp(%w(http https ftp)), allow_blank: true
+  validates :allowed_uri, format: URI::regexp(%w(http https ftp)), allow_blank: true
   validates :denied_uri, format: URI::regexp(%w(http https ftp)), allow_blank: true
 
   class FormatError < StandardError
@@ -15,7 +15,7 @@ class Prefix < ActiveRecord::Base
     prefixes = CSV.parse(params[:endpoint][:file].read, {headers: true}).map do |row|
       prefix = Prefix.new
       prefix.endpoint_id = params[:id]
-      prefix.uri = NKF::nkf("-w", row[0].to_s)
+      prefix.allowed_uri = NKF::nkf("-w", row[0].to_s)
       prefix.denied_uri = NKF::nkf("-w", row[1].to_s)
       case_sensitive = NKF::nkf("-w", row[2].to_s)
       if case_sensitive.present?

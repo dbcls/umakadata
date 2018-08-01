@@ -11,10 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180730071309) do
-
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+ActiveRecord::Schema.define(version: 20180801010115) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -137,7 +134,7 @@ ActiveRecord::Schema.define(version: 20180730071309) do
 
   create_table "prefixes", force: :cascade do |t|
     t.integer  "endpoint_id"
-    t.string   "uri"
+    t.string   "allowed_uri"
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
     t.string   "denied_uri"
