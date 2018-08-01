@@ -4,9 +4,11 @@ require 'uri'
 
 class Prefix < ActiveRecord::Base
 
+  FORMAT_VALIDATOR = { with: URI::regexp(%w(http https ftp)), message: "URI must start with 'http://', 'https://' or 'ftp://." }.freeze
+
   belongs_to :endpoint
-  validates :allowed_uri, format: URI::regexp(%w(http https ftp)), allow_blank: true
-  validates :denied_uri, format: URI::regexp(%w(http https ftp)), allow_blank: true
+  validates :allowed_uri, format: FORMAT_VALIDATOR, allow_blank: true
+  validates :denied_uri, format: FORMAT_VALIDATOR, allow_blank: true
   validate :uri_present
 
   class FormatError < StandardError
@@ -28,7 +30,7 @@ class Prefix < ActiveRecord::Base
       end
 
       unless prefix.valid?
-        raise FormatError.new("Failed to import: #{prefix.errors.full_messages} URI must start with 'http://', 'https://' or 'ftp://'.")
+        raise FormatError.new("Failed to import: #{prefix.errors.full_messages}")
       end
       prefix
     end
@@ -43,7 +45,6 @@ class Prefix < ActiveRecord::Base
     nil
   end
 
-
   private
 
   def uri_present
@@ -51,5 +52,4 @@ class Prefix < ActiveRecord::Base
       errors.add(:base, "At least one of allowed_uri and denied_uri must be present.")
     end
   end
-
 end

@@ -58,7 +58,7 @@ namespace :umakadata do
       puts file_path
       endpoint.prefixes.destroy_all
       CSV.foreach(file_path, { :headers => true }) do |row|
-        Prefix.create(:endpoint_id => endpoint.id, :uri => row[0])
+        Prefix.create(:endpoint_id => endpoint.id, :allowed_uri => row[0])
       end
     else
       puts endpoint.name
