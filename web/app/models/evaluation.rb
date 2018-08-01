@@ -109,7 +109,7 @@ class Evaluation < ActiveRecord::Base
 
     eval.alive_log = logger_with_time { |logger| eval.alive = retriever.alive?(logger: logger) }.as_json
 
-    eval.support_service_clause_log = logger_with_time { |logger| eval.support_service_clause = retriever.support?(logger: logger) }.as_json
+    eval.support_service_clause_log = logger_with_time { |logger| eval.support_service_clause = retriever.check_service_clause(logger: logger) }.as_json
 
     if eval.alive
       eval.support_graph_clause = retriever.support_graph_clause
