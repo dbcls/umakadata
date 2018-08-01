@@ -300,7 +300,7 @@ class Evaluation < ActiveRecord::Base
     end.as_json
 
     if eval.endpoint.prefixes.present?
-      prefixes = Prefix.where(endpoint_id: eval.endpoint_id).pluck(:uri)
+      prefixes = Prefix.where(endpoint_id: eval.endpoint_id).map{ |p| { allow: p.uri, deny: p.denied_uri, case_sensitive: p.case_sensitive } }
       eval.uri_provides_info_log = logger_with_time { |logger| eval.uri_provides_info = retriever.uri_provides_info?(prefixes, logger: logger) }.as_json
       eval.contains_links_log    = logger_with_time { |logger| eval.contains_links = retriever.contains_links?(prefixes, logger: logger) }.as_json
     end
