@@ -128,7 +128,7 @@ namespace :umakadata do
   task :export_prefixes, ['output_path'] => :environment do |task, args|
     path = args[:output_path]
     CSV.open(path, 'w') do |row|
-      columns = Prefix.columns.map(&:name).select{ |c| !%w(created_at updated_at).include?(c) }
+      columns = Prefix.columns.map(&:name).select{ |c| c != 'created_at' && c != 'updated_at' }
       row << columns
       Prefix.all.each { |prefix| row << columns.map{ |c| prefix[c] } }
     end
