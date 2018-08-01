@@ -7,6 +7,7 @@ class Prefix < ActiveRecord::Base
   belongs_to :endpoint
   validates :allowed_uri, format: URI::regexp(%w(http https ftp)), allow_blank: true
   validates :denied_uri, format: URI::regexp(%w(http https ftp)), allow_blank: true
+  validate :uri_present
 
   class FormatError < StandardError
   end
@@ -40,6 +41,15 @@ class Prefix < ActiveRecord::Base
       return 'CSV file is required'
     end
     nil
+  end
+
+
+  private
+
+  def uri_present
+    unless allowed_uri.present? || denied_uri.present?
+      errors.add(:base, "At least one of allowed_uri and denied_uri must be present.")
+    end
   end
 
 end
