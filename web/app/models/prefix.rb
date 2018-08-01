@@ -18,9 +18,9 @@ class Prefix < ActiveRecord::Base
     prefixes = CSV.parse(params[:endpoint][:file].read, {headers: true}).map do |row|
       prefix = Prefix.new
       prefix.endpoint_id = params[:id]
-      prefix.allowed_uri = NKF::nkf("-w", row[0].to_s)
-      prefix.denied_uri = NKF::nkf("-w", row[1].to_s)
-      case_sensitive = NKF::nkf("-w", row[2].to_s)
+      prefix.allowed_uri = NKF::nkf("-w", row['URI'].to_s)
+      prefix.denied_uri = NKF::nkf("-w", row['DENIED_URI'].to_s)
+      case_sensitive = NKF::nkf("-w", row['CASE_SENSITIVE'].to_s)
       if case_sensitive.present?
         if %w(true false).include?(case_sensitive)
           prefix.case_sensitive = case_sensitive

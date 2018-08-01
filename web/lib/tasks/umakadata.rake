@@ -57,9 +57,7 @@ namespace :umakadata do
     if !endpoint.nil? && File.exist?(file_path)
       puts file_path
       endpoint.prefixes.destroy_all
-      CSV.foreach(file_path, { :headers => true }) do |row|
-        Prefix.create(:endpoint_id => endpoint.id, :allowed_uri => row[0])
-      end
+      Prefix.import_csv({:id => endpoint.id, :endpoint => {:file => File.new(file_path)}})
     else
       puts endpoint.name
     end

@@ -4,21 +4,6 @@ RSpec.describe Prefix, type: :model do
 
   describe '#import_csv' do
 
-    it 'treats the first line of the CSV file as a header' do
-      str = <<-CSV
-http://example0.com,http://denied_example0.com,false
-http://example1.com,http://denied_example1.com,false
-http://example2.com,http://denied_example2.com,true
-      CSV
-
-      file = double(File)
-      allow(file).to receive(:read).and_return(str)
-      params = {:id => 1, :endpoint => {:file => file}}
-      Prefix.import_csv(params)
-      expect(Prefix.where(allowed_uri: 'http://example0.com').count).to eq 0
-      expect(Prefix.all.count).to eq 2
-    end
-
     it 'saves no prefix when there is only header line in the CSV file' do
       str = <<-CSV
 URI,DENIED_URI,CASE_SENSITIVE
@@ -99,6 +84,48 @@ http://example2.com,http://denied_example2.com,true
       expect(prefixes[1].case_sensitive).to eq(true)
     end
 
-  end
+    it 'can be parse csv whose columns are reordered' do
+      str = <<-CSV
+URI,CASE_SENSITIVE,DENIED_URI
+http://example1.com,false,http://denied_example1.com
+http://example2.com,true,http://denied_example2.com
+      CSV
+      file = double(File)
+      allow(file).to receive(:read).and_return(str)
+      params = {:id => 1, :endpoint => {:file => file}}
 
+      Prefix.import_csv(params)
+      prefixes= Prefix.all.to_a
+      expect(prefixes.count).to eq 2
+      expect(prefixes[0].allowed_uri).to eq 'http://example1.com'
+      expect(prefixes[0].denied_uri).to eq 'http://denied_example1.com'
+      expect(prefixes[0].case_sensitive).to eq(false)
+
+      expect(prefixes[1].allowed_uri).to eq 'http://example2.com'
+      expect(prefixes[1].denied_uri).to eq 'http://denied_example2.com'
+      expect(prefixes[1].case_sensitive).to eq(true)
+    end
+
+    it 'can be parse csv with redundant column ignoring them' do
+      str = <<-CSV
+URI,CASE_SENSITIVE,REDUNDANT,DENIED_URI
+http://example1.com,false,redundant,http://denied_example1.com
+http://example2.com,true,redundant,http://denied_example2.com
+      CSV
+      file = double(File)
+      allow(file).to receive(:read).and_return(str)
+      params = {:id => 1, :endpoint => {:file => file}}
+
+      Prefix.import_csv(params)
+      prefixes= Prefix.all.to_a
+      expect(prefixes.count).to eq 2
+      expect(prefixes[0].allowed_uri).to eq 'http://example1.com'
+      expect(prefixes[0].denied_uri).to eq 'http://denied_example1.com'
+      expect(prefixes[0].case_sensitive).to eq(false)
+
+      expect(prefixes[1].allowed_uri).to eq 'http://example2.com'
+      expect(prefixes[1].denied_uri).to eq 'http://denied_example2.com'
+      expect(prefixes[1].case_sensitive).to eq(true)
+    end
+  end
 end
