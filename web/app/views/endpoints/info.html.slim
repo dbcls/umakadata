@@ -81,6 +81,11 @@
                   = format_text(@supported_language)
               tr
                 td
+                  | Support for ServiceClause
+                td
+                  = @evaluation.support_service_clause.to_s
+              tr
+                td
                   .umakadata-tooltip
                     | Support for GraphClause
                     span.small
