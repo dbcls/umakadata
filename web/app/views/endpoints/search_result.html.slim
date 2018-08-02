@@ -1,0 +1,30 @@
+- content_for :header
+= stylesheet_link_tag 'umakadata/search'
+= javascript_include_tag 'umakadata/search'
+
+
+.row
+  .col-md-12.page-element
+    = render partial: "search_form", locals: { start_date: @start_date, date: @date, collapse: true }
+    #result
+      - if @endpoints.empty?
+        h4 No Endpoints are found
+      - else
+        .table-responsive
+          table.table.table-striped
+            thead
+              tr
+                th Name
+                th URL
+                th Score
+              - @endpoints.each do |endpoint|
+                tr
+                  td
+                    a[href="/endpoints/#{endpoint.id}/#{endpoint.evaluation.id}"]
+                      = endpoint.name
+                  td
+                    a[href=endpoint.url]
+                      = endpoint.url
+                  td
+                    = endpoint.evaluation.score
+            tbody#result_body

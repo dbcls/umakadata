@@ -61,6 +61,11 @@ class EndpointsController < ApplicationController
     @start_date = evaluation.retrieved_at.strftime('%d-%m-%Y')
   end
 
+  def search_result
+    self.search
+    @endpoints = SearchForm.new(request.query_parameters).search
+  end
+
   def show
     @endpoint_id = params[:id]
     @evaluation_id = params[:evaluation_id]

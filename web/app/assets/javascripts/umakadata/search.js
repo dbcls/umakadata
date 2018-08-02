@@ -24,8 +24,6 @@ $(document).ready(function() {
 });
 
 $(function () {
-  $("#result").hide();
-
   $("#search").keypress(function (e) {
     if (e.which === 13) {
       $("#search_button").click();
@@ -40,21 +38,7 @@ $(function () {
     $('#collapse').collapse('hide');
     var values = getInputValues();
     var params = createParams(values);
-    var url = "/api/endpoints/search/?" + params;
-    $.getJSON(url, function (data) {
-      $("#result").show();
-      var result_body = $("#result_body");
-      result_body.empty();
-      for (var i = 0; i < data.length; i++) {
-        var endpoint = data[i];
-        var row = $("<tr>");
-        row.append($("<td>").append($("<a>").attr("href", "/endpoints/" + endpoint.id + '/' + endpoint.evaluation.id).text(endpoint.name)));
-        row.append($("<td>").append($("<a>").attr("href", endpoint.url).text(endpoint.url)));
-        row.append($("<td>").text(endpoint.evaluation.score));
-        result_body.append(row);
-      }
-      $('#searching').modal('hide');
-    });
+    location.href = "/endpoints/search_result?" + params;
   });
 });
 
