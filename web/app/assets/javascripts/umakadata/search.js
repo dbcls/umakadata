@@ -4,12 +4,12 @@
 $(document).ready(function() {
   $("form#search").validate({
     rules: {
-      prefix_filter_uri: {
+      'search_form[prefix_filter_uri]': {
         url: true
       }
     },
     messages: {
-      prefix_filter_uri: {
+      'search_form[prefix_filter_uri]': {
         url: "Please enter a valid URI."
       }
     },
@@ -28,6 +28,13 @@ $(function () {
     if (e.which === 13) {
       $("#search_button").click();
     }
+  });
+  $("#search_button").on("click", function () {
+    if (!$("form#search").valid()) {
+      $('#searching').modal('hide');
+      return false;
+    }
+    $('#searching').modal('show');
   });
 });
 
