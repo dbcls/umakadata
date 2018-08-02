@@ -9,26 +9,28 @@ class SearchForm
   def search
     @endpoints = Endpoint.joins(:evaluation).eager_load(:evaluation).order('evaluations.score DESC')
     @endpoints = @endpoints.includes(:prefixes) unless prefix.blank?
-    self.add_like_condition_for_name_url(name) if !name.blank?
-    self.add_like_condition_for_prefix(prefix) if !prefix.blank?
-    self.add_date_condition(date.blank? ? Endpoint.get_last_crawled_date.to_s : date)
-    self.add_range_condition('evaluations.score', score_lower, score_upper)
-    self.add_range_condition('evaluations.alive_rate', alive_rate_lower, alive_rate_upper)
-    self.add_rank_condition('evaluations.rank', rank) if !rank.blank?
-    self.add_range_condition('evaluations.cool_uri_rate', cool_uri_rate_lower, cool_uri_rate_upper)
-    self.add_range_condition('evaluations.ontology', ontology_lower, ontology_upper)
-    self.add_range_condition('evaluations.metadata_score', metadata_lower, metadata_upper)
-    self.add_is_not_empty_condition('evaluations.service_description') if !service_description.blank?
-    self.add_is_not_empty_condition('evaluations.void_ttl') if !void.blank?
-    self.add_is_not_empty_condition('evaluations.support_content_negotiation') if !content_negotiation.blank?
-    self.add_is_not_empty_condition('evaluations.support_html_format') if !html.blank?
-    self.add_is_not_empty_condition('evaluations.support_turtle_format') if !turtle.blank?
-    self.add_is_not_empty_condition('evaluations.support_xml_format') if !xml.blank?
-    self.add_equal_condition_for_prefix_filter(element_type, prefix_filter_uri, prefix_filter_uri_fragment) if !element_type.blank? && !prefix_filter_uri.blank?
+    add_like_condition_for_name_url(name) if !name.blank?
+    add_like_condition_for_prefix(prefix) if !prefix.blank?
+    add_date_condition(date.blank? ? Endpoint.get_last_crawled_date.to_s : date)
+    add_range_condition('evaluations.score', score_lower, score_upper)
+    add_range_condition('evaluations.alive_rate', alive_rate_lower, alive_rate_upper)
+    add_rank_condition('evaluations.rank', rank) if !rank.blank?
+    add_range_condition('evaluations.cool_uri_rate', cool_uri_rate_lower, cool_uri_rate_upper)
+    add_range_condition('evaluations.ontology', ontology_lower, ontology_upper)
+    add_range_condition('evaluations.metadata_score', metadata_lower, metadata_upper)
+    add_is_not_empty_condition('evaluations.service_description') if !service_description.blank?
+    add_is_not_empty_condition('evaluations.void_ttl') if !void.blank?
+    add_is_true_condition('evaluations.support_content_negotiation') if !content_negotiation.blank?
+    add_is_true_condition('evaluations.support_html_format') if !html.blank?
+    add_is_true_condition('evaluations.support_turtle_format') if !turtle.blank?
+    add_is_true_condition('evaluations.support_xml_format') if !xml.blank?
+    add_equal_condition_for_prefix_filter(element_type, prefix_filter_uri, prefix_filter_uri_fragment) if !element_type.blank? && !prefix_filter_uri.blank?
+
 
     @endpoints
   end
 
+  private
 
   def add_like_condition_for_name_url(value)
     @endpoints = @endpoints.where("LOWER(name) LIKE ? OR LOWER(url) LIKE ?", "%#{value.downcase}%", "%#{value.downcase}%")
@@ -40,6 +42,10 @@ class SearchForm
 
   def add_is_not_empty_condition(column)
     @endpoints = @endpoints.where("#{column} IS NOT NULL AND #{column} <> ''")
+  end
+
+  def add_is_true_condition(column)
+    @endpoints = @endpoints.where(column => true)
   end
 
   def add_equal_condition(column, value)
@@ -107,7 +113,7 @@ class SearchForm
       subject = '?s'
       object = "<#{uri}>"
     end
-    query = <<-SPARQL
+    <<-SPARQL
 SELECT
   *
 WHERE

@@ -58,12 +58,15 @@ class EndpointsController < ApplicationController
     @date = date_param
     evaluation = Evaluation.first
     return nil if evaluation.nil?
-    @start_date = evaluation.retrieved_at.strftime('%d-%m-%Y')
+    @search_form = SearchForm.new
+    @search_form.date = evaluation.retrieved_at.strftime('%d-%m-%Y')
+    @search_form.element_type = 'subject'
   end
 
   def search_result
-    self.search
-    @endpoints = SearchForm.new(request.query_parameters).search
+    @date = date_param
+    @search_form = SearchForm.new(request.query_parameters[:search_form])
+    @endpoints = @search_form.search
   end
 
   def show
