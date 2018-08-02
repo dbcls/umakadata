@@ -19,24 +19,13 @@ RSpec.describe Endpoint, type: :model do
       expect(Endpoint.create_label(endpoint) ).to eq(label)
     end
 
-    it 'should return the trimmed label if label name is too long (maximum is 50 character)' do
-      endpoint = Endpoint.create(:id => 1, :name => 'Microbial Genome Database for Comparative Analysis (MBGD)', :url => 'http://www.example.com/sparql')
-      label    = double(Sawyer::Resource)
-
-      allow(label).to receive(:[]).with(:id).and_return(1)
-      allow(GithubHelper).to receive(:label_exists?).and_return(false)
-      allow(GithubHelper).to receive(:add_label).with('Microbial Genome Database for Comparative Analysis', anything).and_return(label)
-
-      expect(Endpoint.create_label(endpoint)).to eq(label)
-    end
-
     it 'should return label if label does not yet exist' do
       endpoint = Endpoint.create(:id => 1, :name => 'Endpoint 1', :url => 'http://www.example.com/sparql')
       label    = double(Sawyer::Resource)
 
       allow(label).to receive(:[]).with(:id).and_return(1)
       allow(GithubHelper).to receive(:label_exists?).and_return(nil)
-      allow(GithubHelper).to receive(:add_label).with(endpoint.name, anything).and_return(label)
+      allow(GithubHelper).to receive(:add_label).with(endpoint.id.to_s, anything).and_return(label)
 
       expect(Endpoint.create_label(endpoint)).to eq(label)
     end
@@ -82,19 +71,6 @@ RSpec.describe Endpoint, type: :model do
       allow(GithubHelper).to receive(:labels_for_issue).and_return([])
 
       expect { Endpoint.sync_label(endpoint) }.to raise_exception("issue for #{endpoint.name} does not have a label")
-    end
-
-    it 'is Success if endpoint.name is too long (maximum is 50 characters)' do
-      endpoint = Endpoint.create(:id => 1, :name => 'Microbial Genome Database for Comparative Analysis (MBGD)', :url => 'http://www.example.com/sparql', :label_id => 1)
-      label    = double(Sawyer::Resource)
-
-      allow(label).to receive(:[]).with(:id).and_return(1)
-      allow(label).to receive(:[]).with(:name).and_return('Microbial Genome Database for Comparative Analysis')
-
-      allow(GithubHelper).to receive(:labels_for_issue).and_return([label])
-      allow(GithubHelper).to receive(:update_label).and_return(nil)
-
-      expect { Endpoint.sync_label(endpoint) }.not_to raise_exception
     end
 
     it 'is Success if there is no problem for endpoint' do
