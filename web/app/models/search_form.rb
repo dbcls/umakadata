@@ -26,7 +26,6 @@ class SearchForm
     add_is_true_condition('evaluations.support_xml_format') if !xml.blank?
     add_equal_condition_for_prefix_filter(element_type, prefix_filter_uri, prefix_filter_uri_fragment) if !element_type.blank? && !prefix_filter_uri.blank?
 
-
     @endpoints
   end
 
@@ -84,8 +83,8 @@ class SearchForm
     domain = uri_obj.scheme + "://" + uri_obj.host
     prefix_filters = PrefixFilter.where(element_type: element_type).where('uri LIKE ?', "#{domain}%")
     endpoint_ids = prefix_filters.select{|prefix_filter| input_uri =~ /#{prefix_filter.uri}.*/}.map(&:endpoint_id)
-    self.add_equal_condition(:id, endpoint_ids)
-    self.filter_endpoints_with_sparql_query(element_type, input_uri)
+    add_equal_condition(:id, endpoint_ids)
+    filter_endpoints_with_sparql_query(element_type, input_uri)
   end
 
 
@@ -101,7 +100,7 @@ class SearchForm
         end
       end
     end
-    self.add_equal_condition(:id, endpoint_ids)
+    add_equal_condition(:id, endpoint_ids)
   end
 
   def create_filter_endpoints_query(element_type, uri)

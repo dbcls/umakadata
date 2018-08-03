@@ -65,7 +65,10 @@ class EndpointsController < ApplicationController
 
   def search_result
     @date = date_param
-    @search_form = SearchForm.new(request.query_parameters[:search_form])
+    search_params = request.query_parameters[:search_form]
+    search_params[:prefix_filter_uri], search_params[:prefix_filter_uri_fragment] =
+      search_params[:prefix_filter_uri].split('#')
+    @search_form = SearchForm.new(search_params)
     @endpoints = @search_form.search
   end
 

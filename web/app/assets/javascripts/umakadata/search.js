@@ -35,17 +35,6 @@ $(function () {
       return false;
     }
     $('#searching').modal('show');
+    $('#collapse').collapse('hide');
   });
 });
-
-// function splitFragmentIdentifier(params) {
-//   var domainUri = params['prefix_filter_uri'];
-//   if (domainUri !== "") {
-//     var splited = domainUri.split("#");
-//     if (splited[1] !== undefined) {
-//       params['prefix_filter_uri'] = splited[0];
-//       params['prefix_filter_uri_fragment'] = splited[1];
-//     }
-//   }
-//   return params;
-// }
