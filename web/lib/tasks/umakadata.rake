@@ -387,18 +387,17 @@ namespace :umakadata do
   desc "Update Linked Open Vocabularies"
   task :update_linked_open_vocabularies => :environment do
     puts 'Update Linked Open Vocabularies.'
-    list_ontologies = Umakadata::LinkedOpenVocabularies.instance.get(logger: nil)
+    logger = Umakadata::Logging::Log.new
+    list_ontologies = Umakadata::LinkedOpenVocabularies.instance.get(logger: logger)
+    if list_ontologies.empty?
+      puts 'Vocabulary list in LOV is not fetchable'
+    end
 
     lov = LinkedOpenVocabulary.first
-    begin
-      if lov.nil?
-        LinkedOpenVocabulary.create(:list_ontologies => list_ontologies)
-      else
-        lov.update_attribute(:list_ontologies, list_ontologies)
-      end
-    rescue => e
-      puts e.message
-      puts e.backtrace
+    if lov.nil?
+      LinkedOpenVocabulary.create(:list_ontologies => list_ontologies) unless list_ontologies.empty?
+    else
+      lov.update_attribute(:list_ontologies, list_ontologies) unless list_ontologies.empty?
     end
   end
 end
