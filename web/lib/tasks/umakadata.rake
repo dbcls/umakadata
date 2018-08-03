@@ -372,6 +372,24 @@ namespace :umakadata do
     sql = "DELETE FROM sessions WHERE (updated_at < '#{(DateTime.now - 1.hours).utc}')"
     ActiveRecord::Base.connection.execute(sql)
   end
+
+  desc "Update Linked Open Vocabularies"
+  task :update_linked_open_vocabularies => :environment do
+    puts 'Update Linked Open Vocabularies.'
+    list_ontologies = Umakadata::LinkedOpenVocabularies.instance.get(logger: nil)
+
+    lov = LinkedOpenVocabulary.first
+    begin
+      if lov.nil?
+        LinkedOpenVocabulary.create(:list_ontologies => list_ontologies)
+      else
+        lov.update_attribute(:list_ontologies, list_ontologies)
+      end
+    rescue => e
+      puts e.message
+      puts e.backtrace
+    end
+  end
 end
 
 namespace :sbmeta do
