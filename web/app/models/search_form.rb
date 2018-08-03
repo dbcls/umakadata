@@ -16,7 +16,7 @@ class SearchForm
     add_range_condition('evaluations.alive_rate', alive_rate_lower, alive_rate_upper)
     add_rank_condition('evaluations.rank', rank) if !rank.blank?
     add_range_condition('evaluations.cool_uri_rate', cool_uri_rate_lower, cool_uri_rate_upper)
-    add_range_condition('evaluations.ontology', ontology_lower, ontology_upper)
+    add_range_condition('evaluations.ontology_score', ontology_lower, ontology_upper)
     add_range_condition('evaluations.metadata_score', metadata_lower, metadata_upper)
     add_is_not_empty_condition('evaluations.service_description') if !service_description.blank?
     add_is_not_empty_condition('evaluations.void_ttl') if !void.blank?
@@ -24,7 +24,7 @@ class SearchForm
     add_is_true_condition('evaluations.support_html_format') if !html.blank?
     add_is_true_condition('evaluations.support_turtle_format') if !turtle.blank?
     add_is_true_condition('evaluations.support_xml_format') if !xml.blank?
-    add_equal_condition_for_prefix_filter(element_type, prefix_filter_uri, prefix_filter_uri_fragment) if !element_type.blank? && !prefix_filter_uri.blank?
+    add_equal_condition_for_prefix_filter(element_type, prefix_filter_uri, prefix_filter_uri_fragment) if element_type.present? && prefix_filter_uri.present?
 
     @endpoints
   end
@@ -36,7 +36,7 @@ class SearchForm
   end
 
   def add_like_condition_for_prefix(value)
-    @endpoints = @endpoints.where("LOWER(prefixes.uri) LIKE ?", "%#{value.downcase}%")
+    @endpoints = @endpoints.where("LOWER(prefixes.allowed_uri) LIKE ?", "%#{value.downcase}%")
   end
 
   def add_is_not_empty_condition(column)
