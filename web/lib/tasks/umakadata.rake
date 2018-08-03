@@ -395,7 +395,7 @@ namespace :umakadata do
 
     lov = LinkedOpenVocabulary.first
     if lov.nil?
-      LinkedOpenVocabulary.create(:list_ontologies => list_ontologies) unless list_ontologies.empty?
+      LinkedOpenVocabulary.create(:list_ontologies => list_ontologies)
     else
       lov.update_attribute(:list_ontologies, list_ontologies) unless list_ontologies.empty?
     end
