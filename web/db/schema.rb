@@ -139,9 +139,11 @@ ActiveRecord::Schema.define(version: 20180801023536) do
 
   create_table "prefixes", force: :cascade do |t|
     t.integer  "endpoint_id"
-    t.string   "uri"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.string   "allowed_uri"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.string   "denied_uri"
+    t.boolean  "case_sensitive", default: true, null: false
   end
 
   create_table "rdf_prefixes", force: :cascade do |t|

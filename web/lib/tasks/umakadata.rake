@@ -57,9 +57,7 @@ namespace :umakadata do
     if !endpoint.nil? && File.exist?(file_path)
       puts file_path
       endpoint.prefixes.destroy_all
-      CSV.foreach(file_path, { :headers => true }) do |row|
-        Prefix.create(:endpoint_id => endpoint.id, :uri => row[0])
-      end
+      Prefix.import_csv({:id => endpoint.id, :endpoint => {:file => File.new(file_path)}})
     else
       puts endpoint.name
     end
@@ -130,8 +128,9 @@ namespace :umakadata do
   task :export_prefixes, ['output_path'] => :environment do |task, args|
     path = args[:output_path]
     CSV.open(path, 'w') do |row|
-      row << %w(id endpoint_id uri)
-      Prefix.all.each { |prefix| row << %W(#{prefix.id} #{prefix.endpoint_id} #{prefix.uri}) }
+      columns = Prefix.columns.map(&:name).select{ |c| c != 'created_at' && c != 'updated_at' }
+      row << columns
+      Prefix.all.each { |prefix| row << columns.map{ |c| prefix[c] } }
     end
   end
 

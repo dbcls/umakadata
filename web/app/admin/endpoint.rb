@@ -161,4 +161,16 @@ ActiveAdmin.register Endpoint do
     end
     redirect_to collection_path, alert: message
   end
+
+  batch_action :sync_label do |ids|
+    message = 'The endpoints have synchronized label for issue'
+    batch_action_collection.find(ids).each do |endpoint|
+      begin
+        Endpoint.sync_label(endpoint)
+      rescue => e
+        message = e.message
+      end
+    end
+    redirect_to collection_path, alert: message
+  end
 end
