@@ -163,6 +163,10 @@ namespace :umakadata do
     if crawl_log.blank?
       crawl_log = CrawlLog.create(started_at: time)
     end
+
+    Rake::Task["umakadata:update_linked_open_vocabularies"].execute
+    list_of_ontologies_in_LOV =  LinkedOpenVocabulary.first.list_ontologies
+
     rdf_prefixes = RdfPrefix.all.pluck(:id, :endpoint_id, :uri)
     Endpoint.all.order("id #{args[:order]}").each do |endpoint|
       next if endpoint.disable_crawling
@@ -176,7 +180,7 @@ namespace :umakadata do
       puts endpoint.name
       begin
         retriever  = Umakadata::Retriever.new endpoint.url, time
-        evaluation = Evaluation.record(endpoint, retriever, rdf_prefixes_candidates)
+        evaluation = Evaluation.record(endpoint, retriever, rdf_prefixes_candidates, list_of_ontologies_in_LOV)
         evaluation.update_column(:crawl_log_id, crawl_log.id) unless evaluation.nil?
       rescue => e
         puts e.message
@@ -203,9 +207,12 @@ namespace :umakadata do
 
       rdf_prefixes_candidates = RdfPrefix.where.not(endpoint_id: endpoint.id).pluck(:uri)
 
+      Rake::Task["umakadata:update_linked_open_vocabularies"].execute
+      list_of_ontologies_in_LOV =  LinkedOpenVocabulary.first.list_ontologies
+
       begin
         retriever  = Umakadata::Retriever.new endpoint.url, Time.zone.parse(start_time)
-        evaluation = Evaluation.record(endpoint, retriever, rdf_prefixes_candidates)
+        evaluation = Evaluation.record(endpoint, retriever, rdf_prefixes_candidates, list_of_ontologies_in_LOV)
         evaluation.update_column(:crawl_log_id, crawl_log.id) unless evaluation.nil?
       rescue => e
         puts e.message
@@ -248,8 +255,12 @@ namespace :umakadata do
       prefix = rdf_prefix[1] != endpoint.id ? rdf_prefix[2] : nil
       rdf_prefixes_candidates.push prefix unless prefix.nil?
     end
+
+    Rake::Task["umakadata:update_linked_open_vocabularies"].execute
+    list_of_ontologies_in_LOV =  LinkedOpenVocabulary.first.list_ontologies
+
     retriever = Umakadata::Retriever.new endpoint.url, Time.zone.now
-    Evaluation.record(endpoint, retriever, rdf_prefixes_candidates)
+    Evaluation.record(endpoint, retriever, rdf_prefixes_candidates, list_of_ontologies_in_LOV)
   end
 
   desc "test for checking retriever method all endpoints"
