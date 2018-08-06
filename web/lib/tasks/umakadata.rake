@@ -165,7 +165,7 @@ namespace :umakadata do
     end
 
     Rake::Task["umakadata:update_linked_open_vocabularies"].execute
-    list_of_ontologies_in_LOV =  LinkedOpenVocabulary.first.list_ontologies
+    list_of_ontologies_in_LOV = LinkedOpenVocabulary.all.pluck(:uri)
 
     rdf_prefixes = RdfPrefix.all.pluck(:id, :endpoint_id, :uri)
     Endpoint.all.order("id #{args[:order]}").each do |endpoint|
@@ -208,7 +208,7 @@ namespace :umakadata do
       rdf_prefixes_candidates = RdfPrefix.where.not(endpoint_id: endpoint.id).pluck(:uri)
 
       Rake::Task["umakadata:update_linked_open_vocabularies"].execute
-      list_of_ontologies_in_LOV =  LinkedOpenVocabulary.first.list_ontologies
+      list_of_ontologies_in_LOV = LinkedOpenVocabulary.all.pluck(:uri)
 
       begin
         retriever  = Umakadata::Retriever.new endpoint.url, Time.zone.parse(start_time)
@@ -257,7 +257,7 @@ namespace :umakadata do
     end
 
     Rake::Task["umakadata:update_linked_open_vocabularies"].execute
-    list_of_ontologies_in_LOV =  LinkedOpenVocabulary.first.list_ontologies
+    list_of_ontologies_in_LOV = LinkedOpenVocabulary.all.pluck(:uri)
 
     retriever = Umakadata::Retriever.new endpoint.url, Time.zone.now
     Evaluation.record(endpoint, retriever, rdf_prefixes_candidates, list_of_ontologies_in_LOV)
@@ -386,18 +386,14 @@ namespace :umakadata do
 
   desc "Update Linked Open Vocabularies"
   task :update_linked_open_vocabularies => :environment do
-    puts 'Update Linked Open Vocabularies.'
     logger = Umakadata::Logging::Log.new
     list_ontologies = Umakadata::LinkedOpenVocabularies.instance.get(logger: logger)
     if list_ontologies.empty?
       puts 'Vocabulary list in LOV is not fetchable'
-    end
-
-    lov = LinkedOpenVocabulary.first
-    if lov.nil?
-      LinkedOpenVocabulary.create(:list_ontologies => list_ontologies)
     else
-      lov.update_attribute(:list_ontologies, list_ontologies) unless list_ontologies.empty?
+      puts 'Update Linked Open Vocabularies.'
+      LinkedOpenVocabulary.delete_all
+      list_ontologies.each { |uri| LinkedOpenVocabulary.create(:uri => uri) }
     end
   end
 end
