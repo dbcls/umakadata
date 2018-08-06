@@ -90,17 +90,17 @@ class Evaluation < ActiveRecord::Base
     self.where('retrieved_at > ?', retrieved_at).where(endpoint_id: endpoint_id).order('retrieved_at ASC').first
   end
 
-  def self.record(endpoint, retriever, rdf_prefixes)
+  def self.record(endpoint, retriever, rdf_prefixes, list_of_ontologies_in_LOV)
     self.transaction do
       self.where(endpoint_id: endpoint.id).update_all("latest = false")
-      self.retrieve_and_record endpoint, retriever, rdf_prefixes
+      self.retrieve_and_record endpoint, retriever, rdf_prefixes, list_of_ontologies_in_LOV
     end
     rescue => e
     puts e.message
     puts e.backtrace
   end
 
-  def self.retrieve_and_record(endpoint, retriever, rdf_prefixes)
+  def self.retrieve_and_record(endpoint, retriever, rdf_prefixes, list_of_ontologies_in_LOV)
     eval = Evaluation.new
     eval.endpoint_id = endpoint.id
     eval.retrieved_at = retriever.retrieved_at
@@ -150,11 +150,7 @@ class Evaluation < ActiveRecord::Base
             rdf_prefix.save
           end
 
-          list_of_ontologies_in_LOV_log = Umakadata::Logging::Log.new
-          list_of_ontologies_in_LOV = retriever.list_ontologies_in_LOV(metadata, logger: list_of_ontologies_in_LOV_log)
-
           score_ontologies_for_LOV_log = Umakadata::Logging::Log.new
-          score_ontologies_for_LOV_log.push list_of_ontologies_in_LOV_log
           logger.push score_ontologies_for_LOV_log
 
           score_LOV = retriever.score_ontologies_for_LOV(list_of_ontologies, list_of_ontologies_in_LOV, logger: score_ontologies_for_LOV_log)
