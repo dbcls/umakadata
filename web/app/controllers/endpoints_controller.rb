@@ -8,7 +8,7 @@ class EndpointsController < ApplicationController
   include Umakadata::DataFormat
 
   before_action :set_endpoint, only: [:info]
-  before_action :set_start_date, only: [:index, :top, :show]
+  before_action :set_start_date, only: [:index, :top, :show, :search, :search_result]
 
   def index
     @date = date_param
@@ -55,16 +55,12 @@ class EndpointsController < ApplicationController
   end
 
   def search
-    @date = date_param
-    evaluation = Evaluation.first
-    return nil if evaluation.nil?
     @search_form = SearchForm.new
-    @search_form.date = evaluation.retrieved_at.strftime('%d-%m-%Y')
+    @search_form.date = date_param.strftime('%d-%m-%Y')
     @search_form.element_type = 'subject'
   end
 
   def search_result
-    @date = date_param
     search_params = request.query_parameters[:search_form]
     search_params[:prefix_filter_uri], search_params[:prefix_filter_uri_fragment] =
       search_params[:prefix_filter_uri].split('#')

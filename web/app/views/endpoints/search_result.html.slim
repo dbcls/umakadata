@@ -5,7 +5,7 @@
 
 .row
   .col-md-12.page-element
-    = render partial: "search_form", locals: { start_date: @start_date, date: @date, search_form: @search_form, collapse: true }
+    = render partial: "search_form", locals: { start_date: @start_date, search_form: @search_form, collapse: true }
     #result
       - if @endpoints.empty?
         h4 No Endpoints are found
