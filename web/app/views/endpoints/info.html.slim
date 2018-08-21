@@ -30,7 +30,7 @@
           - unless @endpoint.issue_id.nil?
             h2.page-title-header
               | Forum
-            a href="https://github.com/#{Rails.application.secrets.github_repo}/issues?q=is:open+label:%22#{@endpoint.name.gsub(",", "")}%22"
+            a href="https://github.com/#{Rails.application.secrets.github_repo}/issues?q=is:open+label:%22#{@endpoint.id.to_s}%22"
               = "Discussion About #{@endpoint.name}"
             br
             br
