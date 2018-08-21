@@ -10,7 +10,7 @@ class IssuesController < ApplicationController
     session[:issue_info] = {
         'title' => @issue.title,
         'description' => @issue.description,
-        'endpoint_name' => @endpoint.name,
+        'endpoint_name' => @endpoint.id.to_s,
     }
     session[:prev_url] = request.referer
     redirect_to '/auth/github'
