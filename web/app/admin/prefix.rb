@@ -6,8 +6,8 @@ ActiveAdmin.register Prefix do
     selectable_column
     id_column
     column :endpoint
-    column :allowed_uri
-    column :denied_uri
+    column :allow_regex
+    column :deny_regex
     column :case_sensitive
     column :created_at
     column :updated_at
@@ -17,8 +17,8 @@ ActiveAdmin.register Prefix do
   csv do
     column :id
     column :endpoint_id
-    column :allowed_uri
-    column :denied_uri
+    column :allow_regex
+    column :deny_regex
     column :case_sensitive
     column :created_at
     column :updated_at

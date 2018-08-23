@@ -8,7 +8,7 @@ RSpec.describe SearchForm, type: :model do
       create(:evaluation, endpoint_id: 1, retrieved_at: DateTime.parse('2018-08-01'),
                         score: 80, alive_rate: 0.5, rank: 5, cool_uri_rate: 55,
                         ontology_score: 45, metadata_score: 62)
-      create(:prefix, endpoint_id: 1, allowed_uri: 'http://purl.example.com/')
+      create(:prefix, endpoint_id: 1, allow_regex: 'http://purl.example.com/')
     end
 
     context 'by name' do
