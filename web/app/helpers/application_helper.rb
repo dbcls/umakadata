@@ -2,7 +2,10 @@ module ApplicationHelper
 
   def showExecutionTime(content)
     if content.is_a?(Hash)
-      content_tag(:p, (content.has_key?('execution_time') ? "#{Time.zone.parse(content['execution_time']['start'])}–#{Time.zone.parse(content['execution_time']['end'])}" : ''))
+      content_tag(:div) do
+        concat content_tag(:p, (content.has_key?('execution_time') ? "Started at:  #{Time.zone.parse(content['execution_time']['start'])}" : ''))
+        concat content_tag(:p, (content.has_key?('execution_time') ? "Finished at: #{Time.zone.parse(content['execution_time']['end'])}" : ''))
+      end
     end
   end
 
