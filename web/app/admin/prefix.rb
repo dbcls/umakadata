@@ -24,4 +24,14 @@ ActiveAdmin.register Prefix do
     column :updated_at
   end
 
+  controller do
+    def create
+      super do |success, failure|
+        success.html {
+          flash[:notice] = "Prefix was successfully added."
+          redirect_to action: 'edit', id: Prefix.last.id
+        }
+      end
+    end
+  end
 end
