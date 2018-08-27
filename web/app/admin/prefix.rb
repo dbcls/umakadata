@@ -1,6 +1,6 @@
 ActiveAdmin.register Prefix do
 
-  permit_params :endpoint_id, :allowed_uri, :denied_uri, :case_sensitive
+  permit_params :endpoint_id, :allow_regex, :deny_regex, :case_sensitive
 
   index do
     selectable_column

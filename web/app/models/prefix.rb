@@ -49,7 +49,7 @@ class Prefix < ActiveRecord::Base
 
   def uri_present
     unless allow_regex.present? || deny_regex.present?
-      errors.add(:base, "At least one of allowed_uri and denied_uri must be present.")
+      errors.add(:base, "At least one of allow_regex and deny_regex must be present.")
     end
   end
 end
