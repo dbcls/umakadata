@@ -423,20 +423,31 @@ class EndpointsController < ApplicationController
         data_entries: {count: 0, variation: 0}
       }
       return metrics if CrawlLog.latest.blank?
-      date = CrawlLog.latest.started_at
-      latest_crawllog_id = CrawlLog.latest.id
+
+      crawllog_today     = CrawlLog.last
+      crawllog_yesterday = (crawllog_today.id - 1 > 0) ? CrawlLog.find(crawllog_today.id - 1) : CrawlLog.first
+      crawllog_last_week = (crawllog_today.id - 7 > 0) ? CrawlLog.find(crawllog_today.id - 7) : CrawlLog.first
 
       metrics[:data_collection][:count] = CrawlLog.where.not(finished_at: nil).count
-      metrics[:data_collection][:variation] = ((Time.zone.now - date) / 3600 / 24).round(0)
-      number_of_endpoints_last_week = Endpoint.where('disable_crawling = ? AND created_at < ?', false, date.ago(7.days).beginning_of_day).count
-      metrics[:no_of_endpoints][:count] = Endpoint.where('disable_crawling = ?', false).count
+      metrics[:data_collection][:variation] = ((Time.zone.now - crawllog_today.started_at) / 3600 / 24).round(0)
+
+      number_of_endpoints_last_week         = Endpoint.where('disable_crawling = ? AND created_at < ?', false, crawllog_last_week.finished_at).count
+      metrics[:no_of_endpoints][:count]     = Endpoint.where('disable_crawling = ?', false).count
       metrics[:no_of_endpoints][:variation] = metrics[:no_of_endpoints][:count] - number_of_endpoints_last_week
-      metrics[:active_endpoints][:count] = Evaluation.where(crawl_log_id: latest_crawllog_id, alive: true).count(:endpoint_id)
-      metrics[:active_endpoints][:variation] = metrics[:active_endpoints][:count] - Evaluation.where(crawl_log_id: latest_crawllog_id-1, alive: true).count(:endpoint_id) if latest_crawllog_id - 1 > 0
-      metrics[:alive_rates][:count] = ((metrics[:active_endpoints][:count].to_f / metrics[:no_of_endpoints][:count].to_f) * 100).round(0)
-      metrics[:alive_rates][:variation] = metrics[:alive_rates][:count] - ((Evaluation.where(crawl_log_id: latest_crawllog_id-7, alive: true).count(:endpoint_id).to_f / number_of_endpoints_last_week.to_f) * 100).round(0) if number_of_endpoints_last_week > 0 && latest_crawllog_id-7 > 0
-      metrics[:data_entries][:count] = Evaluation.where(crawl_log_id: latest_crawllog_id).sum(:number_of_statements)
-      metrics[:data_entries][:variation] = metrics[:data_entries][:count] - Evaluation.where(crawl_log_id: latest_crawllog_id-1).sum(:number_of_statements) if latest_crawllog_id-1 > 0
+
+      active_endpoints_yesterday             = Evaluation.where(created_at: crawllog_yesterday.started_at..crawllog_yesterday.finished_at, alive: true).count(:endpoint_id)
+      metrics[:active_endpoints][:count]     = Evaluation.where(created_at: crawllog_today.started_at.all_day, alive: true).count(:endpoint_id)
+      metrics[:active_endpoints][:variation] = metrics[:active_endpoints][:count] - active_endpoints_yesterday
+
+      active_endpoints_last_week        = Evaluation.where(created_at: crawllog_last_week.started_at..crawllog_last_week.finished_at, alive: true).count(:endpoint_id)
+      alive_rates_last_week             = ((active_endpoints_last_week.to_f / number_of_endpoints_last_week.to_f) * 100).round(0) if number_of_endpoints_last_week > 0
+      metrics[:alive_rates][:count]     = ((metrics[:active_endpoints][:count].to_f / metrics[:no_of_endpoints][:count].to_f) * 100).round(0)
+      metrics[:alive_rates][:variation] = metrics[:alive_rates][:count] - alive_rates_last_week
+
+      data_entries_yesterday             = Evaluation.where(created_at: crawllog_yesterday.started_at..crawllog_yesterday.finished_at).sum(:number_of_statements)
+      metrics[:data_entries][:count]     = Evaluation.where(created_at: crawllog_today.started_at.all_day).sum(:number_of_statements)
+      metrics[:data_entries][:variation] = metrics[:data_entries][:count] - data_entries_yesterday
+
       metrics
     end
 end
