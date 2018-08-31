@@ -440,9 +440,8 @@ class EndpointsController < ApplicationController
       metrics[:active_endpoints][:variation] = metrics[:active_endpoints][:count] - active_endpoints_yesterday
 
       active_endpoints_last_week        = Evaluation.where(created_at: crawllog_last_week.started_at..crawllog_last_week.finished_at, alive: true).count(:endpoint_id)
-      alive_rates_last_week             = ((active_endpoints_last_week.to_f / number_of_endpoints_last_week.to_f) * 100).round(0) if number_of_endpoints_last_week > 0
       metrics[:alive_rates][:count]     = ((metrics[:active_endpoints][:count].to_f / metrics[:no_of_endpoints][:count].to_f) * 100).round(0)
-      metrics[:alive_rates][:variation] = metrics[:alive_rates][:count] - alive_rates_last_week
+      metrics[:alive_rates][:variation] = metrics[:alive_rates][:count] - ((active_endpoints_last_week.to_f / number_of_endpoints_last_week.to_f) * 100).round(0) if number_of_endpoints_last_week > 0
 
       data_entries_yesterday             = Evaluation.where(created_at: crawllog_yesterday.started_at..crawllog_yesterday.finished_at).sum(:number_of_statements)
       metrics[:data_entries][:count]     = Evaluation.where(created_at: crawllog_today.started_at..crawllog_today.finished_at).sum(:number_of_statements)
