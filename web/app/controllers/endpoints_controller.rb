@@ -432,11 +432,11 @@ class EndpointsController < ApplicationController
       metrics[:data_collection][:variation] = ((Time.zone.now - crawllog_today.started_at) / 3600 / 24).round(0)
 
       number_of_endpoints_last_week         = Endpoint.where('disable_crawling = ? AND created_at < ?', false, crawllog_last_week.finished_at).count
-      metrics[:no_of_endpoints][:count]     = Endpoint.where('disable_crawling = ?', false).count
+      metrics[:no_of_endpoints][:count]     = Endpoint.where('disable_crawling = ? AND created_at < ?', false, crawllog_today.finished_at).count
       metrics[:no_of_endpoints][:variation] = metrics[:no_of_endpoints][:count] - number_of_endpoints_last_week
 
       active_endpoints_yesterday             = Evaluation.where(created_at: crawllog_yesterday.started_at..crawllog_yesterday.finished_at, alive: true).count(:endpoint_id)
-      metrics[:active_endpoints][:count]     = Evaluation.where(created_at: crawllog_today.started_at.all_day, alive: true).count(:endpoint_id)
+      metrics[:active_endpoints][:count]     = Evaluation.where(created_at: crawllog_today.started_at..crawllog_today.finished_at, alive: true).count(:endpoint_id)
       metrics[:active_endpoints][:variation] = metrics[:active_endpoints][:count] - active_endpoints_yesterday
 
       active_endpoints_last_week        = Evaluation.where(created_at: crawllog_last_week.started_at..crawllog_last_week.finished_at, alive: true).count(:endpoint_id)
@@ -445,7 +445,7 @@ class EndpointsController < ApplicationController
       metrics[:alive_rates][:variation] = metrics[:alive_rates][:count] - alive_rates_last_week
 
       data_entries_yesterday             = Evaluation.where(created_at: crawllog_yesterday.started_at..crawllog_yesterday.finished_at).sum(:number_of_statements)
-      metrics[:data_entries][:count]     = Evaluation.where(created_at: crawllog_today.started_at.all_day).sum(:number_of_statements)
+      metrics[:data_entries][:count]     = Evaluation.where(created_at: crawllog_today.started_at..crawllog_today.finished_at).sum(:number_of_statements)
       metrics[:data_entries][:variation] = metrics[:data_entries][:count] - data_entries_yesterday
 
       metrics
