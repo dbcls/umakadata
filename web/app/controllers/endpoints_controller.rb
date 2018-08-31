@@ -424,7 +424,7 @@ class EndpointsController < ApplicationController
       }
       return metrics if CrawlLog.latest.blank?
 
-      crawllog_today     = CrawlLog.last
+      crawllog_today     = CrawlLog.latest
       crawllog_yesterday = (crawllog_today.id - 1 > 0) ? CrawlLog.find(crawllog_today.id - 1) : CrawlLog.first
       crawllog_last_week = (crawllog_today.id - 7 > 0) ? CrawlLog.find(crawllog_today.id - 7) : CrawlLog.first
 
