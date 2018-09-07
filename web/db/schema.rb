@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180802025150) do
+ActiveRecord::Schema.define(version: 20180822084305) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -145,10 +145,10 @@ ActiveRecord::Schema.define(version: 20180802025150) do
 
   create_table "prefixes", force: :cascade do |t|
     t.integer  "endpoint_id"
-    t.string   "allowed_uri"
+    t.string   "allow_regex"
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
-    t.string   "denied_uri"
+    t.string   "deny_regex"
     t.boolean  "case_sensitive", default: true, null: false
   end
 

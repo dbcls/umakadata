@@ -7,8 +7,8 @@ class Prefix < ActiveRecord::Base
   FORMAT_VALIDATOR = { with: URI::regexp(%w(http https ftp)), message: "URI must start with 'http://', 'https://' or 'ftp://." }.freeze
 
   belongs_to :endpoint
-  validates :allowed_uri, format: FORMAT_VALIDATOR, allow_blank: true
-  validates :denied_uri, format: FORMAT_VALIDATOR, allow_blank: true
+  validates :allow_regex, format: FORMAT_VALIDATOR, allow_blank: true
+  validates :deny_regex, format: FORMAT_VALIDATOR, allow_blank: true
   validate :uri_present
 
   class FormatError < StandardError
@@ -18,8 +18,8 @@ class Prefix < ActiveRecord::Base
     prefixes = CSV.parse(params[:endpoint][:file].read, {headers: true}).map do |row|
       prefix = Prefix.new
       prefix.endpoint_id = params[:id]
-      prefix.allowed_uri = NKF::nkf("-w", row['URI'].to_s)
-      prefix.denied_uri = NKF::nkf("-w", row['DENIED_URI'].to_s)
+      prefix.allow_regex = NKF::nkf("-w", row['URI'].to_s)
+      prefix.deny_regex = NKF::nkf("-w", row['DENIED_URI'].to_s)
       case_sensitive = NKF::nkf("-w", row['CASE_SENSITIVE'].to_s)
       if case_sensitive.present?
         if %w(true false).include?(case_sensitive)
@@ -48,8 +48,8 @@ class Prefix < ActiveRecord::Base
   private
 
   def uri_present
-    unless allowed_uri.present? || denied_uri.present?
-      errors.add(:base, "At least one of allowed_uri and denied_uri must be present.")
+    unless allow_regex.present? || deny_regex.present?
+      errors.add(:base, "At least one of allow_regex and deny_regex must be present.")
     end
   end
 end

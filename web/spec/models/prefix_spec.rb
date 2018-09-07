@@ -13,7 +13,7 @@ URI,DENIED_URI,CASE_SENSITIVE
       allow(file).to receive(:read).and_return(str)
       params = {:id => 1, :endpoint => {:file => file}}
       Prefix.import_csv(params)
-      expect(Prefix.where(allowed_uri: 'URI').count).to eq 0
+      expect(Prefix.where(allow_regex: 'URI').count).to eq 0
       expect(Prefix.all.count).to eq 0
     end
 
@@ -57,8 +57,8 @@ http://example1.com
       Prefix.import_csv(params)
       prefixes= Prefix.all.to_a
       expect(prefixes.count).to eq 1
-      expect(prefixes[0].allowed_uri).to eq 'http://example1.com'
-      expect(prefixes[0].denied_uri).to eq('')
+      expect(prefixes[0].allow_regex).to eq 'http://example1.com'
+      expect(prefixes[0].deny_regex).to eq('')
       expect(prefixes[0].case_sensitive).to eq(true)
     end
 
@@ -75,12 +75,12 @@ http://example2.com,http://denied_example2.com,true
       Prefix.import_csv(params)
       prefixes= Prefix.all.to_a
       expect(prefixes.count).to eq 2
-      expect(prefixes[0].allowed_uri).to eq 'http://example1.com'
-      expect(prefixes[0].denied_uri).to eq 'http://denied_example1.com'
+      expect(prefixes[0].allow_regex).to eq 'http://example1.com'
+      expect(prefixes[0].deny_regex).to eq 'http://denied_example1.com'
       expect(prefixes[0].case_sensitive).to eq(false)
 
-      expect(prefixes[1].allowed_uri).to eq 'http://example2.com'
-      expect(prefixes[1].denied_uri).to eq 'http://denied_example2.com'
+      expect(prefixes[1].allow_regex).to eq 'http://example2.com'
+      expect(prefixes[1].deny_regex).to eq 'http://denied_example2.com'
       expect(prefixes[1].case_sensitive).to eq(true)
     end
 
@@ -97,12 +97,12 @@ http://example2.com,true,http://denied_example2.com
       Prefix.import_csv(params)
       prefixes= Prefix.all.to_a
       expect(prefixes.count).to eq 2
-      expect(prefixes[0].allowed_uri).to eq 'http://example1.com'
-      expect(prefixes[0].denied_uri).to eq 'http://denied_example1.com'
+      expect(prefixes[0].allow_regex).to eq 'http://example1.com'
+      expect(prefixes[0].deny_regex).to eq 'http://denied_example1.com'
       expect(prefixes[0].case_sensitive).to eq(false)
 
-      expect(prefixes[1].allowed_uri).to eq 'http://example2.com'
-      expect(prefixes[1].denied_uri).to eq 'http://denied_example2.com'
+      expect(prefixes[1].allow_regex).to eq 'http://example2.com'
+      expect(prefixes[1].deny_regex).to eq 'http://denied_example2.com'
       expect(prefixes[1].case_sensitive).to eq(true)
     end
 
@@ -119,12 +119,12 @@ http://example2.com,true,redundant,http://denied_example2.com
       Prefix.import_csv(params)
       prefixes= Prefix.all.to_a
       expect(prefixes.count).to eq 2
-      expect(prefixes[0].allowed_uri).to eq 'http://example1.com'
-      expect(prefixes[0].denied_uri).to eq 'http://denied_example1.com'
+      expect(prefixes[0].allow_regex).to eq 'http://example1.com'
+      expect(prefixes[0].deny_regex).to eq 'http://denied_example1.com'
       expect(prefixes[0].case_sensitive).to eq(false)
 
-      expect(prefixes[1].allowed_uri).to eq 'http://example2.com'
-      expect(prefixes[1].denied_uri).to eq 'http://denied_example2.com'
+      expect(prefixes[1].allow_regex).to eq 'http://example2.com'
+      expect(prefixes[1].deny_regex).to eq 'http://denied_example2.com'
       expect(prefixes[1].case_sensitive).to eq(true)
     end
   end
