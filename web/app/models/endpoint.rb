@@ -136,4 +136,8 @@ class Endpoint < ActiveRecord::Base
 
     GithubHelper.update_label(label[:name], { :name => endpoint.id.to_s })
   end
+
+  def self.enabled
+    where(disable_crawling: false)
+  end
 end

@@ -436,8 +436,8 @@ class EndpointsController < ApplicationController
     metrics[:data_collection][:count]     = CrawlLog.finished.count
     metrics[:data_collection][:variation] = ((Time.zone.now - latest.started_at) / 3600 / 24).round(0)
 
-    number_of_endpoints_last_week         = Endpoint.where('disable_crawling = ? AND created_at < ?', false, oldest.finished_at).count
-    metrics[:no_of_endpoints][:count]     = Endpoint.where('disable_crawling = ? AND created_at < ?', false, latest.finished_at).count
+    number_of_endpoints_last_week         = Endpoint.enabled.where('created_at < ?', oldest.finished_at).count
+    metrics[:no_of_endpoints][:count]     = Endpoint.enabled.where('created_at < ?', latest.finished_at).count
     metrics[:no_of_endpoints][:variation] = metrics[:no_of_endpoints][:count] - number_of_endpoints_last_week
 
     active_endpoints_yesterday             = Evaluation.where(crawl_log_id: one_before.id, alive: true).count(:endpoint_id)
