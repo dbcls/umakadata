@@ -408,9 +408,11 @@ class EndpointsController < ApplicationController
 
   def endpointlist_param
     column    = %w[name url score].include?(params[:column]) ? params[:column] : 'score'
-    direction = %w[ASC DESC].include?(params[:direction]) ? params[:direction]
-                  : %w[score].include?(params[:column]) || params[:column].blank? ? 'DESC'
-                      : 'ASC'
+    direction = if %w[ASC DESC].include?(params[:direction])
+                  params[:direction]
+                else
+                  %w[score].include?(params[:column]) || params[:column].blank? ? 'DESC' : 'ASC'
+                end
     column + ' ' + direction
   end
 
