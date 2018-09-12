@@ -425,7 +425,7 @@ class EndpointsController < ApplicationController
       data_entries:     { count: 0, variation: 0 }
     }
 
-    recent_crawl_log = CrawlLog.where.not(finished_at: nil).reverse_order.take(7)
+    recent_crawl_log = CrawlLog.finished.reverse_order.take(7)
 
     return metrics if recent_crawl_log.size < 2
 
@@ -433,7 +433,7 @@ class EndpointsController < ApplicationController
     crawllog_yesterday = recent_crawl_log.first
     crawllog_last_week = recent_crawl_log.last
 
-    metrics[:data_collection][:count]     = CrawlLog.where.not(finished_at: nil).count
+    metrics[:data_collection][:count]     = CrawlLog.finished.count
     metrics[:data_collection][:variation] = ((Time.zone.now - crawllog_today.started_at) / 3600 / 24).round(0)
 
     number_of_endpoints_last_week         = Endpoint.where('disable_crawling = ? AND created_at < ?', false, crawllog_last_week.finished_at).count

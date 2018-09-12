@@ -2,7 +2,11 @@ class CrawlLog < ActiveRecord::Base
   has_many :evaluations
 
   def self.latest
-    self.where.not(finished_at: nil).last
+    finished.last
+  end
+
+  def self.finished
+    where.not(finished_at: nil)
   end
 
   def self.started_at(date)
