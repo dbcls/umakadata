@@ -424,11 +424,14 @@ class EndpointsController < ApplicationController
       alive_rates:      { count: 0, variation: 0 },
       data_entries:     { count: 0, variation: 0 }
     }
-    return metrics if CrawlLog.latest.blank?
 
-    crawllog_today     = CrawlLog.latest
-    crawllog_yesterday = (crawllog_today.id - 1 > 0) ? CrawlLog.find(crawllog_today.id - 1) : CrawlLog.first
-    crawllog_last_week = (crawllog_today.id - 7 > 0) ? CrawlLog.find(crawllog_today.id - 7) : CrawlLog.first
+    recent_crawl_log = CrawlLog.where.not(finished_at: nil).reverse_order.take(7)
+
+    return metrics if recent_crawl_log.size < 2
+
+    crawllog_today     = recent_crawl_log.shift
+    crawllog_yesterday = recent_crawl_log.first
+    crawllog_last_week = recent_crawl_log.last
 
     metrics[:data_collection][:count]     = CrawlLog.where.not(finished_at: nil).count
     metrics[:data_collection][:variation] = ((Time.zone.now - crawllog_today.started_at) / 3600 / 24).round(0)
