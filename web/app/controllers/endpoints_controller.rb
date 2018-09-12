@@ -417,41 +417,57 @@ class EndpointsController < ApplicationController
   end
 
   def set_metrics
-    metrics = {
-      data_collection:  { count: 0, variation: 0 },
-      no_of_endpoints:  { count: 0, variation: 0 },
-      active_endpoints: { count: 0, variation: 0 },
-      alive_rates:      { count: 0, variation: 0 },
-      data_entries:     { count: 0, variation: 0 }
-    }
-
     recent_crawl_log = CrawlLog.finished.reverse_order.take(7)
 
-    return metrics if recent_crawl_log.size < 2
+    return Hash.new { { count: 0, variation: 0 } } if recent_crawl_log.size < 2
 
-    latest     = recent_crawl_log.shift
-    one_before = recent_crawl_log.first
-    oldest     = recent_crawl_log.last
+    crawl_log = {
+      latest: recent_crawl_log.first,
+      previous: recent_crawl_log.drop(1).first,
+      earliest: recent_crawl_log.last
+    }
 
-    metrics[:data_collection][:count]     = CrawlLog.finished.count
-    metrics[:data_collection][:variation] = ((Time.zone.now - latest.started_at) / 3600 / 24).round(0)
+    evaluations = %i[latest previous earliest].map do |x|
+      [x, Evaluation.where(crawl_log_id: crawl_log[x].id)]
+    end.to_h
 
-    number_of_endpoints_last_week         = Endpoint.enabled.where('created_at < ?', oldest.finished_at).count
-    metrics[:no_of_endpoints][:count]     = Endpoint.enabled.where('created_at < ?', latest.finished_at).count
-    metrics[:no_of_endpoints][:variation] = metrics[:no_of_endpoints][:count] - number_of_endpoints_last_week
+    active_endpoints = %i[latest previous earliest].map do |x|
+      [x, evaluations[x].where(alive: true).count(:endpoint_id)]
+    end.to_h
 
-    active_endpoints_yesterday             = Evaluation.where(crawl_log_id: one_before.id, alive: true).count(:endpoint_id)
-    metrics[:active_endpoints][:count]     = Evaluation.where(crawl_log_id: latest.id, alive: true).count(:endpoint_id)
-    metrics[:active_endpoints][:variation] = metrics[:active_endpoints][:count] - active_endpoints_yesterday
+    no_of_endpoints = %i[latest earliest].map do |x|
+      [x, Endpoint.enabled.where('created_at < ?', crawl_log[x].finished_at).count]
+    end.to_h
 
-    active_endpoints_last_week        = Evaluation.where(crawl_log_id: oldest.id, alive: true).count(:endpoint_id)
-    metrics[:alive_rates][:count]     = ((metrics[:active_endpoints][:count].to_f / metrics[:no_of_endpoints][:count].to_f) * 100).round(0)
-    metrics[:alive_rates][:variation] = metrics[:alive_rates][:count] - ((active_endpoints_last_week.to_f / number_of_endpoints_last_week.to_f) * 100).round(0) if number_of_endpoints_last_week > 0
+    active_rates = %i[latest earliest].map do |x|
+      [x, no_of_endpoints[x] > 0 ? (active_endpoints[x].to_f / no_of_endpoints[x].to_f) * 100 : 0]
+    end.to_h
 
-    data_entries_yesterday             = Evaluation.where(crawl_log_id: one_before.id).sum(:number_of_statements)
-    metrics[:data_entries][:count]     = Evaluation.where(crawl_log_id: latest.id).sum(:number_of_statements)
-    metrics[:data_entries][:variation] = metrics[:data_entries][:count] - data_entries_yesterday
+    data_entries = %i[latest previous].map do |x|
+      [x, evaluations[x].sum(:number_of_statements)]
+    end.to_h
 
-    metrics
+    {
+      data_collection:  {
+        count:     CrawlLog.finished.count,
+        variation: ((Time.zone.now - crawl_log[:latest].started_at) / 3600 / 24).round(0)
+      },
+      no_of_endpoints:  {
+        count:     no_of_endpoints[:latest],
+        variation: no_of_endpoints[:latest] - no_of_endpoints[:earliest]
+      },
+      active_endpoints: {
+        count:     active_endpoints[:latest],
+        variation: active_endpoints[:latest] - active_endpoints[:previous]
+      },
+      alive_rates:      {
+        count:     active_rates[:latest].round(0),
+        variation: (active_rates[:latest] - active_rates[:earliest]).round(0)
+      },
+      data_entries:     {
+        count:     data_entries[:latest],
+        variation: data_entries[:latest] - data_entries[:previous]
+      }
+    }
   end
 end
