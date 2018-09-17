@@ -62,7 +62,7 @@ gem 'pundit'
 
 gem 'pg', '~> 0.20.0'
 
-gem 'umakadata', :path => './lib/assets/umakadata'
+gem 'umakadata', git: 'https://github.com/lifematics/umakadata_gem.git' # TODO: replace with dbcls/umakadata_gem.git
 
 gem 'octokit'
 
