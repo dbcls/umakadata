@@ -17,6 +17,7 @@
 # compiled assets
 /web/public/assets
 
-# secret files
+# config files
+/web/config/database.yml
 /web/config/secrets.yml
 
