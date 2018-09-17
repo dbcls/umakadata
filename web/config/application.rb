@@ -53,5 +53,14 @@ module UmakadataUi
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
 
     config.action_mailer.default_options = {to: 'test@example.com', from: 'no-reply@example.com'}
+
+    console do
+      if defined?(Pry)
+        tmp_path = Rails.root.join('tmp')
+        if Dir.exist?(tmp_path) && File.writable?(tmp_path)
+          Pry.config.history.file = tmp_path.join('.pry_history').to_s
+        end
+      end
+    end
   end
 end
