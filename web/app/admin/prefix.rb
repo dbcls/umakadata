@@ -24,6 +24,16 @@ ActiveAdmin.register Prefix do
     column :updated_at
   end
 
+  form do |f|
+    f.semantic_errors
+    f.inputs
+    f.actions do
+      add_create_another_checkbox
+      action(:submit, label: 'Add Prefix')
+      cancel_link
+    end
+  end
+
   controller do
     def create
       super do |success, _|
