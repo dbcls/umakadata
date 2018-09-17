@@ -81,13 +81,13 @@
                   = format_text(@supported_language)
               tr
                 td
-                  | Support for ServiceClause
+                  | SERVICE clause
                 td
                   = @evaluation.support_service_clause.to_s
               tr
                 td
                   .umakadata-tooltip
-                    | Support for GraphClause
+                    | GRAPH clause
                     span.small
                       | true if the query using 'GRAPH' clause returns result, otherwise false.
                 td
