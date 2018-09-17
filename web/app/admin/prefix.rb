@@ -26,11 +26,11 @@ ActiveAdmin.register Prefix do
 
   controller do
     def create
-      super do |success, failure|
-        success.html {
-          flash[:notice] = "Prefix was successfully added."
-          redirect_to action: 'edit', id: Prefix.last.id
-        }
+      super do |success, _|
+        success.html do
+          flash[:notice] = 'Prefix was successfully added.'
+          redirect_to admin_prefix_path(resource)
+        end
       end
     end
   end
