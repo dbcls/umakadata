@@ -223,17 +223,23 @@ class Evaluation < ActiveRecord::Base
     eval.support_html_format = true
 
     Prefix.where(endpoint_id: endpoint.id).each do |prefix|
+      allow = prefix.allow.presence
+      deny = prefix.deny.presence
+      as_regex = prefix.as_regex.presence
+      case_insensitive = prefix.case_insensitive.presence
+      fixed_uri = prefix.fixed_uri.presence
+
       log = Umakadata::Logging::Log.new
       log_turtle.push log
-      eval.support_turtle_format &= retriever.check_content_negotiation(prefix.allow_regex, prefix.deny_regex, prefix.case_sensitive, Umakadata::DataFormat::TURTLE, logger: log)
+      eval.support_turtle_format &= retriever.check_content_negotiation(allow, deny, as_regex, case_insensitive, fixed_uri, Umakadata::DataFormat::TURTLE, logger: log)
 
       log = Umakadata::Logging::Log.new
       log_xml.push log
-      eval.support_xml_format &= retriever.check_content_negotiation(prefix.allow_regex, prefix.deny_regex, prefix.case_sensitive, Umakadata::DataFormat::RDFXML, logger: log)
+      eval.support_xml_format &= retriever.check_content_negotiation(allow, deny, as_regex, case_insensitive, fixed_uri, Umakadata::DataFormat::RDFXML, logger: log)
 
       log = Umakadata::Logging::Log.new
       log_html.push log
-      eval.support_html_format &= retriever.check_content_negotiation(prefix.allow_regex, prefix.deny_regex, prefix.case_sensitive, Umakadata::DataFormat::HTML, logger: log)
+      eval.support_html_format &= retriever.check_content_negotiation(allow, deny, as_regex, case_insensitive, fixed_uri, Umakadata::DataFormat::HTML, logger: log)
     end
 
     log_turtle.result = "Some URI #{eval.support_turtle_format ? "" : "does not "}support content negotiation with #{Umakadata::DataFormat::TURTLE}"
@@ -298,7 +304,7 @@ class Evaluation < ActiveRecord::Base
     end.as_json
 
     if eval.endpoint.prefixes.present?
-      prefixes = Prefix.where(endpoint_id: eval.endpoint_id).select(:allow_regex, :deny_regex, :case_sensitive).to_a
+      prefixes = Prefix.where(endpoint_id: eval.endpoint_id)
       eval.uri_provides_info_log = logger_with_time { |logger| eval.uri_provides_info = retriever.uri_provides_info?(prefixes, logger: logger) }.as_json
       eval.contains_links_log    = logger_with_time { |logger| eval.contains_links = retriever.contains_links?(prefixes, logger: logger) }.as_json
     end

@@ -1,14 +1,17 @@
 ActiveAdmin.register Prefix do
 
-  permit_params :endpoint_id, :allow_regex, :deny_regex, :case_sensitive
+  permit_params :endpoint_id, :allow, :deny, :as_regex, :case_insensitive, :use_fixed_uri, :fixed_uri
 
   index do
     selectable_column
     id_column
     column :endpoint
-    column :allow_regex
-    column :deny_regex
-    column :case_sensitive
+    column :allow
+    column :deny
+    column :as_regex
+    column :case_insensitive
+    column 'Use Fixed URI', :use_fixed_uri
+    column 'Fixed URI', :fixed_uri
     column :created_at
     column :updated_at
     actions
@@ -17,9 +20,12 @@ ActiveAdmin.register Prefix do
   csv do
     column :id
     column :endpoint_id
-    column :allow_regex
-    column :deny_regex
-    column :case_sensitive
+    column :allow
+    column :deny
+    column :as_regex
+    column :case_insensitive
+    column :use_fixed_uri
+    column :fixed_uri
     column :created_at
     column :updated_at
   end

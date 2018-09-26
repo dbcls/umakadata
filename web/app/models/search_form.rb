@@ -36,7 +36,7 @@ class SearchForm
   end
 
   def add_like_condition_for_prefix(value)
-    @endpoints = @endpoints.where("LOWER(prefixes.allow_regex) LIKE ?", "%#{value.downcase}%")
+    @endpoints = @endpoints.where("LOWER(prefixes.allow) LIKE ?", "%#{value.downcase}%")
   end
 
   def add_is_not_empty_condition(column)
