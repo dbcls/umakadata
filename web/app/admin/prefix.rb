@@ -17,6 +17,21 @@ ActiveAdmin.register Prefix do
     actions
   end
 
+  show do
+    attributes_table do
+      row :endpoint
+      row :allow
+      row :deny
+      row :as_regex
+      row :case_insensitive
+      row :use_fixed_uri
+      row :fixed_uri
+      row :created_at
+      row :updated_at
+    end
+    active_admin_comments
+  end
+
   csv do
     column :id
     column :endpoint_id
