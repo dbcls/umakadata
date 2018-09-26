@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180822084305) do
+ActiveRecord::Schema.define(version: 20180926075923) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -145,11 +145,14 @@ ActiveRecord::Schema.define(version: 20180822084305) do
 
   create_table "prefixes", force: :cascade do |t|
     t.integer  "endpoint_id"
-    t.string   "allow_regex"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-    t.string   "deny_regex"
-    t.boolean  "case_sensitive", default: true, null: false
+    t.string   "allow"
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.string   "deny"
+    t.boolean  "case_insensitive", default: false, null: false
+    t.boolean  "as_regex",         default: false
+    t.boolean  "use_fixed_uri",    default: false
+    t.string   "fixed_uri"
   end
 
   create_table "rdf_prefixes", force: :cascade do |t|
