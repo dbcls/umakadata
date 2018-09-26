@@ -32,11 +32,43 @@ ActiveAdmin.register Prefix do
 
   form do |f|
     f.semantic_errors
-    f.inputs
+    f.inputs do
+      input :endpoint
+      input :allow
+      input :deny
+      input :as_regex
+      input :case_insensitive
+      input :use_fixed_uri, label: "Use fixed URI"
+      input :fixed_uri, label: "Fixed URI"
+    end
     f.actions do
       add_create_another_checkbox
       action(:submit, label: 'Add Prefix')
       cancel_link
+    end
+    script do
+      raw <<-SCRIPT
+        $(function() {
+          var update_form;
+          update_form = function() {
+            var as_regex, use_fixed_uri;
+            as_regex = $('#prefix_as_regex').prop('checked');
+            use_fixed_uri = $('#prefix_use_fixed_uri').prop('checked');
+            $('#prefix_allow').prop('disabled', use_fixed_uri);
+            $('#prefix_deny').prop('disabled', use_fixed_uri);
+            $('#prefix_as_regex').prop('disabled', use_fixed_uri);
+            $('#prefix_case_insensitive').prop('disabled', !as_regex || use_fixed_uri);
+            $('#prefix_fixed_uri').prop('disabled', !use_fixed_uri);
+          };
+          update_form();
+          $('#prefix_as_regex').on('change', function() {
+            update_form();
+          });
+          $('#prefix_use_fixed_uri').on('change', function() {
+            update_form();
+          });
+        });
+      SCRIPT
     end
   end
 
