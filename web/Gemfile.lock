@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/lifematics/umakadata_gem.git
-  revision: a9a9e4ee02983ed70305094768077b1f9c1d4e68
+  revision: 43724112c6a633df1ca4800f95dd4ac98a961243
   specs:
     umakadata (0.9.0)
       activesupport (~> 4.2.6)
@@ -444,4 +444,4 @@ DEPENDENCIES
   whenever
 
 BUNDLED WITH
-   1.16.4
+   1.16.5
