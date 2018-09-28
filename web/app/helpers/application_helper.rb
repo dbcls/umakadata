@@ -1,5 +1,14 @@
 module ApplicationHelper
 
+  def showExecutionTime(content)
+    if content.is_a?(Hash)
+      content_tag(:div) do
+        concat content_tag(:p, (content.has_key?('execution_time') ? "Started at:  #{Time.zone.parse(content['execution_time']['start'])}" : ''))
+        concat content_tag(:p, (content.has_key?('execution_time') ? "Finished at: #{Time.zone.parse(content['execution_time']['end'])}" : ''))
+      end
+    end
+  end
+
   def createRowRecursive(key, content, id, parent_id)
     if content.is_a?(Hash)
       data = {'tt-id' => id, 'tt-parent-id' => parent_id}
@@ -13,7 +22,7 @@ module ApplicationHelper
         parent_id = id
         i = 0
         content.each do |key, value|
-          next if key == "result"
+          next if key == "result" || key == "execution_time"
           result = createRowRecursive(key, value, "#{parent_id}_#{i += 1}", parent_id)
           concat result unless result.nil?
         end

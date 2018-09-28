@@ -8,19 +8,19 @@ class EndpointsController < ApplicationController
   include Umakadata::DataFormat
 
   before_action :set_endpoint, only: [:info]
-  before_action :set_start_date, only: [:index, :top, :show]
+  before_action :set_start_date, only: [:index, :top, :show, :search, :search_result]
 
   def index
-    @date = date_param
+    @date     = date_param
     crawl_log = CrawlLog.started_at(@date)
     if crawl_log.blank?
       @evaluations = Array.new
     else
-      evaluations = crawl_log.evaluations.joins(:endpoint).order(endpointlist_param).pluck(:id, :score, :'endpoints.id', :'endpoints.name', :'endpoints.url')
+      evaluations  = crawl_log.evaluations.joins(:endpoint).order(endpointlist_param).pluck(:id, :score, :'endpoints.id', :'endpoints.name', :'endpoints.url')
       @evaluations = evaluations.map do |result|
         {
-          :id   => result[0],
-          :score => result[1],
+          :id       => result[0],
+          :score    => result[1],
           :endpoint => {
             :id   => result[2],
             :name => result[3],
@@ -32,17 +32,17 @@ class EndpointsController < ApplicationController
   end
 
   def top
-    @date = date_param
-    @metrics = set_metrics
+    @date     = date_param
+    @metrics  = set_metrics
     crawl_log = CrawlLog.started_at(@date)
     if crawl_log.blank?
       @evaluations = Array.new
     else
-      evaluations = crawl_log.evaluations.joins(:endpoint).order("score DESC").limit(5).pluck(:id, :score, :'endpoints.id', :'endpoints.name', :'endpoints.url')
+      evaluations  = crawl_log.evaluations.joins(:endpoint).order("score DESC").limit(5).pluck(:id, :score, :'endpoints.id', :'endpoints.name', :'endpoints.url')
       @evaluations = evaluations.map do |result|
         {
-          :id   => result[0],
-          :score => result[1],
+          :id       => result[0],
+          :score    => result[1],
           :endpoint => {
             :id   => result[2],
             :name => result[3],
@@ -55,61 +55,69 @@ class EndpointsController < ApplicationController
   end
 
   def search
-    @date = date_param
-    evaluation = Evaluation.first
-    return nil if evaluation.nil?
-    @start_date = evaluation.retrieved_at.strftime('%d-%m-%Y')
+    @search_form              = SearchForm.new
+    @search_form.date         = date_param.strftime('%d-%m-%Y')
+    @search_form.element_type = 'subject'
+  end
+
+  def search_result
+    search_params                                                                 = request.query_parameters[:search_form]
+    search_params[:prefix_filter_uri], search_params[:prefix_filter_uri_fragment] =
+      search_params[:prefix_filter_uri].split('#')
+    @search_form                                                                  = SearchForm.new(search_params)
+    @endpoints                                                                    = @search_form.search
   end
 
   def show
-    @endpoint_id = params[:id]
+    @endpoint_id   = params[:id]
     @evaluation_id = params[:evaluation_id]
   end
 
   def info
-    @date = date_param
-    count = PrefixFilter.where(endpoint_id: @endpoint[:id]).count()
+    @date        = date_param
+    count        = PrefixFilter.where(endpoint_id: @endpoint[:id]).count()
     @uri_indexed = count > 0
     render layout: false
   end
 
   def log
-    evaluation = Evaluation.where(:id => params[:evaluation_id]).first
-    @endpoint_id = evaluation.endpoint_id
-    json = nil
-    case(params[:name])
-      when 'alive' then
-        json = evaluation.alive_log
-      when 'last_updated' then
-        json = evaluation.last_updated_log
-      when 'execution_time' then
-        json = evaluation.execution_time_log
-      when 'service_description'
-        json = evaluation.service_description_log
-      when 'void_ttl' then
-        json = evaluation.void_ttl_log
-      when 'subject_is_http_uri'
-        json = evaluation.subject_is_http_uri_log
-      when 'uri_provides_info'
-        json = evaluation.uri_provides_info_log
-      when 'contains_links'
-        json = evaluation.contains_links_log
-      when 'metadata_score' then
-        json = evaluation.metadata_log
-      when 'ontology_score' then
-        json = evaluation.ontology_log
-      when 'support_xml_format' then
-        json = evaluation.support_content_negotiation_log
-      when 'support_html_format' then
-        json = evaluation.support_html_format_log
-      when 'support_turtle_format' then
-        json = evaluation.support_turtle_format_log
-      when 'cool_uri_rate' then
-        json = evaluation.cool_uri_rate_log
-      when 'number_of_statements' then
-        json = evaluation.number_of_statements_log
-      else
-        json = nil
+    evaluation     = Evaluation.where(:id => params[:evaluation_id]).first
+    @endpoint_id   = evaluation.endpoint_id
+    @evaluation_id = params[:evaluation_id]
+    json           = nil
+    case (params[:name])
+    when 'alive' then
+      json = evaluation.alive_log
+    when 'last_updated' then
+      json = evaluation.last_updated_log
+    when 'execution_time' then
+      json = evaluation.execution_time_log
+    when 'service_description'
+      json = evaluation.service_description_log
+    when 'void_ttl' then
+      json = evaluation.void_ttl_log
+    when 'subject_is_http_uri'
+      json = evaluation.subject_is_http_uri_log
+    when 'uri_provides_info'
+      json = evaluation.uri_provides_info_log
+    when 'contains_links'
+      json = evaluation.contains_links_log
+    when 'metadata_score' then
+      json = evaluation.metadata_log
+    when 'ontology_score' then
+      json = evaluation.ontology_log
+    when 'support_xml_format' then
+      json = evaluation.support_content_negotiation_log
+    when 'support_html_format' then
+      json = evaluation.support_html_format_log
+    when 'support_turtle_format' then
+      json = evaluation.support_turtle_format_log
+    when 'cool_uri_rate' then
+      json = evaluation.cool_uri_rate_log
+    when 'number_of_statements' then
+      json = evaluation.number_of_statements_log
+    else
+      json = nil
     end
 
     begin
@@ -121,7 +129,7 @@ class EndpointsController < ApplicationController
   end
 
   def scores
-    count = {1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0}
+    count = { 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0 }
     ranks = Endpoint.retrieved_at(date_param).pluck(:rank)
     ranks.each do |rank|
       count[rank] += 1
@@ -132,7 +140,7 @@ class EndpointsController < ApplicationController
   def radar
     data = {
       data: Evaluation.rates(params[:id], params[:evaluation_id]),
-      avg: Evaluation.avg_rates
+      avg:  Evaluation.avg_rates
     }
     respond_to do |format|
       format.any { render :json => data }
@@ -141,19 +149,19 @@ class EndpointsController < ApplicationController
   end
 
   def score_history
-    labels = Array.new
+    labels       = Array.new
     availability = Array.new
-    freshness = Array.new
-    operation = Array.new
-    usefulness = Array.new
-    validity = Array.new
-    performance = Array.new
-    rank = Array.new
-    points = 30
+    freshness    = Array.new
+    operation    = Array.new
+    usefulness   = Array.new
+    validity     = Array.new
+    performance  = Array.new
+    rank         = Array.new
+    points       = 30
 
     evaluations = Evaluation.history(params, points)
     evaluations.each do |evaluation|
-      date = evaluation.crawl_log.started_at
+      date  = evaluation.crawl_log.started_at
       rates = Evaluation.calc_rates(evaluation)
       availability.push(rates[0])
       freshness.push(rates[1])
@@ -167,7 +175,7 @@ class EndpointsController < ApplicationController
 
     while labels.size < points
       evaluation = Evaluation.new
-      rates = Evaluation.calc_rates(evaluation)
+      rates      = Evaluation.calc_rates(evaluation)
       availability.unshift(rates[0])
       freshness.unshift(rates[1])
       operation.unshift(rates[2])
@@ -179,42 +187,42 @@ class EndpointsController < ApplicationController
     end
 
     render :json => {
-      :labels => labels,
+      :labels   => labels,
       :datasets => [
         {
           label: 'Availability',
-          data: availability
+          data:  availability
         },
         {
           label: 'Freshness',
-          data: freshness
+          data:  freshness
         },
         {
           label: 'Operation',
-          data: operation
+          data:  operation
         },
         {
           label: 'Usefulness',
-          data: usefulness
+          data:  usefulness
         },
         {
           label: 'Validity',
-          data: validity
+          data:  validity
         },
         {
           label: 'Performance',
-          data: performance
+          data:  performance
         },
         {
           label: 'Rank',
-          data: rank
+          data:  rank
         }
       ]
     }
   end
 
   def alive
-    count = { :alive => 0, :dead => 0 }
+    count     = { :alive => 0, :dead => 0 }
     crawl_log = CrawlLog.started_at(date_param)
     if crawl_log.blank?
       render :json => {}
@@ -228,7 +236,7 @@ class EndpointsController < ApplicationController
   end
 
   def service_descriptions
-    count = { :true => 0, :false => 0 }
+    count     = { :true => 0, :false => 0 }
     crawl_log = CrawlLog.started_at(date_param)
     if crawl_log.blank?
       render :json => {}
@@ -244,12 +252,12 @@ class EndpointsController < ApplicationController
 
   def score_statistics
     last_crawled_date = date_param
-    points = 10
+    points            = 10
 
     time_series = Endpoint.score_statistics_lastest_n(last_crawled_date, points)
-    labels = time_series['date'].reverse
-    averages = time_series['average'].values.reverse
-    medians = time_series['median'].values.reverse
+    labels      = time_series['date'].reverse
+    averages    = time_series['average'].values.reverse
+    medians     = time_series['median'].values.reverse
 
     while labels.size < points
       labels.unshift(labels.first - 1)
@@ -258,15 +266,15 @@ class EndpointsController < ApplicationController
     end
 
     render :json => {
-      :labels => labels,
+      :labels   => labels,
       :datasets => [
         {
           :label => 'Average',
-          :data => averages.map{|average| average.round(1)}
+          :data  => averages.map { |average| average.round(1) }
         },
         {
           :label => 'Median',
-          :data => medians
+          :data  => medians
         }
       ]
     }
@@ -275,11 +283,11 @@ class EndpointsController < ApplicationController
 
   def alive_statistics
     last_crawled_date = date_param
-    points = 10
+    points            = 10
 
     time_series = Endpoint.alive_statistics_latest_n(last_crawled_date, points)
-    labels = time_series['date'].reverse
-    alive_data = time_series['alive'].values.reverse
+    labels      = time_series['date'].reverse
+    alive_data  = time_series['alive'].values.reverse
 
     while labels.size < points
       labels.unshift(labels.first - 1)
@@ -287,11 +295,11 @@ class EndpointsController < ApplicationController
     end
 
     render :json => {
-      :labels => labels,
+      :labels   => labels,
       :datasets => [
         {
           label: 'Alive',
-          data: alive_data.map{|alive| alive.round(1)}
+          data:  alive_data.map { |alive| alive.round(1) }
         }
       ]
     }
@@ -299,11 +307,11 @@ class EndpointsController < ApplicationController
 
   def service_description_statistics
     last_crawled_date = date_param
-    points = 10
+    points            = 10
 
     time_series = Endpoint.sd_statistics_latest_n(last_crawled_date, points)
-    labels = time_series['date'].reverse
-    have_data = time_series['sd'].values.reverse
+    labels      = time_series['date'].reverse
+    have_data   = time_series['sd'].values.reverse
 
     while labels.size < points
       labels.unshift(labels.first - 1)
@@ -311,11 +319,11 @@ class EndpointsController < ApplicationController
     end
 
     render :json => {
-      :labels => labels,
+      :labels   => labels,
       :datasets => [
         {
           label: 'Have',
-          data: have_data.map{|sd_score| sd_score.round(1)}
+          data:  have_data.map { |sd_score| sd_score.round(1) }
         }
       ]
     }
@@ -332,102 +340,134 @@ class EndpointsController < ApplicationController
 
   private
 
-    def render_404
-      render :file=>"/public/404.html", :status=>'404 Not Found'
+  def render_404
+    render :file => "/public/404.html", :status => '404 Not Found'
+  end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_endpoint
+    @endpoint   = Endpoint.find(params[:id])
+    @evaluation = Evaluation.lookup(params[:id], params[:evaluation_id])
+    if @evaluation.nil?
+      render_404
+      return
     end
+    @prev_evaluation = Evaluation.previous(@endpoint[:id], @evaluation[:retrieved_at])
+    @next_evaluation = Evaluation.next(@endpoint[:id], @evaluation[:retrieved_at])
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_endpoint
-      @endpoint = Endpoint.find(params[:id])
-      @evaluation = Evaluation.lookup(params[:id], params[:evaluation_id])
-      if @evaluation.nil?
-         render_404
-         return
-      end
-      @prev_evaluation = Evaluation.previous(@endpoint[:id], @evaluation[:retrieved_at])
-      @next_evaluation = Evaluation.next(@endpoint[:id], @evaluation[:retrieved_at])
-
-      @cors = false
-      if !@evaluation.response_header.blank?
-        @evaluation.response_header.split(/\n/).each do |line|
-          items = line.split(/\s*:\s*/)
-          if items[0].downcase == 'access-control-allow-origin'
-            @cors = true if items[1] == '*'
-            break
-          end
+    @cors = false
+    if !@evaluation.response_header.blank?
+      @evaluation.response_header.split(/\n/).each do |line|
+        items = line.split(/\s*:\s*/)
+        if items[0].downcase == 'access-control-allow-origin'
+          @cors = true if items[1] == '*'
+          break
         end
       end
-
-      @void = @evaluation.void_ttl
-      @supported_language = JSON.parse(@evaluation.supported_language).join('<br/>') unless @evaluation.supported_language.nil?
-      @linksets = JSON.parse(@evaluation.linksets) unless @evaluation.linksets.nil?
-      @license = JSON.parse(@evaluation.license).join('<br/>') unless @evaluation.license.nil?
-      @publisher = JSON.parse(@evaluation.publisher).join('<br/>') unless @evaluation.publisher.nil?
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def endpoint_params
-      params.require(:endpoint).permit(:name, :url)
-    end
+    @void               = @evaluation.void_ttl
+    @supported_language = JSON.parse(@evaluation.supported_language).join('<br/>') unless @evaluation.supported_language.nil?
+    @linksets           = JSON.parse(@evaluation.linksets) unless @evaluation.linksets.nil?
+    @license            = JSON.parse(@evaluation.license).join('<br/>') unless @evaluation.license.nil?
+    @publisher          = JSON.parse(@evaluation.publisher).join('<br/>') unless @evaluation.publisher.nil?
+  end
 
-    def date_param
-      input_date = params[:date]
-      endpoint_id = params[:id]
-      evaluation_id = params[:evaluation_id]
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def endpoint_params
+    params.require(:endpoint).permit(:name, :url)
+  end
 
-      return Time.zone.parse(input_date) if input_date.present?
+  def date_param
+    input_date    = params[:date]
+    endpoint_id   = params[:id]
+    evaluation_id = params[:evaluation_id]
 
-      if endpoint_id.present?
-        evaluation = Evaluation.lookup(endpoint_id, evaluation_id)
-        if evaluation && evaluation.crawl_log && (latest = evaluation.crawl_log.started_at)
-          return latest
-        end
-      end
+    return Time.zone.parse(input_date) if input_date.present?
 
-      if CrawlLog.latest && (latest = CrawlLog.latest.started_at)
+    if endpoint_id.present?
+      evaluation = Evaluation.lookup(endpoint_id, evaluation_id)
+      if evaluation && evaluation.crawl_log && (latest = evaluation.crawl_log.started_at)
         return latest
       end
-
-      Time.now
     end
 
-    def set_start_date
-      evaluations = params[:id].nil? ? Evaluation.all : Evaluation.where(:endpoint_id => params[:id])
-      oldest_evaluation = evaluations.order('retrieved_at ASC').first
-      return if oldest_evaluation.nil?
-      @start_date = oldest_evaluation.retrieved_at.strftime('%d-%m-%Y')
+    if CrawlLog.latest && (latest = CrawlLog.latest.started_at)
+      return latest
     end
 
-    def endpointlist_param
-      column = %w[name url score].include?(params[:column]) ? params[:column] : 'score'
-      direction = %w[ASC DESC].include?(params[:direction]) ? params[:direction]
-                                                            : %w[score].include?(params[:column]) || params[:column].blank? ? 'DESC'
-                                                                                                                            : 'ASC'
-      column + ' ' + direction
-    end
+    Time.now
+  end
 
-    def set_metrics
-      metrics = {
-        data_collection: {count: 0, variation: 0},
-        no_of_endpoints: {count: 0, variation: 0},
-        active_endpoints: {count: 0, variation: 0},
-        alive_rates: {count: 0, variation: 0},
-        data_entries: {count: 0, variation: 0}
+  def set_start_date
+    evaluations       = params[:id].nil? ? Evaluation.all : Evaluation.where(:endpoint_id => params[:id])
+    oldest_evaluation = evaluations.order('retrieved_at ASC').first
+    return if oldest_evaluation.nil?
+    @start_date = oldest_evaluation.retrieved_at.strftime('%d-%m-%Y')
+  end
+
+  def endpointlist_param
+    column    = %w[name url score].include?(params[:column]) ? params[:column] : 'score'
+    direction = if %w[ASC DESC].include?(params[:direction])
+                  params[:direction]
+                else
+                  %w[score].include?(params[:column]) || params[:column].blank? ? 'DESC' : 'ASC'
+                end
+    column + ' ' + direction
+  end
+
+  def set_metrics
+    recent_crawl_log = CrawlLog.finished.reverse_order.take(7)
+
+    return Hash.new { { count: 0, variation: 0 } } if recent_crawl_log.size < 2
+
+    crawl_log = {
+      latest: recent_crawl_log.first,
+      previous: recent_crawl_log.drop(1).first,
+      earliest: recent_crawl_log.last
+    }
+
+    evaluations = %i[latest previous earliest].map do |x|
+      [x, Evaluation.where(crawl_log_id: crawl_log[x].id)]
+    end.to_h
+
+    active_endpoints = %i[latest previous earliest].map do |x|
+      [x, evaluations[x].where(alive: true).count(:endpoint_id)]
+    end.to_h
+
+    no_of_endpoints = %i[latest earliest].map do |x|
+      [x, Endpoint.enabled.where('created_at < ?', crawl_log[x].finished_at).count]
+    end.to_h
+
+    active_rates = %i[latest earliest].map do |x|
+      [x, no_of_endpoints[x] > 0 ? (active_endpoints[x].to_f / no_of_endpoints[x].to_f) * 100 : 0]
+    end.to_h
+
+    data_entries = %i[latest previous].map do |x|
+      [x, evaluations[x].sum(:number_of_statements)]
+    end.to_h
+
+    {
+      data_collection:  {
+        count:     CrawlLog.finished.count,
+        variation: ((Time.zone.now - crawl_log[:latest].started_at) / 3600 / 24).round(0)
+      },
+      no_of_endpoints:  {
+        count:     no_of_endpoints[:latest],
+        variation: no_of_endpoints[:latest] - no_of_endpoints[:earliest]
+      },
+      active_endpoints: {
+        count:     active_endpoints[:latest],
+        variation: active_endpoints[:latest] - active_endpoints[:previous]
+      },
+      alive_rates:      {
+        count:     active_rates[:latest].round(0),
+        variation: (active_rates[:latest] - active_rates[:earliest]).round(0)
+      },
+      data_entries:     {
+        count:     data_entries[:latest],
+        variation: data_entries[:latest] - data_entries[:previous]
       }
-      return metrics if CrawlLog.latest.blank?
-      date = CrawlLog.latest.started_at
-
-      metrics[:data_collection][:count] = CrawlLog.where.not(finished_at: nil).count
-      metrics[:data_collection][:variation] = ((Time.zone.now - date) / 3600 / 24).round(0)
-      number_of_endpoints_last_week = Endpoint.where.not('created_at >= ?', date.ago(7.days).beginning_of_day).count
-      metrics[:no_of_endpoints][:count] = Endpoint.where('disable_crawling = ?', false).count
-      metrics[:no_of_endpoints][:variation] = metrics[:no_of_endpoints][:count] - number_of_endpoints_last_week
-      metrics[:active_endpoints][:count] = Evaluation.where(created_at: date.all_day, alive: true).count(:endpoint_id)
-      metrics[:active_endpoints][:variation] = metrics[:active_endpoints][:count] - Evaluation.where(created_at: date.ago(1.days).all_day, alive: true).count(:endpoint_id)
-      metrics[:alive_rates][:count] = ((metrics[:active_endpoints][:count].to_f / metrics[:no_of_endpoints][:count].to_f) * 100).round(0)
-      metrics[:alive_rates][:variation] = metrics[:alive_rates][:count] - ((Evaluation.where(created_at: date.ago(7.days).all_day, alive: true).count(:endpoint_id).to_f / number_of_endpoints_last_week.to_f) * 100).round(0)
-      metrics[:data_entries][:count] = Evaluation.where(created_at: date.all_day).sum(:number_of_statements)
-      metrics[:data_entries][:variation] = metrics[:data_entries][:count] - Evaluation.where(created_at: date.ago(1.days).all_day).sum(:number_of_statements)
-      metrics
-    end
+    }
+  end
 end

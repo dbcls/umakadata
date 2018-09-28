@@ -27,3 +27,24 @@ label.control-label {
   float: right;
   color: inherit;
 }
+
+.form-group {
+  margin-bottom: 5px;
+}
+
+.form-group label {
+  margin-top: 7px;
+  margin-bottom: 0;
+}
+
+.form-group .radio-inline {
+  margin-top: 0;
+}
+
+.form-group .radio-inline input {
+  margin-top: 2px;
+}
+
+.left-margin-1 {
+  margin-left: 1rem;
+}

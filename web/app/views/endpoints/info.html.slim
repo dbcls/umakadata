@@ -30,8 +30,12 @@
           - unless @endpoint.issue_id.nil?
             h2.page-title-header
               | Forum
-            a href="https://github.com/#{Rails.application.secrets.github_repo}/issues?q=is:open+label:%22#{@endpoint.name.gsub(",", "")}%22"
+            a href="https://github.com/#{Rails.application.secrets.github_repo}/issues?q=is:open+label:%22#{@endpoint.id.to_s}%22"
               = "Discussion About #{@endpoint.name}"
+            br
+            br
+            = link_to "Create Issue About #{@endpoint.name}", issues_form_path(@endpoint), remote: true, class: 'p'
+            .modal.fade#user-modal[tabindex="-1" role="dialog" aria-hidden="true"]
           h2.page-title-header
             | Basic Information
           table.table.table-bordered
@@ -77,8 +81,13 @@
                   = format_text(@supported_language)
               tr
                 td
+                  | SERVICE clause
+                td
+                  = @evaluation.support_service_clause.to_s
+              tr
+                td
                   .umakadata-tooltip
-                    | Support for GraphClause
+                    | GRAPH clause
                     span.small
                       | true if the query using 'GRAPH' clause returns result, otherwise false.
                 td

@@ -1,7 +1,5 @@
 require 'rails_helper'
 
-include FactoryBot::Syntax::Methods
-
 #RSpec.describe Evaluation, type: :model do
 #  pending "add some examples to (or delete) #{__FILE__}"
 #end
@@ -29,8 +27,8 @@ RSpec.describe Evaluation, type: :model do
 
   it 'calculate alive rate by 2 evaluation that latest evaluation is dead and 1 old evaluation is alive' do
     endpoint_id = 1
-    create(:evaluation, :endpoint_id => endpoint_id, :latest => false, :alive => true)
-    eval = Evaluation.new(:endpoint_id => endpoint_id, :latest => true, :alive => false)
+    create(:evaluation, :endpoint_id => endpoint_id, :latest => false, :alive => true, :retrieved_at => 10.days.ago(Time.zone.now))
+    eval = Evaluation.new(:endpoint_id => endpoint_id, :latest => true, :alive => false, :retrieved_at => Time.zone.now)
 
     alive_rate = Evaluation.calc_alive_rate(eval)
 
@@ -39,8 +37,8 @@ RSpec.describe Evaluation, type: :model do
 
   it 'calculate alive rate by 2 evaluation that latest evaluation is alive and 1 old evaluation is dead' do
     endpoint_id = 1
-    create(:evaluation, :endpoint_id => endpoint_id, :latest => false, :alive => false)
-    eval = Evaluation.new(:endpoint_id => endpoint_id, :latest => true, :alive => true)
+    create(:evaluation, :endpoint_id => endpoint_id, :latest => false, :alive => false, :retrieved_at => 10.days.ago(Time.zone.now))
+    eval = Evaluation.new(:endpoint_id => endpoint_id, :latest => true, :alive => true, :retrieved_at => Time.zone.now)
 
     alive_rate = Evaluation.calc_alive_rate(eval)
 
@@ -49,8 +47,8 @@ RSpec.describe Evaluation, type: :model do
 
   it 'calculate alive rate by 30 evaluation that latest evaluation is dead and 29 old evaluation is alive' do
     endpoint_id = 1
-    create_list(:evaluation, 29, :endpoint_id => endpoint_id, :latest => false, :alive => true)
-    eval = Evaluation.new(:endpoint_id => endpoint_id, :latest => true, :alive => false)
+    create_list(:evaluation, 29, :endpoint_id => endpoint_id, :latest => false, :alive => true, :retrieved_at => 10.days.ago(Time.zone.now))
+    eval = Evaluation.new(:endpoint_id => endpoint_id, :latest => true, :alive => false, :retrieved_at => Time.zone.now)
 
     alive_rate = Evaluation.calc_alive_rate(eval)
 
@@ -59,8 +57,8 @@ RSpec.describe Evaluation, type: :model do
 
   it 'calculate alive rate by 30 evaluation that latest evaluation is alive and 29 old evaluation is dead' do
     endpoint_id = 1
-    create_list(:evaluation, 29, :endpoint_id => endpoint_id, :latest => false, :alive => false)
-    eval = Evaluation.new(:endpoint_id => endpoint_id, :latest => true, :alive => true)
+    create_list(:evaluation, 29, :endpoint_id => endpoint_id, :latest => false, :alive => false, :retrieved_at => 10.days.ago(Time.zone.now))
+    eval = Evaluation.new(:endpoint_id => endpoint_id, :latest => true, :alive => true, :retrieved_at => Time.zone.now)
 
     alive_rate = Evaluation.calc_alive_rate(eval)
 
@@ -69,9 +67,9 @@ RSpec.describe Evaluation, type: :model do
 
   it 'calculate alive rate by 30 evaluation that last 15 evaluations are alive and the others are dead' do
     endpoint_id = 1
-    create_list(:evaluation, 14, :endpoint_id => endpoint_id, :latest => false, :alive => true)
-    create_list(:evaluation, 15, :endpoint_id => endpoint_id, :latest => false, :alive => false)
-    eval = Evaluation.new(:endpoint_id => endpoint_id, :latest => true, :alive => true)
+    create_list(:evaluation, 14, :endpoint_id => endpoint_id, :latest => false, :alive => true, :retrieved_at => 10.days.ago(Time.zone.now))
+    create_list(:evaluation, 15, :endpoint_id => endpoint_id, :latest => false, :alive => false, :retrieved_at => 5.days.ago(Time.zone.now))
+    eval = Evaluation.new(:endpoint_id => endpoint_id, :latest => true, :alive => true, :retrieved_at => Time.zone.now)
 
     alive_rate = Evaluation.calc_alive_rate(eval)
 

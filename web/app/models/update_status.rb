@@ -5,8 +5,8 @@ class UpdateStatus < ActiveRecord::Base
   def self.record(endpoint_id, latest)
     status = UpdateStatus.new
     status[:endpoint_id] = endpoint_id
-    status[:first] = latest[:first].nil? ? '' : latest[:first].map{ |k, v| v }.join('$')
-    status[:last]  = latest[:last].nil?  ? '' : latest[:last].map{ |k, v| v }.join('$')
+    status[:first] = latest[:first].nil? ? '' : latest[:first].join('$')
+    status[:last]  = latest[:last].nil?  ? '' : latest[:last].join('$')
     status.save
     return status
   end

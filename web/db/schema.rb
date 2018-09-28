@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171108035435) do
+ActiveRecord::Schema.define(version: 20180926075923) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -122,10 +122,18 @@ ActiveRecord::Schema.define(version: 20171108035435) do
     t.text     "publisher"
     t.datetime "retrieved_at"
     t.integer  "crawl_log_id"
+    t.boolean  "support_service_clause"
+    t.text     "support_service_clause_log"
   end
 
   add_index "evaluations", ["created_at"], name: "index_evaluations_on_created_at", using: :btree
   add_index "evaluations", ["retrieved_at"], name: "index_evaluations_on_retrieved_at", using: :btree
+
+  create_table "linked_open_vocabularies", force: :cascade do |t|
+    t.text     "uri"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "prefix_filters", force: :cascade do |t|
     t.integer  "endpoint_id"
@@ -137,9 +145,14 @@ ActiveRecord::Schema.define(version: 20171108035435) do
 
   create_table "prefixes", force: :cascade do |t|
     t.integer  "endpoint_id"
-    t.string   "uri"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.string   "allow"
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.string   "deny"
+    t.boolean  "case_insensitive", default: false, null: false
+    t.boolean  "as_regex",         default: false
+    t.boolean  "use_fixed_uri",    default: false
+    t.string   "fixed_uri"
   end
 
   create_table "rdf_prefixes", force: :cascade do |t|
@@ -157,6 +170,16 @@ ActiveRecord::Schema.define(version: 20171108035435) do
     t.datetime "updated_at",  null: false
     t.integer  "src_id"
   end
+
+  create_table "sessions", force: :cascade do |t|
+    t.string   "session_id", null: false
+    t.text     "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree
+  add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
   create_table "update_statuses", force: :cascade do |t|
     t.integer  "endpoint_id"

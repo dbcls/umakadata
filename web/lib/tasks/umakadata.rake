@@ -1,3 +1,5 @@
+require 'umakadata'
+
 STDOUT.sync = true
 STDERR.sync = true
 
@@ -17,6 +19,31 @@ namespace :umakadata do
     ActiveMedian.create_function
   end
 
+  desc "import endpoints from CSV file"
+  task :import_endpoints_from_csv, ['file_path'] => :environment do |task, args|
+    file_path = args[:file_path].blank? ? "./db/seeds_data/endpoints.csv" : args[:file_path]
+    if File.exists?(file_path)
+      puts file_path
+      CSV.foreach(file_path, { :headers => true }) do |row|
+        Rake::Task["umakadata:import_endpoint"].execute(Rake::TaskArguments.new([:name, :url], [row[0], row[1]]))
+      end
+    else
+      puts "#{file_path} is not found"
+    end
+  end
+
+  desc "import endpoint"
+  task :import_endpoint, ['name', 'url'] => :environment do |task, args|
+    name = args[:name].blank? ? nil : args[:name]
+    url  = args[:url].blank? ? nil : args[:url]
+    unless name.nil? || url.nil?
+      puts name
+      Endpoint.create(:name => name, :url => url)
+    else
+      puts "Invalid argument: (name or url)"
+    end
+  end
+
   desc "import prefix for all endpoints from CSV file"
   task :import_prefix_for_all_endpoints, ['directory_path'] => :environment do |task, args|
     names          = Endpoint.pluck(:name)
@@ -32,9 +59,7 @@ namespace :umakadata do
     if !endpoint.nil? && File.exist?(file_path)
       puts file_path
       endpoint.prefixes.destroy_all
-      CSV.foreach(file_path, { :headers => true }) do |row|
-        Prefix.create(:endpoint_id => endpoint.id, :uri => row[0])
-      end
+      Prefix.import_csv({:id => endpoint.id, :endpoint => {:file => File.new(file_path)}})
     else
       puts endpoint.name
     end
@@ -105,8 +130,9 @@ namespace :umakadata do
   task :export_prefixes, ['output_path'] => :environment do |task, args|
     path = args[:output_path]
     CSV.open(path, 'w') do |row|
-      row << %w(id endpoint_id uri)
-      Prefix.all.each { |prefix| row << %W(#{prefix.id} #{prefix.endpoint_id} #{prefix.uri}) }
+      columns = Prefix.columns.map(&:name).select{ |c| c != 'created_at' && c != 'updated_at' }
+      row << columns
+      Prefix.all.each { |prefix| row << columns.map{ |c| prefix[c] } }
     end
   end
 
@@ -139,6 +165,10 @@ namespace :umakadata do
     if crawl_log.blank?
       crawl_log = CrawlLog.create(started_at: time)
     end
+
+    Rake::Task["umakadata:update_linked_open_vocabularies"].execute
+    list_of_ontologies_in_LOV = LinkedOpenVocabulary.all.pluck(:uri)
+
     rdf_prefixes = RdfPrefix.all.pluck(:id, :endpoint_id, :uri)
     Endpoint.all.order("id #{args[:order]}").each do |endpoint|
       next if endpoint.disable_crawling
@@ -152,7 +182,7 @@ namespace :umakadata do
       puts endpoint.name
       begin
         retriever  = Umakadata::Retriever.new endpoint.url, time
-        evaluation = Evaluation.record(endpoint, retriever, rdf_prefixes_candidates)
+        evaluation = Evaluation.record(endpoint, retriever, rdf_prefixes_candidates, list_of_ontologies_in_LOV)
         evaluation.update_column(:crawl_log_id, crawl_log.id) unless evaluation.nil?
       rescue => e
         puts e.message
@@ -179,9 +209,12 @@ namespace :umakadata do
 
       rdf_prefixes_candidates = RdfPrefix.where.not(endpoint_id: endpoint.id).pluck(:uri)
 
+      Rake::Task["umakadata:update_linked_open_vocabularies"].execute
+      list_of_ontologies_in_LOV = LinkedOpenVocabulary.all.pluck(:uri)
+
       begin
         retriever  = Umakadata::Retriever.new endpoint.url, Time.zone.parse(start_time)
-        evaluation = Evaluation.record(endpoint, retriever, rdf_prefixes_candidates)
+        evaluation = Evaluation.record(endpoint, retriever, rdf_prefixes_candidates, list_of_ontologies_in_LOV)
         evaluation.update_column(:crawl_log_id, crawl_log.id) unless evaluation.nil?
       rescue => e
         puts e.message
@@ -224,19 +257,23 @@ namespace :umakadata do
       prefix = rdf_prefix[1] != endpoint.id ? rdf_prefix[2] : nil
       rdf_prefixes_candidates.push prefix unless prefix.nil?
     end
+
+    Rake::Task["umakadata:update_linked_open_vocabularies"].execute
+    list_of_ontologies_in_LOV = LinkedOpenVocabulary.all.pluck(:uri)
+
     retriever = Umakadata::Retriever.new endpoint.url, Time.zone.now
-    Evaluation.record(endpoint, retriever, rdf_prefixes_candidates)
+    Evaluation.record(endpoint, retriever, rdf_prefixes_candidates, list_of_ontologies_in_LOV)
   end
 
   desc "test for checking retriever method all endpoints"
-  task :retriever_method, ['method_name'] => :environment do |task, args|
+  task :test_retriever_method_all, ['method_name'] => :environment do |_task, args|
     puts "endpoint_name|dead/alive|result|log"
     Endpoint.all.each do |endpoint|
       retriever = Umakadata::Retriever.new endpoint.url, Time.zone.now
 
       if retriever.alive?
         logger = Umakadata::Logging::Log.new
-        puts endpoint.name + "|alive|" + retriever.send(args[:method_name], logger: logger).to_s + "|" + logger.as_json.to_s
+        puts endpoint.name + "|alive|" + retriever.send(args[:method_name], *args.extras, logger: logger).to_s + "|" + logger.as_json.to_s
       else
         puts endpoint.name + "|dead|x|x|"
       end
@@ -244,17 +281,13 @@ namespace :umakadata do
   end
 
   desc "test for checking retriever method"
-  task :test_retriever_method, ['name', 'method_name'] => :environment do |task, args|
-    puts "endpoint_name|dead/alive|result|log"
+  task :test_retriever_method, ['name', 'method_name'] => :environment do |_task, args|
+    puts "endpoint_name|result|log"
     endpoint  = Endpoint.where("name LIKE ?", "%#{args[:name]}%").first
     retriever = Umakadata::Retriever.new endpoint.url, Time.zone.now
 
-    # if retriever.alive?
     logger = Umakadata::Logging::Log.new
-    puts endpoint.name + "|alive|" + retriever.send(args[:method_name], logger: logger).to_s + "|" + logger.as_json.to_s
-    # else
-    #   puts endpoint.name + "|dead|x|x|"
-    # end
+    puts "#{endpoint.name}|#{retriever.send(args[:method_name], *args.extras, logger: logger)}|#{logger.as_json.to_s}"
   end
 
   desc "Fill retrieved_at column in evaluations table"
@@ -294,8 +327,12 @@ namespace :umakadata do
       endpoint = Endpoint.where(name: issue[:title]).take
 
       if endpoint.nil?
-        GithubHelper.close_issue(issue_id)
-        next
+        begin
+          GithubHelper.close_issue(issue_id)
+        rescue => e
+          p e.message
+          next
+        end
       end
       ActiveRecord::Base.transaction do
         # do not return callback after update
@@ -307,23 +344,31 @@ namespace :umakadata do
   desc "Create label for each endpoint"
   task :create_label_for_each_endpoint => :environment do
     Endpoint.all.each_with_index do |endpoint, index|
-      label_name = endpoint.name.gsub(",", "")
-      label      = GithubHelper.add_label(label_name, Color.get_color(endpoint.id))
-      endpoint.update_column(:label_id, label[:id])
+      begin
+        label_name = endpoint.name.gsub(",", "")
+        label      = GithubHelper.add_label(label_name, Color.get_color(endpoint.id))
+        endpoint.update_column(:label_id, label[:id])
+      rescue => e
+        p e.message
+      end
     end
   end
 
-  desc "Add label to exsiting issues"
-  task :add_label_to_exsiting_issues => :environment do
+  desc "Add label to existing issues"
+  task :add_label_to_existing_issues => :environment do
     GithubHelper.list_issues({ :state => 'all', :label => "endpoints" }).each do |issue|
       endpoint = Endpoint.where(name: issue[:title]).take
 
       if endpoint.nil?
-        puts endpoint.name
+        puts issue[:title]
         next
       end
       label = endpoint.name.gsub(",", "")
-      GithubHelper.add_labels_to_an_issue(issue[:number], [label])
+      begin
+        GithubHelper.add_labels_to_an_issue(issue[:number], [label])
+      rescue => e
+        p e.message
+      end
     end
   end
 
@@ -335,6 +380,24 @@ namespace :umakadata do
     end
   end
 
+  desc "Clear expired sessions (created more than 1 hour ago)"
+  task :cleanup_sessions => :environment do
+    sql = "DELETE FROM sessions WHERE (updated_at < '#{(DateTime.now - 1.hours).utc}')"
+    ActiveRecord::Base.connection.execute(sql)
+  end
+
+  desc "Update Linked Open Vocabularies"
+  task :update_linked_open_vocabularies => :environment do
+    logger = Umakadata::Logging::Log.new
+    list_ontologies = Umakadata::LinkedOpenVocabularies.instance.get(logger: logger)
+    if list_ontologies.empty?
+      puts 'Vocabulary list in LOV is not fetchable'
+    else
+      puts 'Update Linked Open Vocabularies.'
+      LinkedOpenVocabulary.delete_all
+      list_ontologies.each { |uri| LinkedOpenVocabulary.create(:uri => uri) }
+    end
+  end
 end
 
 namespace :sbmeta do

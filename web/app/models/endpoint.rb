@@ -49,24 +49,20 @@ class Endpoint < ActiveRecord::Base
   end
 
   after_save do
-    if self.issue_id.nil?
-      issue = GithubHelper.create_issue(self.name)
-      self.update_column(:issue_id, issue[:number]) unless issue.nil?
-
-      label = GithubHelper.add_label(self.name.gsub(",", ""), Color.get_color(self.id))
-
-      next if issue.nil? || label.nil?
-
-      GithubHelper.add_labels_to_an_issue(issue[:number], [label[:name]])
-      self.update_column(:label_id, label[:id]) unless label.nil?
-    else
-      GithubHelper.edit_issue(self.issue_id, self.name)
-
-      labels = GithubHelper.labels_for_issue(self.issue_id)
-      label = labels.select {|label| label[:id] == self.label_id}.first
-      GithubHelper.update_label(label[:name], {:name => self.name.gsub(",", "")})
+    begin
+      if self.issue_id.nil?
+        label = Endpoint.create_label(self)
+        issue = Endpoint.create_issue(self)
+        GithubHelper.add_labels_to_an_issue(issue[:number], [label[:name]]) unless label.nil? && issue.nil?
+      else
+        Endpoint.sync_label(self)
+        GithubHelper.update_issue(self.issue_id, self.name)
+      end
+      GithubHelper.add_labels_to_an_issue(self.issue_id, ['endpoints'])
+    rescue => e
+      p "#{self.name}: #{e.message}"
+      errors.add(:base, "Error occured during using Github API!\n\n#{e.message}")
     end
-    GithubHelper.add_labels_to_an_issue(self.issue_id, ['endpoints'])
   end
 
   after_destroy do
@@ -115,4 +111,33 @@ class Endpoint < ActiveRecord::Base
     data
   end
 
+  def self.create_label(endpoint)
+    name  = endpoint.id.to_s
+    label = if GithubHelper.label_exists?(name)
+              GithubHelper.get_label(name)
+            else
+              GithubHelper.add_label(name, Color.get_color(endpoint.id))
+            end
+    endpoint.update_column(:label_id, label[:id]) unless label.nil?
+    label
+  end
+
+  def self.create_issue(endpoint)
+    raise(StandardError, "issue for #{endpoint.name} already exists") if GithubHelper.issue_exists?(endpoint.name)
+    issue = GithubHelper.create_issue(endpoint.name)
+    endpoint.update_column(:issue_id, issue[:number]) unless issue.nil?
+    issue
+  end
+
+  def self.sync_label(endpoint)
+    labels = GithubHelper.labels_for_issue(endpoint.issue_id)
+    label  = labels.select { |label| label[:id] == endpoint.label_id }.first
+    raise(StandardError, "issue for #{endpoint.name} does not have a label") if label.nil?
+
+    GithubHelper.update_label(label[:name], { :name => endpoint.id.to_s })
+  end
+
+  def self.enabled
+    where(disable_crawling: false)
+  end
 end

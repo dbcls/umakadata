@@ -7,6 +7,7 @@ Rails.application.routes.draw do
 
   get  'endpoints' => 'endpoints#index'
   get  'endpoints/search'
+  get  'endpoints/search_result'
   get  'api/endpoints/search'  => 'api#endpoints_search'
   get  'endpoints/graph'
   get  'api/endpoints/graph'  => 'api#endpoints_graph'
@@ -31,6 +32,13 @@ Rails.application.routes.draw do
 
   get 'inquiries' => 'inquiries#form'
   post 'inquiries' => 'inquiries#send_inquiry'
+
+  get  'issues/:endpoint_id/form' => 'issues#form', as: 'issues_form'
+  get  'issues/after_authorization'
+  post  'issues/:endpoint_id/create' => 'issues#create', as: 'issues_create'
+
+  get '/auth/:provider/callback' => 'sessions#callback'
+  get '/auth/failure' => 'sessions#failure'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
