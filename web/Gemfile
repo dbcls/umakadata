@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'umakadata', git: 'https://github.com/lifematics/umakadata_gem.git' # TODO: replace with dbcls/umakadata_gem.git
+gem 'umakadata', git: 'https://github.com/dbcls/umakadata_gem.git'
 
 # web framework
 gem 'rails', '4.2.10'
