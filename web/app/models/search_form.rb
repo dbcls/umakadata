@@ -11,21 +11,21 @@ class SearchForm
   def search
     @endpoints = Endpoint.joins(:evaluation).eager_load(:evaluation).order('evaluations.score DESC')
     @endpoints = @endpoints.includes(:prefixes) unless prefix.blank?
-    add_like_condition_for_name_url(name) if !name.blank?
-    add_like_condition_for_prefix(prefix) if !prefix.blank?
+    add_like_condition_for_name_url(name) if name.present?
+    add_like_condition_for_prefix(prefix) if prefix.present?
     add_date_condition(date.blank? ? Endpoint.get_last_crawled_date.to_s : date)
     add_range_condition('evaluations.score', score_lower, score_upper)
     add_range_condition('evaluations.alive_rate', alive_rate_lower, alive_rate_upper)
-    add_rank_condition('evaluations.rank', rank) if !rank.blank?
+    add_rank_condition('evaluations.rank', rank) if rank.present?
     add_range_condition('evaluations.cool_uri_rate', cool_uri_rate_lower, cool_uri_rate_upper)
     add_range_condition('evaluations.ontology_score', ontology_lower, ontology_upper)
     add_range_condition('evaluations.metadata_score', metadata_lower, metadata_upper)
-    add_is_not_empty_condition('evaluations.service_description') if !service_description.blank?
-    add_is_not_empty_condition('evaluations.void_ttl') if !void.blank?
-    add_is_true_condition('evaluations.support_content_negotiation') if !content_negotiation.blank?
-    add_is_true_condition('evaluations.support_html_format') if !html.blank?
-    add_is_true_condition('evaluations.support_turtle_format') if !turtle.blank?
-    add_is_true_condition('evaluations.support_xml_format') if !xml.blank?
+    add_is_not_empty_condition('evaluations.service_description') if service_description.present?
+    add_is_not_empty_condition('evaluations.void_ttl') if void.present?
+    add_is_true_condition('evaluations.support_content_negotiation') if content_negotiation.present?
+    add_is_true_condition('evaluations.support_html_format') if html.present?
+    add_is_true_condition('evaluations.support_turtle_format') if turtle.present?
+    add_is_true_condition('evaluations.support_xml_format') if xml.present?
     add_equal_condition_for_prefix_filter(element_type, prefix_filter_uri, prefix_filter_uri_fragment) if element_type.present? && prefix_filter_uri.present?
 
     @endpoints
