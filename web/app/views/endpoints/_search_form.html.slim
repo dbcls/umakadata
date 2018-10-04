@@ -66,33 +66,33 @@ div.panel-group#accordion
           .form-group.row
             label.col-xs-3 Score (0–100)
             .form-inline.col-xs-9
-              = form.text_field :score_lower, :class => 'form-control'
+              = form.text_field :score_lower, type: 'number', min: 0, max: 100, step: 1, class: 'form-control'
               span –
-              = form.text_field :score_upper, :class => 'form-control'
+              = form.text_field :score_upper, type: 'number', min: 0, max: 100, step: 1, class: 'form-control'
           .form-group.row
             label.col-xs-3 Alive Rate (0–100)
             .form-inline.col-xs-9
-              = form.text_field :alive_rate_lower, :class => 'form-control'
+              = form.text_field :alive_rate_lower, type: 'number', min: 0, max: 100, step: 1, class: 'form-control'
               span –
-              = form.text_field :alive_rate_upper, :class => 'form-control'
+              = form.text_field :alive_rate_upper, type: 'number', min: 0, max: 100, step: 1, class: 'form-control'
           .form-group.row
             label.col-xs-3 Cool URI Rate (0–100)
             .form-inline.col-xs-9
-              = form.text_field :cool_uri_rate_lower, :class => 'form-control'
+              = form.text_field :cool_uri_rate_lower, type: 'number', min: 0, max: 100, step: 1, class: 'form-control'
               span –
-              = form.text_field :cool_uri_rate_upper, :class => 'form-control'
+              = form.text_field :cool_uri_rate_upper, type: 'number', min: 0, max: 100, step: 1, class: 'form-control'
           .form-group.row
             label.col-xs-3 Ontology (0–100)
             .form-inline.col-xs-9
-              = form.text_field :ontology_lower, :class => 'form-control'
+              = form.text_field :ontology_lower, type: 'number', min: 0, max: 100, step: 1, class: 'form-control'
               span –
-              = form.text_field :ontology_upper, :class => 'form-control'
+              = form.text_field :ontology_upper, type: 'number', min: 0, max: 100, step: 1, class: 'form-control'
           .form-group.row
             label.col-xs-3 Metadata Coverage (0–100)
             .form-inline.col-xs-9
-              = form.text_field :metadata_lower, :class => 'form-control'
+              = form.text_field :metadata_lower, type: 'number', min: 0, max: 100, step: 1, class: 'form-control'
               span –
-              = form.text_field :metadata_upper, :class => 'form-control'
+              = form.text_field :metadata_upper, type: 'number', min: 0, max: 100, step: 1, class: 'form-control'
           .form-group.row
             label.col-xs-3 Attributes
             .col-xs-9
