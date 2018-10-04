@@ -48,3 +48,12 @@ label.control-label {
 .left-margin-1 {
   margin-left: 1rem;
 }
+
+.hight-fix {
+  height: 34px;
+  padding-top: 7px;
+}
+
+.hight-fix label {
+  margin-top: 0;
+}

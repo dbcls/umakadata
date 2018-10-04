@@ -45,9 +45,24 @@ div.panel-group#accordion
                       todayHighlight: true
                   });
           .form-group.row
-            label.col-xs-3 Rank (A, B, C, D, E)
-            .form-inline.col-xs-9
-              = form.text_field :rank, :class => 'form-control'
+            label.col-xs-3 Rank
+            .col-xs-9
+              .hight-fix
+                label.checkbox-inline
+                  = form.check_box :rank, { multiple: true }, 'A', nil
+                  | A
+                label.checkbox-inline
+                  = form.check_box :rank, { multiple: true }, 'B', nil
+                  | B
+                label.checkbox-inline
+                  = form.check_box :rank, { multiple: true }, 'C', nil
+                  | C
+                label.checkbox-inline
+                  = form.check_box :rank, { multiple: true }, 'D', nil
+                  | D
+                label.checkbox-inline
+                  = form.check_box :rank, { multiple: true }, 'E', nil
+                  | E
           .form-group.row
             label.col-xs-3 Score (0–100)
             .form-inline.col-xs-9
