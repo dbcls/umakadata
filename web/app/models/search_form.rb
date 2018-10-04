@@ -6,6 +6,8 @@ class SearchForm
                 :metadata_lower, :metadata_upper, :service_description, :void, :content_negotiation,
                 :html, :turtle, :xml, :element_type, :prefix_filter_uri, :prefix_filter_uri_fragment
 
+  RANKS = ('A'..'E').to_a.reverse.freeze
+
   def search
     @endpoints = Endpoint.joins(:evaluation).eager_load(:evaluation).order('evaluations.score DESC')
     @endpoints = @endpoints.includes(:prefixes) unless prefix.blank?
@@ -52,8 +54,16 @@ class SearchForm
   end
 
   def add_rank_condition(column, value)
-    rank_values = { 'A' => 5, 'B' => 4, 'C' => 3, 'D' => 2, 'E' => 1 }
-    add_equal_condition(column, rank_values[value]) unless rank_values[value].nil?
+    ranks = Array(value).map(&:upcase).select { |x| x.presence_in(RANKS) }
+
+    condition = Endpoint.all
+    ranks.each do |x|
+      condition = condition.where(column => RANKS.index(x) + 1)
+    end
+
+    if (c = condition.where_values).present?
+      @endpoints = @endpoints.where(c.reduce(:or))
+    end
   end
 
   def add_date_condition(value)
