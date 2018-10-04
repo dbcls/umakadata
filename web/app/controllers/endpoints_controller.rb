@@ -61,11 +61,14 @@ class EndpointsController < ApplicationController
   end
 
   def search_result
-    search_params                                                                 = request.query_parameters[:search_form]
-    search_params[:prefix_filter_uri], search_params[:prefix_filter_uri_fragment] =
-      search_params[:prefix_filter_uri].split('#')
-    @search_form                                                                  = SearchForm.new(search_params)
-    @endpoints                                                                    = @search_form.search
+    search_params = request.query_parameters[:search_form]
+
+    prefix_filter_uri = search_params[:prefix_filter_uri].split('#')
+    search_params[:prefix_filter_uri] = prefix_filter_uri[0]
+    search_params[:prefix_filter_uri_fragment] = prefix_filter_uri[1]
+
+    @search_form = SearchForm.new(search_params)
+    @endpoints   = @search_form.search
   end
 
   def show
