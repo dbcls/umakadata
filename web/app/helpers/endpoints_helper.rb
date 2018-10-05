@@ -15,4 +15,13 @@ module EndpointsHelper
     end
   end
 
+  def twitter_widget
+    url = 'https://twitter.com/umakayummy?ref_src=twsrc%5Etfw'
+    options = { class: 'twitter-timeline', data: { height: 600 } }
+    js = 'https://platform.twitter.com/widgets.js'
+    content_tag :div do
+      concat link_to 'Tweets by umakayummy', url, options
+      concat javascript_include_tag js, cache: true, async: true, charset: 'utf-8'
+    end
+  end
 end
