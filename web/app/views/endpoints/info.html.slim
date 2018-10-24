@@ -130,7 +130,7 @@
                             td E
                             td 0 - 20
                 td
-                  = "Rank " + show_rank(@evaluation.rank) + " ( " + @evaluation.score.to_s + " ) "
+                  = "Rank " + show_rank(@evaluation.rank) + " ( " + format('%d', @evaluation.score.to_i) + " ) "
               tr
                 td
                   .umakadata-tooltip
