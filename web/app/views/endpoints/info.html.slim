@@ -95,6 +95,16 @@
               tr
                 td
                   .umakadata-tooltip
+                    | Data scale
+                    span.small
+                      | a number represents the scale of data.
+                      br
+                      | The value is determined by a formula, x = log<sub>10</sub>N where N is the number of data entries.
+                td
+                  = (n = @evaluation.number_of_statements) ? format('%.1f', Math.log10(n)) : '-'
+              tr
+                td
+                  .umakadata-tooltip
                     | Rank
                     span.small
                       | ranked as shown in the following table
