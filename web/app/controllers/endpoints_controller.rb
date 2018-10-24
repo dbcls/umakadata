@@ -165,7 +165,7 @@ class EndpointsController < ApplicationController
     evaluations = Evaluation.history(params, points)
     evaluations.each do |evaluation|
       date  = evaluation.crawl_log.started_at
-      rates = Evaluation.calc_rates(evaluation)
+      rates = evaluation.rates
       availability.push(rates[0])
       freshness.push(rates[1])
       operation.push(rates[2])
@@ -178,7 +178,7 @@ class EndpointsController < ApplicationController
 
     while labels.size < points
       evaluation = Evaluation.new
-      rates      = Evaluation.calc_rates(evaluation)
+      rates      = evaluation.rates
       availability.unshift(rates[0])
       freshness.unshift(rates[1])
       operation.unshift(rates[2])

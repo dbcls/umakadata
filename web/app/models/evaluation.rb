@@ -166,8 +166,6 @@ class Evaluation < ActiveRecord::Base
     end
 
     eval.alive_rate = Evaluation.calc_alive_rate(eval)
-    eval.score = Evaluation.calc_score(eval)
-    eval.rank  = Evaluation.calc_rank(eval.score)
     eval.update_interval = Evaluation.calc_update_interval(eval)
 
     return eval if eval.save!
@@ -323,11 +321,12 @@ class Evaluation < ActiveRecord::Base
     return percentage.round(1)
   end
 
+  # @deprecated use Evaluation#score instead
   def self.calc_score(eval)
-    rates = self.calc_rates(eval)
-    return rates.inject(0.0) { |r, i| r += i } / rates.count
+    eval.calc_score
   end
 
+  # @deprecated use Evaluation#rank instead
   def self.calc_rank(score)
     case score
     when (0..20)   then 1
@@ -363,7 +362,7 @@ class Evaluation < ActiveRecord::Base
     conditions['evaluations.id'] = evaluation_id unless evaluation_id.nil?
     endpoint = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions).first
     evaluation = endpoint.evaluation
-    return self.calc_rates(evaluation)
+    return evaluation.rates
   end
 
   def self.avg_rates
@@ -373,7 +372,7 @@ class Evaluation < ActiveRecord::Base
     endpoints = Endpoint.includes(:evaluation).order('evaluations.score DESC').where(conditions).all
     endpoints.each do |endpoint|
       evaluation = endpoint.evaluation
-      rates = self.calc_rates(evaluation)
+      rates = evaluation.rates
       for i in 0..5 do
         total[i] += rates[i]
       end
@@ -386,45 +385,9 @@ class Evaluation < ActiveRecord::Base
     return avg
   end
 
+  # @deprecated use Evaluation#rates instead
   def self.calc_rates(eval)
-    rates = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-
-    # availability
-    rates[0] += eval.alive_rate unless eval.alive_rate.blank?
-
-    #freshness
-    # max =100, min = 30 to avoid being 0 point for all endpoints which does not have VoID
-    if eval.update_interval.nil?
-      rates[1] = 30.0
-    else
-      rates[1] = 100.0 if eval.update_interval < 30
-      #rates[1] = 100.0 -  100.0 * ( eval.update_interval - 30 ) / 335 if eval.update_interval >= 30
-      rates[1] = 100.0 -  70.0 * ( eval.update_interval - 30 ) / 335 if eval.update_interval >= 30
-      rates[1] = 30.0 if eval.update_interval > 365
-    end
-    
-    #operation
-    rates[2] += 50.0 unless eval.service_description.blank?
-    rates[2] += 50.0 unless eval.void_ttl.blank?
-
-    #usefulness
-    rates[3] += 50.0 * eval.ontology_score / 100.0 unless eval.ontology_score.blank?
-    rates[3] += 50.0 * eval.metadata_score / 100.0 unless eval.metadata_score.blank?
-
-    #validity
-    rates[4] += 40.0 * eval.cool_uri_rate.to_f / 100.0 unless eval.cool_uri_rate.blank?
-    rates[4] += 20.0 if eval.subject_is_http_uri
-    rates[4] += 20.0 if eval.uri_provides_info
-    rates[4] += 20.0 if eval.contains_links
-
-    #performance
-    if eval.execution_time.present? && eval.number_of_statements.present? && eval.number_of_statements > 0
-      second = (eval.execution_time / eval.number_of_statements) * 1000000
-      rates[5] = 100.0 * (1.0 - second)
-    end
-    rates[5] = 0.0 if rates[5] < 0.0 || 100.0 < rates[5]
-
-    return rates.map{ |v| v.to_i }
+    eval.rates
   end
 
   def self.check_update(retriever, eval, logger: nil)
@@ -494,4 +457,67 @@ class Evaluation < ActiveRecord::Base
     logger
   end
 
+  def rates
+    @rates ||= begin
+      rates = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+      # availability
+      rates[0] += alive_rate unless alive_rate.blank?
+
+      #freshness
+      # max =100, min = 30 to avoid being 0 point for all endpoints which does not have VoID
+      if update_interval.nil?
+        rates[1] = 30.0
+      else
+        rates[1] = 100.0 if update_interval < 30
+        #rates[1] = 100.0 -  100.0 * ( update_interval - 30 ) / 335 if update_interval >= 30
+        rates[1] = 100.0 - 70.0 * (update_interval - 30) / 335 if update_interval >= 30
+        rates[1] = 30.0 if update_interval > 365
+      end
+
+      #operation
+      rates[2] += 50.0 unless service_description.blank?
+      rates[2] += 50.0 unless void_ttl.blank?
+
+      #usefulness
+      rates[3] += 50.0 * ontology_score / 100.0 unless ontology_score.blank?
+      rates[3] += 50.0 * metadata_score / 100.0 unless metadata_score.blank?
+
+      #validity
+      rates[4] += 40.0 * cool_uri_rate.to_f / 100.0 unless cool_uri_rate.blank?
+      rates[4] += 20.0 if subject_is_http_uri
+      rates[4] += 20.0 if uri_provides_info
+      rates[4] += 20.0 if contains_links
+
+      #performance
+      if execution_time.present? && number_of_statements.present? && number_of_statements > 0
+        second   = (execution_time / number_of_statements) * 1000000
+        rates[5] = 100.0 * (1.0 - second)
+      end
+      rates[5] = 0.0 if rates[5] < 0.0 || 100.0 < rates[5]
+
+      rates.map { |v| v.to_i }
+    end
+  end
+
+  def score
+    rates.sum.to_f / rates.count
+  end
+
+  def rank
+    case score
+    when (0..20) then
+      1
+    when (20..40) then
+      2
+    when (40..60) then
+      3
+    when (60..80) then
+      4
+    when (80..100) then
+      5
+    else
+      1
+    end
+  end
 end
