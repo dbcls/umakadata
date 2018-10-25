@@ -13,3 +13,12 @@
  *= require_tree ./umakadata
  *= require_self
  */
+
+/* adjustment for common header */
+body .container-fluid {
+  margin-top: 24px;
+}
+
+body .container-fluid .sidebar {
+  margin-top: 24px;
+}
