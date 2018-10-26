@@ -166,6 +166,8 @@ class Evaluation < ActiveRecord::Base
     end
 
     eval.alive_rate = Evaluation.calc_alive_rate(eval)
+    eval.score = eval.score
+    eval.rank  = eval.rank
     eval.update_interval = Evaluation.calc_update_interval(eval)
 
     return eval if eval.save!
