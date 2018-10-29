@@ -13,3 +13,9 @@
 //= require jquery
 //= require jquery_ujs
 //= require bootstrap.min
+
+$(function() {
+  setTimeout(function() {
+    $.getScript('https://dbcls.rois.ac.jp/DBCLS-common-header-footer/common-header/script/common-header.js');
+  }, 10);
+});
