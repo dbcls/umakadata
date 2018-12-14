@@ -276,6 +276,8 @@ class Evaluation < ActiveRecord::Base
     eval.linksets = retriever.linksets(eval.void_ttl)
   end
 
+  include ActionView::Helpers::TextHelper
+
   def self.retrieve_linked_data_rules(retriever, eval)
     eval.subject_is_uri = true
 
@@ -296,7 +298,7 @@ class Evaluation < ActiveRecord::Base
             log.result = "Prefix #{uri} is not HTTP/HTTPS URI"
             logger.push log
           end
-          logger.result = "#{invalid.count} preixes are not HTTP/HTTPS URI"
+          logger.result = "#{pluralize(invalid.count, "prefix")} are not HTTP/HTTPS URI"
         end
       else
         eval.subject_is_http_uri = retriever.http_subject?(eval.number_of_statements, logger: logger)
