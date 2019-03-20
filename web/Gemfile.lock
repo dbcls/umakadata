@@ -18,7 +18,7 @@ GIT
 
 GIT
   remote: https://github.com/dbcls/umakadata_gem.git
-  revision: 88711a469e9f96d1d78a10d43f37146dee7014b7
+  revision: 0b2ea192f8d14f23ac3ed153379ff760722083c7
   specs:
     umakadata (0.9.0)
       activesupport (~> 4.2.6)
@@ -266,7 +266,7 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
-    rdf (3.0.7)
+    rdf (3.0.10)
       hamster (~> 3.0)
       link_header (~> 0.0, >= 0.0.8)
     rdf-aggregate-repo (2.2.1)
@@ -286,7 +286,7 @@ GEM
       rdf (>= 2.2, < 4.0)
       rdf-rdfa (>= 2.2, < 4.0)
       rdf-xsd (>= 2.2, < 4.0)
-    rdf-turtle (3.0.3)
+    rdf-turtle (3.0.5)
       ebnf (~> 1.1)
       rdf (~> 3.0)
     rdf-vocab (3.0.4)
@@ -365,8 +365,8 @@ GEM
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     sqlite3 (1.3.13)
-    sxp (1.0.1)
-      rdf (>= 2.2, < 4.0)
+    sxp (1.0.2)
+      rdf (~> 3.0)
     temple (0.8.0)
     therubyracer (0.12.3)
       libv8 (~> 3.16.14.15)
