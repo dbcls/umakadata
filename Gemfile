@@ -12,6 +12,9 @@ gem 'puma', '~> 3.11'
 # gem 'redis', '~> 4.0'
 gem 'unicorn', '~> 5.5'
 
+## html
+gem 'slim-rails', '~> 3.2'
+
 ## css
 gem 'sass-rails', '~> 5.0'
 
