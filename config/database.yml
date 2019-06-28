@@ -14,6 +14,7 @@ test:
 
 production:
   <<: *default
+  host: <%= ENV.fetch("UMAKADATA_DATABASE_HOST") { 'localhost' } %>
   database: umakadata_production
   username: umakadata
   password: <%= ENV['UMAKADATA_DATABASE_PASSWORD'] %>
