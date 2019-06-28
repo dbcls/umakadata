@@ -6,9 +6,11 @@ ruby '2.6.3'
 gem 'rails', '~> 5.2.3'
 
 ## middleware
+gem 'foreman', '~> 0.85.0'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 3.11'
 # gem 'redis', '~> 4.0'
+gem 'unicorn', '~> 5.5'
 
 ## css
 gem 'sass-rails', '~> 5.0'
