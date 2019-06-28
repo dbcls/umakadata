@@ -1,24 +1,54 @@
 version: '2'
- 
+
 services:
-  db:
-    image: postgres:9.5
+  nginx:
+    image: nginx:1.17
     volumes:
-      - dbdata:/var/lib/postgresql/data
-  web:
-    build: .
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - app_www:/var/www
+    ports:
+      - 80:80
+    depends_on:
+      - app
+
+  postgres:
+    image: postgres:11.4
+    environment:
+      - POSTGRES_USER=umakadata
+      - POSTGRES_PASSWORD=${UMAKADATA_DATABASE_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:5.0
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+
+  app:
+    build: docker/app
     environment:
       - RAILS_ENV=production
+      - NODE_ENV=production
+      - UMAKADATA_DATABASE_HOST=postgres
+      - UMAKADATA_DATABASE_PASSWORD=${UMAKADATA_DATABASE_PASSWORD}
     volumes:
-      - .:/myapp
-      - bundle:/myapp/web/vendor/bundle
-    ports:
-      - "127.0.0.1:8080:8080"
-    links:
-      - db
+      - .:/app
+      - app_bundle:/app/vendor/bundle
+      - app_tmp:/app/tmp
+      - app_www:/var/www
+    depends_on:
+      - postgres
+      - redis
 
 volumes:
-  bundle:
+  postgres_data:
     driver: local
-  dbdata:
+  redis_data:
+    driver: local
+  app_bundle:
+    driver: local
+  app_tmp:
+    driver: local
+  app_www:
     driver: local
