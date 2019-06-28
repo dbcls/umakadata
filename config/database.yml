@@ -6,6 +6,7 @@ default: &default
 development:
   <<: *default
   database: umakadata_development
+  username: umakadata
 
 test:
   <<: *default
