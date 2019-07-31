@@ -25,6 +25,8 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'turbolinks', '~> 5'
 
 ## utility
+gem 'activeadmin', '~> 1.4'
+gem 'devise', '~> 4.5'
 gem 'jbuilder', '~> 2.5'
 
 group :development, :test do
