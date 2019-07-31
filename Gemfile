@@ -16,10 +16,8 @@ gem 'unicorn', '~> 5.5'
 gem 'slim-rails', '~> 3.2'
 
 ## css
-gem 'sass-rails', '~> 5.0'
 
 ## js
-gem 'uglifier', '>= 1.3.0'
 gem 'webpacker'
 
 ## optimization
