@@ -2,10 +2,10 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  host: localhost
-  port: 5432
-  username: umakadata
-  password:
+  host: <%= ENV.fetch("UMAKADATA_DATABASE_HOST") { 'localhost' } %>
+  port: <%= ENV.fetch("UMAKADATA_DATABASE_PORT") { 5432 } %>
+  username: <%= ENV.fetch("UMAKADATA_DATABASE_USERNAME") { 'umakadata' } %>
+  password: <%= ENV['UMAKADATA_DATABASE_PASSWORD'] %>
 
 development:
   <<: *default
@@ -18,7 +18,3 @@ test:
 production:
   <<: *default
   database: umakadata_production
-  host: <%= ENV.fetch("UMAKADATA_DATABASE_HOST") { 'localhost' } %>
-  port: <%= ENV.fetch("UMAKADATA_DATABASE_PORT") { 5432 } %>
-  username: <%= ENV.fetch("UMAKADATA_DATABASE_USERNAME") { 'umakadata' } %>
-  password: <%= ENV['UMAKADATA_DATABASE_PASSWORD'] %>
