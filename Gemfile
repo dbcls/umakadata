@@ -26,6 +26,7 @@ gem 'turbolinks', '~> 5'
 ## utility
 gem 'activeadmin', '~> 1.4'
 gem 'devise', '~> 4.5'
+gem 'dotenv', '~> 2.7'
 gem 'jbuilder', '~> 2.5'
 
 group :development, :test do
