@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_31_112528) do
+ActiveRecord::Schema.define(version: 2019_09_04_051142) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,18 @@ ActiveRecord::Schema.define(version: 2019_07_31_112528) do
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
   end
 
+  create_table "activities", force: :cascade do |t|
+    t.string "name"
+    t.text "request"
+    t.text "response"
+    t.float "elapsed_time"
+    t.string "trace"
+    t.string "warnings"
+    t.binary "errors"
+    t.bigint "measurement_id"
+    t.index ["measurement_id"], name: "index_activities_on_measurement_id"
+  end
+
   create_table "admin_users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -38,4 +50,99 @@ ActiveRecord::Schema.define(version: 2019_07_31_112528) do
     t.index ["email"], name: "index_admin_users_on_email", unique: true
   end
 
+  create_table "crawls", force: :cascade do |t|
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.index ["finished_at"], name: "index_crawls_on_finished_at"
+    t.index ["started_at"], name: "index_crawls_on_started_at"
+  end
+
+  create_table "endpoints", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "endpoint_url", null: false
+    t.string "description_url"
+    t.boolean "enabled", default: true, null: false
+    t.string "viewer_url"
+    t.integer "issue_id"
+    t.integer "label_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["endpoint_url"], name: "index_endpoints_on_endpoint_url", unique: true
+    t.index ["issue_id"], name: "index_endpoints_on_issue_id", unique: true
+    t.index ["label_id"], name: "index_endpoints_on_label_id", unique: true
+    t.index ["name"], name: "index_endpoints_on_name", unique: true
+  end
+
+  create_table "evaluations", force: :cascade do |t|
+    t.string "publisher"
+    t.string "license"
+    t.string "language"
+    t.boolean "service_keyword", default: false, null: false
+    t.boolean "graph_keyword", default: false, null: false
+    t.decimal "data_scale"
+    t.decimal "score", default: "0.0", null: false
+    t.integer "rank", default: 0, null: false
+    t.boolean "cors", default: false, null: false
+    t.boolean "alive", default: false, null: false
+    t.float "alive_rate", default: 0.0, null: false
+    t.date "last_updated"
+    t.boolean "service_description", default: false, null: false
+    t.boolean "void", default: false, null: false
+    t.float "metadata", default: 0.0, null: false
+    t.float "ontology", default: 0.0, null: false
+    t.string "links_to_other_datasets"
+    t.bigint "data_entry"
+    t.boolean "support_html_format", default: false, null: false
+    t.boolean "support_rdfxml_format", default: false, null: false
+    t.boolean "support_turtle_format", default: false, null: false
+    t.float "cool_uri", default: 0.0, null: false
+    t.boolean "http_uri", default: false, null: false
+    t.boolean "provide_useful_information", default: false, null: false
+    t.boolean "link_to_other_uri", default: false, null: false
+    t.float "execution_time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "endpoint_id"
+    t.bigint "crawl_id"
+    t.index ["crawl_id"], name: "index_evaluations_on_crawl_id"
+    t.index ["endpoint_id"], name: "index_evaluations_on_endpoint_id"
+  end
+
+  create_table "measurements", force: :cascade do |t|
+    t.string "name"
+    t.string "value"
+    t.string "comment"
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.bigint "evaluation_id"
+    t.index ["evaluation_id"], name: "index_measurements_on_evaluation_id"
+  end
+
+  create_table "resource_uris", force: :cascade do |t|
+    t.string "uri", null: false
+    t.boolean "as_regex", default: false, null: false
+    t.string "allow"
+    t.string "deny"
+    t.boolean "case_insensitive", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "endpoint_id"
+    t.index ["endpoint_id"], name: "index_resource_uris_on_endpoint_id"
+  end
+
+  create_table "vocabulary_prefixes", force: :cascade do |t|
+    t.string "uri", null: false
+    t.bigint "endpoint_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["endpoint_id"], name: "index_vocabulary_prefixes_on_endpoint_id"
+    t.index ["uri"], name: "index_vocabulary_prefixes_on_uri"
+  end
+
+  add_foreign_key "activities", "measurements"
+  add_foreign_key "evaluations", "crawls"
+  add_foreign_key "evaluations", "endpoints"
+  add_foreign_key "measurements", "evaluations"
+  add_foreign_key "resource_uris", "endpoints"
+  add_foreign_key "vocabulary_prefixes", "endpoints"
 end
