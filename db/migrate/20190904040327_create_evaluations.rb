@@ -46,6 +46,7 @@ class CreateEvaluations < ActiveRecord::Migration[5.2]
       t.references :crawl, foreign_key: true
     end
 
-
+    add_index :evaluations, :created_at
+    add_index :evaluations, :updated_at
   end
 end

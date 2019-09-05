@@ -31,12 +31,12 @@ ActiveRecord::Schema.define(version: 2019_09_04_051142) do
 
   create_table "activities", force: :cascade do |t|
     t.string "name"
-    t.text "request"
-    t.text "response"
+    t.binary "request"
+    t.binary "response"
     t.float "elapsed_time"
     t.string "trace"
     t.string "warnings"
-    t.binary "errors"
+    t.binary "exceptions"
     t.bigint "measurement_id"
     t.index ["measurement_id"], name: "index_activities_on_measurement_id"
   end
@@ -105,7 +105,9 @@ ActiveRecord::Schema.define(version: 2019_09_04_051142) do
     t.bigint "endpoint_id"
     t.bigint "crawl_id"
     t.index ["crawl_id"], name: "index_evaluations_on_crawl_id"
+    t.index ["created_at"], name: "index_evaluations_on_created_at"
     t.index ["endpoint_id"], name: "index_evaluations_on_endpoint_id"
+    t.index ["updated_at"], name: "index_evaluations_on_updated_at"
   end
 
   create_table "measurements", force: :cascade do |t|
