@@ -17,10 +17,14 @@ ActiveAdmin.register Endpoint do
     end
     column :alert do |endpoint|
       if endpoint.evaluations.count.zero?
-        icon 'fas', 'check fa-2x', title: 'Just Registered', style: 'color: #608F66;'
+        content_tag('span', style: 'color: #608F66;') do
+          icon('fas', 'check fa', 'Just Registered')
+        end
       elsif endpoint.evaluations.where('created_at < ?', 1.week.ago).limit(1).present?
         if (latest = endpoint.latest_alive_evaluation).blank? || (latest && latest.created_at < 1.week.ago)
-          icon 'fas', 'skull-crossbones fa-2x', title: 'Probably Dead'
+          content_tag('span', style: 'color: #C04040;') do
+            icon 'fas', 'skull-crossbones fa', 'Probably Dead'
+          end
         end
       end
     end
