@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_04_051142) do
+ActiveRecord::Schema.define(version: 2019_09_05_045628) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,6 +57,18 @@ ActiveRecord::Schema.define(version: 2019_09_04_051142) do
     t.index ["started_at"], name: "index_crawls_on_started_at"
   end
 
+  create_table "dataset_relations", force: :cascade do |t|
+    t.bigint "src_endpoint_id"
+    t.bigint "dst_endpoint_id"
+    t.string "relation"
+    t.bigint "endpoint_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["dst_endpoint_id"], name: "index_dataset_relations_on_dst_endpoint_id"
+    t.index ["endpoint_id"], name: "index_dataset_relations_on_endpoint_id"
+    t.index ["src_endpoint_id"], name: "index_dataset_relations_on_src_endpoint_id"
+  end
+
   create_table "endpoints", force: :cascade do |t|
     t.string "name", null: false
     t.string "endpoint_url", null: false
@@ -100,6 +112,7 @@ ActiveRecord::Schema.define(version: 2019_09_04_051142) do
     t.boolean "provide_useful_information", default: false, null: false
     t.boolean "link_to_other_uri", default: false, null: false
     t.float "execution_time"
+    t.binary "exceptions"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "endpoint_id"
@@ -121,10 +134,10 @@ ActiveRecord::Schema.define(version: 2019_09_04_051142) do
   end
 
   create_table "resource_uris", force: :cascade do |t|
-    t.string "uri", null: false
-    t.boolean "as_regex", default: false, null: false
+    t.string "uri"
     t.string "allow"
     t.string "deny"
+    t.boolean "regex", default: false, null: false
     t.boolean "case_insensitive", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -142,6 +155,9 @@ ActiveRecord::Schema.define(version: 2019_09_04_051142) do
   end
 
   add_foreign_key "activities", "measurements"
+  add_foreign_key "dataset_relations", "endpoints"
+  add_foreign_key "dataset_relations", "endpoints", column: "dst_endpoint_id"
+  add_foreign_key "dataset_relations", "endpoints", column: "src_endpoint_id"
   add_foreign_key "evaluations", "crawls"
   add_foreign_key "evaluations", "endpoints"
   add_foreign_key "measurements", "evaluations"
