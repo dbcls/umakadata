@@ -8,27 +8,27 @@ ActiveAdmin.register ResourceURI do
     id_column
     column :endpoint
     column 'URI', :uri
-    column :as_regex
     column :allow
     column :deny
+    column :regex
     column :case_insensitive
     actions
   end
 
   filter :endpoint
   filter :uri
-  filter :as_regex
   filter :allow
   filter :deny
+  filter :regex
   filter :case_insensitive
 
   show do
     attributes_table do
       row :endpoint
       row :uri
-      row :as_regex
       row :allow
       row :deny
+      row :regex
       row :case_insensitive
       row :created_at
       row :updated_at
@@ -40,9 +40,9 @@ ActiveAdmin.register ResourceURI do
     column :id
     column :endpoint_id
     column :uri
-    column :as_regex
     column :allow
     column :deny
+    column :regex
     column :case_insensitive
     column :created_at
     column :updated_at
@@ -53,9 +53,9 @@ ActiveAdmin.register ResourceURI do
     f.inputs do
       input :endpoint
       input :uri, label: 'URI'
-      input :as_regex
       input :allow
       input :deny
+      input :regex
       input :case_insensitive
     end
     f.actions do
@@ -67,13 +67,11 @@ ActiveAdmin.register ResourceURI do
       raw <<-SCRIPT
         $(function() {
           let update_form = function() {
-            let as_regex = $('#resource_uri_as_regex').prop('checked');
-            $('#resource_uri_allow').prop('disabled', !as_regex);
-            $('#resource_uri_deny').prop('disabled', !as_regex);
-            $('#resource_uri_case_insensitive').prop('disabled', !as_regex);
+            let regex = $('#resource_uri_regex').prop('checked');
+            $('#resource_uri_case_insensitive').prop('disabled', !regex);
           };
           update_form();
-          $('#resource_uri_as_regex').on('change', function() {
+          $('#resource_uri_regex').on('change', function() {
             update_form();
           });
         });
