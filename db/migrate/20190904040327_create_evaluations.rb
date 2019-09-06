@@ -1,6 +1,7 @@
 class CreateEvaluations < ActiveRecord::Migration[5.2]
   def change
     create_table :evaluations do |t|
+      # Basic information
       t.string :publisher
       t.string :license
       t.string :language
@@ -39,6 +40,8 @@ class CreateEvaluations < ActiveRecord::Migration[5.2]
 
       # Performance
       t.float :execution_time
+
+      t.binary :exceptions
 
       t.timestamps
 
