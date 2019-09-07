@@ -2,6 +2,7 @@ class CreateActivities < ActiveRecord::Migration[5.2]
   def change
     create_table :activities do |t|
       t.string :name
+      t.string :comment
       t.binary :request
       t.binary :response
       t.float :elapsed_time
