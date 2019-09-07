@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_05_045628) do
+ActiveRecord::Schema.define(version: 2019_09_07_063211) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 2019_09_05_045628) do
 
   create_table "activities", force: :cascade do |t|
     t.string "name"
+    t.string "comment"
     t.binary "request"
     t.binary "response"
     t.float "elapsed_time"
@@ -52,8 +53,6 @@ ActiveRecord::Schema.define(version: 2019_09_05_045628) do
 
   create_table "crawls", force: :cascade do |t|
     t.datetime "started_at"
-    t.datetime "finished_at"
-    t.index ["finished_at"], name: "index_crawls_on_finished_at"
     t.index ["started_at"], name: "index_crawls_on_started_at"
   end
 
@@ -123,6 +122,14 @@ ActiveRecord::Schema.define(version: 2019_09_05_045628) do
     t.index ["updated_at"], name: "index_evaluations_on_updated_at"
   end
 
+  create_table "excluding_graphs", force: :cascade do |t|
+    t.string "uri"
+    t.bigint "endpoint_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["endpoint_id"], name: "index_excluding_graphs_on_endpoint_id"
+  end
+
   create_table "measurements", force: :cascade do |t|
     t.string "name"
     t.string "value"
@@ -160,6 +167,7 @@ ActiveRecord::Schema.define(version: 2019_09_05_045628) do
   add_foreign_key "dataset_relations", "endpoints", column: "src_endpoint_id"
   add_foreign_key "evaluations", "crawls"
   add_foreign_key "evaluations", "endpoints"
+  add_foreign_key "excluding_graphs", "endpoints"
   add_foreign_key "measurements", "evaluations"
   add_foreign_key "resource_uris", "endpoints"
   add_foreign_key "vocabulary_prefixes", "endpoints"
