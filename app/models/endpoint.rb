@@ -4,6 +4,8 @@ class Endpoint < ApplicationRecord
   has_many :resource_uris, class_name: ResourceURI.name
   has_many :vocabulary_prefixes
 
+  scope :active, -> { where(enabled: true) }
+
   def latest_alive_evaluation
     evaluations.where(alive: true).order(created_at: :desc).limit(1).first
   end
