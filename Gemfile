@@ -7,11 +7,16 @@ gem 'rails', '~> 5.2.3'
 
 gem 'umakadata', path: '../umakadata_gem'
 
+# quick fix
+gem 'sparql-client', git: 'https://github.com/dsatoh/sparql-client.git', branch: 'fix_name_error'
+
 ## middleware
 gem 'foreman', '~> 0.85.0'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 3.11'
-# gem 'redis', '~> 4.0'
+gem 'redis', '~> 4.1', '>= 4.1.3'
+gem 'sidekiq', '~> 6.0'
+gem 'sidekiq-scheduler', '~> 3.0'
 gem 'unicorn', '~> 5.5'
 
 ## html
@@ -33,6 +38,9 @@ gem 'jbuilder', '~> 2.5'
 
 # asset
 gem 'font-awesome-sass', '~> 5.4.1'
+
+# console
+gem 'pry-rails', '~> 0.3.9'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
