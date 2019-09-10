@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+APP_PATH = File.expand_path('../config/application', __dir__)
+
+require_relative '../config/boot'
+require 'thor'
+
+Dir[File.expand_path('./lib/tasks/**/*.thor')].each(&method(:load))
+
+module Umakadata
+  class CLI < Thor
+    register(Crawler, 'crawler', 'crawler [COMMAND]', 'Commands for endpoint crawler')
+  end
+end
+
+Umakadata::CLI.start
