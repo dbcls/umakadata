@@ -1,0 +1,5 @@
+schedule_checker:
+  class: RunnerJob
+  queue: runner
+  cron: '0 0 * * * *'
+  description: 'This job checks whether if it is time to start crawler every hour.'
