@@ -3,17 +3,21 @@ ActiveAdmin.register DatasetRelation do
 
   config.sort_order = 'id_asc'
 
-  endpoints = Endpoint.all.order(:name).pluck(:name, :id).to_h
+  endpoints = -> { Endpoint.all.order(:name).pluck(:name, :id).to_h }
 
   index do
     selectable_column
     id_column
     column :endpoint
     column :src_endpoint do |x|
-      link_to Endpoint.find(x.src_endpoint_id).name, admin_endpoint_path(x.src_endpoint_id)
+      if (endpoint = Endpoint.find_by(id: x.src_endpoint_id))
+        link_to endpoint.name, admin_endpoint_path(x.src_endpoint_id)
+      end
     end
     column :dst_endpoint do |x|
-      link_to Endpoint.find(x.dst_endpoint_id).name, admin_endpoint_path(x.dst_endpoint_id)
+      if (endpoint = Endpoint.find_by(id: x.dst_endpoint_id))
+        link_to endpoint.name, admin_endpoint_path(x.dst_endpoint_id)
+      end
     end
 
     actions
@@ -27,10 +31,14 @@ ActiveAdmin.register DatasetRelation do
     attributes_table do
       row :endpoint
       row :src_endpoint do |x|
-        link_to Endpoint.find(x.src_endpoint_id).name, admin_endpoint_path(x.src_endpoint_id)
+        if (endpoint = Endpoint.find_by(id: x.src_endpoint_id))
+          link_to endpoint.name, admin_endpoint_path(x.src_endpoint_id)
+        end
       end
       row :dst_endpoint do |x|
-        link_to Endpoint.find(x.dst_endpoint_id).name, admin_endpoint_path(x.dst_endpoint_id)
+        if (endpoint = Endpoint.find_by(id: x.dst_endpoint_id))
+          link_to endpoint.name, admin_endpoint_path(x.dst_endpoint_id)
+        end
       end
     end
     active_admin_comments
