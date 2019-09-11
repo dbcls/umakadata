@@ -1,6 +1,8 @@
 require 'umakadata'
 
-class CrawlerJob < ActiveJob::Base
+class CrawlerJob
+  include Sidekiq::Worker
+
   sidekiq_options queue: :crawler, retry: 1, backtrace: true
 
   def perform(crawl_id, endpoint_id)

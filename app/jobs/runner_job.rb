@@ -1,4 +1,6 @@
-class RunnerJob < ActiveJob::Base
+class RunnerJob
+  include Sidekiq::Worker
+
   sidekiq_options queue: :runner
 
   def perform
