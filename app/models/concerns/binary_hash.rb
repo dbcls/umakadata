@@ -1,6 +1,6 @@
 class BinaryHash < ActiveRecord::Type::Binary
   def serialize(value)
-    super value_to_binary(value.to_json)
+    super value_to_binary(ensure_utf8(value).to_json)
   end
 
   def deserialize(value)
@@ -22,5 +22,20 @@ class BinaryHash < ActiveRecord::Type::Binary
 
   def value_to_binary(value)
     ActiveSupport::Gzip.compress(value)
+  end
+
+  def ensure_utf8(value)
+    case value
+    when Hash
+      value.each_with_object({}) do |(k, v), result|
+        result[k] = ensure_utf8(v)
+      end
+    when Array
+      value.map { |e| ensure_utf8(e) }
+    when String
+      value.force_encoding(Encoding::UTF_8)
+    else
+      value
+    end
   end
 end
