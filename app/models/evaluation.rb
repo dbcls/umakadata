@@ -57,12 +57,15 @@ class Evaluation < ApplicationRecord
     end
 
     def usefulness
-      (ontology + metadata) * 0.5
+      v = 0.0
+      v += 50.0 if ontology.present?
+      v += 50.0 if metadata.present?
+      v
     end
 
     def validity
       v = 0.0
-      v += 40.0 * cool_uri / 100.0
+      v += 40.0 * cool_uri / 100.0 if cool_uri.present?
       v += 20.0 if http_uri
       v += 20.0 if provide_useful_information
       v += 20.0 if link_to_other_uri
@@ -70,9 +73,9 @@ class Evaluation < ApplicationRecord
     end
 
     def performance
-      return 0.0 unless execution_time.present? && data_entry.positive?
+      return 0.0 unless execution_time.present? && data_entry.presence&.positive?
 
-      t = execution_time / number_of_statements.to_f
+      t = execution_time / data_entry.to_f
       v = 100.0 * (1.0 - t * 1_000_000) # negative if t >= 1 micro sec.
 
       [[0.0, v].max, 100.0].min
@@ -117,11 +120,13 @@ class Evaluation < ApplicationRecord
       self.void = v.present?
       self.publisher = measurement.activities&.last&.publishers&.ensure_utf8&.to_json
       self.license = measurement.activities&.last&.licenses&.ensure_utf8&.to_json
-    elsif name == 'data_entry'
-      send("#{name}=", v)
-      self.data_scale = Math.log10(v) if v&.positive?
-    elsif respond_to?("#{name}=")
-      send("#{name}=", v.is_a?(String) ? v.ensure_utf8 : v)
+    elsif v.present?
+      if name == 'data_entry'
+        send("#{name}=", v)
+        self.data_scale = Math.log10(v) if v.positive?
+      elsif respond_to?("#{name}=")
+        send("#{name}=", v.is_a?(String) ? v.ensure_utf8 : v)
+      end
     end
   end
 end
