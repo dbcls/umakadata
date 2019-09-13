@@ -41,8 +41,6 @@ class CreateEvaluations < ActiveRecord::Migration[5.2]
       # Performance
       t.float :execution_time
 
-      t.binary :exceptions
-
       t.timestamps
 
       t.references :endpoint, foreign_key: true

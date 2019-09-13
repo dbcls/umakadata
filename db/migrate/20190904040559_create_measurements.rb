@@ -6,6 +6,7 @@ class CreateMeasurements < ActiveRecord::Migration[5.2]
       t.string :comment
       t.datetime :started_at
       t.datetime :finished_at
+      t.binary :exceptions
 
       t.references :evaluation, foreign_key: true
     end

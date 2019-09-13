@@ -111,7 +111,6 @@ ActiveRecord::Schema.define(version: 2019_09_07_063211) do
     t.boolean "provide_useful_information", default: false, null: false
     t.boolean "link_to_other_uri", default: false, null: false
     t.float "execution_time"
-    t.binary "exceptions"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "endpoint_id"
@@ -136,6 +135,7 @@ ActiveRecord::Schema.define(version: 2019_09_07_063211) do
     t.string "comment"
     t.datetime "started_at"
     t.datetime "finished_at"
+    t.binary "exceptions"
     t.bigint "evaluation_id"
     t.index ["evaluation_id"], name: "index_measurements_on_evaluation_id"
   end
