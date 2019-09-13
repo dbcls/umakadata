@@ -77,7 +77,7 @@ class Crawl < ApplicationRecord
       Sidekiq::Workers
         .new
         .select { |_, _, job| job.dig('queue') == 'crawler' && job.dig('payload', 'args')&.first == id }
-        .map { |job| job.dig('payload', 'args') }
+        .map { |_, _, job| job.dig('payload', 'args') }
     end
   end
   include SidekiqMethods
