@@ -30,7 +30,9 @@ class Evaluation < ApplicationRecord
   def days_since_last_update
     return unless last_updated
 
-    (crawl.started_at - last_updated).to_i
+    (crawl.started_at.to_date - last_updated.to_date).to_i
+  rescue
+    nil
   end
 
   module Scores
