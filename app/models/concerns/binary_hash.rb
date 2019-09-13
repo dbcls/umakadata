@@ -35,7 +35,7 @@ class Object
     when Array
       map(&:ensure_utf8)
     when String
-      force_encoding(Encoding::UTF_8)
+      (frozen? ? dup : self).force_encoding(Encoding::UTF_8)
     else
       self
     end
