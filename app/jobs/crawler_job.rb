@@ -76,6 +76,6 @@ class CrawlerJob
   end
 
   def log_file_name
-    "#{crawl.started_at.strftime('%Y%m%d_%H%M%S')}_crawl_#{@crawl_id}.log"
+    "crawl_#{@crawl_id}_#{crawl.started_at.strftime('%Y%m%d_%H%M%S')}.log"
   end
 end
