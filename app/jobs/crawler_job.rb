@@ -52,18 +52,30 @@ class CrawlerJob
   def crawler
     @crawler ||= begin
       Umakadata::Crawler.config.backtrace = true
+      Umakadata::Crawler.config.logger = ::Logger.new(log_file_path, **logger_options)
       Umakadata::Crawler.new(endpoint.endpoint_url, **crawler_options)
     end
   end
 
   def crawler_options
     {
-      logger: {
-        logdev: "log/#{crawl.started_at.strftime('%Y%m%d_%H%M%S')}_crawl_#{@crawl_id}.log",
-        level: ::Logger::INFO
-      },
       exclude_graph: endpoint.excluding_graphs.map(&:uri).presence,
       resource_uri: endpoint.resource_uris.map { |x| Umakadata::ResourceURI.new(x.attributes) }.presence
     }.compact
+  end
+
+  def logger_options
+    {
+      level: Logger::INFO,
+      formatter: Umakadata::Logger::Formatter.new
+    }
+  end
+
+  def log_file_path
+    Rails.root.join('log', log_file_name).to_s
+  end
+
+  def log_file_name
+    "#{crawl.started_at.strftime('%Y%m%d_%H%M%S')}_crawl_#{@crawl_id}.log"
   end
 end

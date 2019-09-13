@@ -4,7 +4,12 @@ class RunnerJob
   sidekiq_options queue: :runner
 
   def perform
-    Crawl.start! if scheduled_time? && crawl_not_performed?
+    return unless scheduled_time? && crawl_not_performed?
+
+    Umakadata::Crawler.config.logger = Rails.logger
+    Umakadata::LinkedOpenVocabulary.update
+
+    Crawl.start!
   end
 
   private
