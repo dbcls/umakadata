@@ -3,13 +3,13 @@ require 'umakadata'
 class CrawlerJob
   include Sidekiq::Worker
 
-  sidekiq_options queue: :crawler, retry: 1, backtrace: true
+  sidekiq_options queue: :crawler, retry: 0, backtrace: true
 
   def perform(crawl_id, endpoint_id)
     @crawl_id = crawl_id
     @endpoint_id = endpoint_id
 
-    Evaluation.new(created_at: Time.current, crawl: crawl, endpoint: endpoint) do |e|
+    Evaluation.new(attributes.merge(crawler.basic_information)) do |e|
       t = Time.current
 
       crawler.run do |measurement|
@@ -20,6 +20,8 @@ class CrawlerJob
           x.started_at = t
           x.finished_at = Time.current
         end
+
+        e.set_value(measurement)
 
         e.measurements << m
 
@@ -32,15 +34,26 @@ class CrawlerJob
 
   # @return [Crawl]
   def crawl
-    Crawl.find(@crawl_id)
+    @crawl ||= Crawl.find(@crawl_id)
   end
 
   def endpoint
-    Endpoint.find(@endpoint_id)
+    @endpoint ||= Endpoint.find(@endpoint_id)
+  end
+
+  def attributes
+    {
+      created_at: Time.current,
+      crawl: crawl,
+      endpoint: endpoint
+    }
   end
 
   def crawler
-    Umakadata::Crawler.new(endpoint.endpoint_url, **crawler_options)
+    @crawler ||= begin
+      Umakadata::Crawler.config.backtrace = true
+      Umakadata::Crawler.new(endpoint.endpoint_url, **crawler_options)
+    end
   end
 
   def crawler_options
