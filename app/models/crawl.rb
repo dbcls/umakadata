@@ -17,7 +17,7 @@ class Crawl < ApplicationRecord
 
     # @param [Date, Time, DateTime, ActiveSupport::TimeWithZone] date
     # @return [Symbol] :asc or :desc
-    def order(date)
+    def queue_order(date)
       (utc_time(date).strftime('%j').to_i % 2).zero? ? :asc : :desc
     end
 
@@ -31,7 +31,7 @@ class Crawl < ApplicationRecord
       end
 
       crawl = create!(started_at: Time.current)
-      endpoints = Endpoint.active.order(id: order(Date.current))
+      endpoints = Endpoint.active.order(id: self.class.queue_order(Date.current))
       endpoints = endpoints.where(id: id) if id.present?
 
       endpoints.each do |endpoint|
