@@ -23,6 +23,7 @@ gem 'unicorn', '~> 5.5'
 gem 'slim-rails', '~> 3.2'
 
 ## js
+gem 'js-routes', '~> 1.4', '>= 1.4.9'
 gem 'uglifier', '>= 1.3.0'
 gem 'webpacker'
 
