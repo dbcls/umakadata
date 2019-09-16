@@ -1,1 +1,129 @@
 - provide :current, 'dashboard'
+
+- content_for :head
+  = javascript_pack_tag 'dashboard'
+
+.container
+  #site-description.page-title-header
+    | YummyData (in Japanese Umaka Data) is a site that lists and monitors SPARQL endpoints that
+      provide data of interest to the biomedical community.
+  .page-title-body
+    p
+      | Sometimes it is difficult to decide which
+        endpoint to use. YummyData helps by providing a curated list of endpoints, and by monitoring over time
+        their availability, updates rate, standard compliance and other features that are important
+        to data consumers.
+    p
+      | Beyond this, YummyData provides a
+      '
+      = link_to 'forum', URI.encode("https://github.com/#{Rails.application.secrets.github_repo}/issues?q=is:open -label:endpoints")
+      '
+      | where consumers and providers of
+        biomedical information in RDF can communicate and improve the usability of the web of (bio) data.
+    p
+      | If you are a provider and want your resource exposed in a curated directory, or if you are a user and
+        have issues with an endpoint, YummyData is here to
+      '
+      = link_to 'help', inquiries_path
+      |.
+
+.container
+  = render partial: 'metrics', locals: { metrics: metrics }
+
+.container
+  .d-flex.justify-content-between
+    .page-title-header
+      | Scores
+    .calendar-form
+      label.calendar-title for='calendar' Data for the day of
+      input.date-input#calendar readonly='readonly' name='date' value=@current_date.strftime('%d-%b-%Y') data-start-date=@start_date.strftime('%d-%b-%Y')
+      input.go-button#update-date type='button' value='GO'
+
+  .row
+    .col-md-9
+      .scores-board-element
+        .carousel.slide#scores[data-ride="carousel"]
+          ol.carousel-indicators
+            li.active data-target="#chart-carousel" data-slide-to="0"
+            li data-target="#chart-carousel" data-slide-to="1"
+          .carousel-inner role="listbox"
+            .item
+              .page-title-header
+                | Umaka Score
+              canvas#score[height=350 width=750]
+            .item
+              .page-title-header
+                | Top 5 endpoints, by Umaka Score
+              .table-responsive
+                table.table.table-striped.top-5-endpoints
+                  thead
+                    tr
+                      th Score
+                      th Name
+                      th URL
+                  tbody
+                    - @evaluations.each do |evaluation|
+                      - ep = evaluation.endpoint
+                      tr
+                        td
+                          = evaluation.score.to_i
+                        td
+                          = link_to ep.name, '#'
+                          / endpoint_path(evaluation[:endpoint][:id], evaluation[:id])
+                        td
+                          = link_to ep.endpoint_url, ep.endpoint_url
+
+    .col-md-3
+      .scores-board-element
+        .page-title-header
+          | Umaka Score:
+            what it is ?
+        .page-title-body
+          | Umaka Score represents how valuable endpoints are.
+          | Umaka Score is calculated on the basis of the evaluation from the 6 aspects,
+          | Availability, Freshness, Operation, Usefulness, Validity and Performance.
+          | We also rank the ebdpoints on a scale of A to E according to the Umaka score.
+        = link_to 'More', 'umaka-score.html', { :class => 'btn btn-xs more-button', 'data-no-turbolink' => true }
+
+  .row
+    .col-md-6.col-sm-12
+      .scores-board-element
+        .page-title-header
+          | #umakadata news from Twitter
+        .row
+          .col-md-12
+            / = twitter_widget
+    .col-md-6.col-sm-12
+      .row
+        .col-md-12.col-sm-6.col-xs-12
+          .scores-board-element
+            .page-title-header
+              | Endpoint discussions
+            .page-title-body
+              | Do you want to ask something about an endpoint?
+              br
+              | You can use the Yummydata forum on Github.
+              br
+              | You will find a issue page for each one of the endpoints we are
+              br
+              | monitoring, feel free to add to the discussion.
+            = link_to("See all discussions", URI.encode("https://github.com/#{Rails.application.secrets.github_repo}/issues?q=is:open+label:endpoints"), :class => 'btn see-all-endpoints')
+        .col-md-12.col-sm-6.col-xs-12
+          .scores-board-element
+            .page-title-header
+              | About
+            .page-title-body
+              p
+                | YummyData is a system that monitors SPARQL endpoints
+                  (and in general RDF datasets) relevant for biomedical
+                  research. It provides information such as their compliance
+                  to standards and their performance.
+              p
+                | Examples of features that YummyData
+                  inspects are the presence of a VoID descriptor, the presence
+                  of license information, support of SPARQL1.1 or support for CORS.
+              p
+                | Examples of the information that YummyData monitors are the
+                  endpoint uptime, the number of statements, and some measure of
+                  the amount of ontology constructs in use.
+            = link_to 'More', about_path, { :class => 'btn btn-xs more-button' }
