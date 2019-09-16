@@ -90,4 +90,7 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # Set Google Analytics tracker code
+  GA.tracker = ENV['UMAKADATA_GA_TRACKER']
 end
