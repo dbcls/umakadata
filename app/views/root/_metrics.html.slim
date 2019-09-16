@@ -1,0 +1,68 @@
+ul.rate-endpoints-list
+  li.rate-of-endpoints
+    span
+      | Days of data collection
+    .number-data
+      | #{metrics.dig(:data_collection, :count) || 0}
+    span
+      | #{format('%d', metrics.dig(:data_collection, :variation) || 0)} days without data
+
+  li.rate-of-endpoints
+    span
+      | No. of endpoints
+    .number-data
+      | #{metrics.dig(:no_of_endpoints, :count) || 0}
+    - if metrics.dig(:no_of_endpoints, :variation) == 0
+      span
+        | Unch.
+    - else
+      span[class="#{metrics.dig(:no_of_endpoints, :variation)&.negative? ? 'minus' : 'plus'}_variation"]
+        = format('%+d', metrics.dig(:no_of_endpoints, :variation) || 0)
+    span.temp-footer
+      '
+      | from last week
+
+  li.rate-of-endpoints
+    span
+      | Active endpoints today
+    .number-data
+      | #{metrics.dig(:active_endpoints, :count) || 0}
+    - if metrics.dig(:active_endpoints, :variation) == 0
+      span
+        | Unch.
+    - else
+      span[class="#{metrics.dig(:active_endpoints, :variation)&.negative? ? 'minus' : 'plus'}_variation"]
+        = format('%+d', metrics.dig(:active_endpoints, :variation) || 0)
+    span
+      '
+      | from yesterday
+
+  li.rate-of-endpoints
+    span
+      | Alive rate
+    .number-data
+      | #{metrics.dig(:alive_rates, :count) || 0}%
+    - if metrics.dig(:alive_rates, :variation) == 0
+      | Unch.
+    - else
+      span[class="#{metrics.dig(:alive_rates, :variation)&.negative? ? 'minus' : 'plus'}_variation"]
+        | #{format('%+d', metrics.dig(:alive_rates, :variation) || 0)}%
+    span
+      '
+      | from last week
+
+  li.rate-of-endpoints
+    | Data entries
+    .number-data
+      - units = { thousand: 'K', million: 'M', billion: 'G', trillion: 'T', quadrillion: 'P' }
+      = number_to_human(metrics.dig(:data_entries, :count) || 0, units: units)
+    - if metrics.dig(:data_entries, :variation)&.zero?
+      span
+        | Unch.
+    - else
+      span[class="#{metrics.dig(:data_entries, :variation).negative? ? 'minus' : 'plus'}_variation"]
+        = '+' if metrics.dig(:data_entries, :variation).positive?
+        = number_to_human(metrics.dig(:data_entries, :variation) || 0, units: units)
+    span
+      '
+      | from yesterday
