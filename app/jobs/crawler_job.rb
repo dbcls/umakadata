@@ -66,7 +66,7 @@ class CrawlerJob
 
   def logger_options
     {
-      level: Logger::INFO,
+      level: Rails.logger.level,
       formatter: Umakadata::Logger::Formatter.new
     }
   end
