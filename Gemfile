@@ -42,6 +42,9 @@ gem 'font-awesome-sass', '~> 5.4.1'
 # console
 gem 'pry-rails', '~> 0.3.9'
 
+# analysis
+gem 'google-analytics-rails', '~> 1.1', '>= 1.1.1'
+
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'rspec-rails', '~> 3.8'
