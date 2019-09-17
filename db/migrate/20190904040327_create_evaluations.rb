@@ -8,7 +8,7 @@ class CreateEvaluations < ActiveRecord::Migration[5.2]
       t.boolean :service_keyword, null: false, default: false
       t.boolean :graph_keyword, null: false, default: false
       t.decimal :data_scale
-      t.decimal :score, null: false, default: 0
+      t.integer :score, null: false, default: 0
       t.integer :rank, null: false, default: 0
       t.boolean :cors, null: false, default: false
 

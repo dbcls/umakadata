@@ -53,6 +53,8 @@ ActiveRecord::Schema.define(version: 2019_09_07_063211) do
 
   create_table "crawls", force: :cascade do |t|
     t.datetime "started_at"
+    t.datetime "finished_at"
+    t.index ["finished_at"], name: "index_crawls_on_finished_at"
     t.index ["started_at"], name: "index_crawls_on_started_at"
   end
 
@@ -91,7 +93,7 @@ ActiveRecord::Schema.define(version: 2019_09_07_063211) do
     t.boolean "service_keyword", default: false, null: false
     t.boolean "graph_keyword", default: false, null: false
     t.decimal "data_scale"
-    t.decimal "score", default: "0.0", null: false
+    t.integer "score", default: 0, null: false
     t.integer "rank", default: 0, null: false
     t.boolean "cors", default: false, null: false
     t.boolean "alive", default: false, null: false
