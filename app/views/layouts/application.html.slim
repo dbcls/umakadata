@@ -1,9 +1,31 @@
 doctype html
-html
+
+html[lang='en']
   head
-    title Umakadata
+    meta[charset='utf-8']
+    meta[http-equiv='X-UA-Compatible' content='IE=edge']
+    meta[name='viewport' content='width=device-width, initial-scale=1']
+    meta[name='description' content='']
+    meta[name='author' content='']
+    link[rel='icon' href='favicon.ico']
+    title Umaka Data
+    = javascript_pack_tag 'application'
+    = stylesheet_pack_tag 'application'
+    = yield :head
     = csrf_meta_tags
     = csp_meta_tag
-    = javascript_pack_tag 'application'
+    = analytics_init if Rails.env.production?
+
   body
-    = yield
+    .container-fluid
+      .row
+        .sidebar.col-md-2.d-none.d-md-block
+          = render partial: 'layouts/sidebar'
+
+        = image_tag(asset_pack_path('media/images/logo-background.png'), class: 'yummydata-logo-background')
+
+        main.col-md-9.ml-sm-auto.col-lg-10.px-4
+          - if flash[:failure]
+            .alert.alert-danger
+              = flash[:failure]
+          == yield

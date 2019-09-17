@@ -1,0 +1,29 @@
+- current = yield(:current)
+
+.sidebar-sticky
+  = link_to image_tag(asset_pack_path('media/images/logo.png'), class: 'yummydata-logo'), '/'
+
+  ul.nav
+    li.nav-item class="#{'dashboard' == current ? 'active' : ''}"
+      = link_to 'DASHBOARD', root_path, class: 'nav-link'
+
+    li.nav-item class="#{'about' == current ? 'active' : ''}"
+      = link_to 'ABOUT', about_path, class: 'nav-link'
+
+    li.nav-item class="#{'endpoints' == current ? 'active' : ''}"
+      = link_to 'RANKED ENDPOINTS', '#', class: 'nav-link'
+
+    li.nav-item class="#{'search' == current ? 'active' : ''}"
+      = link_to 'ENDPOINT SEARCH', '#', class: 'nav-link'
+
+    li.nav-item class="#{'links' == current ? 'active' : ''}"
+      = link_to 'LINK GRAPH', '#', class: 'nav-link'
+
+    li.nav-item class="#{'forum' == current ? 'active' : ''}"
+      = link_to 'FORUM', '#', class: 'nav-link'
+
+    li.nav-item class="#{'contact' == current ? 'active' : ''}"
+      = link_to 'CONTACT US', inquiries_path, class: 'nav-link'
+
+    li.nav-item class="#{'terms' == current ? 'active' : ''}"
+      = link_to 'TERMS AND CONDITIONS', terms_path, class: 'nav-link'
