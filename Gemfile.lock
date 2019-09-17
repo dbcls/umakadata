@@ -389,6 +389,9 @@ GEM
       rufus-scheduler (~> 3.2)
       sidekiq (>= 3)
       tilt (>= 1.4.0)
+    simple_form (5.0.0)
+      actionpack (>= 5.0)
+      activemodel (>= 5.0)
     slim (4.0.1)
       temple (>= 0.7.6, < 0.9)
       tilt (>= 2.0.6, < 2.1)
@@ -468,6 +471,7 @@ DEPENDENCIES
   rspec-rails (~> 3.8)
   sidekiq (~> 6.0)
   sidekiq-scheduler (~> 3.0)
+  simple_form (~> 5.0)
   slim-rails (~> 3.2)
   sparql-client!
   spring

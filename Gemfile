@@ -35,6 +35,7 @@ gem 'activeadmin', '~> 1.4'
 gem 'devise', '~> 4.5'
 gem 'dotenv-rails', '~> 2.7', '>= 2.7.5'
 gem 'jbuilder', '~> 2.5'
+gem 'simple_form', '~> 5.0'
 
 # asset
 gem 'font-awesome-sass', '~> 5.4.1'
