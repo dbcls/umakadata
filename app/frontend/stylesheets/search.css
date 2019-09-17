@@ -1,0 +1,59 @@
+label.control-label {
+  margin-left: 10px;
+}
+
+.panel-default > .panel-heading {
+  background: #F7F7F7;
+}
+
+.panel-collapse {
+  background-color: #F7F7F7;
+  padding: 20px;
+  border-top: 0;
+}
+
+.panel-title > a {
+  cursor: pointer;
+}
+
+.accordion-toggle a:after {
+  content: "\0025b2";
+  float: right;
+  color: inherit;
+}
+
+.accordion-toggle a.collapsed:after {
+  content: "\0025bc";
+  float: right;
+  color: inherit;
+}
+
+.form-group {
+  margin-bottom: 5px;
+}
+
+.form-group label {
+  margin-top: 7px;
+  margin-bottom: 0;
+}
+
+.form-group .radio-inline {
+  margin-top: 0;
+}
+
+.form-group .radio-inline input {
+  margin-top: 2px;
+}
+
+.left-margin-1 {
+  margin-left: 1rem;
+}
+
+.hight-fix {
+  height: 34px;
+  padding-top: 7px;
+}
+
+.hight-fix label {
+  margin-top: 0;
+}

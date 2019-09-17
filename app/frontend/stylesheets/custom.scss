@@ -1,0 +1,40 @@
+details {
+
+  summary {
+    font-weight: bold;
+  }
+
+  p {
+    padding-top: 10px;
+  }
+
+}
+
+#about.page-header + .row {
+  margin-bottom: 20px;
+}
+
+table {
+  word-break: break-all;
+  word-wrap: break-word;
+}
+
+.umakadata-tooltip  {
+  span {
+    table {
+      border-collapse: separate;
+      border-spacing: 0px;
+      th {
+        color: #51A2C1;
+        border-color: white;
+        border: 0px solid;
+        background-color: white;
+        padding: 5px;
+      }
+      td {
+        border: 1px solid;
+        padding: 5px;
+      }
+    }
+  }
+}

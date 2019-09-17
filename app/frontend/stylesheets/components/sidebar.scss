@@ -1,0 +1,45 @@
+.sidebar {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .sidebar {
+    display: block;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  }
+}
+
+.sidebar-sticky {
+  position: sticky;
+  top: 0;
+  height: calc(100vh - 48px);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.nav {
+  flex-wrap: nowrap;
+  flex-direction: column;
+
+  a {
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      background: #7FC7AF;
+      text-decoration: none;
+    }
+  }
+
+  & > .active > a {
+    color: #fff;
+    background: #7FC7AF;
+  }
+}
