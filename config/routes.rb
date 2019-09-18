@@ -2,14 +2,14 @@ require 'sidekiq/web'
 require 'sidekiq-scheduler/web'
 
 Rails.application.routes.draw do
-  get 'endpoint/index'
-  get 'endpoint/show'
   root 'root#dashboard'
 
   get '/about', to: 'root#about'
   get '/inquiries', to: 'root#inquiry'
   post '/inquiries', to: 'root#send_inquiry'
   get '/terms', to: 'root#terms'
+
+  resources :endpoint, only: %i[index show]
 
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)

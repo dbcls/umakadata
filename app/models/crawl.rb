@@ -1,6 +1,10 @@
 class Crawl < ApplicationRecord
   has_many :evaluations, dependent: :destroy
 
+  scope :latest, -> { where.not(finished_at: nil).order(started_at: :desc).first }
+  scope :oldest, -> { where.not(finished_at: nil).order(started_at: :asc).first }
+  scope :on, -> x { where(started_at: x.all_day).first }
+
   class CrawlDuplicateError < StandardError
   end
 

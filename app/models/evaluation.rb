@@ -111,6 +111,21 @@ class Evaluation < ApplicationRecord
     end
   end
 
+  def rank_label
+    case rank
+    when 5
+      'A'
+    when 4
+      'B'
+    when 3
+      'C'
+    when 2
+      'D'
+    else
+      'E'
+    end
+  end
+
   # @param [Umakadata::Measurement] measurement
   def set_value(measurement)
     v = measurement.value
