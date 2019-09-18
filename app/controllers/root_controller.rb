@@ -1,11 +1,13 @@
 class RootController < ApplicationController
-  before_action :set_current_date, :dashboard
-  before_action :set_start_date, :dashboard
-
   # GET /dashboard
   def dashboard
-    crawl = Crawl.where(started_at: @current_date.all_day).first
-    @evaluations = crawl.evaluations.order(score: :desc).limit(5)
+    @start_date = Crawl.oldest.started_at.to_date
+    @end_date = Crawl.latest.started_at.to_date
+    @current_date = begin
+      Date.parse(dashboard_params[:date])
+    rescue
+      @end_date
+    end
   end
 
   # GET /inquiry
@@ -39,19 +41,5 @@ class RootController < ApplicationController
 
   def inquiry_params
     params.require(:inquiry).permit(:name, :email, :message)
-  end
-
-  def set_current_date
-    @current_date = if dashboard_params[:date].present?
-              Date.parse(dashboard_params[:date])
-            else
-              xs = Crawl.order(started_at: :desc).limit(2).to_a
-              xs.shift unless xs.first.finished?
-              xs.first.started_at.to_date
-            end
-  end
-
-  def set_start_date
-    @start_date = Crawl.order(:started_at).first.started_at.to_date
   end
 end
