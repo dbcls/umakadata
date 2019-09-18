@@ -36,7 +36,7 @@
       | Scores
     .calendar-form
       label.calendar-title for='calendar' Data for the day of
-      input.date-input#calendar readonly='readonly' name='date' value=@current_date.strftime('%d-%b-%Y') data-start-date=@start_date.strftime('%d-%b-%Y')
+      input.date-input#calendar readonly='readonly' name='date' value=@current_date.to_formatted_s data-start-date=@start_date.to_formatted_s data-end-date=@end_date.to_formatted_s
       input.go-button#update-date type='button' value='GO'
 
   .row
@@ -44,14 +44,14 @@
       .scores-board-element
         .carousel.slide#scores[data-ride="carousel"]
           ol.carousel-indicators
-            li.active data-target="#chart-carousel" data-slide-to="0"
-            li data-target="#chart-carousel" data-slide-to="1"
-          .carousel-inner role="listbox"
-            .item
+            li.active data-target="#scores" data-slide-to="0"
+            li data-target="#scores" data-slide-to="1"
+          .carousel-inner
+            .carousel-item.active
               .page-title-header
                 | Umaka Score
-              canvas#score[height=350 width=750]
-            .item
+              canvas#score-bar[height=350 width=750]
+            .carousel-item
               .page-title-header
                 | Top 5 endpoints, by Umaka Score
               .table-responsive
@@ -61,17 +61,7 @@
                       th Score
                       th Name
                       th URL
-                  tbody
-                    - @evaluations.each do |evaluation|
-                      - ep = evaluation.endpoint
-                      tr
-                        td
-                          = evaluation.score.to_i
-                        td
-                          = link_to ep.name, '#'
-                          / endpoint_path(evaluation[:endpoint][:id], evaluation[:id])
-                        td
-                          = link_to ep.endpoint_url, ep.endpoint_url
+                  tbody#score-table
 
     .col-md-3
       .scores-board-element
