@@ -2,6 +2,8 @@ require 'sidekiq/web'
 require 'sidekiq-scheduler/web'
 
 Rails.application.routes.draw do
+  get 'endpoint/index'
+  get 'endpoint/show'
   root 'root#dashboard'
 
   get '/about', to: 'root#about'
