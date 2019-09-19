@@ -19,7 +19,7 @@ body {
 /*
  * Main content
  */
-main > .container {
+main .container {
   background: #FFFFFF;
   box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.10), 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   border-radius: 4px;
@@ -37,6 +37,50 @@ main > .container {
   & + .container {
     margin-top: 1.5rem;
   }
+
+  div[class^="col-"] {
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+  }
+}
+
+.page-title-header {
+  font-family: Roboto-Medium;
+  font-size: 24px;
+  color: #73879C;
+  font-weight: bold;
+  line-height: 29px;
+
+  & + .page-title-body {
+    margin-top: 0.75rem;
+  }
+}
+
+.page-title-body {
+  font-family: Roboto-Regular;
+  font-size: 14px;
+  color: #73879C;
+  line-height: 19px;
+}
+
+.score-board {
+  background: #F7F7F7;
+  box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.10), 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  padding: 15px;
+
+  & + .score-board {
+    margin-top: 1rem;
+  }
+}
+
+.btn {
+  font-family: Roboto-Bold;
+  font-size: 14px;
+  line-height: 18px;
+  color: #FFFFFF;
+  background: #7FC7AF;
+  text-decoration: none;
 }
 
 .table-striped > tbody > tr {
@@ -60,10 +104,22 @@ $carousel-indicator-length: 10px;
   }
 }
 
-#site-description {
-  margin-top: 20px;
-  margin-bottom: 35px;
+.chart-title {
+  font-weight: 500;
+  line-height: 1.1;
+  font-size: 18px;
+  text-align: center;
+
+  & + .text-muted {
+    font-size: 14px;
+    text-align: center;
+  }
 }
+
+
+
+
+
 
 .page-element {
   background: #FFFFFF;
@@ -73,15 +129,6 @@ $carousel-indicator-length: 10px;
   padding-bottom: 10px;
 }
 
-.page-title-header {
-  margin-top: 10px;
-  font-family: Roboto-Medium;
-  font-size: 24px;
-  color: #73879C;
-  font-weight: bold;
-  line-height: 29px;
-  margin-bottom: 15px;
-}
 
 .page-title-sub-header {
   margin-top: 10px;
@@ -103,54 +150,11 @@ $carousel-indicator-length: 10px;
   margin-bottom: 15px;
 }
 
-.page-title-body {
-  font-family: Roboto-Regular;
-  font-size: 14px;
-  color: #73879C;
-  line-height: 19px;
-  margin-bottom: 15px;
-}
-
-.scores-board {
-  font-family: Roboto-Bold;
-  font-size: 22px;
-  color: #73879C;
-}
-
-.scores-board-element {
-  background: #F7F7F7;
-  box-shadow: 0px 0px 0px 1px rgba(63, 63, 68, 0.10), 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
-  border-radius: 4px;
-  margin-bottom: 30px;
-  padding: 15px;
-}
-
-.more-button {
-  font-family: Roboto-Medium;
-  font-size: 10px;
-  color: #FFFFFF;
-  background: #7FC7AF;
-  border: 1px solid #3FB8AF;
-  border-radius: 3px;
-  text-decoration: none;
-}
-
 .rate-board {
   font-family: Roboto-Medium;
   font-size: 15px;
   color: #242323;
   line-height: 14px;
-}
-
-.see-all-endpoints {
-  font-family: Roboto-Bold;
-  font-size: 14px;
-  line-height: 18px;
-  margin-top: 5px;
-  margin-bottom: 15px;
-  color: #FFFFFF;
-  background: #7FC7AF;
-  text-decoration: none;
 }
 
 .yummydata-logo {

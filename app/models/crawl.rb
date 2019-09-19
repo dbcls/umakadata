@@ -2,13 +2,22 @@ class Crawl < ApplicationRecord
   has_many :evaluations, dependent: :destroy
 
   scope :finished, -> { where.not(finished_at: nil) }
-  scope :latest, -> { finished.order(started_at: :desc).first }
-  scope :oldest, -> { finished.order(started_at: :asc).first }
-  scope :on, -> x { where(started_at: x.all_day).first }
 
   include CrawlerTask
 
   class << self
+    def latest
+      finished.order(started_at: :desc).first
+    end
+
+    def oldest
+      finished.order(started_at: :asc).first
+    end
+
+    def on(date)
+      where(started_at: date.all_day).first
+    end
+
     def data_collection
       finished.count
     end
@@ -31,7 +40,24 @@ class Crawl < ApplicationRecord
     number_of_active_endpoints / v.to_f
   end
 
+  def number_of_service_descriptions
+    evaluations.has_service_description.count
+  end
+
+  def service_descriptions_rate
+    return 0 unless (v = number_of_endpoints).positive?
+    evaluations.has_service_description.count / v.to_f
+  end
+
   def data_entries
     evaluations.map(&:data_entry).compact.sum
+  end
+
+  def score_average
+    evaluations.average(:score)
+  end
+
+  def score_median
+    (evaluations.maximum(:score) + evaluations.minimum(:score)) / 2.0
   end
 end

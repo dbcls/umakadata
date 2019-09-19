@@ -2,6 +2,7 @@
 
 - content_for :head
   = javascript_pack_tag 'dashboard'
+  = stylesheet_pack_tag 'dashboard'
 
 .container
   #site-description.page-title-header
@@ -29,16 +30,15 @@
 
 .container
   .d-flex.justify-content-between
-    .page-title-header
-      | Scores
+    .page-title-header Scores
     .calendar-form
       label.calendar-title for='calendar' Data for the day of
       input.date-input#calendar readonly='readonly' name='date' value=@date[:current].to_formatted_s data-start-date=@date[:start].to_formatted_s data-end-date=@date[:end].to_formatted_s
       input.go-button#update-date type='button' value='GO'
 
   .row
-    .col-md-9
-      .scores-board-element
+    .col-12.col-lg-9
+      .score-board
         .carousel.slide#scores[data-ride="carousel"]
           ol.carousel-indicators
             li.active data-target="#scores" data-slide-to="0"
@@ -58,36 +58,39 @@
                       th URL
                   tbody#score-table
 
-    .col-md-3
-      .scores-board-element
+    .col-12.col-lg-3
+      .score-board
         .page-title-header Umaka Score: what it is?
         .page-title-body
           | Umaka Score represents how valuable endpoints are.
             Umaka Score is calculated on the basis of the evaluation from the 6 aspects,
             Availability, Freshness, Operation, Usefulness, Validity and Performance.
             We also rank the ebdpoints on a scale of A to E according to the Umaka score.
-        = link_to 'More', 'umaka-score.html', { :class => 'btn btn-xs more-button', 'data-no-turbolink' => true }
+        = link_to 'More', 'umaka-score.html', { :class => 'btn mt-3', 'data-no-turbolink' => true }
 
   .row
-    .col-md-6.col-sm-12
-      .scores-board-element
-        .page-title-header #umakadata news from Twitter
-        .row
-          .col-md-12
-            / = twitter_widget
-    .col-md-6.col-sm-12
+    .col-12.col-lg-6
       .row
-        .col-md-12.col-sm-6.col-xs-12
-          .scores-board-element
+        .col-12
+          .score-board
+            .page-title-header #umakadata news from Twitter
+            .row
+              .col-md-12
+                / = twitter_widget
+
+    .col-12.col-lg-6
+      .row
+        .col-12
+          .score-board
             .page-title-header Endpoint discussions
             .page-title-body
               | Do you want to ask something about an endpoint?
                 You can use the Yummydata forum on Github.
                 You will find a issue page for each one of the endpoints we are
                 monitoring, feel free to add to the discussion.
-            = link_to("See all discussions", URI.encode("https://github.com/#{Rails.application.secrets.github_repo}/issues?q=is:open+label:endpoints"), :class => 'btn see-all-endpoints')
-        .col-md-12.col-sm-6.col-xs-12
-          .scores-board-element
+            = link_to("See all discussions", URI.encode("https://github.com/#{Rails.application.secrets.github_repo}/issues?q=is:open+label:endpoints"), :class => 'btn mt-3')
+        .col-12
+          .score-board
             .page-title-header About
             .page-title-body
               p
@@ -103,4 +106,4 @@
                 | Examples of the information that YummyData monitors are the
                   endpoint uptime, the number of statements, and some measure of
                   the amount of ontology constructs in use.
-            = link_to 'More', about_path, { :class => 'btn btn-xs more-button' }
+            = link_to 'More', about_path, { :class => 'btn' }

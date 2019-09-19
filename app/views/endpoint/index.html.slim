@@ -1,2 +1,69 @@
-h1 Endpoint#index
-p Find me in app/views/endpoint/index.html.slim
+- provide :current, 'endpoints'
+
+- content_for :head
+  = javascript_pack_tag 'endpoint/index'
+  = stylesheet_pack_tag 'endpoint/index'
+
+.container
+  .d-flex.justify-content-between.my-2
+    .page-title-header Ranked Endpoints
+    .calendar-form
+      label.calendar-title for='calendar' Data for the day of
+      input.date-input#calendar readonly='readonly' name='date' value=@date[:current].to_formatted_s data-start-date=@date[:start].to_formatted_s data-end-date=@date[:end].to_formatted_s
+      input.go-button#update-date type='button' value='GO'
+
+  .row
+    .col-12
+      .score-board
+        .page-title-header Umaka Score
+        .row
+          .col-12.col-sm-6.col-md-4
+            canvas#score_rank[height=300]
+            .chart-title.mt-3 Scores
+            .text-muted Total Scores
+          .col-12.col-sm-6.col-md-4
+            canvas#alive[height=300]
+            .chart-title.mt-3 Alive
+            .text-muted Alive
+          .col-12.col-sm-6.col-md-4
+            canvas#sd[height=300]
+            .chart-title.mt-3 Service Descriptions
+            .text-muted Service Descriptions
+
+          .col-12.col-sm-6.col-md-4
+            canvas#score_statistics[height=300]
+            .chart-title.mt-3 Score Statistics
+            .text-muted Total Scores Statistics
+          .col-12.col-sm-6.col-md-4
+            canvas#alive_statistics[height=300]
+            .chart-title.mt-3 Alive Statistics
+            .text-muted Alive Statistics
+          .col-12.col-sm-6.col-md-4
+            canvas#sd_statistics[height=300]
+            .chart-title.mt-3 Service Description Statistics
+            .text-muted Service Description Statistics
+
+  .row
+    .col-12
+      .score-board
+        .page-title-header Score Ranking
+        .row
+          .col-12
+            .table-responsive
+              table.table.table-striped
+                thead
+                  tr
+                    th.column Name
+                    th.column URL
+                    th.column Score
+                tbody#result_body
+                  - if @evaluations.present?
+                    - @evaluations.preload(:endpoint).order(score: :desc).each do |evaluation|
+                      - ep = evaluation.endpoint
+                      tr
+                        td
+                          = link_to ep.name, endpoint_path(ep)
+                        td
+                          = link_to ep.endpoint_url, ep.endpoint_url, target: '_blank'
+                        td
+                          = evaluation.score

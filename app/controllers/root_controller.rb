@@ -1,16 +1,9 @@
 class RootController < ApplicationController
+  include DatePicker
+
   # GET /dashboard
   def dashboard
-    @date = {
-      start: Crawl.oldest.started_at.to_date,
-      end: (latest = Crawl.latest.started_at.to_date),
-      current: begin
-        Date.parse(dashboard_params[:date])
-      rescue
-        latest
-      end
-    }
-
+    @date = date_picker
     @metrics = metrics
   end
 

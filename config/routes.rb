@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   post '/inquiries', to: 'root#send_inquiry'
   get '/terms', to: 'root#terms'
 
+  get 'endpoint/statistics', to: 'endpoint#statistics', as: :endpoint_statistics
   resources :endpoint, only: %i[index show]
 
   devise_for :admin_users, ActiveAdmin::Devise.config
