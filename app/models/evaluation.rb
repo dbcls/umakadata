@@ -5,6 +5,8 @@ class Evaluation < ApplicationRecord
 
   before_save :update_score
 
+  scope :alive, -> { where(alive: true) }
+
   def update_score
     return unless measurements.any? { |x| x.new_record? || x.changed? }
 

@@ -14,21 +14,18 @@
         their availability, updates rate, standard compliance and other features that are important
         to data consumers.
     p
-      | Beyond this, YummyData provides a
-      '
+      ' Beyond this, YummyData provides a
       = link_to 'forum', URI.encode("https://github.com/#{Rails.application.secrets.github_repo}/issues?q=is:open -label:endpoints")
-      '
-      | where consumers and providers of
+      '  where consumers and providers of
         biomedical information in RDF can communicate and improve the usability of the web of (bio) data.
     p
-      | If you are a provider and want your resource exposed in a curated directory, or if you are a user and
+      ' If you are a provider and want your resource exposed in a curated directory, or if you are a user and
         have issues with an endpoint, YummyData is here to
-      '
       = link_to 'help', inquiries_path
-      |.
+      | .
 
 .container
-  = render partial: 'metrics', locals: { metrics: metrics }
+  = render partial: 'metrics', locals: { metrics: @metrics }
 
 .container
   .d-flex.justify-content-between
@@ -36,7 +33,7 @@
       | Scores
     .calendar-form
       label.calendar-title for='calendar' Data for the day of
-      input.date-input#calendar readonly='readonly' name='date' value=@current_date.to_formatted_s data-start-date=@start_date.to_formatted_s data-end-date=@end_date.to_formatted_s
+      input.date-input#calendar readonly='readonly' name='date' value=@date[:current].to_formatted_s data-start-date=@date[:start].to_formatted_s data-end-date=@date[:end].to_formatted_s
       input.go-button#update-date type='button' value='GO'
 
   .row
@@ -48,12 +45,10 @@
             li data-target="#scores" data-slide-to="1"
           .carousel-inner
             .carousel-item.active
-              .page-title-header
-                | Umaka Score
+              .page-title-header Umaka Score
               canvas#score-bar[height=350 width=750]
             .carousel-item
-              .page-title-header
-                | Top 5 endpoints, by Umaka Score
+              .page-title-header Top 5 endpoints, by Umaka Score
               .table-responsive
                 table.table.table-striped.top-5-endpoints
                   thead
@@ -65,21 +60,18 @@
 
     .col-md-3
       .scores-board-element
-        .page-title-header
-          | Umaka Score:
-            what it is ?
+        .page-title-header Umaka Score: what it is?
         .page-title-body
           | Umaka Score represents how valuable endpoints are.
-          | Umaka Score is calculated on the basis of the evaluation from the 6 aspects,
-          | Availability, Freshness, Operation, Usefulness, Validity and Performance.
-          | We also rank the ebdpoints on a scale of A to E according to the Umaka score.
+            Umaka Score is calculated on the basis of the evaluation from the 6 aspects,
+            Availability, Freshness, Operation, Usefulness, Validity and Performance.
+            We also rank the ebdpoints on a scale of A to E according to the Umaka score.
         = link_to 'More', 'umaka-score.html', { :class => 'btn btn-xs more-button', 'data-no-turbolink' => true }
 
   .row
     .col-md-6.col-sm-12
       .scores-board-element
-        .page-title-header
-          | #umakadata news from Twitter
+        .page-title-header #umakadata news from Twitter
         .row
           .col-md-12
             / = twitter_widget
@@ -87,21 +79,16 @@
       .row
         .col-md-12.col-sm-6.col-xs-12
           .scores-board-element
-            .page-title-header
-              | Endpoint discussions
+            .page-title-header Endpoint discussions
             .page-title-body
               | Do you want to ask something about an endpoint?
-              br
-              | You can use the Yummydata forum on Github.
-              br
-              | You will find a issue page for each one of the endpoints we are
-              br
-              | monitoring, feel free to add to the discussion.
+                You can use the Yummydata forum on Github.
+                You will find a issue page for each one of the endpoints we are
+                monitoring, feel free to add to the discussion.
             = link_to("See all discussions", URI.encode("https://github.com/#{Rails.application.secrets.github_repo}/issues?q=is:open+label:endpoints"), :class => 'btn see-all-endpoints')
         .col-md-12.col-sm-6.col-xs-12
           .scores-board-element
-            .page-title-header
-              | About
+            .page-title-header About
             .page-title-body
               p
                 | YummyData is a system that monitors SPARQL endpoints

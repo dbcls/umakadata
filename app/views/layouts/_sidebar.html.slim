@@ -1,9 +1,9 @@
 - current = yield(:current)
 
-.sidebar-sticky
+.sidebar-sticky.text-center
   = link_to image_tag(asset_pack_path('media/images/logo.png'), class: 'yummydata-logo'), '/'
 
-  ul.nav
+  ul.nav.text-left
     li.nav-item class="#{'dashboard' == current ? 'active' : ''}"
       = link_to 'DASHBOARD', root_path, class: 'nav-link'
 

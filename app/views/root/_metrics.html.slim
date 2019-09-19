@@ -1,68 +1,65 @@
 ul.rate-endpoints-list
   li.rate-of-endpoints
-    span
-      | Days of data collection
-    .number-data
-      | #{metrics.dig(:data_collection, :count) || 0}
-    span
-      | #{format('%d', metrics.dig(:data_collection, :diff) || 0)} days without data
-
-  li.rate-of-endpoints
-    span
-      | No. of endpoints
-    .number-data
-      | #{metrics.dig(:no_of_endpoints, :count) || 0}
-    - if metrics.dig(:no_of_endpoints, :diff) == 0
-      span
-        | Unch.
+    span Days of data collection
+    .number-data = metrics.dig(:data_collection, :current) || '-'
+    - if (v = metrics.dig(:data_collection, :diff))
+      span #{v} days without data
     - else
-      span[class="#{metrics.dig(:no_of_endpoints, :diff)&.negative? ? 'minus' : 'plus'}_variation"]
-        = format('%+d', metrics.dig(:no_of_endpoints, :diff) || 0)
-    span.temp-footer
-      '
-      | from last week
+      span No data.
 
   li.rate-of-endpoints
-    span
-      | Active endpoints today
-    .number-data
-      | #{metrics.dig(:active_endpoints, :count) || 0}
-    - if metrics.dig(:active_endpoints, :diff) == 0
-      span
-        | Unch.
+    span No. of endpoints
+    .number-data = metrics.dig(:no_of_endpoints, :current) || '-'
+    - if (v = metrics.dig(:no_of_endpoints, :diff))
+      - if v == 0
+        span Unch.
+      - else
+        span class="#{v.negative? ? 'minus' : 'plus'}_variation" = format('%+d', v)
+      |  from last week
     - else
-      span[class="#{metrics.dig(:active_endpoints, :diff)&.negative? ? 'minus' : 'plus'}_variation"]
-        = format('%+d', metrics.dig(:active_endpoints, :diff) || 0)
-    span
-      '
-      | from yesterday
+      span No data at last week.
 
   li.rate-of-endpoints
-    span
-      | Alive rate
-    .number-data
-      | #{metrics.dig(:alive_rates, :count) || 0}%
-    - if metrics.dig(:alive_rates, :diff) == 0
-      | Unch.
+    span Active endpoints today
+    .number-data = metrics.dig(:active_endpoints, :current) || '-'
+    - if (v = metrics.dig(:active_endpoints, :diff))
+      - if v == 0
+        span Unch.
+      - else
+        span class="#{v.negative? ? 'minus' : 'plus'}_variation" = format('%+d', v)
+      |  from yesterday
     - else
-      span[class="#{metrics.dig(:alive_rates, :diff)&.negative? ? 'minus' : 'plus'}_variation"]
-        | #{format('%+d', metrics.dig(:alive_rates, :diff) || 0)}%
-    span
-      '
-      | from last week
+      span No data at yesterday.
 
   li.rate-of-endpoints
-    | Data entries
+    span Alive rate
+    .number-data
+      - if (v = metrics.dig(:alive_rate, :current))
+        = v.round(0)
+      - else
+        | -
+      | %
+    - if (v = metrics.dig(:alive_rate, :diff))
+      - if (v = v.round(0)) == 0
+        span Unch.
+      - else
+        span[class="#{v.negative? ? 'minus' : 'plus'}_variation"] = format('%+d%%', v)
+      |  from last week
+    - else
+      span No data at last week.
+
+  li.rate-of-endpoints
+    span Data entries
     .number-data
       - units = { thousand: 'K', million: 'M', billion: 'G', trillion: 'T', quadrillion: 'P' }
-      = number_to_human(metrics.dig(:data_entries, :count) || 0, units: units)
-    - if metrics.dig(:data_entries, :diff)&.zero?
-      span
-        | Unch.
+      = number_to_human(metrics.dig(:data_entries, :current) || 0, units: units)
+    - if (v = metrics.dig(:data_entries, :diff))
+      - if v.zero?
+        span Unch.
+      - else
+        span[class="#{v.negative? ? 'minus' : 'plus'}_variation"]
+          = '+' if v.positive?
+          = number_to_human(v, units: units)
+      |  from yesterday
     - else
-      span[class="#{metrics.dig(:data_entries, :diff).negative? ? 'minus' : 'plus'}_variation"]
-        = '+' if metrics.dig(:data_entries, :diff).positive?
-        = number_to_human(metrics.dig(:data_entries, :diff) || 0, units: units)
-    span
-      '
-      | from yesterday
+      span No data at yesterday.
