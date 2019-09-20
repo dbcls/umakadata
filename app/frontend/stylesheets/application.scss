@@ -3,8 +3,10 @@
 @import "components/tooltip";
 
 body {
+  font-size: 0.9rem;
   background: #D4ECE4;
-  padding: 15px;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .sub-header {
@@ -191,7 +193,8 @@ ul.rate-endpoints-list {
   display: table;
   width: 100%;
   list-style-type: none;
-  padding-left: 0px;
+  padding-left: 0;
+  margin-bottom: 0;
   color: #73879C;
   font-size: 17px;
 }

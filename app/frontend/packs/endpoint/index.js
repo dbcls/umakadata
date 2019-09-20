@@ -23,7 +23,7 @@ $(function () {
 
   const LINE_CHART_OPTIONS = {
     animation: {
-      duration: 2000
+      duration: 1000
     },
     scales: {
       yAxes: [
@@ -44,7 +44,7 @@ $(function () {
         labels: ['Rank A', 'Rank B', 'Rank C', 'Rank D', 'Rank E'],
         datasets: [
           {
-            data: [],
+            data: [0, 0, 0, 0, 0],
             backgroundColor: ['#1D2088', '#00A0E9', '#009944', '#FFF100', '#E60012'],
             hoverBackgroundColor: ['#6356A3', '#00B9EF', '#03EB37', '#FFF462', '#FF5A5E']
           }
@@ -58,7 +58,7 @@ $(function () {
         labels: ['Alive', 'Dead'],
         datasets: [
           {
-            data: [],
+            data: [0, 0],
             backgroundColor: ['#00A0E9', '#E60012'],
             hoverBackgroundColor: ['#00B9EF', '#FF5A5E']
           }
@@ -72,7 +72,7 @@ $(function () {
         labels: ['Have', 'Do not have'],
         datasets: [
           {
-            data: [],
+            data: [0, 0],
             backgroundColor: ['#00A0E9', '#E60012'],
             hoverBackgroundColor: ['#00B9EF', '#FF5A5E']
           }
