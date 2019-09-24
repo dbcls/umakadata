@@ -31,7 +31,7 @@ module CrawlerTask
       end
 
       crawl = create!(started_at: Time.current)
-      endpoints = Endpoint.active.order(id: self.class.queue_order(Date.current))
+      endpoints = Endpoint.active.order(id: queue_order(Date.current))
       endpoints = endpoints.where(id: id) if id.present?
 
       endpoints.each do |endpoint|

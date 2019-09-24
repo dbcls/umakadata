@@ -15,6 +15,8 @@ class Crawl < ApplicationRecord
     end
 
     def on(date)
+      return nil unless date.respond_to?(:all_day)
+
       where(started_at: date.all_day).first
     end
 
@@ -37,6 +39,7 @@ class Crawl < ApplicationRecord
 
   def alive_rate
     return 0 unless (v = number_of_endpoints).positive?
+
     number_of_active_endpoints / v.to_f
   end
 
@@ -46,6 +49,7 @@ class Crawl < ApplicationRecord
 
   def service_descriptions_rate
     return 0 unless (v = number_of_endpoints).positive?
+
     evaluations.has_service_description.count / v.to_f
   end
 

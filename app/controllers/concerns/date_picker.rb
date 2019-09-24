@@ -3,12 +3,12 @@ module DatePicker
 
   def date_picker
     {
-      start: Crawl.oldest.started_at.to_date,
-      end: (latest = Crawl.latest.started_at.to_date),
+      start: (oldest = Crawl.oldest) ? oldest.started_at.to_date : Date.current,
+      end: (latest = Crawl.latest) ? latest.started_at.to_date : Date.current,
       current: begin
         Date.parse(params[:date])
       rescue
-        latest
+        latest || Date.current
       end
     }
   end

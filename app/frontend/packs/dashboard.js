@@ -6,6 +6,7 @@ import '../stylesheets/dashboard.scss'
 
 $(function () {
   let cal = $('#calendar');
+  let currentDate = cal.val();
 
   cal.datepicker({
     autoclose: true,
@@ -14,8 +15,6 @@ $(function () {
     format: 'yyyy-mm-dd',
     todayHighlight: true
   });
-
-  let currentDate = cal.val();
 
   let drawScores = function (date) {
     $.ajax({
