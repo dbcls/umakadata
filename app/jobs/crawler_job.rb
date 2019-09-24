@@ -21,7 +21,7 @@ class CrawlerJob
           x.finished_at = Time.current
         end
 
-        e.set_value(measurement)
+        set_value(e, measurement)
 
         e.measurements << m
 
@@ -31,6 +31,28 @@ class CrawlerJob
   end
 
   private
+
+  def set_value(evaluation, measurement)
+    v = measurement.value
+
+    if (name = measurement.name.split('.').last) == 'service_description'
+      evaluation.service_description = v.present?
+      evaluation.language = measurement.activities&.last&.supported_languages&.ensure_utf8&.to_json
+    elsif name == 'void'
+      evaluation.void = v.present?
+      evaluation.publisher = measurement.activities&.last&.publishers&.ensure_utf8&.to_json
+      evaluation.license = measurement.activities&.last&.licenses&.ensure_utf8&.to_json
+    elsif v.present?
+      if name == 'data_entry'
+        evaluation.send("#{name}=", v)
+        evaluation.data_scale = Math.log10(v) if v.positive?
+      elsif respond_to?("#{name}=")
+        evaluation.send("#{name}=", v.is_a?(String) ? v.ensure_utf8 : v)
+      end
+    end
+  rescue StandardError => e
+    Rails.logger.error('Crawler') { ([e.message] + e.backtrace).join("\n") }
+  end
 
   # @return [Crawl]
   def crawl
@@ -60,7 +82,8 @@ class CrawlerJob
   def crawler_options
     {
       exclude_graph: endpoint.excluding_graphs.map(&:uri).presence,
-      resource_uri: endpoint.resource_uris.map { |x| Umakadata::ResourceURI.new(x.attributes) }.presence
+      resource_uri: endpoint.resource_uris.map { |x| Umakadata::ResourceURI.new(x.attributes) }.presence,
+      vocabulary_prefix: VocabularyPrefix.where.not(endpoint_id: @endpoint_id).pluck(:uri)
     }.compact
   end
 

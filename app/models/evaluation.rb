@@ -128,25 +128,4 @@ class Evaluation < ApplicationRecord
       'E'
     end
   end
-
-  # @param [Umakadata::Measurement] measurement
-  def set_value(measurement)
-    v = measurement.value
-
-    if (name = measurement.name.split('.').last) == 'service_description'
-      self.service_description = v.present?
-      self.language = measurement.activities&.last&.supported_languages&.ensure_utf8&.to_json
-    elsif name == 'void'
-      self.void = v.present?
-      self.publisher = measurement.activities&.last&.publishers&.ensure_utf8&.to_json
-      self.license = measurement.activities&.last&.licenses&.ensure_utf8&.to_json
-    elsif v.present?
-      if name == 'data_entry'
-        send("#{name}=", v)
-        self.data_scale = Math.log10(v) if v.positive?
-      elsif respond_to?("#{name}=")
-        send("#{name}=", v.is_a?(String) ? v.ensure_utf8 : v)
-      end
-    end
-  end
 end
