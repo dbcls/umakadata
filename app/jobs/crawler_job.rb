@@ -1,7 +1,9 @@
 require 'umakadata'
+require 'forwardable'
 
 class CrawlerJob
   include Sidekiq::Worker
+  extend Forwardable
 
   sidekiq_options queue: :crawler, retry: 0, backtrace: true
 
@@ -9,30 +11,27 @@ class CrawlerJob
     @crawl_id = crawl_id
     @endpoint_id = endpoint_id
 
-    Evaluation.new(attributes.merge(crawler.basic_information)) do |e|
-      t = Time.current
-
+    Evaluation.new(attributes.merge(crawler.basic_information)) do |evaluation|
+      start_time = Time.current
       crawler.run do |measurement|
-        hash = measurement.to_h
-        hash[:activities] = hash[:activities]&.map { |activity| Activity.new(activity.to_h) }
-
-        m = Measurement.new(hash) do |x|
-          x.started_at = t
-          x.finished_at = Time.current
-        end
-
-        set_value(e, measurement)
-
-        e.measurements << m
-
-        t = Time.current
+        set_value(evaluation, measurement, start_time)
       end
     end.save!
   end
 
   private
 
-  def set_value(evaluation, measurement)
+  def set_value(evaluation, measurement, start_time = Time.current)
+    hash = measurement.to_h
+    hash[:activities] = hash[:activities]&.map { |activity| Activity.new(activity.to_h) }
+
+    evaluation.measurements << begin
+      Measurement.new(hash) do |x|
+        x.started_at = start_time
+        x.finished_at = Time.current
+      end
+    end
+
     v = measurement.value
 
     if (name = measurement.name.split('.').last) == 'service_description'
@@ -42,16 +41,16 @@ class CrawlerJob
       evaluation.void = v.present?
       evaluation.publisher = measurement.activities&.last&.publishers&.ensure_utf8&.to_json
       evaluation.license = measurement.activities&.last&.licenses&.ensure_utf8&.to_json
-    elsif v.present?
-      if name == 'data_entry'
-        evaluation.send("#{name}=", v)
-        evaluation.data_scale = Math.log10(v) if v.positive?
-      elsif respond_to?("#{name}=")
-        evaluation.send("#{name}=", v.is_a?(String) ? v.ensure_utf8 : v)
-      end
+    elsif name == 'data_entry'
+      evaluation.data_entry = v
+      evaluation.data_scale = Math.log10(v) if v.present? && v.positive?
+    elsif evaluation.respond_to?("#{name}=")
+      evaluation.send("#{name}=", v.is_a?(String) ? v.ensure_utf8 : v)
+    else
+      error('Crawler') { "Missing method #{name}= for #{evaluation.class}" }
     end
   rescue StandardError => e
-    Rails.logger.error('Crawler') { ([e.message] + e.backtrace).join("\n") }
+    error('Crawler') { ([e.message] + e.backtrace).join("\n") }
   end
 
   # @return [Crawl]
@@ -89,7 +88,7 @@ class CrawlerJob
 
   def logger_options
     {
-      level: Rails.logger.level,
+      level: ::Logger::INFO,
       formatter: Umakadata::Logger::Formatter.new
     }
   end
@@ -101,4 +100,10 @@ class CrawlerJob
   def log_file_name
     "crawl_#{@crawl_id}_#{crawl.started_at.strftime('%Y%m%d_%H%M%S')}.log"
   end
+
+  def logger
+    @logger ||= Umakadata::Crawler.config.logger
+  end
+
+  def_delegators :logger, :debug, :info, :warn, :error, :fatal
 end
