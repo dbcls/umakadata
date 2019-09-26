@@ -5,13 +5,13 @@ module CrawlerTask
   end
 
   module ClassMethods
-    START_OFFSET = [21, 21, 3, 3, 9, 9].freeze
+    START_OFFSET = [0, 0, 18, 18, 12, 12, 6, 6].freeze
 
     # @param [Date, Time, DateTime, ActiveSupport::TimeWithZone] date
     # @return [ActiveSupport::TimeWithZone]
     def start_time(date)
       (date = utc_time(date))
-        .change(hour: START_OFFSET[date.strftime('%j').to_i % 6])
+        .change(hour: START_OFFSET[date.strftime('%j').to_i % 8])
         .in_time_zone(Time.zone)
     end
 
