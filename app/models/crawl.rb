@@ -2,6 +2,7 @@ class Crawl < ApplicationRecord
   has_many :evaluations, dependent: :destroy
 
   scope :finished, -> { where.not(finished_at: nil) }
+  scope :processing, -> { where(finished_at: nil) }
 
   include CrawlerTask
 
