@@ -11,15 +11,32 @@ class CrawlerJob
     @crawl_id = crawl_id
     @endpoint_id = endpoint_id
 
-    Evaluation.new(attributes.merge(crawler.basic_information)) do |evaluation|
+    evaluation = create_evaluation.update!(crawler.basic_information)
+    begin
       start_time = Time.current
       crawler.run do |measurement|
         set_value(evaluation, measurement, start_time)
       end
-    end.save!
+
+      evaluation.save!
+
+      endpoint.update_vocabulary_prefixes!(*crawler.vocabulary_prefix)
+    rescue StandardError => e
+      raise e
+    ensure
+      crawl.finalize! if crawl.finished?
+    end
   end
 
   private
+
+  def create_evaluation
+    Evaluation.create! do |e|
+      e.created_at = Time.current
+      e.crawl = crawl
+      e.endpoint = endpoint
+    end
+  end
 
   def set_value(evaluation, measurement, start_time = Time.current)
     hash = measurement.to_h

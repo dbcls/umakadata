@@ -29,6 +29,11 @@ class Crawl < ApplicationRecord
     end
   end
 
+  def finalize!
+    VocabularyPrefix.caches = nil
+    update!(finished_at: Time.current)
+  end
+
   def number_of_endpoints
     evaluations.count
   end
