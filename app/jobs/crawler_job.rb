@@ -11,7 +11,8 @@ class CrawlerJob
     @crawl_id = crawl_id
     @endpoint_id = endpoint_id
 
-    evaluation = create_evaluation.update!(crawler.basic_information)
+    evaluation = create_evaluation.tap { |x| x.update!(crawler.basic_information) }
+
     begin
       start_time = Time.current
       crawler.run do |measurement|
