@@ -8,6 +8,7 @@ class RunnerJob
 
     Umakadata::Crawler.config.logger = Rails.logger
     Umakadata::LinkedOpenVocabulary.update
+    VocabularyPrefix.caches = VocabularyPrefix.all.map(&:attributes)
 
     Crawl.start!
   end
