@@ -7,7 +7,7 @@ class Crawler < Thor
     require_relative '../../config/application'
     Rails.application.initialize!
 
-    if (crawl = Crawl.find_by(started_at: Date.current.all_day))
+    if (crawl = Crawl.on(Date.current))
       unless crawl.finished?
         say 'Crawling already in progress.', %i[red bold]
         return
@@ -21,24 +21,7 @@ class Crawler < Thor
       end
     end
 
-    Crawl.start!(*id)
-  end
-
-  desc 'restart', 'restart incomplete crawling'
-
-  def restart(*id)
-    require_relative '../../config/application'
-    Rails.application.initialize!
-
-    unless Crawl.find_by(started_at: Date.current.all_day)
-      say 'Crawling not exists.', %i[red bold]
-      return
-    end
-
-    enqueued = Crawl.restart!(*id)
-
-    say "Enqueue #{enqueued.size} #{'endpoint'.pluralize(enqueued.size)}."
-    say enqueued.map { |x| "#{x.id} - #{x.name}" }.join("\n").indent(2)
+    RunnerJob.perform_async(*id)
   end
 
   map run: 'execute'

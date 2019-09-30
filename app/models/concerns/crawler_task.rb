@@ -39,18 +39,6 @@ module CrawlerTask
       end
     end
 
-    # @return [Array<Endpoint>] enqueued endpoint
-    def restart!(*id)
-      crawl = Crawl.find_by(started_at: Date.current.all_day)
-
-      endpoints = Endpoint.active
-      endpoints = endpoints.where(id: id) if id.present?
-
-      (endpoints - (crawl.finished_endpoints | crawl.queued_endpoints)).tap do |missing|
-        missing.each { |endpoint| CrawlerJob.perform_async(crawl.id, endpoint.id) }
-      end
-    end
-
     private
 
     def utc_time(obj)
@@ -89,10 +77,6 @@ module CrawlerTask
 
   def last?
     job_size == 1
-  end
-
-  def finished?
-    job_size.zero?
   end
 
   private

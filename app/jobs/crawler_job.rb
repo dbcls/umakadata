@@ -100,14 +100,18 @@ class CrawlerJob
     {
       exclude_graph: endpoint.excluding_graphs.map(&:uri).presence,
       resource_uri: endpoint.resource_uris.map { |x| Umakadata::ResourceURI.new(x.attributes) }.presence,
-      vocabulary_prefix_others: if (cache = VocabularyPrefix.caches).present?
-                                  logger.info('VocabularyPrefix') { 'Cached prefixes will be used.' }
-                                  cache.select { |x| x['endpoint_id'] != @endpoint_id }.map { |x| x['uri'] }.uniq
-                                else
-                                  logger.info('VocabularyPrefix') { 'Prefixes from database will be used.' }
-                                  VocabularyPrefix.where.not(endpoint_id: @endpoint_id).pluck(:uri).uniq
-                                end
+      vocabulary_prefix_others: vocabulary_prefix
     }.compact
+  end
+
+  def vocabulary_prefix
+    if (cache = VocabularyPrefix.caches).present?
+      logger.info('VocabularyPrefix') { 'Cached prefixes will be used.' }
+      cache.reject { |x| x['endpoint_id'] == @endpoint_id }.map { |x| x['uri'] }.uniq
+    else
+      logger.info('VocabularyPrefix') { 'Prefixes from database will be used.' }
+      VocabularyPrefix.where.not(endpoint_id: @endpoint_id).pluck(:uri).uniq
+    end
   end
 
   def logger_options

@@ -3,16 +3,21 @@ class RunnerJob
 
   sidekiq_options queue: :runner
 
-  def perform
+  # Start runner job asynchronously
+  #
+  # @param [Array<Integer>] id an array of endpoint id
+  def perform(*id)
     check_crawls
 
     return unless scheduled_time? && crawl_not_performed?
+    return if Crawl.processing.present?
 
     Umakadata::Crawler.config.logger = Rails.logger
     Umakadata::LinkedOpenVocabulary.update
+
     VocabularyPrefix.caches = VocabularyPrefix.all.map(&:attributes)
 
-    Crawl.start!
+    Crawl.start!(*id)
   end
 
   private

@@ -30,8 +30,15 @@ class Crawl < ApplicationRecord
     end
   end
 
+  def processing?
+    finished_at.nil?
+  end
+
+  def finished?
+    !processing?
+  end
+
   def finalize!
-    VocabularyPrefix.caches = nil
     update!(finished_at: Time.current)
   end
 
