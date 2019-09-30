@@ -9,11 +9,11 @@ class Evaluation < ApplicationRecord
   scope :has_service_description, -> { where(service_description: true) }
 
   def update_score
-    return unless measurements.any? { |x| x.new_record? || x.changed? }
-
     self.alive_rate = calc_alive_rate
     self.score = (vs = scores.values).sum / vs.size.to_f
     self.rank = calc_rank
+
+    self
   end
 
   def calc_alive_rate
