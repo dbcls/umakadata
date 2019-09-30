@@ -25,7 +25,7 @@ class CrawlerJob
     rescue StandardError => e
       raise e
     ensure
-      crawl.finalize! if crawl.finished?
+      crawl.finalize! if crawl.last?
     end
   end
 

@@ -11,6 +11,8 @@ class Endpoint < ApplicationRecord
   end
 
   def update_vocabulary_prefixes!(*prefixes)
+    return unless prefixes.present?
+
     transaction do
       prefixes = prefixes.dup
       vocabulary_prefixes.each do |vp|

@@ -87,7 +87,17 @@ module CrawlerTask
     Endpoint.active.where(id: evaluations.pluck(:endpoint_id))
   end
 
+  def last?
+    job_size == 1
+  end
+
   def finished?
-    (queue.size + retry_set.size + processing.size).zero?
+    job_size.zero?
+  end
+
+  private
+
+  def job_size
+    queue.size + retry_set.size + processing.size
   end
 end
