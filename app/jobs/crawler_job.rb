@@ -60,10 +60,10 @@ class CrawlerJob
       evaluation.publisher = measurement.activities&.last&.publishers&.ensure_utf8&.to_json
       evaluation.license = measurement.activities&.last&.licenses&.ensure_utf8&.to_json
     elsif name == 'data_entry'
-      evaluation.data_entry = v
+      evaluation.data_entry = v if v.present?
       evaluation.data_scale = Math.log10(v) if v.present? && v.positive?
     elsif evaluation.respond_to?("#{name}=")
-      evaluation.send("#{name}=", v.is_a?(String) ? v.ensure_utf8 : v)
+      evaluation.send("#{name}=", v.is_a?(String) ? v.ensure_utf8 : v) if v.present?
     else
       error('Crawler') { "Missing method #{name}= for #{evaluation.class}" }
     end
