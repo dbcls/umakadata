@@ -3,7 +3,7 @@ class RootController < ApplicationController
 
   # GET /dashboard
   def dashboard
-    @date = date_picker
+    @date = date_for_crawl
     @metrics = metrics
   end
 

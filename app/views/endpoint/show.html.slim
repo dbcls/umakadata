@@ -1,2 +1,21 @@
-h1 Endpoint#show
-p Find me in app/views/endpoint/show.html.slim
+- content_for :head
+  = javascript_pack_tag 'endpoint/show'
+
+#progressDialog.modal.fade data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true" style="padding-top:15%; overflow-y:visible;"
+  .modal-dialog.modal-m
+    .modal-content
+      .modal-header
+        h3 style="margin:0;"
+      .modal-body
+        .progress.progress-striped.active style="margin-bottom:0;"
+          .progress-bar style="width: 100%"
+
+.container
+  .d-flex.justify-content-between.my-2
+    .page-title-header= @endpoint.name
+    .calendar-form
+      label.calendar-title for='calendar' Data for the day of
+      input.date-input#calendar readonly='readonly' name='date' value=@date[:current].to_formatted_s data-start-date=@date[:start].to_formatted_s data-end-date=@date[:end].to_formatted_s
+      input.go-button#update-date type='button' value='GO'
+
+#endpoint_info data={endpoint: @endpoint.id, evaluation: @evaluation.id}

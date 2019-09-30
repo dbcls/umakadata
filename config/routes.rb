@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   get '/terms', to: 'root#terms'
 
   get 'endpoint/statistics', to: 'endpoint#statistics', as: :endpoint_statistics
+  get 'endpoint/:id/info', to: 'endpoint#info', as: :endpoint_info
+
   resources :endpoint, only: %i[index show]
 
   devise_for :admin_users, ActiveAdmin::Devise.config

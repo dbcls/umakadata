@@ -3,7 +3,7 @@ class EndpointController < ApplicationController
 
   # GET /endpoint
   def index
-    @date = date_picker
+    @date = date_for_crawl
     @evaluations = if (crawl = Crawl.on(@date[:current])).present?
                      Evaluation.where(crawl_id: crawl.id)
                    end
@@ -20,9 +20,16 @@ class EndpointController < ApplicationController
     end
   end
 
+  # GET /endpoint/:id
+  def show
+    @date = date_for_endpoint(params[:id])
+    @endpoint = Endpoint.find(params[:id])
+    @evaluation = Crawl.on(@date[:current])&.evaluations&.find_by(endpoint_id: params[:id])
+  end
+
   # GET /endpoint/statistics
   def statistics
-    to = date_picker[:current]
+    to = date_for_crawl[:current]
     from = 10.days.ago(to)
 
     begin
@@ -41,6 +48,11 @@ class EndpointController < ApplicationController
     end
   end
 
-  def show
+  def info
+    @date        = date_param
+    count        = PrefixFilter.where(endpoint_id: @endpoint[:id]).count()
+    @uri_indexed = count > 0
+    render layout: false
   end
+
 end
