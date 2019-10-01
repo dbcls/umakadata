@@ -1,0 +1,289 @@
+- measurements = evaluation.measurements
+
+table.table.table-bordered.evaluation
+  thead
+    tr
+      th Area
+      th colspan=2 Name
+      th Value
+      th
+  tbody
+    /
+    / Availability
+    /
+    tr class=class_for_criteria(evaluation.availability)
+      td Availability (#{format('%.1f', evaluation.availability)})
+      td colspan=2
+        | Alive (Alive Rate)
+        .umakadata-tooltip
+          span.medium
+            | The enpoint was alive or not when we cheked the endpoint last time.<br\>
+              Alive rate shows how much the endpoint was alive in these 30 days.
+      td #{evaluation.alive} (#{format('%.1f', evaluation.alive_rate * 100)}%)
+      td.text-center
+        - if measurements.find { |x| x.name == 'availability.alive' }
+          / = link_to controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :alive do
+          i.fa.fa-file-text-o
+
+    /
+    / Freshness
+    /
+    tr class=class_for_criteria(evaluation.freshness)
+      td Freshness (#{format('%.1f', evaluation.freshness)})
+      td colspan=2
+        | Last Updated
+        .umakadata-tooltip
+          span.medium
+            | The last updated date. We decide the date as follows:
+                        Firstly, we try to find the date in Service Description and VoID.
+                        If explicit modifed date can not be found, we compare the number of statements, the fist statement and the last statement with those of yesterday. We assume some data is updated today if there is any differences.<br\>
+              NOTE: Virtuoso could not count the statement correctly. So this mechanism does not work well for the endpoint on Virtuoso.
+      td= evaluation.last_updated.presence || "N/A"
+      td.text-center
+        - if measurements.find { |x| x.name == 'freshness.last_updated' }
+          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :last_updated unless @evaluation.last_updated_log.nil?
+          i.fa.fa-file-text-o
+
+    /
+    / Operation
+    /
+    tr class=class_for_criteria(evaluation.operation)
+      td rowspan=2 Operation (#{format('%.1f', evaluation.operation)})
+      td colspan=2
+        | Service Description
+        .umakadata-tooltip
+          span.medium
+            | true if Service Description can be retrieved as turtle or rdf+xml, otherwise false.
+      td= evaluation.service_description
+      td.text-center
+        - if measurements.find { |x| x.name == 'operation.service_description' }
+          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :service_description unless @evaluation.service_description_log.nil?
+          i.fa.fa-file-text-o
+
+    tr class=class_for_criteria(evaluation.operation)
+      td colspan=2
+        | VoID
+        .umakadata-tooltip
+          span.medium
+            | true if VoID can be found on well known URI, otherwise false.
+      td= evaluation.void
+      td.text-center
+        - if measurements.find { |x| x.name == 'operation.void' }
+          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :void_ttl unless @evaluation.void_ttl_log.nil?
+          i.fa.fa-file-text-o
+
+    /
+    / Usefulness
+    /
+    tr class=class_for_criteria(evaluation.usefulness)
+      td rowspan=8 Usefulness (#{format('%.1f', evaluation.usefulness)})
+
+    tr class=class_for_criteria(evaluation.usefulness)
+      td colspan=2
+        | Metadata
+        .umakadata-tooltip
+          span.medium
+            | This value shows how much metadata can be retrieved using the specified SPARQL query.
+            br
+            | 0 if any graph information can be retrieved.
+            br
+            | For each graph, we score the status by retrieving classes, labels, properties and datatypes.
+                        The average of the scores are shown.
+            br
+            | Please see the following pages for more details:
+            br
+            a href="http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-builder-metadata/"
+              | http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-builder-metadata/
+      td= evaluation.metadata.present? ? format('%.1f', evaluation.metadata) : 'N/A'
+      td.text-center
+        - if measurements.find { |x| x.name == 'usefulness.metadata' }
+          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :metadata_score unless @evaluation.metadata_log.nil?
+          i.fa.fa-file-text-o
+
+    tr class=class_for_criteria(evaluation.usefulness)
+      td colspan=2
+        | Ontology
+        .umakadata-tooltip
+          span.medium
+            | This value show the how the endpoint use common ontologies.
+                        We calculate the value as the average of the rate of the ontologies used in properties in metadata for each graph.
+            br
+            | Please see also the following pages:
+            br
+            a href="http://lov.okfn.org/dataset/lov"
+              | http://lov.okfn.org/dataset/lov
+            br
+            a href="http://stats.lod2.eu/vocabularies"
+              | http://stats.lod2.eu/vocabularies
+      td= evaluation.ontology.present? ? format('%.1f', evaluation.ontology) : 'N/A'
+      td.text-center
+        - if measurements.find { |x| x.name == 'usefulness.ontology' }
+          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :ontology_score unless @evaluation.ontology_log.nil?
+          i.fa.fa-file-text-o
+
+    tr class=class_for_criteria(evaluation.usefulness)
+      td colspan=2
+        | Links to Other Dataset
+        .umakadata-tooltip
+          span.medium
+            | List of datasets specified by void:Linkset in VoID
+      td
+        - if evaluation.links_to_other_datasets.present?
+          ul
+            - evaluation.links_to_other_datasets.each do |x|
+              li= x
+        - else
+          = 'N/A'
+      td.text-center
+
+    tr class=class_for_criteria(evaluation.usefulness)
+      td colspan=2
+        | Data Entry
+        .umakadata-tooltip
+          span.medium
+            | Number of statements in the endpoint.
+      td= evaluation.data_entry.present? ? number_with_delimiter(evaluation.data_entry) : 'N/A'
+      td.text-center
+        - if measurements.find { |x| x.name == 'usefulness.data_entry' }
+          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :number_of_statements unless @evaluation.number_of_statements_log.nil?
+          i.fa.fa-file-text-o
+
+    tr class=class_for_criteria(evaluation.usefulness)
+      td colspan=2
+        | Support for HTML Data Format
+        .umakadata-tooltip
+          span.medium
+            | true if the endpoint returns a response in HTML format, otherwise false.
+      td= evaluation.support_html_format
+      td.text-center
+        - if measurements.find { |x| x.name == 'usefulness.support_html_format' }
+          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :support_html_format unless @evaluation.support_html_format_log.nil?
+          i.fa.fa-file-text-o
+
+    tr class=class_for_criteria(evaluation.usefulness)
+      td colspan=2
+        | Support for Turtle Data Format
+        .umakadata-tooltip
+          span.medium
+            | true if the endpoint returns a response in Turtle format, otherwise false.
+      td= evaluation.support_turtle_format
+      td.text-center
+        - if measurements.find { |x| x.name == 'usefulness.support_html_format' }
+          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :support_turtle_format unless @evaluation.support_turtle_format_log.nil?
+          i.fa.fa-file-text-o
+
+    tr class=class_for_criteria(evaluation.usefulness)
+      td colspan=2
+        | Support for RDF/XML Data Format
+        .umakadata-tooltip
+          span.medium
+            | true if the endpoint returns a response in RDF/XML format, otherwise false.
+      td= evaluation.support_rdfxml_format
+      td.text-center
+        - if measurements.find { |x| x.name == 'usefulness.support_html_format' }
+          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :support_turtle_format unless @evaluation.support_turtle_format_log.nil?
+          i.fa.fa-file-text-o
+
+    /
+    / Validity
+    /
+    tr class=class_for_criteria(evaluation.validity)
+      td rowspan=5 Validity (#{format('%.1f', evaluation.validity)})
+      td rowspan=4
+        | 4 Principles of Linked Data
+        .umakadata-tooltip
+          span.medium
+            | This shows how much the endpoint obey the following 4 principles of Linked Data:
+            ul
+              li
+                | Use URIs as names for things
+              li
+                | Use HTTP URIs so that people can look up those names.
+              li
+                | When someone looks up a URI, provide useful information, using the standards (RDF*, SPARQL)
+              li
+                | Include links to other URIs. so that they can discover more things.
+            | Please see the following page for more details:
+            br
+            a href="https://www.w3.org/DesignIssues/LinkedData.html"
+              | https://www.w3.org/DesignIssues/LinkedData.html
+      td
+        | URIs are used as names?
+        .umakadata-tooltip
+          span.small Always true, because this rule is natural for RDF and it is meaningless for umakadata score.
+      td= true
+      td.text-center
+
+    tr class=class_for_criteria(evaluation.validity)
+      td
+        | HTTP URIs are used?:
+        .umakadata-tooltip
+          span.small N/A if the evaluation does not exist, true if all subjects are HTTP URI or blank node, otherwise false.
+      td= evaluation.http_uri.nil? ? 'N/A' : evaluation.http_uri
+      td.text-center
+        - if measurements.find { |x| x.name == 'validity.http_uri' }
+          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :subject_is_http_uri unless @evaluation.subject_is_http_uri_log.nil?
+          i.fa.fa-file-text-o
+
+    tr class=class_for_criteria(evaluation.validity)
+      td
+        | URI provides useful information?:
+        .umakadata-tooltip
+          span.small
+            | true if we can get some data from a HTTP URI of a subject, otherwise false.<br\>
+              N/A: Firstly, we check whether the web site of the endpoint publishes download data or not.
+      td= evaluation.provide_useful_information.nil? ? 'N/A' : evaluation.provide_useful_information
+      td.text-center
+        - if measurements.find { |x| x.name == 'validity.provide_useful_information' }
+          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :subject_is_http_uri unless @evaluation.subject_is_http_uri_log.nil?
+          i.fa.fa-file-text-o
+
+    tr class=class_for_criteria(evaluation.validity)
+      td
+        | Include links to other URIs?:
+        .umakadata-tooltip
+          span.small
+            | true if the endpoint contains owl:sameAs or rdf:seeAlso dataset, otherwise false.<br\>
+              N/A: Firstly, we check whether the web site of the endpoint publishes download data or not.
+      td= evaluation.link_to_other_uri.nil? ? 'N/A' : evaluation.link_to_other_uri
+      td.text-center
+        - if measurements.find { |x| x.name == 'validity.link_to_other_uri' }
+          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :subject_is_http_uri unless @evaluation.subject_is_http_uri_log.nil?
+          i.fa.fa-file-text-o
+
+    tr class=class_for_criteria(evaluation.validity)
+      td colspan=2
+        | Cool URI
+        .umakadata-tooltip
+          span.medium
+            | We score the cool URI according 4 criteria:
+            ul
+              li the address of the endpoint is represented using host name not IP address.
+              li the endpoint should listen 80 port.
+              li the URI of the endpoint does not contain URL parameters.
+              li the length of the URI is less than 30 characters.
+            | Please see the following pages for more details:
+            ul
+              li= link_to 'https://www.w3.org/TR/cooluris/'
+              li= link_to 'http://patterns.dataincubator.org/book/identifier-patterns.html'
+      td= evaluation.cool_uri.present? ? format('%.1f', evaluation.cool_uri) : 'N/A'
+      td.text-center
+        - if measurements.find { |x| x.name == 'validity.cool_uri' }
+          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :cool_uri_rate unless @evaluation.cool_uri_rate_log.nil?
+          i.fa.fa-file-text-o
+
+    tr class=class_for_criteria(evaluation.performance)
+      td Performance (#{format('%.1f', evaluation.performance)})
+      td
+        | Execution Time
+        .umakadata-tooltip
+          span.medium
+            | This value represents the calculation performance.
+                        It is calculated as a difference of the response time retrieving the number of classes query from its ASK{} query.
+      td
+      td
+        = evaluation.execution_time.present? ? format('%.3f', evaluation.execution_time) : 'N/A'
+      td.text-center
+        - if measurements.find { |x| x.name == 'performance.execution_time' }
+          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :execution_time unless @evaluation.execution_time_log.nil?
+          i.fa.fa-file-text-o

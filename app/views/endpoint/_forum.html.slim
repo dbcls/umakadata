@@ -1,0 +1,11 @@
+- if (repo = Rails.application.credentials.github_repo).present? && endpoint.issue_id.present?
+  h2.page-title-header Forum
+  ul.no-bullets
+    li
+      i.fa.fa-github.pr-1
+      = link_to "Discussion About #{endpoint.name}", "https://github.com/#{repo}/issues?q=is:open+label:%22#{endpoint.id}%22", target: '_blank'
+    li
+      i.fa.fa-github.pr-1
+      = link_to "Create Issue About #{endpoint.name}", '#'
+  / issues_form_path(@endpoint)
+  / .modal.fade#user-modal[tabindex="-1" role="dialog" aria-hidden="true"]

@@ -21,6 +21,22 @@ class Evaluation < ApplicationRecord
     self
   end
 
+  def previous
+    Evaluation
+      .eager_load(:crawl)
+      .where(endpoint_id: endpoint_id)
+      .where('crawls.started_at < ?', crawl.started_at)
+      .last
+  end
+
+  def next
+    Evaluation
+      .eager_load(:crawl)
+      .where(endpoint_id: endpoint_id)
+      .where('crawls.started_at > ?', crawl.started_at)
+      .first
+  end
+
   def calc_alive_rate
     date = crawl.started_at
     duration = 29.days.ago(date).beginning_of_day..1.day.ago(date).end_of_day

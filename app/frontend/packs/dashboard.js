@@ -2,7 +2,7 @@ import 'bootstrap/dist/js/bootstrap'
 import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min'
 import Chart from 'chart.js';
 
-import '../stylesheets/dashboard.scss'
+import '../stylesheets/dashboard'
 
 $(function () {
   let cal = $('#calendar');

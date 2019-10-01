@@ -1,2 +1,100 @@
 @import "~bootstrap-datepicker/dist/css/bootstrap-datepicker3";
-@import "../components/calendar";
+@import "components/calendar";
+@import "variables";
+
+p {
+  font-family: Roboto-Regular;
+  color: $umakadata-text-color;
+}
+
+.chart-title {
+  font-weight: 500;
+  line-height: 1.1;
+  font-size: 18px;
+  text-align: center;
+
+  & + .text-muted {
+    font-size: 14px;
+    text-align: center;
+  }
+}
+
+#progress-dialog {
+  padding-top: 15%;
+  overflow-y: visible;
+
+  h3 {
+    margin: 0;
+  }
+
+  .progress {
+    height: 20px;
+  }
+
+  $progress-background-size: 40px;
+
+  @keyframes progress-bar-stripes {
+    from {
+      background-position: $progress-background-size 0;
+    }
+    to {
+      background-position: 0 0;
+    }
+  }
+
+  .progress-bar {
+    width: 100%;
+    background-color: #337ab7;
+    background-size: $progress-background-size $progress-background-size;
+    animation: progress-bar-stripes 2s linear infinite;
+  }
+}
+
+table {
+  th, td {
+    font-family: Roboto-Regular;
+    color: $umakadata-text-color;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      margin: 0;
+    }
+  }
+
+  .poor {
+    background-color: #F6D4D8;
+  }
+
+  .below_average {
+    background-color: #FCF1D3;
+  }
+
+  .average {
+    background-color: #FFFBD5;
+  }
+
+  .good {
+    background-color: #EEF5D3;
+  }
+
+  .excellent {
+    background-color: #C6EDDB;
+  }
+
+  &.evaluation {
+    td, th {
+      &:last-child {
+        border-left: 0;
+      }
+
+      &:nth-last-child(2) {
+        border-right: 0;
+      }
+    }
+  }
+}

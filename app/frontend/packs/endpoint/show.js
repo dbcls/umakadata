@@ -2,7 +2,7 @@ import 'bootstrap/dist/js/bootstrap'
 import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min'
 import Chart from 'chart.js';
 
-import '../../stylesheets/endpoint/index.scss'
+import '../../stylesheets/endpoint'
 
 $(function () {
   let data = $('#endpoint_info').data();
@@ -22,7 +22,7 @@ $(function () {
           onHide: null // This callback runs after the dialog was hidden
         }, options);
 
-        let $progressDialog = $("#progressDialog");
+        let $progressDialog = $("#progress-dialog");
 
         $progressDialog.find('.modal-dialog').attr('class', 'modal-dialog').addClass('modal-' + settings.dialogSize);
         $progressDialog.find('.progress-bar').attr('class', 'progress-bar progress-bar-striped progress-bar-animated');
@@ -53,7 +53,7 @@ $(function () {
         raderLoaded = false;
         scoreLoaded = false;
         progressDialog.show('Loading Endpoint Information...');
-        dataLoader.showInfo(endpointId, evaluation_id);
+        // dataLoader.showInfo(endpointId, evaluation_id);
         startDate = start_date;
       },
 
@@ -254,5 +254,5 @@ $(function () {
 
   let currentDate = cal.val();
 
-  dataLoader.load(data.endpoint, data.evaluation, currentDate);
+  // dataLoader.load(data.endpoint, data.evaluation, currentDate);
 });

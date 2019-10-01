@@ -1,53 +1,79 @@
+@import "../variables";
+
 div.umakadata-tooltip {
   display: inline-block;
-}
 
-div.umakadata-tooltip span {
-  display: none;
-}
+  &:before {
+    font: normal normal normal 14px/1 FontAwesome;
+    color: $umakadata-text-color;
+    content: "\f059";
+    margin-left: 5px;
+  }
 
-div.umakadata-tooltip:hover {
-  position: relative;
-  color: #333;
-}
+  &:hover {
+    position: relative;
+    color: #333;
 
-div.umakadata-tooltip:hover span {
-  display: block;
-  position: absolute;
-  top: 25px;
-  font-size: 90%;
-  color: #fff;
-  background-color: #51A2C1;
-  padding: 5px;
-  border-radius:3px;
-  z-index:100;
-}
+    p, span {
+      display: block;
+      position: absolute;
+      top: 30px;
+      left: -5px;
+      font-size: 90%;
+      color: #fff;
+      background-color: #51A2C1;
+      padding: 5px;
+      border-radius: 3px;
+      z-index: 100;
+    }
+  }
 
-div.umakadata-tooltip span.large {
-  width: 600px
-}
+  p, span {
+    display: none;
 
-div.umakadata-tooltip span.medium {
-  width: 400px
-}
+    &:before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: -10px;
+      left: 10px;
+      border: 10px transparent solid;
+      border-right-width: 0;
+      border-left-color: #51A2C1;
+      transform: rotate(270deg);
+      -webkit-transform: rotate(270deg);
+      -o-transform: rotate(270deg);
+      z-index: 100;
+    }
 
-div.umakadata-tooltip span.small {
-  width: 200px
-}
+    &.large {
+      width: 600px
+    }
 
-div.umakadata-tooltip span:before {
-  content:'';
-  display:block;
-  position:absolute;
-  height:0;
-  width:0;
-  top:-13px;
-  left:15px;
-  border:13px transparent solid;
-  border-right-width:0;
-  border-left-color:#51A2C1;
-  transform:rotate(270deg);
-  -webkit-transform:rotate(270deg);
-  -o-transform:rotate(270deg);
-  z-index:100;
+    &.medium {
+      width: 400px
+    }
+
+    &.small {
+      width: 200px
+    }
+
+    table {
+      border-collapse: separate;
+      border-spacing: 0;
+
+      th {
+        color: #51A2C1;
+        border: 0;
+        background-color: white;
+        padding: 5px;
+      }
+
+      td {
+        border: 1px solid;
+        padding: 5px;
+      }
+    }
+
+  }
 }
