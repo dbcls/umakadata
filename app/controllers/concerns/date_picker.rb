@@ -20,7 +20,7 @@ module DatePicker
                .where.not(crawls: { finished_at: nil })
                .order('crawls.started_at')
                .first
-               .crawl
+               &.crawl
 
     latest = Evaluation
                .eager_load(:endpoint, :crawl)
@@ -28,7 +28,7 @@ module DatePicker
                .where.not(crawls: { finished_at: nil })
                .order('crawls.started_at')
                .last
-               .crawl
+               &.crawl
 
     {
       start: oldest.present? ? oldest.started_at.to_date : Date.current,
