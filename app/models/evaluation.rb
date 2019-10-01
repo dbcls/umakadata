@@ -3,6 +3,11 @@ class Evaluation < ApplicationRecord
   belongs_to :endpoint
   has_many :measurements, dependent: :destroy
 
+  attribute :publisher, :json_array
+  attribute :license, :json_array
+  attribute :language, :json_array
+  attribute :links_to_other_datasets, :json_array
+
   before_save :update_score
 
   scope :alive, -> { where(alive: true) }

@@ -62,6 +62,8 @@ class CrawlerJob
     elsif name == 'data_entry'
       evaluation.data_entry = v if v.present?
       evaluation.data_scale = Math.log10(v) if v.present? && v.positive?
+    elsif name == 'links_to_other_datasets'
+      evaluation.links_to_other_datasets = v.split("\n") if v.present?
     elsif evaluation.respond_to?("#{name}=")
       evaluation.send("#{name}=", v.is_a?(String) ? v.ensure_utf8 : v) if v.present?
     else
