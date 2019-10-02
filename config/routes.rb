@@ -9,11 +9,12 @@ Rails.application.routes.draw do
   post '/inquiries', to: 'root#send_inquiry'
   get '/terms', to: 'root#terms'
 
-  get 'endpoint/statistics', to: 'endpoint#statistics', as: :endpoint_statistics
-  get 'endpoint/:id/scores', to: 'endpoint#scores', as: :endpoint_scores
-  get 'endpoint/:id/histories', to: 'endpoint#histories', as: :endpoint_histories
-
-  resources :endpoint, only: %i[index show]
+  get '/endpoint', to: 'endpoint#index', as: :endpoint_index
+  get '/endpoint/statistics', to: 'endpoint#statistics', as: :endpoint_statistics
+  get '/endpoint/:id', to: 'endpoint#show', as: :endpoint
+  get '/endpoint/:id/scores', to: 'endpoint#scores', as: :endpoint_scores
+  get '/endpoint/:id/histories', to: 'endpoint#histories', as: :endpoint_histories
+  get '/endpoint/:id/log/:name', to: 'endpoint#log', as: :endpoint_log
 
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)

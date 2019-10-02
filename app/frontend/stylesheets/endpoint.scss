@@ -1,23 +1,8 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
 @import "~bootstrap-datepicker/dist/css/bootstrap-datepicker3";
 @import "components/calendar";
 @import "variables";
-
-p {
-  font-family: Roboto-Regular;
-  color: $umakadata-text-color;
-}
-
-.chart-title {
-  font-weight: 500;
-  line-height: 1.1;
-  font-size: 18px;
-  text-align: center;
-
-  & + .text-muted {
-    font-size: 14px;
-    text-align: center;
-  }
-}
 
 #progress-dialog {
   padding-top: 15%;
@@ -51,18 +36,13 @@ p {
 }
 
 table {
-  th, td {
-    font-family: Roboto-Regular;
-    color: $umakadata-text-color;
-  }
-
   ul {
     list-style: none;
     margin: 0;
     padding: 0;
 
     li {
-      margin: 0;
+      margin: 0 !important;
     }
   }
 
@@ -96,5 +76,74 @@ table {
         border-right: 0;
       }
     }
+  }
+}
+
+.chart {
+  font-family: $font-family-base;
+  color: $body-color;
+}
+
+.chart-title {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.1;
+  text-align: center;
+
+  & + .text-muted {
+    font-size: 14px;
+    text-align: center;
+  }
+}
+
+.log {
+  .card-header {
+    cursor: pointer;
+  }
+
+  .log-title {
+    &[data-toggle="collapse"] {
+      &:before {
+        font-family: FontAwesome;
+        color: $umakadata-text-color;
+        content: "\f078";
+        margin-right: 10px;
+      }
+
+      &.collapsed {
+        &:before {
+          font-family: FontAwesome;
+          color: $umakadata-text-color;
+          content: "\f054";
+          padding-left: 4px;
+        }
+      }
+    }
+  }
+
+  table {
+    margin-bottom: 0;
+
+    &.table-bordered {
+      border: none;
+    }
+
+    pre {
+      color: $umakadata-text-color;
+      margin-bottom: 0;
+    }
+  }
+
+  & + .log {
+    margin-top: 1rem;
+  }
+}
+
+#load-more {
+  display: none;
+  margin-top: 1rem;
+
+  &.show {
+    display: block;
   }
 }

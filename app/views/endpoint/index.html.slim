@@ -1,4 +1,5 @@
 - provide :current, 'endpoints'
+- provide :title, 'Ranked endpoints'
 
 - content_for :head
   = javascript_pack_tag 'endpoint/index'
@@ -14,43 +15,43 @@
 
   .row
     .col-12
-      .score-board
+      .sub-container
         .page-title-header Umaka Score
         .row
-          .col-12.col-sm-6.col-md-4
+          .chart.col-12.col-sm-6.col-md-4
             canvas#score_rank[height=300]
             .chart-title.mt-3 Scores
             .text-muted Total Scores
-          .col-12.col-sm-6.col-md-4
+          .chart.col-12.col-sm-6.col-md-4
             canvas#alive[height=300]
             .chart-title.mt-3 Alive
             .text-muted Alive
-          .col-12.col-sm-6.col-md-4
+          .chart.col-12.col-sm-6.col-md-4
             canvas#sd[height=300]
             .chart-title.mt-3 Service Descriptions
             .text-muted Service Descriptions
 
-          .col-12.col-sm-6.col-md-4
+          .chart.col-12.col-sm-6.col-md-4
             canvas#score_statistics[height=300]
             .chart-title.mt-3 Score Statistics
             .text-muted Total Scores Statistics
-          .col-12.col-sm-6.col-md-4
+          .chart.col-12.col-sm-6.col-md-4
             canvas#alive_statistics[height=300]
             .chart-title.mt-3 Alive Statistics
             .text-muted Alive Statistics
-          .col-12.col-sm-6.col-md-4
+          .chart.col-12.col-sm-6.col-md-4
             canvas#sd_statistics[height=300]
             .chart-title.mt-3 Service Description Statistics
             .text-muted Service Description Statistics
 
   .row
     .col-12
-      .score-board
+      .sub-container
         .page-title-header Score Ranking
         .row
           .col-12
             .table-responsive
-              table.table.table-striped
+              table.table.table-striped.endpoint-list
                 thead
                   tr
                     th.column Name
@@ -62,7 +63,7 @@
                       - ep = evaluation.endpoint
                       tr
                         td
-                          = link_to ep.name, endpoint_path(ep)
+                          = link_to ep.name, endpoint_path(ep, date: @date[:current])
                         td
                           = link_to ep.endpoint_url, ep.endpoint_url, target: '_blank'
                         td

@@ -1,7 +1,8 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
 @import "~bootstrap-datepicker/dist/css/bootstrap-datepicker3";
+@import "variables";
 @import "components/calendar";
-
-$carousel-indicator-length: 10px;
 
 .carousel-indicators {
   & li {
@@ -10,4 +11,81 @@ $carousel-indicator-length: 10px;
     height: $carousel-indicator-length;
     max-width: $carousel-indicator-length;
   }
+}
+
+.rate-of-endpoints {
+  display: table-cell;
+  text-align: center;
+  padding: 5px;
+
+  span {
+    font-family: $font-family-base;
+  }
+
+  .minus_variation {
+    color: #FF9E9D;
+  }
+
+  .plus_variation {
+    color: #3FB8AF;
+  }
+
+  & + .rate-of-endpoints {
+    border-left: 3px solid $umakadata-text-color;
+  }
+}
+
+.rate-board {
+  font-size: 15px;
+  color: #242323;
+  line-height: 14px;
+}
+
+.number-of-endpoints {
+  font-size: 15px;
+  color: #242323;
+  line-height: 14px;
+}
+
+.number-data {
+  padding-top: 5px;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+ul.rate-endpoints-list {
+  display: table;
+  width: 100%;
+  list-style-type: none;
+  padding-left: 0;
+  margin-bottom: 0;
+  font-size: 17px;
+}
+
+.rate-list {
+  padding-bottom: 0;
+}
+
+.carousel-indicators {
+  bottom: -60px;
+}
+
+.carousel-inner {
+  margin-bottom: 40px;
+}
+
+.carousel-indicators li {
+  background-color: grey;
+}
+
+.carousel-indicators ol {
+  vertical-align: bottom;
+}
+
+.carousel-indicators .active {
+  background-color: black;
+}
+
+.top-5-endpoints {
+  font-size: 14px;
 }

@@ -1,5 +1,9 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+
 .sidebar {
   display: none;
+  font-family: $font-family-base;
 }
 
 @media (min-width: 768px) {

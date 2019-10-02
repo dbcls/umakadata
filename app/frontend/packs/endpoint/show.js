@@ -5,21 +5,22 @@ import Chart from 'chart.js';
 import '../../stylesheets/endpoint'
 
 $(function () {
-  let cal = $('#calendar');
+  let $calendar = $('#calendar');
 
-  cal.datepicker({
+  $calendar.datepicker({
     autoclose: true,
-    startDate: cal.data('start-date'),
-    endDate: cal.data('end-date'),
+    startDate: $calendar.data('start-date'),
+    endDate: $calendar.data('end-date'),
     format: 'yyyy-mm-dd',
     todayHighlight: true
   });
 
-  let currentDate = cal.val();
+  let currentDate = $calendar.val();
 
   let $progressDialog = $("#progress-dialog");
   let $scores = $('#scores');
   let $histories = $('#histories');
+  let $updateDate = $('#update-date');
 
   let chartScores = function (data) {
     if (!data.scores) {
@@ -174,6 +175,10 @@ $(function () {
     setTimeout(function () {
       loadData();
     }, 100);
+  });
+
+  $updateDate.on('click', function () {
+    location.href = Routes.endpoint_path($scores.data('endpoint'), {date: $calendar.val()})
   });
 
   $progressDialog.modal('show');

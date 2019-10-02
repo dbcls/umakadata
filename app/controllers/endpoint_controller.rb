@@ -25,6 +25,10 @@ class EndpointController < ApplicationController
     @date = date_for_endpoint(params[:id])
     @endpoint = Endpoint.find(params[:id])
     @evaluation = Crawl.on(@date[:current])&.evaluations&.find_by(endpoint_id: params[:id])
+
+    if @evaluation.blank?
+      render :file => "#{Rails.root}/public/404.html", layout: false, status: :not_found
+    end
   end
 
   # GET /endpoint/statistics
@@ -53,13 +57,16 @@ class EndpointController < ApplicationController
     date = current_date || Date.current
     crawl = Crawl.on(date)
     evaluation = crawl&.evaluations&.find_by(endpoint_id: params[:id])
+    begin
+      render json: {
+        date: date,
 
-    render json: {
-      date: date,
-
-      scores: evaluation&.scores&.map { |k, v| [k, v.to_i] }.to_h,
-      average: crawl&.scores_average&.map { |k, v| [k, v.to_i] }.to_h
-    }
+        scores: evaluation&.scores&.map { |k, v| [k, v.to_i] }.to_h,
+        average: crawl&.scores_average&.map { |k, v| [k, v.to_i] }.to_h
+      }
+    rescue
+      render json: { error: '500 Internal Server Error' }, status: 500
+    end
   end
 
   # GET /endpoint/:id/histories
@@ -73,38 +80,79 @@ class EndpointController < ApplicationController
               .where(started_at: (from.beginning_of_day)..(to.end_of_day))
               .where(evaluations: { endpoint_id: params[:id] })
 
-    render json: {
-      date: {
-        from: from,
-        to: to
-      },
-      labels: crawl.map { |x| x.started_at.to_date.to_formatted_s },
-      datasets: [
-        {
-          label: 'availability',
-          data: crawl.map { |x| x.evaluations.first.availability },
+    begin
+      render json: {
+        date: {
+          from: from,
+          to: to
         },
-        {
-          label: 'freshness',
-          data: crawl.map { |x| x.evaluations.first.freshness },
-        },
-        {
-          label: 'operation',
-          data: crawl.map { |x| x.evaluations.first.operation },
-        },
-        {
-          label: 'usefulness',
-          data: crawl.map { |x| x.evaluations.first.usefulness },
-        },
-        {
-          label: 'validity',
-          data: crawl.map { |x| x.evaluations.first.validity },
-        },
-        {
-          label: 'performance',
-          data: crawl.map { |x| x.evaluations.first.performance },
-        },
-      ]
-    }
+        labels: crawl.map { |x| x.started_at.to_date.to_formatted_s },
+        datasets: [
+          {
+            label: 'availability',
+            data: crawl.map { |x| x.evaluations.first.availability },
+          },
+          {
+            label: 'freshness',
+            data: crawl.map { |x| x.evaluations.first.freshness },
+          },
+          {
+            label: 'operation',
+            data: crawl.map { |x| x.evaluations.first.operation },
+          },
+          {
+            label: 'usefulness',
+            data: crawl.map { |x| x.evaluations.first.usefulness },
+          },
+          {
+            label: 'validity',
+            data: crawl.map { |x| x.evaluations.first.validity },
+          },
+          {
+            label: 'performance',
+            data: crawl.map { |x| x.evaluations.first.performance },
+          },
+        ]
+      }
+    rescue
+      render json: { error: '500 Internal Server Error' }, status: 500
+    end
+  end
+
+  # GET /endpoint/:id/log/:name
+  def log
+    @date = date_for_crawl[:current]
+    @name = params[:name]
+
+    @endpoint = Endpoint.find(params[:id])
+    @evaluation = Crawl.on(@date)&.evaluations&.find_by(endpoint_id: params[:id])
+    @measurement = @evaluation&.measurements&.find_by('measurements.name LIKE ?', "%.#{@name}")
+
+    respond_to do |format|
+      format.html do
+        if @measurement&.activities.blank?
+          render :file => "#{Rails.root}/public/404.html", layout: false, status: :not_found
+        end
+      end
+      format.json do
+        begin
+          columns = %w[id name comment request response elapsed_time trace warnings]
+          columns << 'exceptions' if admin_user_signed_in?
+
+          page = [params[:page].to_i, 1].max
+          activities = @measurement&.activities.order(:id).offset((page - 1) * 10).limit(10)
+          more = @measurement&.activities.count > page * 10
+
+          render json: {
+            date: @date,
+            page: page,
+            data: activities.map { |x| x.attributes.slice(*columns) },
+            more: more
+          }
+        rescue
+          render json: { error: '500 Internal Server Error' }, status: 500
+        end
+      end
+    end
   end
 end

@@ -1,3 +1,5 @@
+- provide :title, @endpoint.name
+
 - content_for :head
   = javascript_pack_tag 'endpoint/show'
 
@@ -12,7 +14,7 @@
 
 .container
   .d-flex.justify-content-between.my-2
-    .page-title-header= @endpoint.name
+    h2.page-title-header= @endpoint.name
     .calendar-form
       label.calendar-title for='calendar' Data for the day of
       input.date-input#calendar readonly='readonly' name='date' value=@date[:current].to_formatted_s data-start-date=@date[:start].to_formatted_s data-end-date=@date[:end].to_formatted_s
@@ -44,4 +46,4 @@
       canvas#histories width="400" height="200" data={ endpoint: @endpoint.id }
 
     .col-12
-      = render partial: 'evaluation', locals: { evaluation: @evaluation }
+      = render partial: 'evaluation', locals: { endpoint: @endpoint, evaluation: @evaluation, date: @date[:current] }

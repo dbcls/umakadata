@@ -1,4 +1,5 @@
 - provide :current, 'dashboard'
+- provide :title, 'Dashboard'
 
 - content_for :head
   = javascript_pack_tag 'dashboard'
@@ -38,7 +39,7 @@
 
   .row
     .col-12.col-lg-9
-      .score-board
+      .sub-container
         .carousel.slide#scores[data-ride="carousel"]
           ol.carousel-indicators
             li.active data-target="#scores" data-slide-to="0"
@@ -50,7 +51,7 @@
             .carousel-item
               .page-title-header Top 5 endpoints, by Umaka Score
               .table-responsive
-                table.table.table-striped.top-5-endpoints
+                table.table.table-striped.endpoint-list
                   thead
                     tr
                       th Score
@@ -59,7 +60,7 @@
                   tbody#score-table
 
     .col-12.col-lg-3
-      .score-board
+      .sub-container
         .page-title-header Umaka Score: what it is?
         .page-title-body
           | Umaka Score represents how valuable endpoints are.
@@ -72,7 +73,7 @@
     .col-12.col-lg-6
       .row
         .col-12
-          .score-board
+          .sub-container
             .page-title-header #umakadata news from Twitter
             .row
               .col-md-12
@@ -81,7 +82,7 @@
     .col-12.col-lg-6
       .row
         .col-12
-          .score-board
+          .sub-container
             .page-title-header Endpoint discussions
             .page-title-body
               | Do you want to ask something about an endpoint?
@@ -90,7 +91,7 @@
                 monitoring, feel free to add to the discussion.
             = link_to("See all discussions", URI.encode("https://github.com/#{Rails.application.secrets.github_repo}/issues?q=is:open+label:endpoints"), :class => 'btn mt-3')
         .col-12
-          .score-board
+          .sub-container
             .page-title-header About
             .page-title-body
               p

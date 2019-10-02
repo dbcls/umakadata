@@ -1,0 +1,20 @@
+- provide :title, "#{@endpoint.name} | #{log_title(@measurement)}"
+
+- content_for :head
+  = javascript_pack_tag 'endpoint/log'
+
+.container
+  .row
+    .col-12
+      h1.page-title-header= @endpoint.name
+
+    .col-12
+      h2 #{log_title(@measurement)}
+      p
+        | Started at: #{@measurement.started_at}<br/>
+          Finished at: #{@measurement.finished_at}
+
+    .col-12
+      h3= @measurement.comment
+      #log data={endpoint: @endpoint.id, date: @date, name: @name}
+      button#load-more.btn.btn-lg.btn-block.show type="button" Load more

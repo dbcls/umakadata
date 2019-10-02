@@ -8,7 +8,7 @@ html[lang='en']
     meta[name='description' content='']
     meta[name='author' content='']
     link[rel='icon' href='favicon.ico']
-    title Umaka Data
+    title= title(yield(:title))
     = javascript_pack_tag 'application'
     = stylesheet_pack_tag 'application'
     = yield :head

@@ -21,9 +21,9 @@ table.table.table-bordered.evaluation
               Alive rate shows how much the endpoint was alive in these 30 days.
       td #{evaluation.alive} (#{format('%.1f', evaluation.alive_rate * 100)}%)
       td.text-center
-        - if measurements.find { |x| x.name == 'availability.alive' }
-          / = link_to controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :alive do
-          i.fa.fa-file-text-o
+        - if measurements.find { |x| x.name == 'availability.alive' }&.activities.present?
+          = link_to endpoint_log_path(id: endpoint.id, name: 'alive', date: date), target: '_blank' do
+            i.fa.fa-file-text-o
 
     /
     / Freshness
@@ -40,9 +40,9 @@ table.table.table-bordered.evaluation
               NOTE: Virtuoso could not count the statement correctly. So this mechanism does not work well for the endpoint on Virtuoso.
       td= evaluation.last_updated.presence || "N/A"
       td.text-center
-        - if measurements.find { |x| x.name == 'freshness.last_updated' }
-          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :last_updated unless @evaluation.last_updated_log.nil?
-          i.fa.fa-file-text-o
+        - if measurements.find { |x| x.name == 'freshness.last_updated' }&.activities.present?
+          = link_to endpoint_log_path(id: endpoint.id, name: 'last_updated', date: date), target: '_blank' do
+            i.fa.fa-file-text-o
 
     /
     / Operation
@@ -56,9 +56,9 @@ table.table.table-bordered.evaluation
             | true if Service Description can be retrieved as turtle or rdf+xml, otherwise false.
       td= evaluation.service_description
       td.text-center
-        - if measurements.find { |x| x.name == 'operation.service_description' }
-          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :service_description unless @evaluation.service_description_log.nil?
-          i.fa.fa-file-text-o
+        - if measurements.find { |x| x.name == 'operation.service_description' }&.activities.present?
+          = link_to endpoint_log_path(id: endpoint.id, name: 'service_description', date: date), target: '_blank' do
+            i.fa.fa-file-text-o
 
     tr class=class_for_criteria(evaluation.operation)
       td colspan=2
@@ -68,9 +68,9 @@ table.table.table-bordered.evaluation
             | true if VoID can be found on well known URI, otherwise false.
       td= evaluation.void
       td.text-center
-        - if measurements.find { |x| x.name == 'operation.void' }
-          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :void_ttl unless @evaluation.void_ttl_log.nil?
-          i.fa.fa-file-text-o
+        - if measurements.find { |x| x.name == 'operation.void' }&.activities.present?
+          = link_to endpoint_log_path(id: endpoint.id, name: 'void', date: date), target: '_blank' do
+            i.fa.fa-file-text-o
 
     /
     / Usefulness
@@ -96,9 +96,9 @@ table.table.table-bordered.evaluation
               | http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-builder-metadata/
       td= evaluation.metadata.present? ? format('%.1f', evaluation.metadata) : 'N/A'
       td.text-center
-        - if measurements.find { |x| x.name == 'usefulness.metadata' }
-          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :metadata_score unless @evaluation.metadata_log.nil?
-          i.fa.fa-file-text-o
+        - if measurements.find { |x| x.name == 'usefulness.metadata' }&.activities.present?
+          = link_to endpoint_log_path(id: endpoint.id, name: 'metadata', date: date), target: '_blank' do
+            i.fa.fa-file-text-o
 
     tr class=class_for_criteria(evaluation.usefulness)
       td colspan=2
@@ -117,9 +117,9 @@ table.table.table-bordered.evaluation
               | http://stats.lod2.eu/vocabularies
       td= evaluation.ontology.present? ? format('%.1f', evaluation.ontology) : 'N/A'
       td.text-center
-        - if measurements.find { |x| x.name == 'usefulness.ontology' }
-          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :ontology_score unless @evaluation.ontology_log.nil?
-          i.fa.fa-file-text-o
+        - if measurements.find { |x| x.name == 'usefulness.ontology' }&.activities.present?
+          = link_to endpoint_log_path(id: endpoint.id, name: 'ontology', date: date), target: '_blank' do
+            i.fa.fa-file-text-o
 
     tr class=class_for_criteria(evaluation.usefulness)
       td colspan=2
@@ -144,9 +144,9 @@ table.table.table-bordered.evaluation
             | Number of statements in the endpoint.
       td= evaluation.data_entry.present? ? number_with_delimiter(evaluation.data_entry) : 'N/A'
       td.text-center
-        - if measurements.find { |x| x.name == 'usefulness.data_entry' }
-          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :number_of_statements unless @evaluation.number_of_statements_log.nil?
-          i.fa.fa-file-text-o
+        - if measurements.find { |x| x.name == 'usefulness.data_entry' }&.activities.present?
+          = link_to endpoint_log_path(id: endpoint.id, name: 'data_entry', date: date), target: '_blank' do
+            i.fa.fa-file-text-o
 
     tr class=class_for_criteria(evaluation.usefulness)
       td colspan=2
@@ -156,9 +156,9 @@ table.table.table-bordered.evaluation
             | true if the endpoint returns a response in HTML format, otherwise false.
       td= evaluation.support_html_format
       td.text-center
-        - if measurements.find { |x| x.name == 'usefulness.support_html_format' }
-          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :support_html_format unless @evaluation.support_html_format_log.nil?
-          i.fa.fa-file-text-o
+        - if measurements.find { |x| x.name == 'usefulness.support_html_format' }&.activities.present?
+          = link_to endpoint_log_path(id: endpoint.id, name: 'support_html_format', date: date), target: '_blank' do
+            i.fa.fa-file-text-o
 
     tr class=class_for_criteria(evaluation.usefulness)
       td colspan=2
@@ -168,9 +168,9 @@ table.table.table-bordered.evaluation
             | true if the endpoint returns a response in Turtle format, otherwise false.
       td= evaluation.support_turtle_format
       td.text-center
-        - if measurements.find { |x| x.name == 'usefulness.support_html_format' }
-          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :support_turtle_format unless @evaluation.support_turtle_format_log.nil?
-          i.fa.fa-file-text-o
+        - if measurements.find { |x| x.name == 'usefulness.support_turtle_format' }&.activities.present?
+          = link_to endpoint_log_path(id: endpoint.id, name: 'support_turtle_format', date: date), target: '_blank' do
+            i.fa.fa-file-text-o
 
     tr class=class_for_criteria(evaluation.usefulness)
       td colspan=2
@@ -180,9 +180,9 @@ table.table.table-bordered.evaluation
             | true if the endpoint returns a response in RDF/XML format, otherwise false.
       td= evaluation.support_rdfxml_format
       td.text-center
-        - if measurements.find { |x| x.name == 'usefulness.support_html_format' }
-          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :support_turtle_format unless @evaluation.support_turtle_format_log.nil?
-          i.fa.fa-file-text-o
+        - if measurements.find { |x| x.name == 'usefulness.support_rdfxml_format' }&.activities.present?
+          = link_to endpoint_log_path(id: endpoint.id, name: 'support_rdfxml_format', date: date), target: '_blank' do
+            i.fa.fa-file-text-o
 
     /
     / Validity
@@ -221,9 +221,9 @@ table.table.table-bordered.evaluation
           span.small N/A if the evaluation does not exist, true if all subjects are HTTP URI or blank node, otherwise false.
       td= evaluation.http_uri.nil? ? 'N/A' : evaluation.http_uri
       td.text-center
-        - if measurements.find { |x| x.name == 'validity.http_uri' }
-          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :subject_is_http_uri unless @evaluation.subject_is_http_uri_log.nil?
-          i.fa.fa-file-text-o
+        - if measurements.find { |x| x.name == 'validity.http_uri' }&.activities.present?
+          = link_to endpoint_log_path(id: endpoint.id, name: 'http_uri', date: date), target: '_blank' do
+            i.fa.fa-file-text-o
 
     tr class=class_for_criteria(evaluation.validity)
       td
@@ -234,9 +234,9 @@ table.table.table-bordered.evaluation
               N/A: Firstly, we check whether the web site of the endpoint publishes download data or not.
       td= evaluation.provide_useful_information.nil? ? 'N/A' : evaluation.provide_useful_information
       td.text-center
-        - if measurements.find { |x| x.name == 'validity.provide_useful_information' }
-          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :subject_is_http_uri unless @evaluation.subject_is_http_uri_log.nil?
-          i.fa.fa-file-text-o
+        - if measurements.find { |x| x.name == 'validity.provide_useful_information' }&.activities.present?
+          = link_to endpoint_log_path(id: endpoint.id, name: 'provide_useful_information', date: date), target: '_blank' do
+            i.fa.fa-file-text-o
 
     tr class=class_for_criteria(evaluation.validity)
       td
@@ -247,9 +247,9 @@ table.table.table-bordered.evaluation
               N/A: Firstly, we check whether the web site of the endpoint publishes download data or not.
       td= evaluation.link_to_other_uri.nil? ? 'N/A' : evaluation.link_to_other_uri
       td.text-center
-        - if measurements.find { |x| x.name == 'validity.link_to_other_uri' }
-          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :subject_is_http_uri unless @evaluation.subject_is_http_uri_log.nil?
-          i.fa.fa-file-text-o
+        - if measurements.find { |x| x.name == 'validity.link_to_other_uri' }&.activities.present?
+          = link_to endpoint_log_path(id: endpoint.id, name: 'link_to_other_uri', date: date), target: '_blank' do
+            i.fa.fa-file-text-o
 
     tr class=class_for_criteria(evaluation.validity)
       td colspan=2
@@ -268,9 +268,9 @@ table.table.table-bordered.evaluation
               li= link_to 'http://patterns.dataincubator.org/book/identifier-patterns.html'
       td= evaluation.cool_uri.present? ? format('%.1f', evaluation.cool_uri) : 'N/A'
       td.text-center
-        - if measurements.find { |x| x.name == 'validity.cool_uri' }
-          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :cool_uri_rate unless @evaluation.cool_uri_rate_log.nil?
-          i.fa.fa-file-text-o
+        - if measurements.find { |x| x.name == 'validity.cool_uri' }&.activities.present?
+          = link_to endpoint_log_path(id: endpoint.id, name: 'cool_uri', date: date), target: '_blank' do
+            i.fa.fa-file-text-o
 
     tr class=class_for_criteria(evaluation.performance)
       td Performance (#{format('%.1f', evaluation.performance)})
@@ -284,6 +284,6 @@ table.table.table-bordered.evaluation
       td
         = evaluation.execution_time.present? ? format('%.3f', evaluation.execution_time) : 'N/A'
       td.text-center
-        - if measurements.find { |x| x.name == 'performance.execution_time' }
-          / = link_to '(Logs)', controller: :endpoints, action: :log, id: @evaluation.endpoint_id, evaluation_id: @evaluation.id, name: :execution_time unless @evaluation.execution_time_log.nil?
-          i.fa.fa-file-text-o
+        - if measurements.find { |x| x.name == 'performance.execution_time' }&.activities.present?
+          = link_to endpoint_log_path(id: endpoint.id, name: 'execution_time', date: date), target: '_blank' do
+            i.fa.fa-file-text-o

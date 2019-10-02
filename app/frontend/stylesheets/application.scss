@@ -6,10 +6,20 @@ $fa-font-path: "~font-awesome/fonts";
 @import "variables";
 
 body {
+  font-family: Roboto-Regular;
   font-size: 0.9rem;
   background: #D4ECE4;
   padding-top: 15px;
   padding-bottom: 15px;
+  color: $umakadata-text-color;
+}
+
+h2, .h2 {
+  font-size: 1.5rem;
+}
+
+h3, .h3 {
+  font-size: 1.2rem;
 }
 
 .sub-header {
@@ -47,48 +57,52 @@ main .container {
     margin-bottom: 0.5rem;
     margin-top: 0.5rem;
   }
-}
 
-.btn {
-  font-family: Roboto-Bold;
-  font-size: 14px;
-  line-height: 18px;
-  color: #FFFFFF;
-  background: #7FC7AF;
-  text-decoration: none;
-}
+  .sub-container {
+    background: #F7F7F7;
+    box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.10), 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    padding: 15px;
 
-.page-title-header {
-  font-family: Roboto-Medium;
-  font-size: 24px;
-  color: $umakadata-text-color;
-  font-weight: bold;
-  line-height: 29px;
-
-  & + .page-title-body {
-    margin-top: 0.75rem;
+    & + .sub-container {
+      margin-top: 1rem;
+    }
   }
 }
 
-.page-title-body {
-  font-family: Roboto-Regular;
-  font-size: 14px;
+a {
+  text-decoration: underline;
   color: $umakadata-text-color;
-  line-height: 19px;
-}
-
-.score-board {
-  background: #F7F7F7;
-  box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.10), 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  border-radius: 4px;
-  padding: 15px;
-
-  & + .score-board {
-    margin-top: 1rem;
-  }
 }
 
 table {
+  tr {
+    color: $umakadata-text-color;
+
+  }
+
+  &.endpoint-list {
+    tr {
+      font-family: $font-family-base;
+      height: 50px;
+
+      th {
+        color: #9A9A9A;
+        border-style: none;
+        font-weight: normal;
+      }
+
+      td {
+        color: #000000;
+        padding-top: 15px;
+      }
+
+      a {
+        color: #000000;
+      }
+    }
+  }
+
   &.table-striped > tbody > tr {
     &:nth-of-type(even) {
       background-color: #FFFFFF;
@@ -105,11 +119,28 @@ ul.no-bullets {
   padding: 0;
 }
 
+.btn {
+  font-size: 14px;
+  line-height: 18px;
+  color: #FFFFFF;
+  background: #7FC7AF;
+  text-decoration: none;
+}
 
+.page-title-header {
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 29px;
 
+  & + .page-title-body {
+    margin-top: 0.75rem;
+  }
+}
 
-
-
+.page-title-body {
+  font-size: 14px;
+  line-height: 19px;
+}
 
 .page-element {
   background: #FFFFFF;
@@ -121,9 +152,7 @@ ul.no-bullets {
 
 .page-title-sub-header {
   margin-top: 10px;
-  font-family: Roboto-Medium;
   font-size: 18px;
-  color: $umakadata-text-color;
   font-weight: bold;
   line-height: 29px;
   margin-bottom: 15px;
@@ -131,19 +160,10 @@ ul.no-bullets {
 
 .page-title-subsub-header {
   margin-top: 10px;
-  font-family: Roboto-Medium;
   font-size: 16px;
-  color: $umakadata-text-color;
   font-weight: bold;
   line-height: 29px;
   margin-bottom: 15px;
-}
-
-.rate-board {
-  font-family: Roboto-Medium;
-  font-size: 15px;
-  color: #242323;
-  line-height: 14px;
 }
 
 .yummydata-logo {
@@ -154,102 +174,4 @@ ul.no-bullets {
   position: fixed;
   left: 0px;
   bottom: 0px;
-}
-
-a {
-  text-decoration: underline;
-  color: $umakadata-text-color;
-}
-
-.number-of-endpoints {
-  font-family: Roboto-Medium;
-  font-size: 15px;
-  color: #242323;
-  line-height: 14px;
-}
-
-.number-data {
-  padding-top: 5px;
-  font-family: Roboto-Medium;
-  font-size: 30px;
-  color: $umakadata-text-color;
-  font-weight: bold;
-}
-
-ul.rate-endpoints-list {
-  display: table;
-  width: 100%;
-  list-style-type: none;
-  padding-left: 0;
-  margin-bottom: 0;
-  color: $umakadata-text-color;
-  font-size: 17px;
-}
-
-li.rate-of-endpoints {
-  display: table-cell;
-  text-align: center;
-  padding: 5px;
-}
-
-li + li.rate-of-endpoints {
-  border-left: 3px solid $umakadata-text-color;
-}
-
-.rate-list {
-  padding-bottom: 0px;
-}
-
-.carousel-indicators {
-  bottom: -60px;
-}
-
-.carousel-inner {
-  margin-bottom: 40px;
-}
-
-.carousel-indicators li {
-  background-color: grey;
-}
-
-.carousel-indicators ol {
-  vertical-align: bottom;
-}
-
-.carousel-indicators .active {
-  background-color: black;
-}
-
-.top-5-endpoints {
-  font-size: 14px;
-}
-
-.table-striped > thead > tr > th {
-  color: #9A9A9A;
-  border-style: none;
-  font-weight: normal;
-}
-
-.table-striped > tbody > tr > td > a {
-  color: #000000;
-}
-
-.table-striped > tbody > tr:nth-of-type(even) {
-  background-color: #FFFFFF;
-}
-
-.table-striped > tbody > tr > td {
-  padding-top: 15px;
-}
-
-.table-striped > tbody > tr {
-  height: 50px;
-}
-
-.minus_variation {
-  color: #FF9E9D;
-}
-
-.plus_variation {
-  color: #3FB8AF;
 }

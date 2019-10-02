@@ -224,7 +224,7 @@ $(function () {
   };
 
   $('#update-date').on('click', function () {
-    draw_scores(cal.val());
+    location.href = Routes.endpoint_index_path({date: cal.val()})
   });
 
   draw_scores(currentDate);
