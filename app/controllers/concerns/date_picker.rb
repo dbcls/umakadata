@@ -1,15 +1,19 @@
 module DatePicker
   extend ActiveSupport::Concern
 
+  def current_date
+    begin
+      Date.parse(params[:date])
+    rescue
+      nil
+    end
+  end
+
   def date_for_crawl
     {
       start: (oldest = Crawl.oldest) ? oldest.started_at.to_date : Date.current,
       end: (latest = Crawl.latest) ? latest.started_at.to_date : Date.current,
-      current: begin
-        Date.parse(params[:date])
-      rescue
-        latest.present? ? latest.started_at.to_date : Date.current
-      end
+      current: current_date || latest&.started_at&.to_date || Date.current
     }
   end
 
@@ -33,11 +37,7 @@ module DatePicker
     {
       start: oldest.present? ? oldest.started_at.to_date : Date.current,
       end: latest.present? ? latest.started_at.to_date : Date.current,
-      current: begin
-        Date.parse(params[:date])
-      rescue
-        latest.present? ? latest.started_at.to_date : Date.current
-      end
+      current: current_date || latest&.started_at&.to_date || Date.current
     }
   end
 end

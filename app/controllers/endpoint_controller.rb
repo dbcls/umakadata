@@ -29,7 +29,7 @@ class EndpointController < ApplicationController
 
   # GET /endpoint/statistics
   def statistics
-    to = date_for_crawl[:current]
+    to = current_date || Date.current
     from = 10.days.ago(to)
 
     begin
@@ -48,11 +48,63 @@ class EndpointController < ApplicationController
     end
   end
 
-  def info
-    @date        = date_param
-    count        = PrefixFilter.where(endpoint_id: @endpoint[:id]).count()
-    @uri_indexed = count > 0
-    render layout: false
+  # GET /endpoint/:id/scores
+  def scores
+    date = current_date || Date.current
+    crawl = Crawl.on(date)
+    evaluation = crawl&.evaluations&.find_by(endpoint_id: params[:id])
+
+    render json: {
+      date: date,
+
+      scores: evaluation&.scores&.map { |k, v| [k, v.to_i] }.to_h,
+      average: crawl&.scores_average&.map { |k, v| [k, v.to_i] }.to_h
+    }
   end
 
+  # GET /endpoint/:id/histories
+  def histories
+    to = current_date || Date.current
+    from = 30.days.ago(to)
+
+    crawl = Crawl
+              .eager_load(:evaluations)
+              .finished
+              .where(started_at: (from.beginning_of_day)..(to.end_of_day))
+              .where(evaluations: { endpoint_id: params[:id] })
+
+    render json: {
+      date: {
+        from: from,
+        to: to
+      },
+      labels: crawl.map { |x| x.started_at.to_date.to_formatted_s },
+      datasets: [
+        {
+          label: 'availability',
+          data: crawl.map { |x| x.evaluations.first.availability },
+        },
+        {
+          label: 'freshness',
+          data: crawl.map { |x| x.evaluations.first.freshness },
+        },
+        {
+          label: 'operation',
+          data: crawl.map { |x| x.evaluations.first.operation },
+        },
+        {
+          label: 'usefulness',
+          data: crawl.map { |x| x.evaluations.first.usefulness },
+        },
+        {
+          label: 'validity',
+          data: crawl.map { |x| x.evaluations.first.validity },
+        },
+        {
+          label: 'performance',
+          data: crawl.map { |x| x.evaluations.first.performance },
+        },
+      ]
+    }
+  end
 end

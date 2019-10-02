@@ -77,4 +77,16 @@ class Crawl < ApplicationRecord
   def score_median
     (evaluations.maximum(:score) + evaluations.minimum(:score)) / 2.0
   end
+
+  def scores_average
+    e = evaluations
+    {
+      availability: (xs = e.map(&:availability)).present? ? xs.sum / xs.size : 0.0,
+      freshness: (xs = e.map(&:freshness)).present? ? xs.sum / xs.size : 0.0,
+      operation: (xs = e.map(&:operation)).present? ? xs.sum / xs.size : 0.0,
+      usefulness: (xs = e.map(&:usefulness)).present? ? xs.sum / xs.size : 0.0,
+      validity: (xs = e.map(&:validity)).present? ? xs.sum / xs.size : 0.0,
+      performance: (xs = e.map(&:performance)).present? ? xs.sum / xs.size : 0.0
+    }
+  end
 end

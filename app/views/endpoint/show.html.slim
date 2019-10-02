@@ -5,7 +5,7 @@
   .modal-dialog.modal-m
     .modal-content
       .modal-header
-        h3
+        h3 Loading Endpoint Information...
       .modal-body
         .progress
           .progress-bar.progress-bar-striped.progress-bar-animated role='progressbar'
@@ -28,16 +28,20 @@
       = link_to "#{date} >>", endpoint_path(@endpoint, date: date), class: 'px-1'
 
   .row
-    .col-12.col-md-6
+    .col-12
+      h2.page-title-header Basic Information
+    .col-12.col-lg-6
       = render partial: 'basic_information', locals: { endpoint: @endpoint, evaluation: @evaluation }
-      = render partial: 'forum', locals: { endpoint: @endpoint }
 
-    .col-12.col-md-6
-      h2.page-title-header rader
+    .col-12.col-lg-6
+      canvas#scores width="400" height="400" data={ endpoint: @endpoint.id }
 
-    .col-12 stat
+    - if Rails.application.credentials.github_repo.present? && @endpoint.issue_id.present?
+      .col-12
+        = render partial: 'forum', locals: { endpoint: @endpoint }
+
+    .col-12
+      canvas#histories width="400" height="200" data={ endpoint: @endpoint.id }
 
     .col-12
       = render partial: 'evaluation', locals: { evaluation: @evaluation }
-
-#endpoint_info data={endpoint: @endpoint.id, evaluation: @evaluation.id}

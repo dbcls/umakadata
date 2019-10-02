@@ -10,7 +10,8 @@ Rails.application.routes.draw do
   get '/terms', to: 'root#terms'
 
   get 'endpoint/statistics', to: 'endpoint#statistics', as: :endpoint_statistics
-  get 'endpoint/:id/info', to: 'endpoint#info', as: :endpoint_info
+  get 'endpoint/:id/scores', to: 'endpoint#scores', as: :endpoint_scores
+  get 'endpoint/:id/histories', to: 'endpoint#histories', as: :endpoint_histories
 
   resources :endpoint, only: %i[index show]
 

@@ -84,9 +84,9 @@ class Evaluation < ApplicationRecord
 
     def usefulness
       v = 0.0
-      v += 50.0 if ontology.present?
-      v += 50.0 if metadata.present?
-      v
+      v += ontology
+      v += metadata
+      v / 2.0
     end
 
     def validity
