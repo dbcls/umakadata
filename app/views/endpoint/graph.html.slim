@@ -1,0 +1,16 @@
+- provide :current, 'graph'
+- provide :title, 'Link graph'
+
+- content_for :head
+  = javascript_pack_tag 'endpoint/graph'
+
+.container
+  h1.page-title-header Link Graph (Experimental)
+  p.page-title-body
+    | This graph shows the relationships among some datasets in YummyData.
+      If there is a triple whose subject and object belong to different datasets from each other,
+      there is an edge connecting them.
+      We manually chose a dataset each URI belongs to.
+      As the fourth principle of Linked Data says, linking to another dataset is significant.
+      We show this graph just for an experiment, and it is subject to change including removal in the future.
+  .sub-container#cy

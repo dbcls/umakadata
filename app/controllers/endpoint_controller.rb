@@ -20,7 +20,19 @@ class EndpointController < ApplicationController
     end
   end
 
+  # GET /endpoint/:id
+  def show
+    @date = date_for_endpoint(params[:id])
+    @endpoint = Endpoint.find(params[:id])
+    @evaluation = Crawl.on(@date[:current])&.evaluations&.find_by(endpoint_id: params[:id])
+
+    if @evaluation.blank?
+      render :file => "#{Rails.root}/public/404.html", layout: false, status: :not_found
+    end
+  end
+
   # GET /endpoint/search
+  # GET /api/endpoint/search
   def search
     @date = date_for_crawl
 
@@ -67,14 +79,23 @@ class EndpointController < ApplicationController
     end
   end
 
-  # GET /endpoint/:id
-  def show
-    @date = date_for_endpoint(params[:id])
-    @endpoint = Endpoint.find(params[:id])
-    @evaluation = Crawl.on(@date[:current])&.evaluations&.find_by(endpoint_id: params[:id])
-
-    if @evaluation.blank?
-      render :file => "#{Rails.root}/public/404.html", layout: false, status: :not_found
+  # GET /endpoint/graph
+  # GET /api/endpoints/graph
+  def graph
+    respond_to do |format|
+      format.html
+      format.json do
+        render json: DatasetRelation.graph
+      end
+    end
+  rescue
+    respond_to do |format|
+      format.html do
+        render :file => "#{Rails.root}/public/500.html", layout: false, status: :internal_server_error
+      end
+      format.json do
+        render json: { error: '500 Internal Server Error' }, status: 500
+      end
     end
   end
 

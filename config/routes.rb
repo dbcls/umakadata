@@ -11,8 +11,9 @@ Rails.application.routes.draw do
   get '/api', to: 'root#api'
 
   get '/endpoint', to: 'endpoint#index', as: :endpoint_index
-  get '/endpoint/search', to: 'endpoint#search'
-  get '/endpoint/statistics', to: 'endpoint#statistics'
+  get '/endpoint/search'
+  get '/endpoint/statistics'
+  get '/endpoint/graph'
   get '/endpoint/:id', to: 'endpoint#show', as: :endpoint
   get '/endpoint/:id/scores', to: 'endpoint#scores', as: :endpoint_scores
   get '/endpoint/:id/histories', to: 'endpoint#histories', as: :endpoint_histories

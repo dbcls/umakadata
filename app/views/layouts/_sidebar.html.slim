@@ -16,8 +16,8 @@
     li.nav-item class="#{'search' == current ? 'active' : ''}"
       = link_to 'ENDPOINT SEARCH', endpoint_search_path, class: 'nav-link'
 
-    li.nav-item class="#{'links' == current ? 'active' : ''}"
-      = link_to 'LINK GRAPH', '#', class: 'nav-link'
+    li.nav-item class="#{'graph' == current ? 'active' : ''}"
+      = link_to 'LINK GRAPH', endpoint_graph_path, class: 'nav-link'
 
     li.nav-item class="#{'forum' == current ? 'active' : ''}"
       = link_to 'FORUM', '#', class: 'nav-link'
