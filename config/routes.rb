@@ -8,13 +8,17 @@ Rails.application.routes.draw do
   get '/inquiries', to: 'root#inquiry'
   post '/inquiries', to: 'root#send_inquiry'
   get '/terms', to: 'root#terms'
+  get '/api', to: 'root#api'
 
   get '/endpoint', to: 'endpoint#index', as: :endpoint_index
-  get '/endpoint/statistics', to: 'endpoint#statistics', as: :endpoint_statistics
+  get '/endpoint/search', to: 'endpoint#search'
+  get '/endpoint/statistics', to: 'endpoint#statistics'
   get '/endpoint/:id', to: 'endpoint#show', as: :endpoint
   get '/endpoint/:id/scores', to: 'endpoint#scores', as: :endpoint_scores
   get '/endpoint/:id/histories', to: 'endpoint#histories', as: :endpoint_histories
   get '/endpoint/:id/log/:name', to: 'endpoint#log', as: :endpoint_log
+
+  get '/api/endpoint/search', to: 'endpoint#search', defaults: { format: 'json' }
 
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)

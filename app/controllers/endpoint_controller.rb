@@ -20,14 +20,29 @@ class EndpointController < ApplicationController
     end
   end
 
-  # GET /endpoint/:id
-  def show
-    @date = date_for_endpoint(params[:id])
-    @endpoint = Endpoint.find(params[:id])
-    @evaluation = Crawl.on(@date[:current])&.evaluations&.find_by(endpoint_id: params[:id])
+  # GET /endpoint/search
+  def search
+    @date = date_for_crawl
 
-    if @evaluation.blank?
-      render :file => "#{Rails.root}/public/404.html", layout: false, status: :not_found
+    @search_form = SearchForm.new(search_params)
+    @search_form.date ||= @date[:current]
+
+    @endpoints = @search_form.search
+
+    respond_to do |format|
+      format.html
+      format.json do
+        render formats: 'json', handlers: 'jbuilder'
+      end
+    end
+  rescue
+    respond_to do |format|
+      format.html do
+        render :file => "#{Rails.root}/public/500.html", layout: false, status: :internal_server_error
+      end
+      format.json do
+        render json: { error: '500 Internal Server Error' }, status: 500
+      end
     end
   end
 
@@ -49,6 +64,17 @@ class EndpointController < ApplicationController
       render json: data.to_h
     rescue
       render json: { error: '500 Internal Server Error' }, status: 500
+    end
+  end
+
+  # GET /endpoint/:id
+  def show
+    @date = date_for_endpoint(params[:id])
+    @endpoint = Endpoint.find(params[:id])
+    @evaluation = Crawl.on(@date[:current])&.evaluations&.find_by(endpoint_id: params[:id])
+
+    if @evaluation.blank?
+      render :file => "#{Rails.root}/public/404.html", layout: false, status: :not_found
     end
   end
 
@@ -154,5 +180,14 @@ class EndpointController < ApplicationController
         end
       end
     end
+  end
+
+  def search_params
+    params
+      .fetch(:search_form, params)
+      .permit(:name, :resource_uri, :element_type, :date, :score_lower, :score_upper, :alive_rate_lower,
+              :alive_rate_upper, :cool_uri_rate_lower, :cool_uri_rate_upper, :ontology_lower, :ontology_upper,
+              :metadata_lower, :metadata_upper, :service_description, :void, :content_negotiation, :html, :turtle, :xml,
+              rank: [])
   end
 end

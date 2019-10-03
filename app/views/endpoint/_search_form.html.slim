@@ -1,0 +1,104 @@
+.card
+  #headingOne.card-header
+    .card-title data-target="#collapse" data-toggle="collapse" Conditions
+
+  #collapse.collapse.show
+    .card-body
+      = form_for(search_form, url: endpoint_search_path, html: { method: 'GET' }) do |form|
+        .form-group.row
+          label.col-12.col-md-2.col-form-label Name or URL
+          .col-12.col-md-10
+            = form.text_field :name, class: 'form-control'
+
+        .form-group.row
+          label.col-12.col-md-2.col-form-label Resource URI
+          .col-12.col-md-10
+            = form.text_field :resource_uri, class: 'form-control'
+
+        .form-group.row
+          label.col-12.col-md-2.col-form-label For the day of
+          .col-12.col-md-10
+            = form.text_field :date, class: 'form-control', data: { 'start-date': @date[:start].to_formatted_s, 'end-date': @date[:end].to_formatted_s }
+
+        .form-group.row
+          .col-12.col-md-2 Rank
+          .col-12.col-md-10
+            .checkbox-inline
+              = form.check_box :rank, { multiple: true }, 'A', nil
+              label.form-check-label for='search_form_rank_a' A
+            .checkbox-inline
+              = form.check_box :rank, { multiple: true }, 'B', nil
+              label.form-check-label for='search_form_rank_b' B
+            .checkbox-inline
+              = form.check_box :rank, { multiple: true }, 'C', nil
+              label.form-check-label for='search_form_rank_c' C
+            .checkbox-inline
+              = form.check_box :rank, { multiple: true }, 'D', nil
+              label.form-check-label for='search_form_rank_d' D
+            .checkbox-inline
+              = form.check_box :rank, { multiple: true }, 'E', nil
+              label.form-check-label for='search_form_rank_e' E
+
+        .form-group.row
+          label.col-12.col-md-2.col-form-label Score (0–100)
+          .col-5.col-md-4
+            = form.text_field :score_lower, type: 'number', min: 0, max: 100, step: 1, class: 'form-control'
+          span –
+          .col-5.col-md-4
+            = form.text_field :score_upper, type: 'number', min: 0, max: 100, step: 1, class: 'form-control'
+
+        .form-group.row
+          label.col-12.col-md-2.col-form-label Alive Rate (0.0–1.0)
+          .col-5.col-md-4
+            = form.text_field :alive_rate_lower, type: 'number', min: 0, max: 1, step: 0.01, class: 'form-control'
+          span –
+          .col-5.col-md-4
+            = form.text_field :alive_rate_upper, type: 'number', min: 0, max: 1, step: 0.01, class: 'form-control'
+
+        .form-group.row
+          label.col-12.col-md-2.col-form-label Cool URI (0–100)
+          .col-5.col-md-4
+            = form.text_field :cool_uri_rate_lower, type: 'number', min: 0, max: 100, step: 1, class: 'form-control'
+          span –
+          .col-5.col-md-4
+            = form.text_field :cool_uri_rate_upper, type: 'number', min: 0, max: 100, step: 1, class: 'form-control'
+
+        .form-group.row
+          label.col-12.col-md-2.col-form-label Ontology (0–100)
+          .col-5.col-md-4
+            = form.text_field :ontology_lower, type: 'number', min: 0, max: 100, step: 1, class: 'form-control'
+          span –
+          .col-5.col-md-4
+            = form.text_field :ontology_upper, type: 'number', min: 0, max: 100, step: 1, class: 'form-control'
+
+        .form-group.row
+          label.col-12.col-md-2.col-form-label Metadata (0–100)
+          .col-5.col-md-4
+            = form.text_field :metadata_lower, type: 'number', min: 0, max: 100, step: 1, class: 'form-control'
+          span –
+          .col-5.col-md-4
+            = form.text_field :metadata_upper, type: 'number', min: 0, max: 100, step: 1, class: 'form-control'
+
+        .form-group.row
+          .col-12.col-md-2 Attributes
+          .col-12.col-md-10
+            .checkbox-inline
+              = form.check_box :service_description
+              label for='search_form_service_description' Service Description
+            .checkbox-inline
+              = form.check_box :void
+              label for='search_form_void' VoID
+            .checkbox-inline
+              = form.check_box :html
+              label for='search_form_html' HTML Data Format
+            .checkbox-inline
+              = form.check_box :turtle
+              label for='search_form_turtle' Turtle Data Format
+            .checkbox-inline
+              = form.check_box :xml
+              label for='search_form_xml' XML Data Format
+
+        .form-group.row
+          .col-12.col-md-2
+          .col-12.col-md-10
+            = form.submit value: 'Search', class: 'btn btn-default more-button'

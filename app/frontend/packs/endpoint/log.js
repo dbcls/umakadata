@@ -64,7 +64,7 @@ $(function () {
     json.data.forEach(function (d) {
       let html = '<div class="card log">';
       html += '<div class="card-header">';
-      html += `<div class="log-title collapsed" data-toggle="collapse" href="#collapse-${d.id}">${d.comment || ""}</div>`;
+      html += `<div class="card-title collapsed" data-toggle="collapse" href="#collapse-${d.id}">${d.comment || ""}</div>`;
       html += '</div>';
       html += `<div class="collapse" id="collapse-${d.id}">`;
       html += '<div class="card-body">';

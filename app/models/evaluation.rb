@@ -13,6 +13,25 @@ class Evaluation < ApplicationRecord
   scope :alive, -> { where(alive: true) }
   scope :has_service_description, -> { where(service_description: true) }
 
+  class << self
+    def rank_number(label)
+      case label.upcase
+      when 'A'
+        5
+      when 'B'
+        4
+      when 'C'
+        3
+      when 'D'
+        2
+      when 'E'
+        1
+      else
+        nil
+      end
+    end
+  end
+
   def update_score
     self.alive_rate = calc_alive_rate
     self.score = (vs = scores.values).sum / vs.size.to_f

@@ -1,0 +1,39 @@
+- provide :current, 'search'
+- provide :title, 'Endpoint search'
+
+- content_for :head
+  = javascript_pack_tag 'endpoint/search'
+
+.container
+  .row
+    .col-12
+      h1.page-title-header Endpoint Search
+      p.page-title-body
+        ' You can search endpoints using REST API. Please see
+        = link_to 'this document', api_path
+        |  for more details.
+
+    .col-12
+      = render partial: "search_form", locals: { search_form: @search_form }
+
+    .col-12
+      #result
+        table.table.table-striped
+          thead
+            tr
+              th Name
+              th URL
+              th Score
+          tbody
+            - if @endpoints.blank?
+              tr
+                td.text-center colspan=3 No Endpoints found
+            - else
+              - @endpoints.each do |endpoint|
+                tr
+                  td
+                    = link_to endpoint.name, endpoint_path(endpoint, date: @search_form.date)
+                  td
+                    = link_to endpoint.endpoint_url, endpoint.endpoint_url, target: '_blank'
+                  td
+                    = endpoint.evaluations.first.score

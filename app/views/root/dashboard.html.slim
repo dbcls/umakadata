@@ -37,7 +37,7 @@
       input.date-input#calendar readonly='readonly' name='date' value=@date[:current].to_formatted_s data-start-date=@date[:start].to_formatted_s data-end-date=@date[:end].to_formatted_s
       input.go-button#update-date type='button' value='GO'
 
-  .row
+  .row.mb-4
     .col-12.col-lg-9
       .sub-container
         .carousel.slide#scores[data-ride="carousel"]
@@ -81,7 +81,7 @@
 
     .col-12.col-lg-6
       .row
-        .col-12
+        .col-12.mb-4
           .sub-container
             .page-title-header Endpoint discussions
             .page-title-body

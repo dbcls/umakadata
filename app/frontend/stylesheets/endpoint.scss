@@ -79,6 +79,41 @@ table {
   }
 }
 
+form {
+  input.form-control {
+    height: inherit;
+    line-height: inherit;
+    padding: 0.275rem 0.75rem;
+  }
+
+  input[type="radio"],
+  input[type="checkbox"] {
+    margin-right: 0.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 0.5rem;
+  }
+
+  .col-form-label {
+    padding-top: calc(0.275rem + 1px);
+    padding-bottom: calc(0.275rem + 1px);
+  }
+
+  .form-check {
+    padding-left: 0;
+
+    label {
+      margin-bottom: 0;
+    }
+  }
+
+  .checkbox-inline {
+    display: inline-block;
+    margin-right: 1.5rem;
+  }
+}
+
 .chart {
   font-family: $font-family-base;
   color: $body-color;
@@ -96,31 +131,33 @@ table {
   }
 }
 
-.log {
-  .card-header {
-    cursor: pointer;
-  }
+.card-header {
+  cursor: pointer;
+}
 
-  .log-title {
-    &[data-toggle="collapse"] {
+.card-title {
+  margin: 0;
+
+  &[data-toggle="collapse"] {
+    &:before {
+      font-family: FontAwesome;
+      color: $umakadata-text-color;
+      content: "\f078";
+      margin-right: 10px;
+    }
+
+    &.collapsed {
       &:before {
         font-family: FontAwesome;
         color: $umakadata-text-color;
-        content: "\f078";
-        margin-right: 10px;
-      }
-
-      &.collapsed {
-        &:before {
-          font-family: FontAwesome;
-          color: $umakadata-text-color;
-          content: "\f054";
-          padding-left: 4px;
-        }
+        content: "\f054";
+        padding-left: 4px;
       }
     }
   }
+}
 
+.log {
   table {
     margin-bottom: 0;
 
