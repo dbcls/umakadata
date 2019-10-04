@@ -1,7 +1,0 @@
-- content_for :header
-  = stylesheet_link_tag 'umakadata/search'
-  = javascript_include_tag 'umakadata/search'
-
-.row
-  .col-md-12.page-element
-    = render partial: "search_form", locals: { start_date: @start_date, search_form: @search_form, collapse: false }
