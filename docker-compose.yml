@@ -14,7 +14,7 @@ services:
   postgres:
     image: postgres:11.4
     environment:
-      - POSTGRES_USER=umakadata
+      - POSTGRES_USER=${UMAKADATA_DATABASE_USERNAME}
       - POSTGRES_PASSWORD=${UMAKADATA_DATABASE_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -31,11 +31,13 @@ services:
       - RAILS_ENV=production
       - NODE_ENV=production
       - UMAKADATA_DATABASE_HOST=postgres
-      - UMAKADATA_DATABASE_PASSWORD=${UMAKADATA_DATABASE_PASSWORD}
+      - UMAKADATA_REDIS_HOST=redis
     volumes:
       - .:/app
       - app_bundle:/app/vendor/bundle
       - app_node_modules:/app/node_modules
+      - app_public_assets:/app/public/assets
+      - app_public_packs:/app/public/packs
       - app_tmp:/app/tmp
       - app_www:/var/www
     depends_on:
@@ -50,6 +52,10 @@ volumes:
   app_bundle:
     driver: local
   app_node_modules:
+    driver: local
+  app_public_assets:
+    driver: local
+  app_public_packs:
     driver: local
   app_tmp:
     driver: local

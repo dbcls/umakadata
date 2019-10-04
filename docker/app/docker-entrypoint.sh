@@ -6,7 +6,7 @@ if [[ $1 = "start" ]]; then
 
   bundle install --path vendor/bundle
 
-  bundle exec rails webpacker:compile
+  bundle exec rails assets:precompile
 
   cp -rv /app/public/* /var/www/
 
