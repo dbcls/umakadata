@@ -38,9 +38,9 @@
     .col-12.col-lg-6
       canvas#scores width="400" height="400" data={ endpoint: @endpoint.id }
 
-    - if Rails.application.credentials.github_repo.present? && @endpoint.issue_id.present?
+    - if @issue
       .col-12
-        = render partial: 'forum', locals: { endpoint: @endpoint }
+        = render partial: 'forum', locals: { endpoint: @endpoint, issue: @issue }
 
     .col-12
       canvas#histories width="400" height="200" data={ endpoint: @endpoint.id }

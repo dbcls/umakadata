@@ -25,6 +25,7 @@ class EndpointController < ApplicationController
     @date = date_for_endpoint(params[:id])
     @endpoint = Endpoint.find(params[:id])
     @evaluation = Crawl.on(@date[:current])&.evaluations&.find_by(endpoint_id: params[:id])
+    @issue = GithubIssue.new if Rails.application.credentials.github_repo.present? && @endpoint.issue_id.present?
 
     if @evaluation.blank?
       render :file => "#{Rails.root}/public/404.html", layout: false, status: :not_found
@@ -203,6 +204,24 @@ class EndpointController < ApplicationController
     end
   end
 
+  # POST /endpoint/:id/forum
+  def create_forum
+    @issue = GithubIssue.new(create_forum_params)
+    @endpoint = Endpoint.find(params[:id])
+
+    session[:issue_info] = {
+      title: @issue.title,
+      description: @issue.description,
+      endpoint_name: @endpoint.id.to_s
+    }
+
+    session[:prev_url] = request.referer
+
+    redirect_to '/auth/github'
+  end
+
+  private
+
   def search_params
     params
       .fetch(:search_form, params)
@@ -210,5 +229,9 @@ class EndpointController < ApplicationController
               :alive_rate_upper, :cool_uri_rate_lower, :cool_uri_rate_upper, :ontology_lower, :ontology_upper,
               :metadata_lower, :metadata_upper, :service_description, :void, :content_negotiation, :html, :turtle, :xml,
               rank: [])
+  end
+
+  def create_forum_params
+    params.require(:github_issue).permit(:title, :description)
   end
 end

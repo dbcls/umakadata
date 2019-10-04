@@ -18,8 +18,13 @@ Rails.application.routes.draw do
   get '/endpoint/:id/scores', to: 'endpoint#scores', as: :endpoint_scores
   get '/endpoint/:id/histories', to: 'endpoint#histories', as: :endpoint_histories
   get '/endpoint/:id/log/:name', to: 'endpoint#log', as: :endpoint_log
+  post '/endpoint/:id/forum', to: 'endpoint#create_forum', as: :endpoint_create_forum
 
   get '/api/endpoint/search', to: 'endpoint#search', defaults: { format: 'json' }
+
+  get '/auth/:provider/callback', to: 'session#callback'
+  get '/auth/after_authorization', to: 'session#after_authorization'
+  get '/auth/failure', to: 'session#failure'
 
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)

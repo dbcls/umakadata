@@ -33,5 +33,7 @@ module Umakadata
       g.helper false
       g.system_tests false
     end
+
+    config.session_store :redis_store, servers: "redis://#{ENV.fetch('UMAKADATA_REDIS_HOST', 'localhost:6379')}/0/session"
   end
 end

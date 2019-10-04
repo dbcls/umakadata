@@ -7,6 +7,18 @@ ul.no-bullets
     = link_to "Discussion About #{endpoint.name}", "https://github.com/#{repo}/issues?q=is:open+label:%22#{endpoint.id}%22", target: '_blank'
   li
     i.fa.fa-github.pr-1
-    = link_to "Create Issue About #{endpoint.name}", '#'
-/ issues_form_path(@endpoint)
-/ .modal.fade#user-modal[tabindex="-1" role="dialog" aria-hidden="true"]
+    = link_to "Create Issue About #{endpoint.name}", '#', data: { toggle: 'modal', target: '#modal-issue' }
+
+#modal-issue.modal.fade role='dialog'
+  .modal-dialog role='document'
+    .modal-content
+      .modal-header
+        h5.modal-title Create Issue About #{endpoint.name}
+        button.close type='button' data-dismiss='modal' &times;
+      .modal-body
+        = simple_form_for(issue, url: endpoint_create_forum_path(endpoint)) do |f|
+          = f.input :title, input_html: { maxlength: 256 }
+          = f.input :description, as: :text, input_html: { rows: 10, maxlength: 65536 }
+          .modal-footer
+            .form-actions.pull-right
+              = f.button :submit, value: 'Submit', data: { disable_with: 'Sending...' }
