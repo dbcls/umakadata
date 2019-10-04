@@ -7,15 +7,12 @@ br
 hr
 div
   | Name:
-  '
   = @inquiry.name
 div
   | Email:
-  '
   = @inquiry.email
 div
   | Message:
-  '
   br
   div
     = simple_format(h(@inquiry.message))

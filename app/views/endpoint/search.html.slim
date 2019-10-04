@@ -3,6 +3,7 @@
 
 - content_for :head
   = javascript_pack_tag 'endpoint/search'
+  = stylesheet_pack_tag 'endpoint/search'
 
 .container
   .row
@@ -30,10 +31,11 @@
                 td.text-center colspan=3 No Endpoints found
             - else
               - @endpoints.each do |endpoint|
-                tr
-                  td
-                    = link_to endpoint.name, endpoint_path(endpoint, date: @search_form.date)
-                  td
-                    = link_to endpoint.endpoint_url, endpoint.endpoint_url, target: '_blank'
-                  td
-                    = endpoint.evaluations.first.score
+                - if (evaluations = endpoint.evaluations).present?
+                  tr
+                    td
+                      = link_to endpoint.name, endpoint_path(endpoint, date: @search_form.date)
+                    td
+                      = link_to endpoint.endpoint_url, endpoint.endpoint_url, target: '_blank'
+                    td
+                      = evaluations.first.score
