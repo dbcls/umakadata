@@ -16,7 +16,7 @@ class RootController < ApplicationController
   def send_inquiry
     @inquiry = Inquiry.new(inquiry_params)
 
-    if @inquiry.valid?
+    if @inquiry.valid? && verify_recaptcha(model: @inquiry)
       begin
         InquiryMailer.with(inquiry: @inquiry).inquiry.deliver_now
         flash[:success] = 'Complate to send a message. thank you for your message!'
