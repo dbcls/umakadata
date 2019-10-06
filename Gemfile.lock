@@ -10,7 +10,7 @@ GIT
 PATH
   remote: ../umakadata_gem
   specs:
-    umakadata (1.0.0.pre.dev)
+    umakadata (1.0.0)
       activesupport (~> 5.2)
       faraday (~> 0.15.4)
       faraday_middleware (~> 0.13.1)
@@ -163,7 +163,7 @@ GEM
     json-ld (3.0.2)
       multi_json (~> 1.12)
       rdf (>= 2.2.8, < 4.0)
-    json-ld-preloaded (3.0.4)
+    json-ld-preloaded (3.0.6)
       json-ld (~> 3.0)
       multi_json (~> 1.12)
       rdf (~> 3.0)
@@ -359,7 +359,7 @@ GEM
     rdf-turtle (3.0.6)
       ebnf (~> 1.1)
       rdf (~> 3.0)
-    rdf-vocab (3.0.10)
+    rdf-vocab (3.0.12)
       rdf (~> 3.0, >= 3.0.11)
     rdf-xsd (3.0.1)
       rdf (~> 3.0)

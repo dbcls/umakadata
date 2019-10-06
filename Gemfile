@@ -39,6 +39,7 @@ gem 'dotenv-rails', '~> 2.7', '>= 2.7.5'
 gem 'jbuilder', '~> 2.5'
 gem 'octokit', '~> 4.14'
 gem 'omniauth-github', '~> 1.3'
+gem 'recaptcha', '~> 5.0'
 gem 'simple_form', '~> 5.0'
 
 # asset
