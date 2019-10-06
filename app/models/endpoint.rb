@@ -10,6 +10,14 @@ class Endpoint < ApplicationRecord
     evaluations.where(alive: true).order(created_at: :desc).limit(1).first
   end
 
+  def just_registered?
+    created_at > Date.current.ago(3.days) && evaluations.count.zero?
+  end
+
+  def dead?
+    (xs = evaluations.order(created_at: :desc).limit(3)).present? && xs.all? { |x| x.alive == false }
+  end
+
   def update_vocabulary_prefixes!(*prefixes)
     return unless prefixes.present?
 
