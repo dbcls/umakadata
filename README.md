@@ -1,15 +1,15 @@
-# README
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
+# Umakadata
 
 * Ruby version
 
-* System dependencies
+2.6.0+
 
-* Configuration
+* Setting up
+
+```
+docker-compose run app bundle install --path vendor/bundle
+docker-compose run app yarn install
+```
 
 * Database creation
 
@@ -23,15 +23,9 @@ docker-compose run app bundle exec rails db:create
 docker-compose run app bundle exec rails db:migrate
 ```
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
 * Deployment instructions
 
 ```
 docker run -p 5432:5432 -e POSTGRES_USER=umakadata -e POSTGRES_PASSWORD=umakadata --name umakadata_postgres -d --rm postgres:11
 docker run -p 6379:6379 --name umakadata_redis -d --rm redis:5.0 redis-server --appendonly yes
 ```
-
-* ...
