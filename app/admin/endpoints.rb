@@ -38,4 +38,79 @@ ActiveAdmin.register Endpoint do
   filter :description_url
   filter :enabled
 
+  controller do
+    def after_modification(succeeded)
+      if succeeded
+        if @endpoint.errors.any?
+          flash[:warning] = @endpoint.errors.full_messages.join('<br>').html_safe
+        end
+        redirect_to admin_endpoint_path(id: @endpoint.id)
+      else
+        flash.now[:error] = @endpoint.errors.full_messages.join('<br>').html_safe
+        @endpoint = Endpoint.new(permitted_params[:endpoint])
+        render :new
+      end
+    end
+
+    def create_issue(endpoint)
+      begin
+        label = endpoint.create_label
+        issue = endpoint.create_issue
+        GithubHelper.add_labels_to_an_issue(issue[:number], [label[:name]])
+        GithubHelper.add_labels_to_an_issue(endpoint.issue_id, ['endpoints'])
+      rescue => e
+        errors.add(:base, "Error occured during using Github API!\n\n#{e.message}")
+      end
+    end
+
+    def create
+      @endpoint = Endpoint.new(permitted_params[:endpoint])
+      create_issue(@endpoint)
+      after_modification(@endpoint.save)
+    end
+
+    def update
+      @endpoint = Endpoint.find(permitted_params[:id])
+      after_modification(@endpoint.update(permitted_params[:endpoint]))
+    end
+  end
+
+  batch_action :create_label do |ids|
+    message = 'The endpoints have created labels'
+    batch_action_collection.find(ids).each do |endpoint|
+      begin
+        label = Endpoint.create_label(endpoint)
+        next if endpoint.issue_id.nil?
+        GithubHelper.add_labels_to_an_issue(endpoint.issue_id, [label[:name], 'endpoints']) unless label.nil?
+      rescue => e
+        message = e.message
+      end
+    end
+    redirect_to collection_path, alert: message
+  end
+
+  batch_action :create_issue do |ids|
+    message = 'The endpoints have created issues'
+    batch_action_collection.find(ids).each do |endpoint|
+      begin
+        Endpoint.create_issue(endpoint)
+        GithubHelper.add_labels_to_an_issue(endpoint.issue_id, ['endpoints'])
+      rescue => e
+        message = e.message
+      end
+    end
+    redirect_to collection_path, alert: message
+  end
+
+  batch_action :sync_label do |ids|
+    message = 'The endpoints have synchronized label for issue'
+    batch_action_collection.find(ids).each do |endpoint|
+      begin
+        Endpoint.sync_label(endpoint)
+      rescue => e
+        message = e.message
+      end
+    end
+    redirect_to collection_path, alert: message
+  end
 end
