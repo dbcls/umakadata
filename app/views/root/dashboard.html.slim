@@ -2,6 +2,7 @@
 - provide :title, 'Dashboard'
 
 - content_for :head
+  = javascript_include_tag 'https://platform.twitter.com/widgets.js', async: true
   = javascript_pack_tag 'dashboard'
   = stylesheet_pack_tag 'dashboard'
 
@@ -75,9 +76,8 @@
         .col-12
           .sub-container
             .page-title-header #umakadata news from Twitter
-            .row
-              .col-md-12
-                / = twitter_widget
+            .page-title-body
+              = link_to 'Tweets by umakayummy', 'https://twitter.com/umakayummy?ref_src=twsrc%5Etfw', class: 'twitter-timeline', data: { height: 600 }
 
     .col-12.col-lg-6
       .row
