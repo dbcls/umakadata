@@ -5,7 +5,7 @@ ruby '2.6.3'
 
 gem 'rails', '~> 5.2.3'
 
-gem 'umakadata', path: '../umakadata_gem'
+gem 'umakadata', git: 'https://github.com/dbcls/umakadata_gem.git'
 
 # quick fix
 gem 'sparql-client', git: 'https://github.com/dsatoh/sparql-client.git', branch: 'fix_name_error'
