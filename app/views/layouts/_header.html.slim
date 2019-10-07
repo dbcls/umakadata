@@ -1,0 +1,36 @@
+- current = yield(:current)
+
+.header
+  nav.navbar.navbar-light
+    = link_to image_tag(asset_pack_path('media/images/icon.png'), class: 'yummydata-logo'), '/'
+    span.page-title-header YummyData
+    button.navbar-toggler type='button' data={ target: '#header-toggle-content', toggle: 'collapse' }
+      span.navbar-toggler-icon
+
+  #header-toggle-content.collapse
+    .p-2
+      ul.nav.text-left
+        li.nav-item class="#{'dashboard' == current ? 'active' : ''}"
+          = link_to 'DASHBOARD', root_path, class: 'nav-link'
+
+        li.nav-item class="#{'about' == current ? 'active' : ''}"
+          = link_to 'ABOUT', about_path, class: 'nav-link'
+
+        li.nav-item class="#{'endpoints' == current ? 'active' : ''}"
+          = link_to 'RANKED ENDPOINTS', endpoint_index_path, class: 'nav-link'
+
+        li.nav-item class="#{'search' == current ? 'active' : ''}"
+          = link_to 'ENDPOINT SEARCH', endpoint_search_path, class: 'nav-link'
+
+        li.nav-item class="#{'graph' == current ? 'active' : ''}"
+          = link_to 'LINK GRAPH', endpoint_graph_path, class: 'nav-link'
+
+        - if (repo = Rails.application.credentials.github_repo).present?
+          li.nav-item class="#{'forum' == current ? 'active' : ''}"
+            = link_to 'FORUM', "https://github.com/#{repo}/issues?q=is:open+label:endpoints", class: 'nav-link', target: '_blank'
+
+        li.nav-item class="#{'contact' == current ? 'active' : ''}"
+          = link_to 'CONTACT US', inquiries_path, class: 'nav-link'
+
+        li.nav-item class="#{'terms' == current ? 'active' : ''}"
+          = link_to 'TERMS AND CONDITIONS', terms_path, class: 'nav-link'

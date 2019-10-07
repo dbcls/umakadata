@@ -17,14 +17,16 @@ html[lang='en']
     = analytics_init if Rails.env.production?
 
   body
+    = render partial: 'layouts/header'
+
     .container-fluid
       .row
-        .sidebar.col-md-2.d-none.d-md-block
+        .sidebar.col-3.col-xl-2.d-none.d-md-block
           = render partial: 'layouts/sidebar'
 
         = image_tag(asset_pack_path('media/images/logo-background.png'), class: 'yummydata-logo-background')
 
-        main.col-md-9.ml-sm-auto.col-lg-10
+        main.col-md-9.col-xl-10.ml-sm-auto
           - if flash[:failure]
             .alert.alert-danger
               = flash[:failure]

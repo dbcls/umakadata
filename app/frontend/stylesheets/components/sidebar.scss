@@ -36,13 +36,13 @@
 
     &:hover,
     &:focus {
-      background: #7FC7AF;
+      background: $umakadata-button-background-color;
       text-decoration: none;
     }
   }
 
   & > .active > a {
     color: #fff;
-    background: #7FC7AF;
+    background: $umakadata-button-background-color;
   }
 }

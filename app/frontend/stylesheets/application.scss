@@ -1,4 +1,5 @@
 @import "~bootstrap/scss/bootstrap";
+@import "components/header";
 @import "components/sidebar";
 @import "components/tooltip";
 $fa-font-path: "~font-awesome/fonts";
@@ -8,10 +9,13 @@ $fa-font-path: "~font-awesome/fonts";
 body {
   font-family: Roboto-Regular;
   font-size: 0.9rem;
-  background: #D4ECE4;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  background: $umakadata-background-color;
   color: $umakadata-text-color;
+
+  .container-fluid {
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
 }
 
 h2, .h2 {
@@ -117,8 +121,8 @@ ul.no-bullets {
 .btn {
   font-size: 14px;
   line-height: 18px;
-  color: #FFFFFF;
-  background: #7FC7AF;
+  color: $umakadata-button-color;
+  background: $umakadata-button-background-color;
   text-decoration: none;
 }
 
