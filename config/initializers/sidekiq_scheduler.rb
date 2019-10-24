@@ -7,9 +7,11 @@ Sidekiq.configure_server do |config|
       Sidekiq.schedule = YAML.load_file(Rails.root.join('config', 'sidekiq_scheduler.yml'))
       SidekiqScheduler::Scheduler.instance.reload_schedule!
     end
+
+    Rails.logger.info "Sidekiq schedule: #{Sidekiq.schedule}"
   else
     SidekiqScheduler::Scheduler.instance.enabled = false
-  end
 
-  Rails.logger.info "SidekiqScheduler is #{SidekiqScheduler::Scheduler.instance.enabled ? 'enabled' : 'disabled'}."
+    Rails.logger.info 'SidekiqScheduler is disabled.'
+  end
 end
