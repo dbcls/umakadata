@@ -11,9 +11,9 @@ if [[ $1 = "start" ]]; then
   cp -rv /app/public/* /var/www/
 
   echo
-  echo "start unicorn..."
+  echo "start foreman..."
 
-  bundle exec unicorn --env production -c config/unicorn.rb
+  bundle exec foreman start
 else
   exec "$@"
 fi
