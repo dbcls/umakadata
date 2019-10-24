@@ -10,13 +10,14 @@ class RootController < ApplicationController
   # GET /inquiry
   def inquiry
     @inquiry = Inquiry.new
+    @use_recaptcha = use_recaptcha
   end
 
   # POST /inquiry
   def send_inquiry
     @inquiry = Inquiry.new(inquiry_params)
 
-    if @inquiry.valid? && verify_recaptcha(model: @inquiry)
+    if @inquiry.valid? && (use_recaptcha ? verify_recaptcha(model: @inquiry) : true)
       begin
         InquiryMailer.with(inquiry: @inquiry).inquiry.deliver_now
         flash[:success] = 'Complate to send a message. thank you for your message!'
@@ -79,5 +80,9 @@ class RootController < ApplicationController
               end
       }
     }
+  end
+
+  def use_recaptcha
+    ENV['UMAKADATA_RECAPTCHA_SITE_KEY'].present? && ENV['UMAKADATA_RECAPTCHA_SECRET_KEY'].present?
   end
 end
