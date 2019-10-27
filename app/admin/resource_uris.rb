@@ -1,4 +1,6 @@
 ActiveAdmin.register ResourceURI do
+  menu priority: 3
+
   permit_params :uri, :as_regex, :allow, :deny, :case_insensitive, :endpoint_id
 
   config.sort_order = 'id_asc'

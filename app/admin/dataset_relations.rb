@@ -1,4 +1,6 @@
 ActiveAdmin.register DatasetRelation do
+  menu priority: 4
+
   permit_params :src_endpoint_id, :dst_endpoint_id, :relation, :endpoint_id
 
   config.sort_order = 'id_asc'

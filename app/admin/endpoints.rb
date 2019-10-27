@@ -1,4 +1,6 @@
 ActiveAdmin.register Endpoint do
+  menu priority: 2
+
   permit_params :name, :endpoint_url, :description_url, :disable_crawling,
                 :viewer_url, :issue_id, :label_id
 
