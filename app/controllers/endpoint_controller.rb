@@ -167,6 +167,9 @@ class EndpointController < ApplicationController
     end
   end
 
+  CURL_GET_TEMPLATE = 'curl -L -H "Accept: %s" "%s"'
+  CURL_POST_TEMPLATE = 'curl -L -XPOST -H "Accept: %s" "%s" -d "%s"'
+
   # GET /endpoint/:id/log/:name
   def log
     @date = date_for_crawl[:current]
@@ -178,23 +181,46 @@ class EndpointController < ApplicationController
 
     respond_to do |format|
       format.html do
-        if @measurement&.activities.blank?
-          render :file => "#{Rails.root}/public/404.html", layout: false, status: :not_found
+        if @endpoint.blank? || @evaluation.blank? || @measurement.blank?
+          render file: "#{Rails.root}/public/404.html", layout: false, status: :not_found
+          return
         end
       end
-      format.json do
-        begin
-          columns = %w[id name comment request response elapsed_time trace warnings]
-          columns << 'exceptions' if admin_user_signed_in?
 
+      format.json do
+        if @endpoint.blank? || @evaluation.blank? || @measurement.blank?
+          render json: { error: '404 Not Found' }, status: 404
+          return
+        end
+
+        columns = %w[id name comment request response elapsed_time trace warnings]
+        columns << 'exceptions' if admin_user_signed_in?
+
+        begin
           page = [params[:page].to_i, 1].max
-          activities = @measurement&.activities.order(:id).offset((page - 1) * 10).limit(10)
-          more = @measurement&.activities.count > page * 10
+          activities = @measurement.activities.order(:id).offset((page - 1) * 10).limit(10)
+          more = @measurement.activities.count > page * 10
+
+          data = activities.map { |x| x.attributes.slice(*columns) }
+
+          data.each do |x|
+            next unless (request = x['request']).is_a?(Hash)
+
+            if (method = request.dig(:method)&.upcase) == 'POST'
+              if (url = request.dig(:url)) && (accept = request.dig(:headers, :Accept)) && (body = request.dig(:body))
+                x['curl'] = format(CURL_POST_TEMPLATE, accept, url, body)
+              end
+            elsif method == 'GET'
+              if (url = request.dig(:url)) && (accept = request.dig(:headers, :Accept))
+                x['curl'] = format(CURL_GET_TEMPLATE, accept, url)
+              end
+            end
+          end
 
           render json: {
             date: @date,
             page: page,
-            data: activities.map { |x| x.attributes.slice(*columns) },
+            data: data,
             more: more
           }
         rescue

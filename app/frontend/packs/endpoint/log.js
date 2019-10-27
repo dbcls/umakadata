@@ -1,4 +1,5 @@
 import 'bootstrap/dist/js/bootstrap'
+import ClipboardJS from 'clipboard/dist/clipboard.min'
 import '../../stylesheets/endpoint'
 
 $(function () {
@@ -68,7 +69,11 @@ $(function () {
       html += '</div>';
       html += `<div class="collapse" id="collapse-${d.id}">`;
       html += '<div class="card-body">';
-      html += '<table class="table table-bordered table-responsive"><tbody>';
+      if (d.curl)  {
+        html += `<button type="button" class="btn mb-3 copy-query" data-clipboard-text='${d.curl}'><i class="fa fa-clipboard"> Copy CURL Query</button>`;
+      }
+      html += '<table class="table table-bordered table-responsive">';
+      html += '<tbody>';
       html += `<tr><th colspan="2">Elapsed time</th><td>${Math.round(d.elapsed_time * 1000) / 1000.0} [s]</td></tr>`;
       html += `<tr><th rowspan="4" scope="rowgroup">Request</th><th scope="row">Method</th><td><pre><code>${d.request.method || ""}</code></pre></td></tr>`;
       html += `<tr><th scope="row">URL</th><td><pre><code>${d.request.url || ""}</code></pre></td></tr>`;
@@ -109,5 +114,6 @@ $(function () {
   };
 
   loadLog(page);
-});
 
+  new ClipboardJS('.copy-query');
+});
