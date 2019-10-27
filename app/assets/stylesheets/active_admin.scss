@@ -8,3 +8,31 @@ table#index_table_endpoints {
     white-space: nowrap;
   }
 }
+
+.no_jobs {
+  text-align: center;
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
+
+  span {
+    @include rounded;
+    color: $blank-slate-primary-color;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+  }
+}
+
+tr.row-processing ul {
+  list-style-type: none;
+  padding-left: 0 !important;
+  margin: 0 !important;
+}
+
+tr.row-processing span.status_tag {
+  display: inline-block;
+  font-weight: bold;
+  text-align: center;
+  min-width: 20px;
+  margin: 2px 0 2px 0;
+}
