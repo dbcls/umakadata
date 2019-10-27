@@ -12,11 +12,6 @@ class RunnerJob
     return unless scheduled_time? && crawl_not_performed?
     return if Crawl.processing.present?
 
-    Umakadata::Crawler.config.logger = Rails.logger
-    Umakadata::LinkedOpenVocabulary.update
-
-    VocabularyPrefix.caches = VocabularyPrefix.all.map(&:attributes)
-
     Crawl.start!(*id)
   end
 

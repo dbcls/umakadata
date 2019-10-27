@@ -21,7 +21,7 @@ class Crawler < Thor
       end
     end
 
-    RunnerJob.perform_async(*id)
+    Crawl.start!(*id)
   end
 
   map run: 'execute'

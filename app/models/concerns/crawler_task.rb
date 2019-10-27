@@ -30,6 +30,11 @@ module CrawlerTask
         'Stop and remove it before start new crawl.'
       end
 
+      Umakadata::Crawler.config.logger = Rails.logger
+      Umakadata::LinkedOpenVocabulary.update
+
+      VocabularyPrefix.caches = VocabularyPrefix.all.map(&:attributes)
+
       crawl = create!(started_at: Time.current)
       endpoints = Endpoint.active.order(id: queue_order(Date.current))
       endpoints = endpoints.where(id: id) if id.present?
@@ -60,11 +65,16 @@ module CrawlerTask
       .map(&:args)
   end
 
+  # @return [Array<Array<Integer>] an array of [crawl_id, endpoint_id]
   def processing
-    Sidekiq::Workers
-      .new
-      .select { |_, _, job| job.dig('queue') == 'crawler' && job.dig('payload', 'args')&.first == id }
-      .map { |_, _, job| job.dig('payload', 'args') }
+    begin
+      Sidekiq::Workers
+        .new
+        .select { |_, _, job| job.dig('queue') == 'crawler' && JSON.parse(job.dig('payload')).fetch('args', []).first == id }
+        .map { |_, _, job| JSON.parse(job.dig('payload')).fetch('args', []) }
+    rescue JSON::ParserError
+      []
+    end
   end
 
   def queued_endpoints
