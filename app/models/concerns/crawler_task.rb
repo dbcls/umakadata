@@ -79,6 +79,14 @@ module CrawlerTask
     job_size == 1
   end
 
+  def finished?
+    job_size.zero?
+  end
+
+  def processing?
+    !finished?
+  end
+
   private
 
   def job_size
