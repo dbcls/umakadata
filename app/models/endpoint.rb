@@ -1,4 +1,5 @@
 class Endpoint < ApplicationRecord
+  has_many :dataset_relations
   has_many :evaluations
   has_many :excluding_graphs
   has_many :resource_uris, class_name: ResourceURI.name
@@ -47,7 +48,7 @@ class Endpoint < ApplicationRecord
                 ffdead b0e0e6 00ff00 800000 9932cc ffdab9 afeeee 32cd32 8b0000 9400d3 ffe4e1 e0ffff 9acd32 a52a2a 8b008b
                 fff0f5 00ffff 556b2f b22222 800080 fff5ee 00ffff 6b8e23 cd5c5c 4b0082 fdf5e6 40e0d0 808000 bc8f8f 483d8b
                 fffff0 48d1cc bdb76b e9967a 8a2be2 f0fff0 00ced1 eee8aa f08080 9370db f5fffa 20b2aa fff8dc fa8072 6a5acd
-                f0ffff 5f9ea0 f5f5dc ffa07a 7b68ee]
+                f0ffff 5f9ea0 f5f5dc ffa07a 7b68ee].freeze
 
     def create_label
       name = id.to_s
