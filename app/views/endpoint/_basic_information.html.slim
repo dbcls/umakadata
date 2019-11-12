@@ -6,11 +6,11 @@ table.table.table-bordered
   tbody
     tr
       td nowrap='' Endpoint URI
-      td= link_to endpoint.endpoint_url
+      td= link_to endpoint.endpoint_url, endpoint.endpoint_url, target: '_blank'
 
     tr
       td nowrap='' Site Description
-      td= link_to endpoint.description_url if endpoint.description_url.present?
+      td= link_to endpoint.description_url, endpoint.description_url, target: '_blank' if endpoint.description_url.present?
 
     tr
       td nowrap=''
