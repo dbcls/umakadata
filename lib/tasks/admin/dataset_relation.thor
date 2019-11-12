@@ -28,18 +28,14 @@ module Umakadata
 
       desc 'list', 'list dataset relations'
       method_option :pretty, type: :boolean, default: false, aliases: '-p', desc: 'print pretty json'
-      method_option :endpoint, type: :numeric, required: false, aliases: '-e', desc: 'specify endpoint id'
-      method_option :src_endpoint, type: :numeric, required: false, aliases: '-s', desc: 'specify source endpoint id'
-      method_option :dst_endpoint, type: :numeric, required: false, aliases: '-d', desc: 'specify destination endpoint id'
+      method_option :endpoint, type: :string, required: false, aliases: '-e', desc: 'specify endpoint id'
+      method_option :src_endpoint, type: :string, required: false, aliases: '-s', desc: 'specify source endpoint id'
+      method_option :dst_endpoint, type: :string, required: false, aliases: '-d', desc: 'specify destination endpoint id'
 
       def list
         setup
 
-        relations = ::DatasetRelation.all
-        relations = relations.where(endpoint_id: options[:endpoint]) if options[:endpoint]
-        relations = relations.where(src_endpoint_id: options[:src_endpoint]) if options[:src_endpoint]
-        relations = relations.where(dst_endpoint_id: options[:dst_endpoint]) if options[:dst_endpoint]
-
+        relations = lookup_dataset_relations
         hash = relations.map(&:attributes)
 
         print(hash)
@@ -47,6 +43,7 @@ module Umakadata
 
       desc 'remove', 'remove dataset relations'
       method_option :pretty, type: :boolean, default: false, aliases: '-p', desc: 'print pretty json'
+      method_option :force, type: :boolean, default: false, aliases: '-f', desc: 'remove without prompt'
       method_option :endpoint, type: :numeric, required: false, aliases: '-e', desc: 'specify endpoint id'
       method_option :src_endpoint, type: :numeric, required: false, aliases: '-s', desc: 'specify source endpoint id'
       method_option :dst_endpoint, type: :numeric, required: false, aliases: '-d', desc: 'specify destination endpoint id'
@@ -54,22 +51,18 @@ module Umakadata
       def remove
         setup
 
-        relations = ::DatasetRelation.all
-        relations = relations.where(endpoint_id: options[:endpoint]) if options[:endpoint]
-        relations = relations.where(src_endpoint_id: options[:src_endpoint]) if options[:src_endpoint]
-        relations = relations.where(dst_endpoint_id: options[:dst_endpoint]) if options[:dst_endpoint]
-
+        relations = lookup_dataset_relations
         hash = relations.map(&:attributes)
 
         if hash.size.zero?
           say 'No relations found.'
-          exit(2)
+          return
         end
 
         say "Remove following #{hash.size} #{'relation'.pluralize(hash.size)}"
         print(hash)
 
-        if yes?('Are you sure? [y/N]:')
+        if options[:force] || yes?('Are you sure? [y/N]:')
           relations.destroy_all
         else
           say('Abort.')
@@ -102,6 +95,25 @@ module Umakadata
         end
 
         ::Endpoint.find(id)
+      end
+
+      def lookup_dataset_relations
+        relations = ::DatasetRelation.all
+
+        if options[:endpoint]
+          endpoint = lookup_endpoint(options[:endpoint])
+          relations = relations.where(endpoint_id: endpoint.id)
+        end
+        if options[:src_endpoint]
+          src_endpoint = lookup_endpoint(options[:src_endpoint])
+          relations = relations.where(endpoint_id: src_endpoint.id)
+        end
+        if options[:dst_endpoint]
+          dst_endpoint = lookup_endpoint(options[:dst_endpoint])
+          relations = relations.where(endpoint_id: dst_endpoint.id)
+        end
+
+        relations
       end
     end
   end
