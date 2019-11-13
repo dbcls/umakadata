@@ -3,7 +3,9 @@ require 'thor'
 module Umakadata
   module Tasks
     class Endpoint < Thor
-      desc 'list', 'list endpoints'
+      namespace 'admin endpoint'
+
+      desc 'list', 'List endpoints'
       method_option :pretty, type: :boolean, default: false, aliases: '-p', desc: 'print pretty json'
       method_option :disabled, type: :boolean, default: false, desc: 'include disabled endpoints'
 
@@ -17,7 +19,7 @@ module Umakadata
         print(hash)
       end
 
-      desc 'search <keyword>', 'search endpoint'
+      desc 'search <keyword>', 'Search endpoint'
       method_option :pretty, type: :boolean, default: false, aliases: '-p', desc: 'print pretty json'
       method_option :disabled, type: :boolean, default: false, desc: 'include disabled endpoints'
 

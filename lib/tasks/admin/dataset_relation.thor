@@ -53,7 +53,7 @@ module Umakadata
         end
       end
 
-      desc 'list', 'list dataset relations'
+      desc 'list', 'List dataset relations'
       method_option :pretty, type: :boolean, default: false, aliases: '-p', desc: 'print pretty json'
       method_option :endpoint, type: :string, required: false, aliases: '-e', desc: 'specify endpoint id'
       method_option :src_endpoint, type: :string, required: false, aliases: '-s', desc: 'specify source endpoint id'
@@ -65,10 +65,10 @@ module Umakadata
         relations = lookup_dataset_relations
         hash = relations.map(&:attributes)
 
-        print(hash)
+        print hash
       end
 
-      desc 'remove', 'remove dataset relations'
+      desc 'remove', 'Remove dataset relations'
       method_option :pretty, type: :boolean, default: false, aliases: '-p', desc: 'print pretty json'
       method_option :force, type: :boolean, default: false, aliases: '-f', desc: 'remove without prompt'
       method_option :endpoint, type: :numeric, required: false, aliases: '-e', desc: 'specify endpoint id'
@@ -87,7 +87,7 @@ module Umakadata
         end
 
         say "Remove following #{hash.size} #{'relation'.pluralize(hash.size)}"
-        print(hash)
+        print hash
 
         if options[:force] || yes?('Are you sure? [y/N]:')
           relations.destroy_all
