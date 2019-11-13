@@ -1,29 +1,56 @@
+require 'active_support'
+require 'active_support/core_ext'
+require 'csv'
 require 'thor'
 
 module Umakadata
   module Tasks
     class DatasetRelation < Thor
-      desc 'add <Endpoint ID or name> <Source endpoint ID or name> <Destination endpoint ID or name>', 'add dataset relation'
+      namespace 'admin dataset_relation'
+
+      desc 'add <Endpoint> <Source> <Destination>', <<~DESC
+        Add dataset relation:
+          each arguments are endpoint ID or name (complete match)
+          this command allows reading from standard input (CSV or TSV)
+
+          Example CSV (4th column is optional):
+            1,2,3,sameAs
+            [endpoint name],[another endpoint name],[the other endpoint name],seeAlso
+      DESC
       method_option :pretty, type: :boolean, default: false, aliases: '-p', desc: 'print pretty json'
-      method_option :relation, type: :string, required: false, aliases: '-r', desc: 'specify relation'
+      method_option :relation, type: :string, aliases: '-r', desc: 'specify relation'
 
-      def add(endpoint, src_endpoint, dst_endpoint)
-        setup
+      if STDIN.tty?
+        def add(endpoint, src_endpoint, dst_endpoint)
+          setup
 
-        endpoint = lookup_endpoint(endpoint)
-        src_endpoint = lookup_endpoint(src_endpoint)
-        dst_endpoint = lookup_endpoint(dst_endpoint)
+          relation = add_relation(endpoint, src_endpoint, dst_endpoint, options[:relation])
 
-        relation = ::DatasetRelation.create! do |r|
-          r.endpoint_id = endpoint.id
-          r.src_endpoint_id = src_endpoint.id
-          r.dst_endpoint_id = dst_endpoint.id
+          print relation.attributes
+        rescue => e
+          say e.message
+          exit(1)
         end
+      else
+        def add
+          say 'Reading from standard input...'
 
-        print relation.attributes
-      rescue => e
-        say e.message
-        exit(1)
+          setup
+
+          buf = []
+          ActiveRecord::Base.transaction do
+            rows.each do |row|
+              next if row.size < 3
+
+              buf << add_relation(*row)
+            end
+          end
+
+          print buf.map(&:attributes)
+        rescue => e
+          say e.message
+          exit(1)
+        end
       end
 
       desc 'list', 'list dataset relations'
@@ -114,6 +141,33 @@ module Umakadata
         end
 
         relations
+      end
+
+      def add_relation(endpoint, src_endpoint, dst_endpoint, relation = nil)
+        endpoint = lookup_endpoint(endpoint)
+        src_endpoint = lookup_endpoint(src_endpoint)
+        dst_endpoint = lookup_endpoint(dst_endpoint)
+
+        ::DatasetRelation.create! do |r|
+          r.endpoint_id = endpoint.id
+          r.src_endpoint_id = src_endpoint.id
+          r.dst_endpoint_id = dst_endpoint.id
+          r.relation = relation if relation.present?
+        end
+      end
+
+      def rows
+        input = STDIN.readlines
+
+        sep = if (3..4).include?(input.first.split("\t").size)
+                "\t"
+              elsif (3..4).include?(input.first.split(',').size)
+                ','
+              else
+                raise 'Failed to detect separator.'
+              end
+
+        CSV.new(input.join, col_sep: sep)
       end
     end
   end
