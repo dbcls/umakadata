@@ -10,7 +10,7 @@ module Umakadata
 
       desc 'add <Endpoint> <Source> <Destination>', <<~DESC
         Add dataset relation:
-          each arguments are endpoint ID or name (complete match)
+          each arguments are endpoint ID or name (exact match)
           this command allows reading from standard input (CSV or TSV)
 
           Example CSV (4th column is optional):
