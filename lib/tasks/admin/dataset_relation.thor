@@ -17,8 +17,8 @@ module Umakadata
             1,2,3,sameAs
             [endpoint name],[another endpoint name],[the other endpoint name],seeAlso
       DESC
-      method_option :pretty, type: :boolean, default: false, aliases: '-p', desc: 'print pretty json'
-      method_option :relation, type: :string, aliases: '-r', desc: 'specify relation'
+      method_option :pretty, type: :boolean, default: false, aliases: '-p', desc: 'Print pretty json'
+      method_option :relation, type: :string, aliases: '-r', desc: 'Optional (e.g. sameAs, seeAlso, ...)'
 
       if STDIN.tty?
         def add(endpoint, src_endpoint, dst_endpoint)
@@ -54,10 +54,10 @@ module Umakadata
       end
 
       desc 'list', 'List dataset relations'
-      method_option :pretty, type: :boolean, default: false, aliases: '-p', desc: 'print pretty json'
-      method_option :endpoint, type: :string, required: false, aliases: '-e', desc: 'specify endpoint id'
-      method_option :src_endpoint, type: :string, required: false, aliases: '-s', desc: 'specify source endpoint id'
-      method_option :dst_endpoint, type: :string, required: false, aliases: '-d', desc: 'specify destination endpoint id'
+      method_option :pretty, type: :boolean, default: false, aliases: '-p', desc: 'Print pretty json'
+      method_option :endpoint, type: :numeric, aliases: '-e', desc: 'Endpoint ID or name (exact match)'
+      method_option :src_endpoint, type: :numeric, aliases: '-s', desc: 'Source endpoint ID or name (exact match)'
+      method_option :dst_endpoint, type: :numeric, aliases: '-d', desc: 'Destination endpoint ID or name (exact match)'
 
       def list
         setup
@@ -69,11 +69,11 @@ module Umakadata
       end
 
       desc 'remove', 'Remove dataset relations'
-      method_option :pretty, type: :boolean, default: false, aliases: '-p', desc: 'print pretty json'
-      method_option :force, type: :boolean, default: false, aliases: '-f', desc: 'remove without prompt'
-      method_option :endpoint, type: :numeric, required: false, aliases: '-e', desc: 'specify endpoint id'
-      method_option :src_endpoint, type: :numeric, required: false, aliases: '-s', desc: 'specify source endpoint id'
-      method_option :dst_endpoint, type: :numeric, required: false, aliases: '-d', desc: 'specify destination endpoint id'
+      method_option :pretty, type: :boolean, default: false, aliases: '-p', desc: 'Print pretty json'
+      method_option :force, type: :boolean, default: false, aliases: '-f', desc: 'Remove without prompt'
+      method_option :endpoint, type: :numeric, aliases: '-e', desc: 'Endpoint ID or name (exact match)'
+      method_option :src_endpoint, type: :numeric, aliases: '-s', desc: 'Source endpoint ID or name (exact match)'
+      method_option :dst_endpoint, type: :numeric, aliases: '-d', desc: 'Destination endpoint ID or name (exact match)'
 
       def remove
         setup

@@ -6,8 +6,8 @@ module Umakadata
       namespace 'admin endpoint'
 
       desc 'list', 'List endpoints'
-      method_option :pretty, type: :boolean, default: false, aliases: '-p', desc: 'print pretty json'
-      method_option :disabled, type: :boolean, default: false, desc: 'include disabled endpoints'
+      method_option :pretty, type: :boolean, default: false, aliases: '-p', desc: 'Print pretty json'
+      method_option :disabled, type: :boolean, default: false, desc: 'Include disabled endpoints'
 
       def list
         setup
@@ -20,8 +20,8 @@ module Umakadata
       end
 
       desc 'search <keyword>', 'Search endpoint'
-      method_option :pretty, type: :boolean, default: false, aliases: '-p', desc: 'print pretty json'
-      method_option :disabled, type: :boolean, default: false, desc: 'include disabled endpoints'
+      method_option :pretty, type: :boolean, default: false, aliases: '-p', desc: 'Print pretty json'
+      method_option :disabled, type: :boolean, default: false, desc: 'Include disabled endpoints'
 
       def search(keyword)
         setup
