@@ -15,8 +15,10 @@ class CrawlerJob
 
     begin
       start_time = Time.current
+
       crawler.run do |measurement|
         set_value(evaluation, measurement, start_time)
+        start_time = Time.current
       end
 
       evaluation.save!
