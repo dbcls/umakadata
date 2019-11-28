@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/dbcls/umakadata_gem.git
-  revision: a58e66129a3284163fb58c54088c2550f60e0123
+  revision: ee4df2899c581d8b2ffa1f8f251195c7b6125b30
   specs:
     umakadata (1.0.0)
       activesupport (~> 5.2)
