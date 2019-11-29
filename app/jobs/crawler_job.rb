@@ -57,8 +57,9 @@ class CrawlerJob
     if (name = measurement.name.split('.').last) == 'service_description'
       evaluation.service_description = v.present?
       evaluation.language = measurement.activities&.last&.supported_languages&.ensure_utf8&.to_json
+      evaluation.void ||= measurement.activities&.last&.void_descriptions&.statements.present?
     elsif name == 'void'
-      evaluation.void = v.present?
+      evaluation.void ||= v.present?
       evaluation.publisher = measurement.activities&.last&.publishers&.ensure_utf8&.to_json
       evaluation.license = measurement.activities&.last&.licenses&.ensure_utf8&.to_json
     elsif name == 'data_entry'
