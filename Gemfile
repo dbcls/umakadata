@@ -13,7 +13,7 @@ gem 'sparql-client', git: 'https://github.com/dsatoh/sparql-client.git', branch:
 ## middleware
 gem 'foreman', '~> 0.85.0'
 gem 'pg', '>= 0.18', '< 2.0'
-gem 'puma', '~> 3.11'
+gem 'puma', '~> 3.12'
 gem 'redis', '~> 4.1', '>= 4.1.3'
 gem 'redis-rails', '~> 5.0', '>= 5.0.2'
 gem 'sendgrid-ruby', '~> 6.0'
