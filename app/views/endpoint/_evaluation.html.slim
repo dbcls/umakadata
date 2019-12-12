@@ -21,7 +21,7 @@ table.table.table-bordered.evaluation
               Alive rate shows how much the endpoint was alive in these 30 days.
       td #{evaluation.alive} (#{format('%.1f', evaluation.alive_rate * 100)}%)
       td.text-center
-        - if measurements.find { |x| x.name == 'availability.alive' }&.activities.present?
+        - if measurements.find { |x| x.name == 'availability.alive' }.present?
           = link_to endpoint_log_path(id: endpoint.id, name: 'alive', date: date), target: '_blank' do
             i.fa.fa-file-text-o
 
@@ -40,7 +40,7 @@ table.table.table-bordered.evaluation
               NOTE: Virtuoso could not count the statement correctly. So this mechanism does not work well for the endpoint on Virtuoso.
       td= evaluation.last_updated.presence || "N/A"
       td.text-center
-        - if measurements.find { |x| x.name == 'freshness.last_updated' }&.activities.present?
+        - if measurements.find { |x| x.name == 'freshness.last_updated' }.present?
           = link_to endpoint_log_path(id: endpoint.id, name: 'last_updated', date: date), target: '_blank' do
             i.fa.fa-file-text-o
 
@@ -56,7 +56,7 @@ table.table.table-bordered.evaluation
             | true if Service Description can be retrieved as turtle or rdf+xml, otherwise false.
       td= evaluation.service_description
       td.text-center
-        - if measurements.find { |x| x.name == 'operation.service_description' }&.activities.present?
+        - if measurements.find { |x| x.name == 'operation.service_description' }.present?
           = link_to endpoint_log_path(id: endpoint.id, name: 'service_description', date: date), target: '_blank' do
             i.fa.fa-file-text-o
 
@@ -68,7 +68,7 @@ table.table.table-bordered.evaluation
             | true if VoID can be found on well known URI, otherwise false.
       td= evaluation.void
       td.text-center
-        - if measurements.find { |x| x.name == 'operation.void' }&.activities.present?
+        - if measurements.find { |x| x.name == 'operation.void' }.present?
           = link_to endpoint_log_path(id: endpoint.id, name: 'void', date: date), target: '_blank' do
             i.fa.fa-file-text-o
 
@@ -96,7 +96,7 @@ table.table.table-bordered.evaluation
               | http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-builder-metadata/
       td= evaluation.metadata.present? ? format('%.1f', evaluation.metadata) : 'N/A'
       td.text-center
-        - if measurements.find { |x| x.name == 'usefulness.metadata' }&.activities.present?
+        - if measurements.find { |x| x.name == 'usefulness.metadata' }.present?
           = link_to endpoint_log_path(id: endpoint.id, name: 'metadata', date: date), target: '_blank' do
             i.fa.fa-file-text-o
 
@@ -117,7 +117,7 @@ table.table.table-bordered.evaluation
               | http://stats.lod2.eu/vocabularies
       td= evaluation.ontology.present? ? format('%.1f', evaluation.ontology) : 'N/A'
       td.text-center
-        - if measurements.find { |x| x.name == 'usefulness.ontology' }&.activities.present?
+        - if measurements.find { |x| x.name == 'usefulness.ontology' }.present?
           = link_to endpoint_log_path(id: endpoint.id, name: 'ontology', date: date), target: '_blank' do
             i.fa.fa-file-text-o
 
@@ -144,7 +144,7 @@ table.table.table-bordered.evaluation
             | Number of statements in the endpoint.
       td= evaluation.data_entry.present? ? number_with_delimiter(evaluation.data_entry) : 'N/A'
       td.text-center
-        - if measurements.find { |x| x.name == 'usefulness.data_entry' }&.activities.present?
+        - if measurements.find { |x| x.name == 'usefulness.data_entry' }.present?
           = link_to endpoint_log_path(id: endpoint.id, name: 'data_entry', date: date), target: '_blank' do
             i.fa.fa-file-text-o
 
@@ -156,7 +156,7 @@ table.table.table-bordered.evaluation
             | true if the endpoint returns a response in HTML format, otherwise false.
       td= evaluation.support_html_format
       td.text-center
-        - if measurements.find { |x| x.name == 'usefulness.support_html_format' }&.activities.present?
+        - if measurements.find { |x| x.name == 'usefulness.support_html_format' }.present?
           = link_to endpoint_log_path(id: endpoint.id, name: 'support_html_format', date: date), target: '_blank' do
             i.fa.fa-file-text-o
 
@@ -168,7 +168,7 @@ table.table.table-bordered.evaluation
             | true if the endpoint returns a response in Turtle format, otherwise false.
       td= evaluation.support_turtle_format
       td.text-center
-        - if measurements.find { |x| x.name == 'usefulness.support_turtle_format' }&.activities.present?
+        - if measurements.find { |x| x.name == 'usefulness.support_turtle_format' }.present?
           = link_to endpoint_log_path(id: endpoint.id, name: 'support_turtle_format', date: date), target: '_blank' do
             i.fa.fa-file-text-o
 
@@ -180,7 +180,7 @@ table.table.table-bordered.evaluation
             | true if the endpoint returns a response in RDF/XML format, otherwise false.
       td= evaluation.support_rdfxml_format
       td.text-center
-        - if measurements.find { |x| x.name == 'usefulness.support_rdfxml_format' }&.activities.present?
+        - if measurements.find { |x| x.name == 'usefulness.support_rdfxml_format' }.present?
           = link_to endpoint_log_path(id: endpoint.id, name: 'support_rdfxml_format', date: date), target: '_blank' do
             i.fa.fa-file-text-o
 
@@ -221,7 +221,7 @@ table.table.table-bordered.evaluation
           span.small N/A if the evaluation does not exist, true if all subjects are HTTP URI or blank node, otherwise false.
       td= evaluation.http_uri.nil? ? 'N/A' : evaluation.http_uri
       td.text-center
-        - if measurements.find { |x| x.name == 'validity.http_uri' }&.activities.present?
+        - if measurements.find { |x| x.name == 'validity.http_uri' }.present?
           = link_to endpoint_log_path(id: endpoint.id, name: 'http_uri', date: date), target: '_blank' do
             i.fa.fa-file-text-o
 
@@ -234,7 +234,7 @@ table.table.table-bordered.evaluation
               N/A: Firstly, we check whether the web site of the endpoint publishes download data or not.
       td= evaluation.provide_useful_information.nil? ? 'N/A' : evaluation.provide_useful_information
       td.text-center
-        - if measurements.find { |x| x.name == 'validity.provide_useful_information' }&.activities.present?
+        - if measurements.find { |x| x.name == 'validity.provide_useful_information' }.present?
           = link_to endpoint_log_path(id: endpoint.id, name: 'provide_useful_information', date: date), target: '_blank' do
             i.fa.fa-file-text-o
 
@@ -247,7 +247,7 @@ table.table.table-bordered.evaluation
               N/A: Firstly, we check whether the web site of the endpoint publishes download data or not.
       td= evaluation.link_to_other_uri.nil? ? 'N/A' : evaluation.link_to_other_uri
       td.text-center
-        - if measurements.find { |x| x.name == 'validity.link_to_other_uri' }&.activities.present?
+        - if measurements.find { |x| x.name == 'validity.link_to_other_uri' }.present?
           = link_to endpoint_log_path(id: endpoint.id, name: 'link_to_other_uri', date: date), target: '_blank' do
             i.fa.fa-file-text-o
 
@@ -268,7 +268,7 @@ table.table.table-bordered.evaluation
               li= link_to 'http://patterns.dataincubator.org/book/identifier-patterns.html'
       td= evaluation.cool_uri.present? ? format('%.1f', evaluation.cool_uri) : 'N/A'
       td.text-center
-        - if measurements.find { |x| x.name == 'validity.cool_uri' }&.activities.present?
+        - if measurements.find { |x| x.name == 'validity.cool_uri' }.present?
           = link_to endpoint_log_path(id: endpoint.id, name: 'cool_uri', date: date), target: '_blank' do
             i.fa.fa-file-text-o
 
@@ -284,6 +284,6 @@ table.table.table-bordered.evaluation
       td
         = evaluation.execution_time.present? ? format('%.3f', evaluation.execution_time) : 'N/A'
       td.text-center
-        - if measurements.find { |x| x.name == 'performance.execution_time' }&.activities.present?
+        - if measurements.find { |x| x.name == 'performance.execution_time' }.present?
           = link_to endpoint_log_path(id: endpoint.id, name: 'execution_time', date: date), target: '_blank' do
             i.fa.fa-file-text-o
