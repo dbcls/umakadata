@@ -1,22 +1,22 @@
 table.table.table-bordered
   thead
     tr
-      th nowrap='' Name
+      th Name
       th Value
   tbody
     tr
-      td nowrap='' Endpoint URI
+      td Endpoint URI
       td= link_to endpoint.endpoint_url, endpoint.endpoint_url, target: '_blank'
 
     tr
-      td nowrap='' Site Description
+      td Site Description
       td= link_to endpoint.description_url, endpoint.description_url, target: '_blank' if endpoint.description_url.present?
 
     tr
-      td nowrap=''
+      td
         | Organization Information
         .umakadata-tooltip
-          span data specified by dcterms:publisher in VoID
+          span.small data specified by dcterms:publisher in VoID
       td
         - if (publishers = evaluation.publisher).present?
           ul
@@ -24,7 +24,7 @@ table.table.table-bordered
               li= x
 
     tr
-      td nowrap=''
+      td
         | License Information
         .umakadata-tooltip
           span.small data specified by dcterms:license in VoID
@@ -35,7 +35,7 @@ table.table.table-bordered
               li= x
 
     tr
-      td nowrap=''
+      td
         | Supported Language
         .umakadata-tooltip
           span.small data specified by sd:supportedLanguage in Service Description
@@ -46,7 +46,7 @@ table.table.table-bordered
               li= x
 
     tr
-      td nowrap=''
+      td
         | SERVICE Keyword
         .umakadata-tooltip
           span.small
@@ -55,7 +55,7 @@ table.table.table-bordered
         = evaluation.service_keyword
 
     tr
-      td nowrap=''
+      td
         | GRAPH Keyword
         .umakadata-tooltip
           span.small
@@ -63,7 +63,7 @@ table.table.table-bordered
       td= evaluation.graph_keyword
 
     tr
-      td nowrap=''
+      td
         | Data Scale
         .umakadata-tooltip
           span.small
@@ -72,7 +72,7 @@ table.table.table-bordered
       td= (n = evaluation.data_scale) ? format('%.1f', n) : '-'
 
     tr
-      td nowrap=''
+      td
         | Rank
         .umakadata-tooltip
           span.small
@@ -101,7 +101,7 @@ table.table.table-bordered
       td #{evaluation.rank_label} (#{evaluation.score})
 
     tr
-      td nowrap=''
+      td
         | CORS
         .umakadata-tooltip
           span.small
@@ -109,19 +109,19 @@ table.table.table-bordered
       td= evaluation.cors
 
     tr
-      td nowrap=''
+      td
         | URI Indexed
         .umakadata-tooltip
           span.small
-            | check_link_to_other_uri check_content_negotiation
+            | true if URI rules of the endpoint are created. These are used for checking content negotiation and 4 Principles of Linked Data
       td= endpoint.resource_uris.present?
 
     tr
-      td nowrap='' Last Checked
+      td Last Checked
       td= evaluation.created_at.getutc
 
     tr
-      td nowrap='' Class Structure
+      td Class Structure
       td= link_to @endpoint.viewer_url, @endpoint.viewer_url unless @endpoint.viewer_url.nil?
 
 p
