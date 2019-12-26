@@ -33,7 +33,7 @@ $(function () {
 
     let html = '<ul>';
     array.forEach(function (x) {
-      html += `<li>${x}</li>`
+      html += `<li><pre><code>${x}</pre></code></li>`
     });
     html += '</ul>';
 
@@ -45,7 +45,7 @@ $(function () {
 
     let html = '<ul>';
     Object.values(object).forEach(function (x) {
-      html += `<li>${x[0]}</li>`
+      html += `<li><pre><code>${x[0]}</pre></code></li>`
     });
     html += '</ul>';
 
