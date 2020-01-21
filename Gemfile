@@ -14,6 +14,8 @@ gem 'sparql-client', git: 'https://github.com/dsatoh/sparql-client.git', branch:
 gem 'foreman', '~> 0.85.0'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 3.12'
+# pin the rack version to 2.0.7 to avoid conflict with sidekiq
+gem 'rack', '2.0.7'
 gem 'redis', '~> 4.1', '>= 4.1.3'
 gem 'redis-rails', '~> 5.0', '>= 5.0.2'
 gem 'sendgrid-ruby', '~> 6.0'
