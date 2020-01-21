@@ -6,3 +6,4 @@ production:
 :queues:
   - crawler
   - runner
+  - mailers

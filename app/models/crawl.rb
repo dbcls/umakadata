@@ -32,6 +32,11 @@ class Crawl < ApplicationRecord
 
   def finalize!
     update!(finished_at: Time.current)
+    AdminUser.crawl_post_hook(self)
+
+    return unless (email = ENV['UMAKADATA_MAILER_CRAWL_MAILER_TO'])
+
+    CrawlerMailer.notify_finished_to(AdminUser.new(email: email), self)
   end
 
   def number_of_endpoints

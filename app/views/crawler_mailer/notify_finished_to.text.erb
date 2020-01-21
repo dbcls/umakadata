@@ -1,0 +1,8 @@
+Hi <%= @user.email %>,
+
+We just let you know that a crawl job finished.
+
+ Started at: <%= @crawl.started_at %>
+Finished at: <%= @crawl.finished_at %>
+
+Evaluated endpoints: <%= @crawl.evaluations.count %>
