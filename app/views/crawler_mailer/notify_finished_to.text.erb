@@ -6,3 +6,14 @@ We just let you know that a crawl job finished.
 Finished at: <%= @crawl.finished_at %>
 
 Evaluated endpoints: <%= @crawl.evaluations.count %>
+
+<% evs = @crawl.evaluations.where.not(started_at: nil, finished_at: nil).sort_by { |x| x.finished_at - x.started_at }.reverse.take(10) %>
+<% if evs.present? %>
+Top 10 endpoints that spent longest crawling time
+  <% evs.each do |ev| %>
+  * <%= "#{ev.endpoint.name} - #{Time.at(ev.finished_at - ev.started_at).utc.strftime('%H:%M:%S')}" %>
+  <% end %>
+<% end %>
+
+--
+Umakadata
