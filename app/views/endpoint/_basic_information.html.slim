@@ -118,7 +118,14 @@ table.table.table-bordered
 
     tr
       td Last Checked
-      td= evaluation.created_at.getutc
+      td
+        = evaluation.created_at.getutc
+        - if (s = evaluation.started_at) && (f = evaluation.finished_at)
+          |  (
+          = (h = Time.at(f - s).utc.hour).positive? ? "#{h}h " : ''
+          = "#{Time.at(f - s).utc.min}m "
+          = "#{Time.at(f - s).utc.sec}s"
+          |)
 
     tr
       td Class Structure

@@ -27,6 +27,13 @@ ActiveAdmin.register Endpoint do
     column :latest_alive_date do |endpoint|
       endpoint.latest_alive_evaluation&.created_at
     end
+    column :last_crawl_time do |endpoint|
+      if (e = endpoint.latest_alive_evaluation)
+        if (s = e.started_at) && (f = e.finished_at)
+          Time.at(f - s).utc.strftime('%H:%M:%S')
+        end
+      end
+    end
 
     # column 'Viewer URL', :viewer_url
     # column 'Issue ID', :issue_id
