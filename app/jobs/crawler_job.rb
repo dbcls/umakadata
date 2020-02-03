@@ -14,7 +14,7 @@ class CrawlerJob
     evaluation = create_evaluation.tap { |x| x.update!(crawler.basic_information) }
 
     begin
-      start_time = Time.current
+      evaluation.started_at = (start_time = Time.current)
 
       crawler.run do |measurement|
         set_value(evaluation, measurement, start_time)
@@ -24,6 +24,8 @@ class CrawlerJob
       evaluation.save!
 
       endpoint.update_vocabulary_prefixes!(*crawler.vocabulary_prefix)
+
+      evaluation.finished_at = Time.current
     rescue StandardError => e
       raise e
     ensure
