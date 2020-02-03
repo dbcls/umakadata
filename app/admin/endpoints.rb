@@ -1,7 +1,7 @@
 ActiveAdmin.register Endpoint do
   menu priority: 2
 
-  permit_params :name, :endpoint_url, :description_url, :disable_crawling,
+  permit_params :name, :endpoint_url, :description_url, :enabled,
                 :viewer_url, :issue_id, :label_id
 
   config.sort_order = 'id_asc'
