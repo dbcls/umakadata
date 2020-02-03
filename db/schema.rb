@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_21_035552) do
+ActiveRecord::Schema.define(version: 2020_02_03_063359) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -118,6 +118,8 @@ ActiveRecord::Schema.define(version: 2020_01_21_035552) do
     t.datetime "updated_at", null: false
     t.bigint "endpoint_id"
     t.bigint "crawl_id"
+    t.datetime "started_at"
+    t.datetime "finished_at"
     t.index ["crawl_id"], name: "index_evaluations_on_crawl_id"
     t.index ["created_at"], name: "index_evaluations_on_created_at"
     t.index ["endpoint_id"], name: "index_evaluations_on_endpoint_id"
