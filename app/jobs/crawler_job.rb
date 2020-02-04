@@ -25,7 +25,7 @@ class CrawlerJob
 
       endpoint.update_vocabulary_prefixes!(*crawler.vocabulary_prefix)
 
-      evaluation.finished_at = Time.current
+      evaluation.update!(finished_at: Time.current)
     rescue StandardError => e
       raise e
     ensure
