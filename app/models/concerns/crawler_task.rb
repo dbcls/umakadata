@@ -70,9 +70,9 @@ module CrawlerTask
     begin
       Sidekiq::Workers
         .new
-        .select { |_, _, job| job.dig('queue') == 'crawler' && JSON.parse(job.dig('payload')).fetch('args', []).first == id }
-        .map { |_, _, job| JSON.parse(job.dig('payload')).fetch('args', []) }
-    rescue JSON::ParserError
+        .select { |_, _, job| job.dig('queue') == 'crawler' && job.dig('payload', 'args')&.first == id }
+        .map { |_, _, job| job.dig('payload', 'args') }
+    rescue
       []
     end
   end
