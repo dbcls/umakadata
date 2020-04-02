@@ -68,7 +68,7 @@ ActiveAdmin.register Endpoint do
         GithubHelper.add_labels_to_an_issue(issue[:number], [label[:name]])
         GithubHelper.add_labels_to_an_issue(endpoint.issue_id, ['endpoints'])
       rescue => e
-        errors.add(:base, "Error occured during using Github API!\n\n#{e.message}")
+        @endpoint.errors.add(:base, "Error occured during using Github API!\n\n#{e.message}")
       end
     end
 
