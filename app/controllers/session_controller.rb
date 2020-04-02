@@ -24,7 +24,7 @@ class SessionController < ApplicationController
     if @issue.errors.any?
       redirect_to prev_url, flash: {failure: "Failure on Issue Creation: \n #{@issue.errors.full_messages.join("\n")}"}
     else
-      redirect_to "https://github.com/#{Rails.application.secrets.github_repo}/issues/#{@issue.id}"
+      redirect_to "https://github.com/#{Rails.application.credentials.github_repo}/issues/#{@issue.id}"
     end
   end
 

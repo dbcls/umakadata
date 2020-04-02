@@ -18,7 +18,7 @@
         to data consumers.
     p
       ' Beyond this, YummyData provides a
-      = link_to 'forum', URI.encode("https://github.com/#{Rails.application.secrets.github_repo}/issues?q=is:open -label:endpoints")
+      = link_to 'forum', URI.encode("https://github.com/#{Rails.application.credentials.github_repo}/issues?q=is:open -label:endpoints")
       '  where consumers and providers of
         biomedical information in RDF can communicate and improve the usability of the web of (bio) data.
     p

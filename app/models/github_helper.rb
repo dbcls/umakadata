@@ -58,8 +58,8 @@ class GithubHelper
     retry_count = 0
 
     begin
-      client = Octokit::Client.new(:access_token => Rails.application.secrets.github_token)
-      yield(client, Rails.application.secrets.github_repo)
+      client = Octokit::Client.new(:access_token => Rails.application.credentials.github_token)
+      yield(client, Rails.application.credentials.github_repo)
     rescue Octokit::UnprocessableEntity => e
       message = "#{e.errors.first[:resource]} #{e.errors.first[:code]}"
       message = "#{e.errors.first[:resource]} #{e.errors.first[:message]}" if e.errors.first[:code] == 'custom'
