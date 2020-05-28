@@ -5,6 +5,11 @@ class Endpoint < ApplicationRecord
   has_many :resource_uris, class_name: ResourceURI.name
   has_many :vocabulary_prefixes
 
+  validates :name, uniqueness: true
+  validates :endpoint_url, uniqueness: true
+  validates :issue_id, uniqueness: true
+  validates :label_id, uniqueness: true
+
   scope :active, -> { where(enabled: true) }
 
   def latest_alive_evaluation

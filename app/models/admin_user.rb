@@ -3,6 +3,8 @@ class AdminUser < ApplicationRecord
          :rememberable,
          :validatable
 
+  validates :email, uniqueness: true
+
   class << self
     def crawl_post_hook(crawl)
       where(notification: true).each do |x|
