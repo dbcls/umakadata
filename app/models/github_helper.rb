@@ -24,7 +24,7 @@ class GithubHelper
   def self.list_issues(options = {})
     call_github_api do |client, github_repo|
       client.auto_paginate = true
-      client.list_issues(github_repo, options)
+      client.list_issues(github_repo, **options)
     end
   end
 
@@ -58,16 +58,19 @@ class GithubHelper
     retry_count = 0
 
     begin
-      client = Octokit::Client.new(:access_token => Rails.application.credentials.github_token)
-      yield(client, Rails.application.credentials.github_repo)
+      yield client, Rails.application.credentials.github_repo
     rescue Octokit::UnprocessableEntity => e
       message = "#{e.errors.first[:resource]} #{e.errors.first[:code]}"
       message = "#{e.errors.first[:resource]} #{e.errors.first[:message]}" if e.errors.first[:code] == 'custom'
-      raise(Octokit::UnprocessableEntity, message)
+      raise Octokit::UnprocessableEntity, message
     rescue Octokit::ServiceUnavailable => e
-      raise(Octokit::ServiceUnavailable, e.message) if (retry_count += 1) > 3
-      seconds = 5 * 2 ** retry_count # [10s, 20s, 40s]
-      sleep(seconds)
+      raise e if (retry_count += 1) > 3
+
+      sleep(5 * 2**retry_count)
     end
+  end
+
+  def self.client
+    Octokit::Client.new(access_token: Rails.application.credentials.github_token)
   end
 end
