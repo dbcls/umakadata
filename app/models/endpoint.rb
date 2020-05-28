@@ -1,9 +1,9 @@
 class Endpoint < ApplicationRecord
-  has_many :dataset_relations
-  has_many :evaluations
-  has_many :excluding_graphs
-  has_many :resource_uris, class_name: ResourceURI.name
-  has_many :vocabulary_prefixes
+  has_many :dataset_relations, dependent: :destroy
+  has_many :evaluations, dependent: :destroy
+  has_many :excluding_graphs, dependent: :destroy
+  has_many :resource_uris, class_name: ResourceURI.name, dependent: :destroy
+  has_many :vocabulary_prefixes, dependent: :destroy
 
   validates :name, uniqueness: true
   validates :endpoint_url, uniqueness: true
