@@ -56,34 +56,31 @@ class Endpoint < ApplicationRecord
                 f0ffff 5f9ea0 f5f5dc ffa07a 7b68ee].freeze
 
     def create_label
-      name = id.to_s
-      label = if GithubHelper.label_exists?(name)
-                GithubHelper.get_label(name)
-              else
-                GithubHelper.add_label(name, COLORS[(id - 1) % COLORS.size])
-              end
+      return unless GithubHelper.available?
 
-      update(label_id: label[:id]) unless label.nil?
-
-      label
+      if GithubHelper.label_exists?((name = self[:id].to_s))
+        GithubHelper.get_label(name)
+      else
+        GithubHelper.add_label(name, COLORS[(self[:id] - 1) % COLORS.size])
+      end
     end
 
     def create_issue
-      raise(StandardError, "issue for #{name} already exists") if GithubHelper.issue_exists?(name)
+      return unless GithubHelper.available?
 
-      issue = GithubHelper.create_issue(name)
-      update(issue_id: issue[:number]) unless issue.nil?
-
-      issue
+      if GithubHelper.issue_exists?(self[:name])
+        GithubHelper.find_issue_by_title(self[:name])
+      else
+        GithubHelper.create_issue(self[:name])
+      end
     end
 
     def sync_label
-      labels = GithubHelper.labels_for_issue(issue_id)
-      label = labels.select { |label| label[:id] == label_id }.first
+      return unless GithubHelper.available?
 
-      raise(StandardError, "issue for #{name} does not have a label") if label.nil?
+      label = GithubHelper.labels_for_issue(self[:issue_id])&.find { |x| x[:id] == self[:label_id] }
 
-      GithubHelper.update_label(label[:name], name: id.to_s)
+      GithubHelper.update_label(label[:name], name: self[:id].to_s) if label.present?
     end
   end
 
