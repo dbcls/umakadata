@@ -10,6 +10,8 @@ class Endpoint < ApplicationRecord
   validates :issue_id, uniqueness: true, allow_nil: true
   validates :label_id, uniqueness: true, allow_nil: true
 
+  after_create_commit :after_create_callback
+
   scope :active, -> { where(enabled: true) }
 
   def latest_alive_evaluation
@@ -82,7 +84,25 @@ class Endpoint < ApplicationRecord
 
       GithubHelper.update_label(label[:name], name: self[:id].to_s) if label.present?
     end
+
+    def create_forum
+      return unless GithubHelper.available?
+
+      return if (label = create_label).nil? || (issue = create_issue).nil?
+
+      update_columns(label_id: label[:id], issue_id: issue[:number]) # skip callbacks
+
+      GithubHelper.add_labels_to_an_issue(issue[:number], [label[:name], 'endpoints'])
+    end
   end
 
   include GitHubMethods
+
+  private
+
+  def after_create_callback
+    create_forum
+  rescue StandardError => e
+    Rails.logger.error(e)
+  end
 end
