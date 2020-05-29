@@ -7,8 +7,8 @@ class Endpoint < ApplicationRecord
 
   validates :name, uniqueness: true
   validates :endpoint_url, uniqueness: true
-  validates :issue_id, uniqueness: true
-  validates :label_id, uniqueness: true
+  validates :issue_id, uniqueness: true, allow_nil: true
+  validates :label_id, uniqueness: true, allow_nil: true
 
   scope :active, -> { where(enabled: true) }
 
