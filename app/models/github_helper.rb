@@ -20,15 +20,17 @@ class GithubHelper
     call_github_api { |client, github_repo| client.label(github_repo, name) }
   end
 
+  def self.find_issue_by_title(title)
+    issues = call_github_api { |client, github_repo| client.issues(github_repo) }
+    issues.find { |issue| issue[:title] == title }
+  end
+
   def self.label_exists?(name)
-    # idempotent API
-    labels = call_github_api { |client, github_repo| client.labels(github_repo) }
-    !labels.select { |label| label[:name] == name }.empty?
+    get_label(name).present?
   end
 
   def self.issue_exists?(title)
-    issues = call_github_api { |client, github_repo| client.issues(github_repo) }
-    !issues.select { |issue| issue[:title] == title }.empty?
+    find_issue_by_title(title).present?
   end
 
   #
