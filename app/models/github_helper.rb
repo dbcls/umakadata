@@ -68,10 +68,6 @@ class GithubHelper
 
     begin
       yield client, Rails.application.credentials.github_repo
-    rescue Octokit::UnprocessableEntity => e
-      message = "#{e.errors.first[:resource]} #{e.errors.first[:code]}"
-      message = "#{e.errors.first[:resource]} #{e.errors.first[:message]}" if e.errors.first[:code] == 'custom'
-      raise Octokit::UnprocessableEntity, message
     rescue Octokit::ServiceUnavailable => e
       raise e if (retry_count += 1) > 3
 
