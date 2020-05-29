@@ -78,4 +78,8 @@ class GithubHelper
   def self.client
     Octokit::Client.new(access_token: Rails.application.credentials.github_token)
   end
+
+  def self.available?
+    Rails.application.credentials.github_token.present? && Rails.application.credentials.github_repo.present?
+  end
 end
