@@ -46,4 +46,20 @@ ActiveAdmin.register Endpoint do
   filter :endpoint_url
   filter :description_url
   filter :enabled
+
+  batch_action :create_forum do |ids|
+    message = 'The forums for endpoints have been created'
+
+    batch_action_collection.find(ids).each do |endpoint|
+      begin
+        Endpoint.create_forum(endpoint)
+      rescue StandardError => e
+        Rails.logger.error(e)
+        message = e.message
+      end
+    end
+
+    redirect_to collection_path, alert: message
+  end
+
 end
