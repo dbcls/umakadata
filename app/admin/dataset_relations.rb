@@ -7,6 +7,23 @@ ActiveAdmin.register DatasetRelation do
 
   endpoints = -> { Endpoint.all.order(:name).pluck(:name, :id).to_h }
 
+  active_admin_import validate: true,
+                      batch_transaction: true,
+                      headers_rewrites: {
+                        'Id': 'id',
+                        'Endpoint': 'endpoint_id',
+                        'Src endpoint': 'src_endpoint_id',
+                        'Dst endpoint': 'dst_endpoint_id',
+                        'Relation': 'relation'
+                      },
+                      before_batch_import: lambda { |importer|
+                        DatasetRelation.where(id: importer.values_at('id')).delete_all
+                      },
+                      template_object: ActiveAdminImport::Model.new(
+                        hint: 'The headers of CSV should not be modified as download at index page or '\
+                              'should be "id","endpoint_id","src_endpoint_id","dst_endpoint_id","relation"'
+                      )
+
   index do
     selectable_column
     id_column
@@ -23,6 +40,14 @@ ActiveAdmin.register DatasetRelation do
     end
 
     actions
+  end
+
+  csv do
+    column :id
+    column :endpoint_id
+    column :src_endpoint_id
+    column :dst_endpoint_id
+    column :relation
   end
 
   filter :endpoint
