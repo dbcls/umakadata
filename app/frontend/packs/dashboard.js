@@ -25,7 +25,7 @@ $(function () {
       timeout: 10000 // 10 sec
     }).done(function (json, textStatus, jqXHR) {
       drawBars(json.data);
-      drawTable(json.data);
+      drawTable(json.data, json.date.current);
       currentDate = date;
     }).fail(function (jqXHR, textStatus, errorThrown) {
       window.alert(`${textStatus}: ${jqXHR.status} ${errorThrown}`);
@@ -83,7 +83,7 @@ $(function () {
     return 0;
   };
 
-  let drawTable = function (json) {
+  let drawTable = function (json, date) {
     let table = $('tbody#score-table');
 
     table.fadeOut(500);
@@ -92,7 +92,7 @@ $(function () {
     json.sort(score_desc).slice(0, 5).forEach(function (x, i) {
       html += '<tr>';
       html += `<td>${x.score}</td>`;
-      html += `<td><a href="${x.endpoint_url}">${x.name}</a></td>`;
+      html += `<td><a href="${Routes.endpoint_path({id: x.id}, {date: date})}">${x.name}</a></td>`;
       html += `<td><a href="${x.endpoint_url}" target="_blank">${x.endpoint_url}</a></td>`;
       html += '</tr>';
     });
