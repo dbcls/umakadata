@@ -1,8 +1,8 @@
 ActiveAdmin.register Endpoint do
   menu priority: 2
 
-  permit_params :name, :endpoint_url, :description_url, :enabled,
-                :viewer_url, :issue_id, :label_id
+  permit_params :name, :endpoint_url, :description_url, :enabled, :viewer_url, :issue_id, :label_id,
+                resource_uris_attributes: %i[id uri allow deny regex case_insensitive created_at updated_at endpoint_id _destroy]
 
   config.sort_order = 'id_asc'
 
@@ -62,4 +62,59 @@ ActiveAdmin.register Endpoint do
     redirect_to collection_path, alert: message
   end
 
+  show do
+    attributes_table do
+      row :name
+      row :endpoint_url
+      row :description_url
+      row :enabled
+      row :viewer_url
+      row :issue_id
+      row :label_id
+      row :created_at
+      row :updated_at
+    end
+
+    panel 'List of Resource URI' do
+      table_for endpoint.resource_uris do
+        column :id
+        column :uri
+        column :allow
+        column :deny
+        column :regex
+        column :case_insensitive
+        column :created_at
+        column :updated_at
+      end
+    end
+
+    panel 'List of Vocabulary Prefix' do
+      table_for endpoint.vocabulary_prefixes do
+        column :id
+        column :uri
+        column :created_at
+        column :updated_at
+      end
+    end
+
+    active_admin_comments
+  end
+
+  form do |f|
+    f.semantic_errors
+
+    f.inputs
+
+    f.inputs do
+      f.has_many :resource_uris, heading: 'List of Resource URI', allow_destroy: true do |t|
+        t.input :uri, label: 'URI'
+        t.input :allow
+        t.input :deny
+        t.input :regex
+        t.input :case_insensitive
+      end
+    end
+
+    f.actions
+  end
 end

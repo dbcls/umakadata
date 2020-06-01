@@ -5,6 +5,8 @@ class Endpoint < ApplicationRecord
   has_many :resource_uris, class_name: ResourceURI.name, dependent: :destroy
   has_many :vocabulary_prefixes, dependent: :destroy
 
+  accepts_nested_attributes_for :resource_uris, allow_destroy: true
+
   validates :name, uniqueness: true
   validates :endpoint_url, uniqueness: true
   validates :issue_id, uniqueness: true, allow_nil: true
