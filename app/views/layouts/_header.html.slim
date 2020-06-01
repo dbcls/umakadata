@@ -1,6 +1,8 @@
 - current = yield(:current)
 
-.header
+script#common-header-and-footer__script type='text/javascript' src='https://dbcls.rois.ac.jp/DBCLS-common-header-footer/v2/script/common-header-and-footer.js' style='display: block'
+
+.header.pt-4
   nav.navbar.navbar-light
     = link_to image_tag(asset_pack_path('media/images/icon.png'), class: 'yummydata-logo'), '/'
     span.page-title-header YummyData
