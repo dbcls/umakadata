@@ -17,7 +17,7 @@ ActiveAdmin.register ResourceURI do
     actions
   end
 
-  filter :endpoint
+  filter :endpoint, as: :select, collection: Endpoint.all.order(:id), member_label: ->(x) { "#{x.id} - #{x.name}" }
   filter :uri
   filter :allow
   filter :deny
@@ -53,7 +53,7 @@ ActiveAdmin.register ResourceURI do
   form do |f|
     f.semantic_errors
     f.inputs do
-      input :endpoint
+      input :endpoint, as: :select, collection: Endpoint.all.order(:id), member_label: ->(x) { "#{x.id} - #{x.name}" }
       input :uri, label: 'URI'
       input :allow
       input :deny
