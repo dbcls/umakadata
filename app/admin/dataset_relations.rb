@@ -75,9 +75,9 @@ ActiveAdmin.register DatasetRelation do
   form do |f|
     f.semantic_errors
     f.inputs do
-      f.input :endpoint, member_label: endpoint_label, include_blank: false
-      f.input :src_endpoint_id, as: :select, collection: endpoints.call, member_label: endpoint_label, include_blank: false
-      f.input :dst_endpoint_id, as: :select, collection: endpoints.call, member_label: endpoint_label, include_blank: false
+      input :endpoint, member_label: endpoint_label, include_blank: false
+      input :src_endpoint_id, as: :select, collection: endpoints.call, member_label: endpoint_label, include_blank: false
+      input :dst_endpoint_id, as: :select, collection: endpoints.call, member_label: endpoint_label, include_blank: false
     end
     f.actions do
       add_create_another_checkbox
