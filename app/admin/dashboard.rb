@@ -24,12 +24,12 @@ ActiveAdmin.register_page 'Dashboard' do
         end
       else
         div class: 'no_jobs' do
-          span 'No crawling in progress'
+          span 'No crawls in progress'
         end
       end
     end
 
-    panel 'Scheduled crawlings' do
+    panel 'Scheduled crawls' do
       if (jobs = controller.instance_variable_get(:@scheduled)).present?
         table_for jobs do
           column :start_at
@@ -37,7 +37,7 @@ ActiveAdmin.register_page 'Dashboard' do
         end
       else
         div class: 'no_jobs' do
-          span 'No scheduled crawlings'
+          span 'No scheduled crawls'
         end
       end
     end
@@ -52,7 +52,7 @@ ActiveAdmin.register_page 'Dashboard' do
                         {
                           started_at: x.started_at.to_formatted_s,
                           processing: Endpoint.where(id: x.processing.map(&:last)).order(:id).pluck(:id, :name),
-                          finished: x.evaluations.count - (x.processing.size),
+                          finished: x.evaluations.count - x.processing.size,
                           total: total
                         }
                       end
