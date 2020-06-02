@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_03_063359) do
+ActiveRecord::Schema.define(version: 2020_06_02_024122) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(version: 2020_02_03_063359) do
   create_table "crawls", force: :cascade do |t|
     t.datetime "started_at"
     t.datetime "finished_at"
+    t.boolean "skip"
     t.index ["finished_at"], name: "index_crawls_on_finished_at"
     t.index ["started_at"], name: "index_crawls_on_started_at"
   end

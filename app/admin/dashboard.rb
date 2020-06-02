@@ -34,6 +34,7 @@ ActiveAdmin.register_page 'Dashboard' do
         table_for jobs do
           column :start_at
           column 'endpoint order', :order
+          column :skip
         end
       else
         div class: 'no_jobs' do
@@ -64,7 +65,8 @@ ActiveAdmin.register_page 'Dashboard' do
         date = Date.current.since(n.days)
         {
           start_at: Crawl.start_time(date).to_formatted_s,
-          order: Crawl.queue_order(date)
+          order: Crawl.queue_order(date),
+          skip: Crawl.skipped.on(date).present?
         }
       end
     end

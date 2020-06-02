@@ -11,6 +11,7 @@ class RunnerJob
 
     return unless scheduled_time? && crawl_not_performed?
     return if Crawl.processing.present?
+    return if Crawl.skipped.on(Date.current).present?
 
     Crawl.start!(*id)
   end
