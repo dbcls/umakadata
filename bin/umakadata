@@ -11,6 +11,9 @@ module Umakadata
   class CLI < Thor
     desc 'admin', 'Commands for admin'
     subcommand 'admin', Umakadata::Tasks::Admin
+
+    desc 'crawler', 'Commands for crawler'
+    subcommand 'crawler', Umakadata::Tasks::Crawler
   end
 end
 

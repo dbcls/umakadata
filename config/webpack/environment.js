@@ -9,17 +9,11 @@ environment.plugins.prepend('Provide',
   })
 );
 
-// To enable jQuery for $ in browser console
-environment.loaders.append('expose', {
-  test: require.resolve('jquery'),
-  use: [{
-    loader: 'expose-loader',
-    options: '$'
-  }]
-});
-
 const erb = require('./loaders/erb');
 environment.loaders.prepend('erb', erb);
+
+const eslint =  require('./loaders/eslint')
+environment.loaders.append('eslint', eslint)
 
 module.exports = environment;
 

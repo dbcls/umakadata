@@ -1,8 +1,8 @@
 ActiveAdmin.register Endpoint do
   menu priority: 2
 
-  permit_params :name, :endpoint_url, :description_url, :enabled,
-                :viewer_url, :issue_id, :label_id
+  permit_params :name, :endpoint_url, :description_url, :enabled, :viewer_url, :issue_id, :label_id,
+                resource_uris_attributes: %i[id uri allow deny regex case_insensitive created_at updated_at endpoint_id _destroy]
 
   config.sort_order = 'id_asc'
 
@@ -47,79 +47,74 @@ ActiveAdmin.register Endpoint do
   filter :description_url
   filter :enabled
 
-  controller do
-    def after_modification(succeeded)
-      if succeeded
-        if @endpoint.errors.any?
-          flash[:warning] = @endpoint.errors.full_messages.join('<br>').html_safe
-        end
-        redirect_to admin_endpoint_path(id: @endpoint.id)
-      else
-        flash.now[:error] = @endpoint.errors.full_messages.join('<br>').html_safe
-        @endpoint = Endpoint.new(permitted_params[:endpoint])
-        render :new
-      end
-    end
+  batch_action :create_forum do |ids|
+    message = 'The forums for endpoints have been created'
 
-    def create_issue(endpoint)
-      begin
-        label = endpoint.create_label
-        issue = endpoint.create_issue
-        GithubHelper.add_labels_to_an_issue(issue[:number], [label[:name]])
-        GithubHelper.add_labels_to_an_issue(endpoint.issue_id, ['endpoints'])
-      rescue => e
-        @endpoint.errors.add(:base, "Error occured during using Github API!\n\n#{e.message}")
-      end
-    end
-
-    def create
-      @endpoint = Endpoint.new(permitted_params[:endpoint])
-      create_issue(@endpoint)
-      after_modification(@endpoint.save)
-    end
-
-    def update
-      @endpoint = Endpoint.find(permitted_params[:id])
-      after_modification(@endpoint.update(permitted_params[:endpoint]))
-    end
-  end
-
-  batch_action :create_label do |ids|
-    message = 'The endpoints have created labels'
     batch_action_collection.find(ids).each do |endpoint|
       begin
-        label = Endpoint.create_label(endpoint)
-        next if endpoint.issue_id.nil?
-        GithubHelper.add_labels_to_an_issue(endpoint.issue_id, [label[:name], 'endpoints']) unless label.nil?
-      rescue => e
+        Endpoint.create_forum(endpoint)
+      rescue StandardError => e
+        Rails.logger.error(e)
         message = e.message
       end
     end
+
     redirect_to collection_path, alert: message
   end
 
-  batch_action :create_issue do |ids|
-    message = 'The endpoints have created issues'
-    batch_action_collection.find(ids).each do |endpoint|
-      begin
-        Endpoint.create_issue(endpoint)
-        GithubHelper.add_labels_to_an_issue(endpoint.issue_id, ['endpoints'])
-      rescue => e
-        message = e.message
+  show do
+    attributes_table do
+      row :name
+      row :endpoint_url
+      row :description_url
+      row :enabled
+      row :viewer_url
+      row :issue_id
+      row :label_id
+      row :created_at
+      row :updated_at
+    end
+
+    panel 'List of Resource URI' do
+      table_for endpoint.resource_uris do
+        column :id
+        column :uri
+        column :allow
+        column :deny
+        column :regex
+        column :case_insensitive
+        column :created_at
+        column :updated_at
       end
     end
-    redirect_to collection_path, alert: message
+
+    panel 'List of Vocabulary Prefix' do
+      table_for endpoint.vocabulary_prefixes do
+        column :id
+        column :uri
+        column :created_at
+        column :updated_at
+      end
+    end
+
+    active_admin_comments
   end
 
-  batch_action :sync_label do |ids|
-    message = 'The endpoints have synchronized label for issue'
-    batch_action_collection.find(ids).each do |endpoint|
-      begin
-        Endpoint.sync_label(endpoint)
-      rescue => e
-        message = e.message
+  form do |f|
+    f.semantic_errors
+
+    f.inputs
+
+    f.inputs do
+      f.has_many :resource_uris, heading: 'List of Resource URI', allow_destroy: true do |t|
+        t.input :uri, label: 'URI'
+        t.input :allow
+        t.input :deny
+        t.input :regex
+        t.input :case_insensitive
       end
     end
-    redirect_to collection_path, alert: message
+
+    f.actions
   end
 end

@@ -26,6 +26,30 @@ module Umakadata
         Crawl.start!(*id)
       end
 
+      desc 'set', 'set crawl activity'
+      method_option :active, type: :boolean
+
+      def set(date)
+        require_relative '../../config/application'
+        Rails.application.initialize!
+
+        date = Date.parse(date)
+
+        raise ArgumentError, 'Past date' if date < Date.current
+        raise ArgumentError, 'Already started' if date == Date.current && Crawl.start_time(date) <= Time.current
+
+        crawl_time = Crawl.start_time(date).to_formatted_s
+
+        return unless yes? "#{options[:active] == false ? 'Disable' : 'Enable'} crawl on #{crawl_time} ? [y/n]:", :bold
+
+        if options[:active] == false
+          Crawl.create!(started_at: Crawl.start_time(date)) unless Crawl.on(date)
+          Crawl.on(date)&.update!(skip: true)
+        else
+          Crawl.skipped.on(date)&.destroy!
+        end
+      end
+
       map run: 'execute'
     end
   end

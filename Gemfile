@@ -33,10 +33,10 @@ gem 'webpacker'
 
 ## optimization
 gem 'bootsnap', '>= 1.1.0', require: false
-gem 'turbolinks', '~> 5'
 
 ## utility
 gem 'activeadmin', '~> 1.4'
+gem 'active_admin_import', '~> 4.2'
 gem 'devise', '~> 4.5'
 gem 'dotenv-rails', '~> 2.7', '>= 2.7.5'
 gem 'jbuilder', '~> 2.5'
