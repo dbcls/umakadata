@@ -1,8 +1,9 @@
-import 'bootstrap/dist/js/bootstrap'
-import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min'
+import 'bootstrap/dist/js/bootstrap';
+import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min';
 import Chart from 'chart.js';
+import Routes from '../../javascripts/js-routes.js.erb';
 
-import '../../stylesheets/endpoint'
+import '../../stylesheets/endpoint';
 
 $(function () {
   let cal = $('#calendar');
@@ -224,7 +225,7 @@ $(function () {
   };
 
   $('#update-date').on('click', function () {
-    location.href = Routes.endpoint_index_path({date: cal.val()})
+    location.href = Routes.endpoint_index_path({date: cal.val()});
   });
 
   draw_scores(currentDate);

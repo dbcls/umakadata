@@ -1,8 +1,9 @@
-import 'bootstrap/dist/js/bootstrap'
-import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min'
+import 'bootstrap/dist/js/bootstrap';
+import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min';
 import Chart from 'chart.js';
+import Routes from '../javascripts/js-routes.js.erb';
 
-import '../stylesheets/dashboard'
+import '../stylesheets/dashboard';
 
 $(function () {
   let cal = $('#calendar');
@@ -23,6 +24,7 @@ $(function () {
       contentType: 'application/json; charset=UTF-8',
       url: Routes.endpoint_index_path({date: date}),
       timeout: 10000 // 10 sec
+      // eslint-disable-next-line no-unused-vars
     }).done(function (json, textStatus, jqXHR) {
       drawBars(json.data);
       drawTable(json.data, json.date.current);
@@ -89,7 +91,7 @@ $(function () {
     table.fadeOut(500);
 
     let html = '';
-    json.sort(score_desc).slice(0, 5).forEach(function (x, i) {
+    json.sort(score_desc).slice(0, 5).forEach(function (x) {
       html += '<tr>';
       html += `<td>${x.score}</td>`;
       html += `<td><a href="${Routes.endpoint_path({id: x.id}, {date: date})}">${x.name}</a></td>`;

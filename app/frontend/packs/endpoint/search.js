@@ -1,7 +1,7 @@
-import 'bootstrap/dist/js/bootstrap'
-import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min'
+import 'bootstrap/dist/js/bootstrap';
+import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min';
 
-import '../../stylesheets/endpoint'
+import '../../stylesheets/endpoint';
 
 $(function () {
   let $calendar = $('#search_form_date');

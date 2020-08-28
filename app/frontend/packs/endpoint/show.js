@@ -1,8 +1,9 @@
-import 'bootstrap/dist/js/bootstrap'
-import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min'
+import 'bootstrap/dist/js/bootstrap';
+import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min';
 import Chart from 'chart.js';
+import Routes from '../../javascripts/js-routes.js.erb';
 
-import '../../stylesheets/endpoint'
+import '../../stylesheets/endpoint';
 
 $(function () {
   let $calendar = $('#calendar');
@@ -17,7 +18,7 @@ $(function () {
 
   let currentDate = $calendar.val();
 
-  let $progressDialog = $("#progress-dialog");
+  let $progressDialog = $('#progress-dialog');
   let $scores = $('#scores');
   let $histories = $('#histories');
   let $updateDate = $('#update-date');
@@ -34,21 +35,21 @@ $(function () {
         labels: labels,
         datasets: [
           {
-            label: "Target",
-            backgroundColor: "rgba(151,187,205,0.2)",
-            borderColor: "rgba(151,187,205,1)",
-            pointBorderColor: "rgba(151,187,205,1)",
-            pointBackgroundColor: "#fff",
+            label: 'Target',
+            backgroundColor: 'rgba(151,187,205,0.2)',
+            borderColor: 'rgba(151,187,205,1)',
+            pointBorderColor: 'rgba(151,187,205,1)',
+            pointBackgroundColor: '#fff',
             data: labels.map(function (x) {
               return data.scores[x];
             })
           },
           {
-            label: "Average",
-            backgroundColor: "rgba(220,220,220,0.5)",
-            borderColor: "rgba(220,220,220,1)",
-            pointBorderColor: "rgba(220,220,220,1)",
-            pointBackgroundColor: "#fff",
+            label: 'Average',
+            backgroundColor: 'rgba(220,220,220,0.5)',
+            borderColor: 'rgba(220,220,220,1)',
+            pointBorderColor: 'rgba(220,220,220,1)',
+            pointBackgroundColor: '#fff',
             data: labels.map(function (x) {
               return data.average[x];
             })
@@ -60,7 +61,7 @@ $(function () {
       }
     };
 
-    return new Chart(document.getElementById('scores').getContext('2d'), config)
+    return new Chart(document.getElementById('scores').getContext('2d'), config);
   };
 
   let chartHistories = function (json) {
@@ -79,36 +80,36 @@ $(function () {
       x['fill'] = false;
 
       switch (x.label) {
-        case 'availability':
-          x['backgroundColor'] = 'rgba(220, 220, 220, 0.2)';
-          x['borderColor'] = x['pointBorderColor'] = 'rgba(220, 220, 220, 1)';
-          break;
-        case 'freshness':
-          x['backgroundColor'] = 'rgba(54, 162, 235, 0.2)';
-          x['borderColor'] = x['pointBorderColor'] = 'rgba(54, 162, 235, 1)';
-          break;
-        case 'operation':
-          x['backgroundColor'] = 'rgba(255, 99, 132, 0.2)';
-          x['borderColor'] = x['pointBorderColor'] = 'rgba(255, 99, 132, 1)';
-          break;
-        case 'usefulness':
-          x['backgroundColor'] = 'rgba(255, 206, 86, 0.2)';
-          x['borderColor'] = x['pointBorderColor'] = 'rgba(255, 206, 86, 1)';
-          break;
-        case 'validity':
-          x['backgroundColor'] = 'rgba(75, 192, 192, 0.2)';
-          x['borderColor'] = x['pointBorderColor'] = 'rgba(75, 192, 192, 1)';
-          break;
-        case 'performance':
-          x['backgroundColor'] = 'rgba(21, 7, 119, 0.2)';
-          x['borderColor'] = x['pointBorderColor'] = 'rgba(21, 7, 119, 1)';
-          break;
-        case 'rank':
-          x['backgroundColor'] = 'rgba(151, 187, 205, 0.2)';
-          x['borderColor'] = x['pointBorderColor'] = 'rgba(151, 187, 205, 1)';
-          break;
-        default:
-          break;
+      case 'availability':
+        x['backgroundColor'] = 'rgba(220, 220, 220, 0.2)';
+        x['borderColor'] = x['pointBorderColor'] = 'rgba(220, 220, 220, 1)';
+        break;
+      case 'freshness':
+        x['backgroundColor'] = 'rgba(54, 162, 235, 0.2)';
+        x['borderColor'] = x['pointBorderColor'] = 'rgba(54, 162, 235, 1)';
+        break;
+      case 'operation':
+        x['backgroundColor'] = 'rgba(255, 99, 132, 0.2)';
+        x['borderColor'] = x['pointBorderColor'] = 'rgba(255, 99, 132, 1)';
+        break;
+      case 'usefulness':
+        x['backgroundColor'] = 'rgba(255, 206, 86, 0.2)';
+        x['borderColor'] = x['pointBorderColor'] = 'rgba(255, 206, 86, 1)';
+        break;
+      case 'validity':
+        x['backgroundColor'] = 'rgba(75, 192, 192, 0.2)';
+        x['borderColor'] = x['pointBorderColor'] = 'rgba(75, 192, 192, 1)';
+        break;
+      case 'performance':
+        x['backgroundColor'] = 'rgba(21, 7, 119, 0.2)';
+        x['borderColor'] = x['pointBorderColor'] = 'rgba(21, 7, 119, 1)';
+        break;
+      case 'rank':
+        x['backgroundColor'] = 'rgba(151, 187, 205, 0.2)';
+        x['borderColor'] = x['pointBorderColor'] = 'rgba(151, 187, 205, 1)';
+        break;
+      default:
+        break;
       }
     });
 
@@ -122,7 +123,7 @@ $(function () {
             type: 'time',
             time: {
               parser: 'YYYY-MM-DD',
-              unit: "day",
+              unit: 'day',
               tooltipFormat: 'll'
             },
             scaleLabel: {
@@ -171,14 +172,14 @@ $(function () {
     });
   };
 
-  $progressDialog.on('shown.bs.modal', function (e) {
+  $progressDialog.on('shown.bs.modal', function () {
     setTimeout(function () {
       loadData();
     }, 100);
   });
 
   $updateDate.on('click', function () {
-    location.href = Routes.endpoint_path($scores.data('endpoint'), {date: $calendar.val()})
+    location.href = Routes.endpoint_path($scores.data('endpoint'), {date: $calendar.val()});
   });
 
   $progressDialog.modal('show');
