@@ -33,7 +33,6 @@ gem 'webpacker'
 
 ## optimization
 gem 'bootsnap', '>= 1.1.0', require: false
-gem 'turbolinks', '~> 5'
 
 ## utility
 gem 'activeadmin', '~> 1.4'
