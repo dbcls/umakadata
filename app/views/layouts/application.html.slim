@@ -9,11 +9,11 @@ html[lang='en']
     meta[name='author' content='']
     link[rel='icon' href='favicon.ico']
     title= title(yield(:title))
-    = javascript_pack_tag 'application'
-    = stylesheet_pack_tag 'application'
-    = yield :head
     = csrf_meta_tags
     = csp_meta_tag
+    = stylesheet_pack_tag 'application'
+    = javascript_pack_tag 'application'
+    = yield :head
     = analytics_init if Rails.env.production?
 
   body
