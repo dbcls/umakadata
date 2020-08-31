@@ -1,7 +1,6 @@
 @import "~bootstrap/scss/bootstrap";
-@import "components/header";
-@import "components/sidebar";
 @import "components/tooltip";
+
 $fa-font-path: "~font-awesome/fonts";
 @import '~font-awesome/scss/font-awesome';
 @import "variables";
@@ -26,18 +25,128 @@ h3, .h3 {
   font-size: 1.2rem;
 }
 
-.sub-header {
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
+/*
+ * Header
+ */
+#header-wrapper {
+  $header-height: 56px;
+
+  position: -webkit-sticky;
+  position: sticky;
+  align-self: flex-start;
+  top: 24px;
+  margin-top: 0;
+  width: 100vw;
+  background-color: $umakadata-background-color;
+  z-index: 1000;
+
+  font-family: $font-family-base;
+  transition: margin 0.25s ease-out;
+  -webkit-transition: margin 0.25s ease-out;
+  -moz-transition: margin 0.25s ease-out;
+  -o-transition: margin 0.25s ease-out;
+
+  #header-title {
+    font-family: Roboto-Regular;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .navbar-toggler {
+    border: none;
+    outline: none;
+  }
+
+  .yummydata-logo {
+    height: 40px;
+    width: 48px;
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    display: none;
+    margin-top: -$header-height;
+  }
 }
 
-.navbar-fixed-top {
-  border: 0;
+/*
+ * Sidebar
+ */
+#sidebar-wrapper {
+  $sidebar-width: 14rem;
+
+  position: -webkit-sticky;
+  position: sticky;
+  align-self: flex-start;
+  top: 24px;
+  margin-left: -$sidebar-width;
+
+  font-family: $font-family-base;
+  transition: margin 0.25s ease-out;
+  -webkit-transition: margin 0.25s ease-out;
+  -moz-transition: margin 0.25s ease-out;
+  -o-transition: margin 0.25s ease-out;
+
+  .sidebar-heading {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .list-group {
+    width: $sidebar-width;
+  }
+
+  @media (min-width: 768px) {
+    margin-left: 0;
+  }
+}
+
+#header-wrapper, #sidebar-wrapper {
+  .list-group {
+    .list-group-item {
+      padding: 0;
+      background-color: unset;
+      border: unset;
+
+      & > a {
+        text-decoration: none;
+        margin: 0 10px;
+
+        &:hover,
+        &:focus {
+          background: $umakadata-button-background-color;
+          text-decoration: none;
+        }
+      }
+
+      &.active > a {
+        color: #fff;
+        background: $umakadata-button-background-color;
+      }
+    }
+  }
 }
 
 /*
  * Main content
  */
+#page-content-wrapper {
+  padding: 10px;
+
+  .white-frame {
+    background: #FFFFFF;
+    box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.10), 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+  }
+
+  @media (min-width: 768px) {
+    min-width: 0;
+    width: 100%;
+    padding: 10px;
+  }
+}
+
 main .container {
   background: #FFFFFF;
   box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.10), 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -165,12 +274,9 @@ ul.no-bullets {
   margin-bottom: 15px;
 }
 
-.yummydata-logo {
-  margin-bottom: 20px;
-}
-
 .yummydata-logo-background {
   position: fixed;
-  left: 0px;
-  bottom: 0px;
+  left: 0;
+  bottom: 0;
+  z-index: -1000;
 }

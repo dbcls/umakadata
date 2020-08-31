@@ -1,25 +1,24 @@
 - provide :current, 'contact'
 - provide :title, 'Contact us'
 
-.container
-  h3.page-title-header Contact Us
+h3.page-title-header Contact Us
 
-  div.page-title-body
-    | Send a message to us using the form below.
+div.page-title-body
+  | Send a message to us using the form below.
 
-    hr
+  hr
 
-    - flash.each do |key, value|
-      = content_tag(:div, value, class: "alert alert-#{key}", role: 'alert')
+  - flash.each do |key, value|
+    = content_tag(:div, value, class: "alert alert-#{key}", role: 'alert')
 
-    = simple_form_for @inquiry do |f|
-      = f.error_notification
-      = f.input :name
-      = f.input :email
-      = f.input :message, as: :text, input_html: {rows: 10}
+  = simple_form_for @inquiry do |f|
+    = f.error_notification
+    = f.input :name
+    = f.input :email
+    = f.input :message, as: :text, input_html: {rows: 10}
 
-      - if @use_recaptcha
-        .form-actions.d-flex.flex-row-reverse.mb-2
-          = recaptcha_tags
-      .form-actions.d-flex.flex-row-reverse
-        = f.button :submit, :value => 'Send request', class: 'see-all-endpoints'
+    - if @use_recaptcha
+      .form-actions.d-flex.flex-row-reverse.mb-2
+        = recaptcha_tags
+    .form-actions.d-flex.flex-row-reverse
+      = f.button :submit, :value => 'Send request', class: 'see-all-endpoints'
