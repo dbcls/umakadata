@@ -3,8 +3,8 @@ const webpack = require('webpack');
 
 environment.plugins.prepend('Provide',
   new webpack.ProvidePlugin({
-    $: 'jquery/dist/jquery',
-    jQuery: 'jquery/dist/jquery',
+    $: 'jquery',
+    jQuery: 'jquery',
     Popper: 'popper.js/dist/popper'
   })
 );
@@ -12,8 +12,8 @@ environment.plugins.prepend('Provide',
 const erb = require('./loaders/erb');
 environment.loaders.prepend('erb', erb);
 
-const eslint =  require('./loaders/eslint')
-environment.loaders.append('eslint', eslint)
+const eslint =  require('./loaders/eslint');
+environment.loaders.prepend('eslint', eslint);
 
 module.exports = environment;
 
