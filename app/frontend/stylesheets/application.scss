@@ -25,6 +25,57 @@ h3, .h3 {
   font-size: 1.2rem;
 }
 
+a {
+  text-decoration: underline;
+  color: $umakadata-text-color;
+}
+
+ul.no-bullets {
+  list-style: none;
+  padding: 0;
+}
+
+table.table {
+  tr {
+    font-family: $font-family-base;
+    color: $umakadata-text-color;
+  }
+
+  th {
+    background-color: #f9f9f9;
+    color: #9A9A9A;
+    border-style: none;
+    font-weight: normal;
+  }
+
+  td {
+    color: #000000;
+    padding-top: 15px;
+  }
+
+  a {
+    color: #000000;
+  }
+
+  &.table-striped > tbody > tr {
+    &:nth-of-type(even) {
+      background-color: #FFFFFF;
+    }
+
+    &:nth-of-type(odd) {
+      background-color: #f9f9f9;
+    }
+  }
+}
+
+.datepicker {
+  table {
+    th {
+      color: #73879c;
+    }
+  }
+}
+
 /*
  * Header
  */
@@ -134,8 +185,30 @@ h3, .h3 {
 #page-content-wrapper {
   padding: 10px;
 
+  section {
+    & + section {
+      margin-top: 1rem;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  ul {
+    li {
+      margin-bottom: 10px;
+    }
+  }
+
   .white-frame {
     background: #FFFFFF;
+    box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.10), 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+  }
+
+  .gray-frame {
+    background: #F7F7F7;
     box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.10), 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     border-radius: 4px;
   }
@@ -147,85 +220,30 @@ h3, .h3 {
   }
 }
 
-main .container {
-  background: #FFFFFF;
-  box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.10), 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  border-radius: 4px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  margin-left: 0 !important;
-  max-width: 100% !important;
-
-  ul {
-    li {
-      margin-bottom: 10px;
-    }
-  }
-
-  & + .container {
-    margin-top: 1.5rem;
-  }
-
-  .sub-container {
-    background: #F7F7F7;
-    box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.10), 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    border-radius: 4px;
-    padding: 15px;
-
-    & + .sub-container {
-      margin-top: 1rem;
-    }
-  }
-}
-
-a {
-  text-decoration: underline;
+.date-picker-wrapper {
+  font-family: Roboto-Medium;
+  font-size: 12px;
   color: $umakadata-text-color;
-}
 
-table {
-  tr {
-    color: $umakadata-text-color;
+  .date-input {
+    width: 100px;
+    height: 24px;
 
+    text-align: center;
+    border: 2px $umakadata-text-color solid;
   }
 
-  &.endpoint-list {
-    tr {
-      font-family: $font-family-base;
-      height: 50px;
-
-      th {
-        color: #9A9A9A;
-        border-style: none;
-        font-weight: normal;
-      }
-
-      td {
-        color: #000000;
-        padding-top: 15px;
-      }
-
-      a {
-        color: #000000;
-      }
-    }
-  }
-
-  &.table-striped > tbody > tr {
-    &:nth-of-type(even) {
-      background-color: #FFFFFF;
-    }
-
-    &:nth-of-type(odd) {
-      background-color: #f9f9f9;
-    }
+  .btn {
+    height: 24px;
+    color: #FFFFFF;
+    background: $umakadata-text-color;
+    padding-top: 2px;
   }
 }
 
-ul.no-bullets {
-  list-style: none;
-  padding: 0;
-}
+
+
+// =====
 
 .btn {
   font-size: 14px;

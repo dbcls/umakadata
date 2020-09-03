@@ -1,31 +1,30 @@
 - current = yield(:current)
 
-#sidebar-wrapper
-  .sidebar-heading
-    = link_to image_tag(asset_pack_path('media/images/logo.png'), class: 'yummydata-logo'), '/'
+.sidebar-heading
+  = link_to image_tag(asset_pack_path('media/images/logo.png'), class: 'yummydata-logo'), '/'
 
-  ul.list-group.list-group-flush
-    li.list-group-item.list-group-item-action class="#{'dashboard' == current ? 'active' : ''}"
-      = link_to 'DASHBOARD', root_path, class: 'nav-link'
+ul.list-group.list-group-flush
+  li.list-group-item.list-group-item-action class="#{'dashboard' == current ? 'active' : ''}"
+    = link_to 'DASHBOARD', root_path, class: 'nav-link'
 
-    li.list-group-item.list-group-item-action class="#{'about' == current ? 'active' : ''}"
-      = link_to 'ABOUT', about_path, class: 'nav-link'
+  li.list-group-item.list-group-item-action class="#{'about' == current ? 'active' : ''}"
+    = link_to 'ABOUT', about_path, class: 'nav-link'
 
-    li.list-group-item.list-group-item-action class="#{'endpoints' == current ? 'active' : ''}"
-      = link_to 'RANKED ENDPOINTS', endpoint_index_path, class: 'nav-link'
+  li.list-group-item.list-group-item-action class="#{'endpoints' == current ? 'active' : ''}"
+    = link_to 'RANKED ENDPOINTS', endpoint_index_path, class: 'nav-link'
 
-    li.list-group-item.list-group-item-action class="#{'search' == current ? 'active' : ''}"
-      = link_to 'ENDPOINT SEARCH', endpoint_search_path, class: 'nav-link'
+  li.list-group-item.list-group-item-action class="#{'search' == current ? 'active' : ''}"
+    = link_to 'ENDPOINT SEARCH', endpoint_search_path, class: 'nav-link'
 
-    li.list-group-item.list-group-item-action class="#{'graph' == current ? 'active' : ''}"
-      = link_to 'LINK GRAPH', endpoint_graph_path, class: 'nav-link'
+  li.list-group-item.list-group-item-action class="#{'graph' == current ? 'active' : ''}"
+    = link_to 'LINK GRAPH', endpoint_graph_path, class: 'nav-link'
 
-    - if (repo = Rails.application.credentials.github_repo).present?
-      li.list-group-item.list-group-item-action class="#{'forum' == current ? 'active' : ''}"
-        = link_to 'FORUM', "https://github.com/#{repo}/issues?q=is:open+label:endpoints", class: 'nav-link', target: '_blank'
+  - if (repo = Rails.application.credentials.github_repo).present?
+    li.list-group-item.list-group-item-action class="#{'forum' == current ? 'active' : ''}"
+      = link_to 'FORUM', "https://github.com/#{repo}/issues?q=is:open+label:endpoints", class: 'nav-link', target: '_blank'
 
-    li.list-group-item.list-group-item-action class="#{'contact' == current ? 'active' : ''}"
-      = link_to 'CONTACT US', inquiries_path, class: 'nav-link'
+  li.list-group-item.list-group-item-action class="#{'contact' == current ? 'active' : ''}"
+    = link_to 'CONTACT US', inquiries_path, class: 'nav-link'
 
-    li.list-group-item.list-group-item-action class="#{'terms' == current ? 'active' : ''}"
-      = link_to 'TERMS AND CONDITIONS', terms_path, class: 'nav-link'
+  li.list-group-item.list-group-item-action class="#{'terms' == current ? 'active' : ''}"
+    = link_to 'TERMS AND CONDITIONS', terms_path, class: 'nav-link'

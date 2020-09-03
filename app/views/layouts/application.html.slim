@@ -13,20 +13,26 @@ html[lang='en']
     = csp_meta_tag
     = stylesheet_pack_tag 'application'
     = javascript_pack_tag 'application'
-    = yield :head
     = analytics_init if Rails.env.production?
+    = yield :head
 
   body
-    = render partial: 'layouts/header'
+    / script#common-header-and-footer__script type='text/javascript' src='https://dbcls.rois.ac.jp/DBCLS-common-header-footer/v2/script/common-header-and-footer.js' style='display: block'
+
+    header#header-wrapper
+      = render partial: 'layouts/header'
 
     #wrapper.d-flex
-      = render partial: 'layouts/sidebar'
+      nav#sidebar-wrapper
+        = render partial: 'layouts/sidebar'
 
-      #page-content-wrapper
+      main#page-content-wrapper
         - if (msg = flash[:failure])
           .alert.alert-danger
             = msg
-        .container-fluid.white-frame
-          == yield
 
-      = image_tag(asset_pack_path('media/images/logo-background.png'), class: 'yummydata-logo-background')
+        == yield
+
+    = image_tag(asset_pack_path('media/images/logo-background.png'), class: 'yummydata-logo-background')
+
+    = yield :javascript

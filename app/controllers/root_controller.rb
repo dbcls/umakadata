@@ -5,6 +5,9 @@ class RootController < ApplicationController
   def dashboard
     @date = date_for_crawl
     @metrics = metrics
+    @evaluations = if (crawl = Crawl.on(@date[:current])).present?
+                     Evaluation.preload(:endpoint).where(crawl_id: crawl.id).order(score: :desc)
+                   end
   end
 
   # GET /inquiry

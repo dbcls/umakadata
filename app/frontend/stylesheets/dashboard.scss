@@ -2,24 +2,65 @@
 @import "~bootstrap/scss/variables";
 @import "~bootstrap-datepicker/dist/css/bootstrap-datepicker3";
 @import "variables";
-@import "components/calendar";
 
-.carousel-indicators {
-  & li {
-    border-radius: 50%;
-    margin: 1px 3px;
-    height: $carousel-indicator-length;
-    max-width: $carousel-indicator-length;
+#metrix-wrapper {
+  .row {
+    margin: -15px;
+    justify-content: space-around;
   }
-}
 
-.rate-of-endpoints {
-  display: table-cell;
-  text-align: center;
-  padding: 5px;
+  .col {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
-  span {
+    border-width: 0 0 1px 0;
+    border-style: solid;
+    border-color: rgba(63, 63, 68, 0.10);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    @media (min-width: 576px) {
+      border-width: 0 1px 0 0;
+
+      &:nth-child(1) {
+        border-width: 0 1px 1px 0;
+      }
+
+      &:nth-child(3) {
+        border-width: 0 0 1px 0;
+      }
+
+      &:nth-child(9) {
+        border: none;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      border: none;
+    }
+  }
+
+  .col-separator {
+    border-width: 0 1px 0 0;
+    border-style: solid;
+    border-color: rgba(63, 63, 68, 0.10);
+  }
+
+  .metrix-title,
+  .metrix-description {
     font-family: $font-family-base;
+    text-align: center;
+  }
+
+  .number-data {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    padding-top: 5px;
   }
 
   .minus_variation {
@@ -29,63 +70,38 @@
   .plus_variation {
     color: #3FB8AF;
   }
+}
 
-  & + .rate-of-endpoints {
-    border-left: 3px solid $umakadata-text-color;
+#scores-wrapper {
+  #scores {
+    .caption {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    ol.carousel-indicators {
+      bottom: -60px;
+      vertical-align: bottom;
+
+      li {
+        border-radius: 50%;
+        margin: 1px 3px;
+        height: $carousel-indicator-length;
+        max-width: $carousel-indicator-length;
+        background-color: grey;
+
+        &.active {
+          background-color: black;
+        }
+      }
+    }
+
+    .carousel-inner {
+      margin-bottom: 40px;
+    }
+
+    .score-table-wrapper {
+      max-width: calc(100vw - 80px);
+    }
   }
-}
-
-.rate-board {
-  font-size: 15px;
-  color: #242323;
-  line-height: 14px;
-}
-
-.number-of-endpoints {
-  font-size: 15px;
-  color: #242323;
-  line-height: 14px;
-}
-
-.number-data {
-  padding-top: 5px;
-  font-size: 30px;
-  font-weight: bold;
-}
-
-ul.rate-endpoints-list {
-  display: table;
-  width: 100%;
-  list-style-type: none;
-  padding-left: 0;
-  margin-bottom: 0;
-  font-size: 17px;
-}
-
-.rate-list {
-  padding-bottom: 0;
-}
-
-.carousel-indicators {
-  bottom: -60px;
-}
-
-.carousel-inner {
-  margin-bottom: 40px;
-}
-
-.carousel-indicators li {
-  background-color: grey;
-}
-
-.carousel-indicators ol {
-  vertical-align: bottom;
-}
-
-.carousel-indicators .active {
-  background-color: black;
-}
-
-.top-5-endpoints {
-  font-size: 14px;
 }
