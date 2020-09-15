@@ -2,11 +2,13 @@
 - provide :title, 'Dashboard'
 
 - content_for :head
-  = javascript_include_tag 'https://platform.twitter.com/widgets.js', async: true
-  = javascript_pack_tag 'dashboard'
   = stylesheet_pack_tag 'dashboard'
 
-.container
+- content_for :javascript
+  = javascript_include_tag 'https://platform.twitter.com/widgets.js', async: true
+  = javascript_pack_tag 'dashboard'
+
+section.container-fluid.white-frame
   #site-description.page-title-header
     | YummyData (in Japanese Umaka Data) is a site that lists and monitors SPARQL endpoints that
       provide data of interest to the biomedical community.
@@ -27,71 +29,92 @@
       = link_to 'help', inquiries_path
       | .
 
-.container
-  = render partial: 'metrics', locals: { metrics: @metrics }
+section.container-fluid.white-frame
+  #metrix-wrapper
+    = render partial: 'metrics', locals: { metrics: @metrics }
 
-.container
-  .d-flex.justify-content-between
-    .page-title-header Scores
-    .calendar-form
-      label.calendar-title for='calendar' Data for the day of
-      input.date-input#calendar readonly='readonly' name='date' value=@date[:current].to_formatted_s data-start-date=@date[:start].to_formatted_s data-end-date=@date[:end].to_formatted_s
-      input.go-button#update-date type='button' value='GO'
+section.container-fluid.white-frame
+  #scores-wrapper
+    .row.pb-1
+      .col.col-12.col-sm-5.page-title-header
+        | Scores
+      .col.col-12.col-sm-7.date-picker-wrapper
+        .input-group.align-items-end.justify-content-end
+          label.mb-0.mr-2 for='calendar'
+            | Data for the day of
+          input.date-input#calendar readonly='readonly' name='date' value=@date[:current].to_formatted_s data-start-date=@date[:start].to_formatted_s data-end-date=@date[:end].to_formatted_s
+          .input-group-append
+            button#update-date class="btn" type="button"
+              | GO
 
-  .row.mb-4
-    .col-12.col-lg-9
-      .sub-container
-        .carousel.slide#scores[data-ride="carousel"]
-          ol.carousel-indicators
-            li.active data-target="#scores" data-slide-to="0"
-            li data-target="#scores" data-slide-to="1"
-          .carousel-inner
-            .carousel-item.active
-              .page-title-header Umaka Score
-              canvas#score-bar[height=350 width=750]
-            .carousel-item
-              .page-title-header Top 5 endpoints, by Umaka Score
-              .table-responsive
-                table.table.table-striped.endpoint-list
-                  thead
-                    tr
-                      th Score
-                      th Name
-                      th URL
-                  tbody#score-table
+    .row
+      .col.col-12.col-lg-9.mb-3
+        .container-fluid.gray-frame
+          .carousel.slide#scores
+            ol.carousel-indicators
+              li.active data-target="#scores" data-slide-to="0"
+              li data-target="#scores" data-slide-to="1"
+            .carousel-inner
+              .carousel-item.active
+                .caption
+                  | Umaka Score
+                .canvas-wrapper
+                  canvas#score-histogram data-scores=data_for_score_histogram(@evaluations)
+              .carousel-item
+                .caption
+                  | Top 5 endpoints, by Umaka Score
+                .score-table-wrapper.table-responsive
+                  table#score-table.table.table-striped
+                    thead
+                      tr
+                        th Score
+                        th Name
+                        th URL
+                    tbody
+                      - if @evaluations.present?
+                        - @evaluations.take(5).each do |x|
+                          tr
+                            td= x.score
+                            td= x.endpoint.name
+                            td= x.endpoint.endpoint_url
+                      - else
+                        tr
+                          td.text-center colspan=3 No data
 
-    .col-12.col-lg-3
-      .sub-container
-        .page-title-header Umaka Score: what it is?
-        .page-title-body
-          | Umaka Score represents how valuable endpoints are.
-            Umaka Score is calculated on the basis of the evaluation from the 6 aspects,
-            Availability, Freshness, Operation, Usefulness, Validity and Performance.
-            We also rank the ebdpoints on a scale of A to E according to the Umaka score.
-        = link_to 'More', 'umaka-score.html', { :class => 'btn mt-3', 'data-no-turbolink' => true }
+      .col.col-12.col-lg-3.mb-3
+        .container-fluid.gray-frame
+          .page-title-header Umaka Score: what it is?
+          .page-title-body
+            | Umaka Score represents how valuable endpoints are.
+              Umaka Score is calculated on the basis of the evaluation from the 6 aspects,
+              Availability, Freshness, Operation, Usefulness, Validity and Performance.
+              We also rank the ebdpoints on a scale of A to E according to the Umaka score.
+          = link_to 'More', 'umaka-score.html', { :class => 'btn mt-3', 'data-no-turbolink' => true }
 
+section.container-fluid.white-frame
   .row
-    .col-12.col-lg-6
+    .col.col-12.col-lg-6
       .row
-        .col-12
-          .sub-container
+        .col.col-12.mb-3
+          .container-fluid.gray-frame
             .page-title-header #umakadata news from Twitter
             .page-title-body
               = link_to 'Tweets by umakayummy', 'https://twitter.com/umakayummy?ref_src=twsrc%5Etfw', class: 'twitter-timeline', data: { height: 600 }
 
-    .col-12.col-lg-6
+    .col.col-12.col-lg-6.mb-3
       .row
-        .col-12.mb-4
-          .sub-container
+        .col.col-12.mb-3
+          .container-fluid.gray-frame
             .page-title-header Endpoint discussions
             .page-title-body
               | Do you want to ask something about an endpoint?
                 You can use the Yummydata forum on Github.
-                You will find a issue page for each one of the endpoints we are
-                monitoring, feel free to add to the discussion.
+                You will find a issue page for each one of the endpoints we are monitoring,
+                feel free to add to the discussion.
             = link_to("See all discussions", URI.encode("https://github.com/#{Rails.application.secrets.github_repo}/issues?q=is:open+label:endpoints"), :class => 'btn mt-3')
-        .col-12
-          .sub-container
+
+        .col.col-12
+          .container-fluid.gray-frame
             .page-title-header About
             .page-title-body
               p

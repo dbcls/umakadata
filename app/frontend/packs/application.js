@@ -1,8 +1,6 @@
-/* eslint no-console:0 */
+// Navbar collapse
+import 'bootstrap/js/dist/collapse';
 
-import Routes from '../javascripts/js-routes.js.erb'
-import '../stylesheets/application'
+import '../stylesheets/application';
 
-const images = require.context('../images', true);
-
-window.Routes = Routes;
+require.context('../images', true);

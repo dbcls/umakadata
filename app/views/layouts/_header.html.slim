@@ -1,38 +1,34 @@
 - current = yield(:current)
 
-script#common-header-and-footer__script type='text/javascript' src='https://dbcls.rois.ac.jp/DBCLS-common-header-footer/v2/script/common-header-and-footer.js' style='display: block'
+nav.navbar.navbar-light.d-flex
+  = link_to image_tag(asset_pack_path('media/images/icon.png'), class: 'yummydata-logo'), '/'
+  #header-title.flex-grow-1 YummyData
+  button.navbar-toggler type='button' data={ target: '#header-toggle-content', toggle: 'collapse' }
+    .navbar-toggler-icon
 
-.header.pt-4
-  nav.navbar.navbar-light
-    = link_to image_tag(asset_pack_path('media/images/icon.png'), class: 'yummydata-logo'), '/'
-    span.page-title-header YummyData
-    button.navbar-toggler type='button' data={ target: '#header-toggle-content', toggle: 'collapse' }
-      span.navbar-toggler-icon
+#header-toggle-content.collapse
+  ul.list-group.list-group-flush
+    li.list-group-item class="#{'dashboard' == current ? 'active' : ''}"
+      = link_to 'DASHBOARD', root_path, class: 'nav-link'
 
-  #header-toggle-content.collapse
-    .p-2
-      ul.nav.text-left
-        li.nav-item class="#{'dashboard' == current ? 'active' : ''}"
-          = link_to 'DASHBOARD', root_path, class: 'nav-link'
+    li.list-group-item class="#{'about' == current ? 'active' : ''}"
+      = link_to 'ABOUT', about_path, class: 'nav-link'
 
-        li.nav-item class="#{'about' == current ? 'active' : ''}"
-          = link_to 'ABOUT', about_path, class: 'nav-link'
+    li.list-group-item class="#{'endpoints' == current ? 'active' : ''}"
+      = link_to 'RANKED ENDPOINTS', endpoint_index_path, class: 'nav-link'
 
-        li.nav-item class="#{'endpoints' == current ? 'active' : ''}"
-          = link_to 'RANKED ENDPOINTS', endpoint_index_path, class: 'nav-link'
+    li.list-group-item class="#{'search' == current ? 'active' : ''}"
+      = link_to 'ENDPOINT SEARCH', endpoint_search_path, class: 'nav-link'
 
-        li.nav-item class="#{'search' == current ? 'active' : ''}"
-          = link_to 'ENDPOINT SEARCH', endpoint_search_path, class: 'nav-link'
+    li.list-group-item class="#{'graph' == current ? 'active' : ''}"
+      = link_to 'LINK GRAPH', endpoint_graph_path, class: 'nav-link'
 
-        li.nav-item class="#{'graph' == current ? 'active' : ''}"
-          = link_to 'LINK GRAPH', endpoint_graph_path, class: 'nav-link'
+    - if (repo = Rails.application.credentials.github_repo).present?
+      li.list-group-item class="#{'forum' == current ? 'active' : ''}"
+        = link_to 'FORUM', "https://github.com/#{repo}/issues?q=is:open+label:endpoints", class: 'nav-link', target: '_blank'
 
-        - if (repo = Rails.application.credentials.github_repo).present?
-          li.nav-item class="#{'forum' == current ? 'active' : ''}"
-            = link_to 'FORUM', "https://github.com/#{repo}/issues?q=is:open+label:endpoints", class: 'nav-link', target: '_blank'
+    li.list-group-item class="#{'contact' == current ? 'active' : ''}"
+      = link_to 'CONTACT US', inquiries_path, class: 'nav-link'
 
-        li.nav-item class="#{'contact' == current ? 'active' : ''}"
-          = link_to 'CONTACT US', inquiries_path, class: 'nav-link'
-
-        li.nav-item class="#{'terms' == current ? 'active' : ''}"
-          = link_to 'TERMS AND CONDITIONS', terms_path, class: 'nav-link'
+    li.list-group-item class="#{'terms' == current ? 'active' : ''}"
+      = link_to 'TERMS AND CONDITIONS', terms_path, class: 'nav-link'

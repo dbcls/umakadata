@@ -1,6 +1,7 @@
-import cytoscape from 'cytoscape'
+import cytoscape from 'cytoscape';
+import Routes from '../../javascripts/js-routes.js.erb';
 
-import '../../stylesheets/endpoint'
+import '../../stylesheets/endpoint';
 
 $(function () {
   let $cy = $('#cy');
@@ -11,6 +12,7 @@ $(function () {
     contentType: 'application/json; charset=UTF-8',
     url: Routes.endpoint_graph_path(),
     timeout: 10000 // 10 sec
+    // eslint-disable-next-line no-unused-vars
   }).done(function (json, textStatus, jqXHR) {
     window.cy = cytoscape({
       elements: json,
@@ -26,7 +28,7 @@ $(function () {
         {
           selector: 'node',
           css: {
-            'content': "data(name)",
+            'content': 'data(name)',
             'height': '200',
             'width': '200',
             'text-valign': 'center',

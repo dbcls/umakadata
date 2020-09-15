@@ -1,7 +1,6 @@
 @import "~bootstrap/scss/bootstrap";
-@import "components/header";
-@import "components/sidebar";
 @import "components/tooltip";
+
 $fa-font-path: "~font-awesome/fonts";
 @import '~font-awesome/scss/font-awesome';
 @import "variables";
@@ -26,80 +25,36 @@ h3, .h3 {
   font-size: 1.2rem;
 }
 
-.sub-header {
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
-}
-
-.navbar-fixed-top {
-  border: 0;
-}
-
-/*
- * Main content
- */
-main .container {
-  background: #FFFFFF;
-  box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.10), 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  border-radius: 4px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  margin-left: 0 !important;
-  max-width: 100% !important;
-
-  ul {
-    li {
-      margin-bottom: 10px;
-    }
-  }
-
-  & + .container {
-    margin-top: 1.5rem;
-  }
-
-  .sub-container {
-    background: #F7F7F7;
-    box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.10), 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    border-radius: 4px;
-    padding: 15px;
-
-    & + .sub-container {
-      margin-top: 1rem;
-    }
-  }
-}
-
 a {
   text-decoration: underline;
   color: $umakadata-text-color;
 }
 
-table {
-  tr {
-    color: $umakadata-text-color;
+ul.no-bullets {
+  list-style: none;
+  padding: 0;
+}
 
+table.table {
+  tr {
+    font-family: $font-family-base;
+    color: $umakadata-text-color;
   }
 
-  &.endpoint-list {
-    tr {
-      font-family: $font-family-base;
-      height: 50px;
+  th {
+    background-color: #f9f9f9;
+    color: #9A9A9A;
+    border-style: none;
+    font-weight: normal;
+  }
 
-      th {
-        color: #9A9A9A;
-        border-style: none;
-        font-weight: normal;
-      }
+  td {
+    color: #000000;
+    padding-top: 15px;
+  }
 
-      td {
-        color: #000000;
-        padding-top: 15px;
-      }
-
-      a {
-        color: #000000;
-      }
-    }
+  a {
+    color: #000000;
   }
 
   &.table-striped > tbody > tr {
@@ -113,10 +68,182 @@ table {
   }
 }
 
-ul.no-bullets {
-  list-style: none;
-  padding: 0;
+.datepicker {
+  table {
+    th {
+      color: #73879c;
+    }
+  }
 }
+
+/*
+ * Header
+ */
+#header-wrapper {
+  $header-height: 56px;
+
+  position: -webkit-sticky;
+  position: sticky;
+  align-self: flex-start;
+  top: 24px;
+  margin-top: 0;
+  width: 100vw;
+  background-color: $umakadata-background-color;
+  z-index: 1000;
+
+  font-family: $font-family-base;
+  transition: margin 0.25s ease-out;
+  -webkit-transition: margin 0.25s ease-out;
+  -moz-transition: margin 0.25s ease-out;
+  -o-transition: margin 0.25s ease-out;
+
+  #header-title {
+    font-family: Roboto-Regular;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .navbar-toggler {
+    border: none;
+    outline: none;
+  }
+
+  .yummydata-logo {
+    height: 40px;
+    width: 48px;
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    display: none;
+    margin-top: -$header-height;
+  }
+}
+
+/*
+ * Sidebar
+ */
+#sidebar-wrapper {
+  $sidebar-width: 14rem;
+
+  position: -webkit-sticky;
+  position: sticky;
+  align-self: flex-start;
+  top: 24px;
+  margin-left: -$sidebar-width;
+
+  font-family: $font-family-base;
+  transition: margin 0.25s ease-out;
+  -webkit-transition: margin 0.25s ease-out;
+  -moz-transition: margin 0.25s ease-out;
+  -o-transition: margin 0.25s ease-out;
+
+  .sidebar-heading {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .list-group {
+    width: $sidebar-width;
+  }
+
+  @media (min-width: 768px) {
+    margin-left: 0;
+  }
+}
+
+#header-wrapper, #sidebar-wrapper {
+  .list-group {
+    .list-group-item {
+      padding: 0;
+      background-color: unset;
+      border: unset;
+
+      & > a {
+        text-decoration: none;
+        margin: 0 10px;
+
+        &:hover,
+        &:focus {
+          background: $umakadata-button-background-color;
+          text-decoration: none;
+        }
+      }
+
+      &.active > a {
+        color: #fff;
+        background: $umakadata-button-background-color;
+      }
+    }
+  }
+}
+
+/*
+ * Main content
+ */
+#page-content-wrapper {
+  padding: 10px;
+
+  section {
+    & + section {
+      margin-top: 1rem;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  ul {
+    li {
+      margin-bottom: 10px;
+    }
+  }
+
+  .white-frame {
+    background: #FFFFFF;
+    box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.10), 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+  }
+
+  .gray-frame {
+    background: #F7F7F7;
+    box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.10), 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+  }
+
+  @media (min-width: 768px) {
+    min-width: 0;
+    width: 100%;
+    padding: 10px;
+  }
+}
+
+.date-picker-wrapper {
+  font-family: Roboto-Medium;
+  font-size: 12px;
+  color: $umakadata-text-color;
+
+  .date-input {
+    width: 100px;
+    height: 24px;
+
+    text-align: center;
+    border: 2px $umakadata-text-color solid;
+  }
+
+  .btn {
+    height: 24px;
+    color: #FFFFFF;
+    background: $umakadata-text-color;
+    padding-top: 2px;
+  }
+}
+
+
+
+// =====
 
 .btn {
   font-size: 14px;
@@ -165,12 +292,9 @@ ul.no-bullets {
   margin-bottom: 15px;
 }
 
-.yummydata-logo {
-  margin-bottom: 20px;
-}
-
 .yummydata-logo-background {
   position: fixed;
-  left: 0px;
-  bottom: 0px;
+  left: 0;
+  bottom: 0;
+  z-index: -1000;
 }

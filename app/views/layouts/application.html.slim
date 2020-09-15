@@ -9,25 +9,30 @@ html[lang='en']
     meta[name='author' content='']
     link[rel='icon' href='favicon.ico']
     title= title(yield(:title))
-    = javascript_pack_tag 'application'
-    = stylesheet_pack_tag 'application'
-    = yield :head
     = csrf_meta_tags
     = csp_meta_tag
+    = stylesheet_pack_tag 'application'
+    = javascript_pack_tag 'application'
     = analytics_init if Rails.env.production?
+    = yield :head
 
   body
-    = render partial: 'layouts/header'
+    / script#common-header-and-footer__script type='text/javascript' src='https://dbcls.rois.ac.jp/DBCLS-common-header-footer/v2/script/common-header-and-footer.js' style='display: block'
 
-    .container-fluid
-      .row
-        .sidebar.col-3.col-xl-2.d-none.d-md-block
-          = render partial: 'layouts/sidebar'
+    header#header-wrapper
+      = render partial: 'layouts/header'
 
-        = image_tag(asset_pack_path('media/images/logo-background.png'), class: 'yummydata-logo-background')
+    #wrapper.d-flex
+      nav#sidebar-wrapper
+        = render partial: 'layouts/sidebar'
 
-        main.col-md-9.col-xl-10.ml-sm-auto
-          - if flash[:failure]
-            .alert.alert-danger
-              = flash[:failure]
-          == yield
+      main#page-content-wrapper
+        - if (msg = flash[:failure])
+          .alert.alert-danger
+            = msg
+
+        == yield
+
+    = image_tag(asset_pack_path('media/images/logo-background.png'), class: 'yummydata-logo-background')
+
+    = yield :javascript
