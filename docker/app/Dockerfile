@@ -1,18 +1,32 @@
-FROM ruby:2.6.3-stretch
+FROM ruby:2.6.3-slim-buster
 
-RUN curl -sL "https://deb.nodesource.com/setup_12.x" | bash - && \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      curl && \
+    rm -rf /var/lib/apt/lists/* && \
+    curl -sL "https://deb.nodesource.com/setup_12.x" | bash - && \
     curl -sS "https://dl.yarnpkg.com/debian/pubkey.gpg" | apt-key add - && \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list
 
 RUN apt-get update && \
-    apt-get install -y nodejs yarn && \
+    apt-get install -y --no-install-recommends \
+      build-essential \
+      ca-certificates \
+      git \
+      libpq-dev \
+      libxml2-dev \
+      libxslt-dev \
+      nodejs \
+      yarn && \
     rm -rf /var/lib/apt/lists/*
 
-RUN echo -e "---\nBUNDLE_PATH: \"vendor/bundle\"" > /usr/local/bundle/config
+RUN gem install bundler -v '< 2'
 
 ADD docker-entrypoint.sh /
 
 WORKDIR app
+
+EXPOSE 3000 3035 8080
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["start"]

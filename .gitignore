@@ -36,3 +36,4 @@ yarn-debug.log*
 # Ignore environment variables used in docker-compose and app
 .env
 
+docker-compose.yml

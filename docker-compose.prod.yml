@@ -1,7 +1,31 @@
 version: '2'
 
 services:
-  nginx:
+  app:
+    build: docker/app
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    environment:
+      - RAILS_ENV=production
+      - NODE_ENV=production
+      - UMAKADATA_DATABASE_HOST=db
+      - UMAKADATA_REDIS_HOST=redis
+    volumes:
+      - .:/app
+      - app_bundle:/usr/local/bundle
+      - app_node_modules:/app/node_modules
+      - app_public_assets:/app/public/assets
+      - app_public_packs:/app/public/packs
+      - app_tmp:/app/tmp
+      - app_www:/var/www
+    depends_on:
+      - db
+      - redis
+
+  web:
     image: nginx:1.17
     logging:
       driver: "json-file"
@@ -16,7 +40,7 @@ services:
     depends_on:
       - app
 
-  postgres:
+  db:
     image: postgres:11.4
     logging:
       driver: "json-file"
@@ -27,7 +51,7 @@ services:
       - POSTGRES_USER=${UMAKADATA_DATABASE_USERNAME}
       - POSTGRES_PASSWORD=${UMAKADATA_DATABASE_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
 
   redis:
     image: redis:5.0
@@ -40,32 +64,8 @@ services:
     volumes:
       - redis_data:/data
 
-  app:
-    build: docker/app
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    environment:
-      - RAILS_ENV=production
-      - NODE_ENV=production
-      - UMAKADATA_DATABASE_HOST=postgres
-      - UMAKADATA_REDIS_HOST=redis
-    volumes:
-      - .:/app
-      - app_bundle:/app/vendor/bundle
-      - app_node_modules:/app/node_modules
-      - app_public_assets:/app/public/assets
-      - app_public_packs:/app/public/packs
-      - app_tmp:/app/tmp
-      - app_www:/var/www
-    depends_on:
-      - postgres
-      - redis
-
 volumes:
-  postgres_data:
+  db_data:
     driver: local
   redis_data:
     driver: local
