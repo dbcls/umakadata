@@ -1,4 +1,3 @@
-import 'bootstrap/dist/js/bootstrap';
 import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min';
 
 import '../../stylesheets/endpoint';

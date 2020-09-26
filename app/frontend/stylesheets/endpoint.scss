@@ -131,18 +131,15 @@ form {
 }
 
 .card-header {
-  cursor: pointer;
-}
+  .card-link {
+    cursor: pointer;
+    text-decoration: none;
 
-.card-title {
-  margin: 0;
-
-  &[data-toggle="collapse"] {
     &:before {
       font-family: FontAwesome;
       color: $umakadata-text-color;
       content: "\f078";
-      margin-right: 10px;
+      padding: 0 4px 0 0;
     }
 
     &.collapsed {
@@ -150,7 +147,7 @@ form {
         font-family: FontAwesome;
         color: $umakadata-text-color;
         content: "\f054";
-        padding-left: 4px;
+        padding: 0 6px 0 2px;
       }
     }
   }
@@ -186,4 +183,86 @@ form {
 
 #cy {
   height: 80vh;
+}
+
+.canvas-wrapper {
+  min-height: 200px;
+  height: calc(100vw * 2 / 3 / 3);
+
+  @media (max-width: 380px) {
+    // workaround for resizing of chart.js
+    width: calc(100vw - 80px);
+  }
+}
+
+.score-table-wrapper {
+  max-width: calc(100vw - 80px);
+}
+
+.table-wrapper {
+  max-width: calc(100vw - 50px);
+}
+
+#scores,
+#histories {
+  @media (max-width: 380px) {
+    // workaround for resizing of chart.js
+    width: calc(100vw - 80px);
+  }
+
+  @media (max-width: 720px) {
+    max-width: calc(100vw - 50px);
+  }
+
+  @media (max-width: 960px) {
+    height: calc(100vw * 2 / 3 / 2);
+  }
+}
+
+#scores {
+  min-height: 250px;
+}
+
+#histories {
+  min-height: 300px;
+}
+
+#basic-information,
+#evaluation,
+#log {
+  tr {
+    font-family: unset;
+  }
+
+  td {
+    color: unset;
+  }
+
+  a {
+    color: unset;
+  }
+
+  th {
+    background-color: unset;
+    color: unset;
+    border: 1px solid #dee2e6;
+    font-weight: bold;
+  }
+}
+
+#basic-information,
+#evaluation {
+  th {
+    border-bottom: 2px solid #dee2e6;
+  }
+}
+
+#evaluation {
+  th:last-child {
+    border-left: 0;
+  }
+
+  th:nth-last-child(2) {
+    border-right: 0;
+  }
 }

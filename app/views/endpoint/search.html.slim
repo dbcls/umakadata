@@ -2,22 +2,26 @@
 - provide :title, 'Endpoint search'
 
 - content_for :head
-  = javascript_pack_tag 'endpoint/search'
   = stylesheet_pack_tag 'endpoint/search'
 
-.container
-  .row
-    .col-12
-      h1.page-title-header Endpoint Search
+- content_for :javascript
+  = javascript_pack_tag 'endpoint/search'
+
+section.container-fluid.white-frame
+  .row.pb-1
+    .col.col-12
+      h1.page-title-header
+        | Endpoint Search
+
       p.page-title-body
         ' You can search endpoints using REST API. Please see
         = link_to 'this document', api_path
         |  for more details.
 
-    .col-12
+    .col.col-12
       = render partial: "search_form", locals: { search_form: @search_form }
 
-    .col-12
+    .col.col-12.mt-4
       #result
         table.table.table-striped
           thead

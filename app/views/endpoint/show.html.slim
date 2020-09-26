@@ -1,8 +1,10 @@
 - provide :title, @endpoint.name
 
 - content_for :head
-  = javascript_pack_tag 'endpoint/show'
   = stylesheet_pack_tag 'endpoint/show'
+
+- content_for :javascript
+  = javascript_pack_tag 'endpoint/show'
 
 #progress-dialog.modal.fade data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true"
   .modal-dialog.modal-m
@@ -13,38 +15,46 @@
         .progress
           .progress-bar.progress-bar-striped.progress-bar-animated role='progressbar'
 
-.container
-  .d-flex.justify-content-between.my-2
-    h2.page-title-header= @endpoint.name
-    .calendar-form
-      label.calendar-title for='calendar' Data for the day of
-      input.date-input#calendar readonly='readonly' name='date' value=@date[:current].to_formatted_s data-start-date=@date[:start].to_formatted_s data-end-date=@date[:end].to_formatted_s
-      input.go-button#update-date type='button' value='GO'
-
-  .page-title-body.text-right
-    - if (prev = @evaluation.previous&.crawl)
-      - date = prev.started_at.to_date.to_formatted_s
-      = link_to "<< #{date}", endpoint_path(@endpoint, date: date), class: 'px-1'
-
-    - if (nxt = @evaluation.next&.crawl)
-      - date = nxt.started_at.to_date.to_formatted_s
-      = link_to "#{date} >>", endpoint_path(@endpoint, date: date), class: 'px-1'
+section#main-wrapper.container-fluid.white-frame
+  .row.pb-1
+    .col.col-12.col-sm-5
+      h1.page-title-header
+        = @endpoint.name
+    .col.col-12.col-sm-7.date-picker-wrapper
+      .input-group.align-items-end.justify-content-end
+        label.mb-0.mr-2 for='calendar'
+          | Data for the day of
+        input.date-input#calendar readonly='readonly' name='date' value=@date[:current].to_formatted_s data-start-date=@date[:start].to_formatted_s data-end-date=@date[:end].to_formatted_s
+        .input-group-append
+          button#update-date class="btn" type="button"
+            | GO
 
   .row
-    .col-12
+    .col
+      .page-title-body.text-right
+        - if (prev = @evaluation.previous&.crawl)
+          - date = prev.started_at.to_date.to_formatted_s
+          = link_to "<< #{date}", endpoint_path(@endpoint, date: date), class: 'px-1'
+
+        - if (nxt = @evaluation.next&.crawl)
+          - date = nxt.started_at.to_date.to_formatted_s
+          = link_to "#{date} >>", endpoint_path(@endpoint, date: date), class: 'px-1'
+
       h2.page-title-header Basic Information
-    .col-12.col-lg-6
+
+  .row
+    .col.col-12.col-lg-6
       = render partial: 'basic_information', locals: { endpoint: @endpoint, evaluation: @evaluation }
 
-    .col-12.col-lg-6
-      canvas#scores width="400" height="400" data={ endpoint: @endpoint.id }
+    .col.col-12.col-lg-6
+      canvas#scores data={ endpoint: @endpoint.id }
 
     - if @issue
       .col-12
         = render partial: 'forum', locals: { endpoint: @endpoint, issue: @issue }
 
     .col-12
-      canvas#histories width="400" height="200" data={ endpoint: @endpoint.id }
+      canvas#histories data={ endpoint: @endpoint.id }
 
     .col-12
       = render partial: 'evaluation', locals: { endpoint: @endpoint, evaluation: @evaluation, date: @date[:current] }

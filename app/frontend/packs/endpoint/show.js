@@ -1,4 +1,4 @@
-import 'bootstrap/dist/js/bootstrap';
+import 'bootstrap/js/dist/modal';
 import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min';
 import Chart from 'chart.js';
 import Routes from '../../javascripts/js-routes.js.erb';
@@ -57,7 +57,7 @@ $(function () {
         ]
       },
       options: {
-        responsive: true
+        maintainAspectRatio: false,
       }
     };
 
@@ -117,7 +117,7 @@ $(function () {
       type: 'line',
       data: data,
       options: {
-        responsive: true,
+        maintainAspectRatio: false,
         scales: {
           xAxes: [{
             type: 'time',

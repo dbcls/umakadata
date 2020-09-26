@@ -9,7 +9,7 @@
   = javascript_pack_tag 'dashboard'
 
 section.container-fluid.white-frame
-  #site-description.page-title-header
+  h1.page-title-header
     | YummyData (in Japanese Umaka Data) is a site that lists and monitors SPARQL endpoints that
       provide data of interest to the biomedical community.
   .page-title-body
@@ -36,8 +36,9 @@ section.container-fluid.white-frame
 section.container-fluid.white-frame
   #scores-wrapper
     .row.pb-1
-      .col.col-12.col-sm-5.page-title-header
-        | Scores
+      .col.col-12.col-sm-5
+        h2.page-title-header
+          | Scores
       .col.col-12.col-sm-7.date-picker-wrapper
         .input-group.align-items-end.justify-content-end
           label.mb-0.mr-2 for='calendar'
@@ -50,18 +51,17 @@ section.container-fluid.white-frame
     .row
       .col.col-12.col-lg-9.mb-3
         .container-fluid.gray-frame
-          .carousel.slide#scores
+          .carousel.slide#scores data-ride="carousel"
             ol.carousel-indicators
               li.active data-target="#scores" data-slide-to="0"
               li data-target="#scores" data-slide-to="1"
             .carousel-inner
               .carousel-item.active
-                .caption
-                  | Umaka Score
+                h3.page-title-header Umaka Score
                 .canvas-wrapper
                   canvas#score-histogram data-scores=data_for_score_histogram(@evaluations)
               .carousel-item
-                .caption
+                h3.page-title-header
                   | Top 5 endpoints, by Umaka Score
                 .score-table-wrapper.table-responsive
                   table#score-table.table.table-striped
@@ -83,7 +83,7 @@ section.container-fluid.white-frame
 
       .col.col-12.col-lg-3.mb-3
         .container-fluid.gray-frame
-          .page-title-header Umaka Score: what it is?
+          h3.page-title-header Umaka Score: what it is?
           .page-title-body
             | Umaka Score represents how valuable endpoints are.
               Umaka Score is calculated on the basis of the evaluation from the 6 aspects,
@@ -97,7 +97,7 @@ section.container-fluid.white-frame
       .row
         .col.col-12.mb-3
           .container-fluid.gray-frame
-            .page-title-header #umakadata news from Twitter
+            h3.page-title-header #umakadata news from Twitter
             .page-title-body
               = link_to 'Tweets by umakayummy', 'https://twitter.com/umakayummy?ref_src=twsrc%5Etfw', class: 'twitter-timeline', data: { height: 600 }
 
@@ -105,7 +105,7 @@ section.container-fluid.white-frame
       .row
         .col.col-12.mb-3
           .container-fluid.gray-frame
-            .page-title-header Endpoint discussions
+            h3.page-title-header Endpoint discussions
             .page-title-body
               | Do you want to ask something about an endpoint?
                 You can use the Yummydata forum on Github.
@@ -115,7 +115,7 @@ section.container-fluid.white-frame
 
         .col.col-12
           .container-fluid.gray-frame
-            .page-title-header About
+            h3.page-title-header About
             .page-title-body
               p
                 | YummyData is a system that monitors SPARQL endpoints

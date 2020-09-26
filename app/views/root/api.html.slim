@@ -2,152 +2,153 @@
 
 - root_url = "#{request.protocol}#{request.host_with_port}"
 
-.page-title-header Umaka REST API
-.page-title-body
-  p
-    | Umaka Data provides information about Linked Data endpoints.
-      We can access the information via REST API.
-      This document shows how we can retrieve the data.
+section.container-fluid.white-frame
+  h1.page-title-header Umaka REST API
+  .page-title-body
+    p
+      | Umaka Data provides information about Linked Data endpoints.
+        We can access the information via REST API.
+        This document shows how we can retrieve the data.
 
-.page-title-sub-header Endpoint Search
-.page-title-body
-  p
-    | API can be accessed over HTTP from '#{root_url}',
-      and API returns data as JSON.
+  h2.page-title-sub-header Endpoint Search
+  .page-title-body
+    p
+      | API can be accessed over HTTP from '#{root_url}',
+        and API returns data as JSON.
 
-.page-title-subsub-header Retrieve Information of All Endpoints
-.page-title-body
-  p You can retrieve information of all endpoints as follows:
-  pre
-    code.command
-      | curl -L -H 'Accept: application/json' #{root_url}/api/endpoint/search
-  p This return the list of information of endpoints as follows:
-  pre
-    code.json
-      | [
-          {
-            "id": 1,
-            "name": "Allie",
-            "endpoint_url": "http://data.allie.dbcls.jp/sparql",
-            "description_url": "http://data.allie.dbcls.jp/",
-            "evaluation": {
-              "started_at": "2019-01-01T00:00:00.000Z",
-              "rank": "A",
-              "score": 100,
-              "publisher": [
-                "http://dbcls.jp/"
-              ],
-              "license": [
-                "http://creativecommons.org/licenses/by/2.1/jp/"
-              ],
-              "language": [
-                "SPARQL11Query"
-              ],
-              "service_keyword": true,
-              "graph_keyword": true,
-              "data_scale": "8.0",
-              "cors": true,
-              "alive": true,
-              "alive_rate": 1.0,
-              "last_updated": "2019-01-01",
-              "service_description": true,
-              "void": true,
-              "metadata": 100.0,
-              "ontology": 100.0,
-              "links_to_other_datasets": [],
-              "data_entry": 100000000,
-              "support_html_format": true,
-              "support_rdfxml_format": true,
-              "support_turtle_format": true,
-              "cool_uri": 100,
-              "http_uri": true,
-              "provide_useful_information": true,
-              "link_to_other_uri": true,
-              "execution_time": 1.000
-            }
-          }, ...
-        ]
+  h2.page-title-subsub-header Retrieve Information of All Endpoints
+  .page-title-body
+    p You can retrieve information of all endpoints as follows:
+    pre
+      code.command
+        | curl -L -H 'Accept: application/json' #{root_url}/api/endpoint/search
+    p This return the list of information of endpoints as follows:
+    pre
+      code.json
+        | [
+            {
+              "id": 1,
+              "name": "Allie",
+              "endpoint_url": "http://data.allie.dbcls.jp/sparql",
+              "description_url": "http://data.allie.dbcls.jp/",
+              "evaluation": {
+                "started_at": "2019-01-01T00:00:00.000Z",
+                "rank": "A",
+                "score": 100,
+                "publisher": [
+                  "http://dbcls.jp/"
+                ],
+                "license": [
+                  "http://creativecommons.org/licenses/by/2.1/jp/"
+                ],
+                "language": [
+                  "SPARQL11Query"
+                ],
+                "service_keyword": true,
+                "graph_keyword": true,
+                "data_scale": "8.0",
+                "cors": true,
+                "alive": true,
+                "alive_rate": 1.0,
+                "last_updated": "2019-01-01",
+                "service_description": true,
+                "void": true,
+                "metadata": 100.0,
+                "ontology": 100.0,
+                "links_to_other_datasets": [],
+                "data_entry": 100000000,
+                "support_html_format": true,
+                "support_rdfxml_format": true,
+                "support_turtle_format": true,
+                "cool_uri": 100,
+                "http_uri": true,
+                "provide_useful_information": true,
+                "link_to_other_uri": true,
+                "execution_time": 1.000
+              }
+            }, ...
+          ]
 
-.page-title-subsub-header Retrieve Information of Filtered Endpoints
-.page-title-body
-  p We can specify the conditions using URL parameters. Please see the table below for all parameters.
-  p Example: Retrieve information of endpoints which name contains "Life" as follows:
-  pre
-    code.command
-      | curl -L -H 'Accept: application/json' #{root_url}/api/endpoint/search?name=Life
-  p Example: Retrieve information of endpoints which Umaka score is between 50 and 70 as follows:
-  pre
-    code.command
-      | curl -L -H 'Accept: application/json' #{root_url}/api/endpoint/search?score_lower=50&score_upper=70
-  p Example: Retrieve information of endpoints which alive rate is more than 75% as follows:
-  pre
-    code.command
-      | curl -L -H 'Accept: application/json' #{root_url}/api/endpoint/search?alive_rate_lower=75
-  p Example: Retrieve information of endpoints which has service description as follows:
-  pre
-    code.command
-      | curl -L -H 'Accept: application/json' #{root_url}/api/endpoint/search?service_description=1
+  h2.page-title-subsub-header Retrieve Information of Filtered Endpoints
+  .page-title-body
+    p We can specify the conditions using URL parameters. Please see the table below for all parameters.
+    p Example: Retrieve information of endpoints which name contains "Life" as follows:
+    pre
+      code.command
+        | curl -L -H 'Accept: application/json' #{root_url}/api/endpoint/search?name=Life
+    p Example: Retrieve information of endpoints which Umaka score is between 50 and 70 as follows:
+    pre
+      code.command
+        | curl -L -H 'Accept: application/json' #{root_url}/api/endpoint/search?score_lower=50&score_upper=70
+    p Example: Retrieve information of endpoints which alive rate is more than 75% as follows:
+    pre
+      code.command
+        | curl -L -H 'Accept: application/json' #{root_url}/api/endpoint/search?alive_rate_lower=75
+    p Example: Retrieve information of endpoints which has service description as follows:
+    pre
+      code.command
+        | curl -L -H 'Accept: application/json' #{root_url}/api/endpoint/search?service_description=1
 
-table.table.table-striped
-  thead
-    tr
-      th Parameter Name
-      th Description
-  tbody
-    tr
-      td name
-      td Endpoint which name contains the specified string.
-    tr
-      td resource_uri
-      td Endpoint which resource_uri contains the specified string as the following element_type.
-    tr
-      td date
-      td The result of searching is as of date specified yyyy-mm-dd string.
-    tr
-      td rank
-      td Endpoint which rank is specified value. This value must be one of A, B, C, D and E. Otherwise this conidition is ignored.
-    tr
-      td score_lower
-      td Endpoint which Umaka score is more than or equal to the specified value.
-    tr
-      td score_upper
-      td Endpoint which Umaka score is less than or equal to the specified value.
-    tr
-      td alive_rate_lower
-      td Endpoint which alive rate is more than or equal to the specified value.
-    tr
-      td alive_rate_upper
-      td Endpoint which alive rate is less than or equal to the specified value.
-    tr
-      td cool_uri_lower
-      td Endpoint which Cool URI rate is more than or equal to the specified value.
-    tr
-      td cool_uri_upper
-      td Endpoint which Cool URI rate is less than or equal to the specified value.
-    tr
-      td ontology_lower
-      td Endpoint which ontology score rate is more than or equal to the specified value.
-    tr
-      td ontology_upper
-      td Endpoint which ontology score rate is less than or equal to the specified value.
-    tr
-      td metadata_lower
-      td Endpoint which metadata score rate is more than or equal to the specified value.
-    tr
-      td metadata_upper
-      td Endpoint which metadata score rate is less than or equal to the specified value.
-    tr
-      td service_description
-      td Endpoint which has Service Description will be shown if this value is 1
-    tr
-      td void
-      td Endpoint which has VoID will be shown if this value is 1
-    tr
-      td html
-      td Endpoint which supports HTML format will be shown if this value is 1
-    tr
-      td turtle
-      td Endpoint which supports Turtle format will be shown if this value is 1
-    tr
-      td xml
-      td Endpoint which supports RDF+XML format will be shown if this value is 1
+  table.table.table-striped
+    thead
+      tr
+        th Parameter Name
+        th Description
+    tbody
+      tr
+        td name
+        td Endpoint which name contains the specified string.
+      tr
+        td resource_uri
+        td Endpoint which resource_uri contains the specified string as the following element_type.
+      tr
+        td date
+        td The result of searching is as of date specified yyyy-mm-dd string.
+      tr
+        td rank
+        td Endpoint which rank is specified value. This value must be one of A, B, C, D and E. Otherwise this conidition is ignored.
+      tr
+        td score_lower
+        td Endpoint which Umaka score is more than or equal to the specified value.
+      tr
+        td score_upper
+        td Endpoint which Umaka score is less than or equal to the specified value.
+      tr
+        td alive_rate_lower
+        td Endpoint which alive rate is more than or equal to the specified value.
+      tr
+        td alive_rate_upper
+        td Endpoint which alive rate is less than or equal to the specified value.
+      tr
+        td cool_uri_lower
+        td Endpoint which Cool URI rate is more than or equal to the specified value.
+      tr
+        td cool_uri_upper
+        td Endpoint which Cool URI rate is less than or equal to the specified value.
+      tr
+        td ontology_lower
+        td Endpoint which ontology score rate is more than or equal to the specified value.
+      tr
+        td ontology_upper
+        td Endpoint which ontology score rate is less than or equal to the specified value.
+      tr
+        td metadata_lower
+        td Endpoint which metadata score rate is more than or equal to the specified value.
+      tr
+        td metadata_upper
+        td Endpoint which metadata score rate is less than or equal to the specified value.
+      tr
+        td service_description
+        td Endpoint which has Service Description will be shown if this value is 1
+      tr
+        td void
+        td Endpoint which has VoID will be shown if this value is 1
+      tr
+        td html
+        td Endpoint which supports HTML format will be shown if this value is 1
+      tr
+        td turtle
+        td Endpoint which supports Turtle format will be shown if this value is 1
+      tr
+        td xml
+        td Endpoint which supports RDF+XML format will be shown if this value is 1

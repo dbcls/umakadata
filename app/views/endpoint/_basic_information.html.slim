@@ -1,135 +1,136 @@
-table.table.table-bordered
-  thead
-    tr
-      th Name
-      th Value
-  tbody
-    tr
-      td Endpoint URI
-      td= link_to endpoint.endpoint_url, endpoint.endpoint_url, target: '_blank'
+.table-wrapper.table-responsive
+  table#basic-information.table.table-bordered
+    thead
+      tr
+        th Name
+        th Value
+    tbody
+      tr
+        td Endpoint URI
+        td= link_to endpoint.endpoint_url, endpoint.endpoint_url, target: '_blank'
 
-    tr
-      td Site Description
-      td= link_to endpoint.description_url, endpoint.description_url, target: '_blank' if endpoint.description_url.present?
+      tr
+        td Site Description
+        td= link_to endpoint.description_url, endpoint.description_url, target: '_blank' if endpoint.description_url.present?
 
-    tr
-      td
-        | Organization Information
-        .umakadata-tooltip
-          span.small data specified by dcterms:publisher in VoID
-      td
-        - if (publishers = evaluation.publisher).present?
-          ul
-            - publishers.each do |x|
-              li= x
+      tr
+        td
+          | Organization Information
+          .umakadata-tooltip
+            span.small data specified by dcterms:publisher in VoID
+        td
+          - if (publishers = evaluation.publisher).present?
+            ul
+              - publishers.each do |x|
+                li= x
 
-    tr
-      td
-        | License Information
-        .umakadata-tooltip
-          span.small data specified by dcterms:license in VoID
-      td
-        - if (licenses = evaluation.license).present?
-          ul
-            - licenses.each do |x|
-              li= x
+      tr
+        td
+          | License Information
+          .umakadata-tooltip
+            span.small data specified by dcterms:license in VoID
+        td
+          - if (licenses = evaluation.license).present?
+            ul
+              - licenses.each do |x|
+                li= x
 
-    tr
-      td
-        | Supported Language
-        .umakadata-tooltip
-          span.small data specified by sd:supportedLanguage in Service Description
-      td
-        - if (languages = evaluation.language).present?
-          ul
-            - languages.each do |x|
-              li= x
+      tr
+        td
+          | Supported Language
+          .umakadata-tooltip
+            span.small data specified by sd:supportedLanguage in Service Description
+        td
+          - if (languages = evaluation.language).present?
+            ul
+              - languages.each do |x|
+                li= x
 
-    tr
-      td
-        | SERVICE Keyword
-        .umakadata-tooltip
-          span.small
-            | true if the query using 'SERVICE' keyword returns result, otherwise false.
-      td
-        = evaluation.service_keyword
+      tr
+        td
+          | SERVICE Keyword
+          .umakadata-tooltip
+            span.small
+              | true if the query using 'SERVICE' keyword returns result, otherwise false.
+        td
+          = evaluation.service_keyword
 
-    tr
-      td
-        | GRAPH Keyword
-        .umakadata-tooltip
-          span.small
-            | true if the query using 'GRAPH' keyword returns result, otherwise false.
-      td= evaluation.graph_keyword
+      tr
+        td
+          | GRAPH Keyword
+          .umakadata-tooltip
+            span.small
+              | true if the query using 'GRAPH' keyword returns result, otherwise false.
+        td= evaluation.graph_keyword
 
-    tr
-      td
-        | Data Scale
-        .umakadata-tooltip
-          span.small
-            | a number represents the scale of data.<br/>
-              The value is determined by a formula, x = log<sub>10</sub>N where N is the number of data entries.
-      td= (n = evaluation.data_scale) ? format('%.1f', n) : '-'
+      tr
+        td
+          | Data Scale
+          .umakadata-tooltip
+            span.small
+              | a number represents the scale of data.<br/>
+                The value is determined by a formula, x = log<sub>10</sub>N where N is the number of data entries.
+        td= (n = evaluation.data_scale) ? format('%.1f', n) : '-'
 
-    tr
-      td
-        | Rank
-        .umakadata-tooltip
-          span.small
-            | ranked as shown in the following table
-            table.text-center
-              thead
-                tr
-                  th Rank
-                  th Score
-              tbody
-                tr
-                  td A
-                  td 81 - 100
-                tr
-                  td B
-                  td 61 - 80
-                tr
-                  td C
-                  td 41 - 60
-                tr
-                  td D
-                  td 21 - 40
-                tr
-                  td E
-                  td 0 - 20
-      td #{evaluation.rank_label} (#{evaluation.score})
+      tr
+        td
+          | Rank
+          .umakadata-tooltip
+            span.small
+              | ranked as shown in the following table
+              table.text-center
+                thead
+                  tr
+                    th Rank
+                    th Score
+                tbody
+                  tr
+                    td A
+                    td 81 - 100
+                  tr
+                    td B
+                    td 61 - 80
+                  tr
+                    td C
+                    td 41 - 60
+                  tr
+                    td D
+                    td 21 - 40
+                  tr
+                    td E
+                    td 0 - 20
+        td #{evaluation.rank_label} (#{evaluation.score})
 
-    tr
-      td
-        | CORS
-        .umakadata-tooltip
-          span.small
-            | true if response header of endpoint contains 'access-control-allow-origin: *', otherwise false.
-      td= evaluation.cors
+      tr
+        td
+          | CORS
+          .umakadata-tooltip
+            span.small
+              | true if response header of endpoint contains 'access-control-allow-origin: *', otherwise false.
+        td= evaluation.cors
 
-    tr
-      td
-        | URI Indexed
-        .umakadata-tooltip
-          span.small
-            | true if URI rules of the endpoint are created. These are used for checking content negotiation and 4 Principles of Linked Data
-      td= endpoint.resource_uris.present?
+      tr
+        td
+          | URI Indexed
+          .umakadata-tooltip
+            span.small
+              | true if URI rules of the endpoint are created. These are used for checking content negotiation and 4 Principles of Linked Data
+        td= endpoint.resource_uris.present?
 
-    tr
-      td Last Checked
-      td
-        = evaluation.created_at.getutc
-        - if (s = evaluation.started_at) && (f = evaluation.finished_at)
-          |  (
-          = (h = Time.at(f - s).utc.hour).positive? ? "#{h}h " : ''
-          = "#{Time.at(f - s).utc.min}m "
-          = "#{Time.at(f - s).utc.sec}s"
-          |)
+      tr
+        td Last Checked
+        td
+          = evaluation.created_at.getutc
+          - if (s = evaluation.started_at) && (f = evaluation.finished_at)
+            |  (
+            = (h = Time.at(f - s).utc.hour).positive? ? "#{h}h " : ''
+            = "#{Time.at(f - s).utc.min}m "
+            = "#{Time.at(f - s).utc.sec}s"
+            |)
 
-    tr
-      td Class Structure
-      td= link_to @endpoint.viewer_url, @endpoint.viewer_url unless @endpoint.viewer_url.nil?
+      tr
+        td Class Structure
+        td= link_to @endpoint.viewer_url, @endpoint.viewer_url unless @endpoint.viewer_url.nil?
 
 p
   ' Please see

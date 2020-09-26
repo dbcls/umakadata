@@ -2,10 +2,12 @@
 - provide :title, 'Link graph'
 
 - content_for :head
-  = javascript_pack_tag 'endpoint/graph'
   = stylesheet_pack_tag 'endpoint/graph'
 
-.container
+- content_for :javascript
+  = javascript_pack_tag 'endpoint/graph'
+
+section.container-fluid.white-frame
   h1.page-title-header Link Graph (Experimental)
   p.page-title-body
     | This graph shows the relationships among some datasets in YummyData.

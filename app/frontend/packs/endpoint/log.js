@@ -1,7 +1,7 @@
-import 'bootstrap/dist/js/bootstrap';
 import ClipboardJS from 'clipboard/dist/clipboard.min';
-import '../../stylesheets/endpoint';
 import Routes from '../../javascripts/js-routes.js.erb';
+
+import '../../stylesheets/endpoint';
 
 $(function () {
   let $log = $('#log');
@@ -66,14 +66,15 @@ $(function () {
     json.data.forEach(function (d) {
       let html = '<div class="card log">';
       html += '<div class="card-header">';
-      html += `<div class="card-title collapsed" data-toggle="collapse" href="#collapse-${d.id}">${d.comment || ''}</div>`;
+      html += `<a class="card-link collapsed" data-toggle="collapse" data-target="#collapse-${d.id}">${d.comment || ''}</a>`;
       html += '</div>';
-      html += `<div class="collapse" id="collapse-${d.id}">`;
+      html += `<div id="collapse-${d.id}" class="collapse" data-parent="#log">`;
       html += '<div class="card-body">';
       if (d.curl)  {
         html += `<button type="button" class="btn mb-3 copy-query" data-clipboard-text='${d.curl}'><i class="fa fa-clipboard"> Copy CURL Query</button>`;
       }
-      html += '<table class="table table-bordered table-responsive">';
+      html += '<div class="table-wrapper table-responsive">';
+      html += '<table class="table table-bordered">';
       html += '<tbody>';
       html += `<tr><th colspan="2">Elapsed time</th><td>${Math.round(d.elapsed_time * 1000) / 1000.0} [s]</td></tr>`;
       html += `<tr><th rowspan="4" scope="rowgroup">Request</th><th scope="row">Method</th><td><pre><code>${d.request.method || ''}</code></pre></td></tr>`;
@@ -90,7 +91,7 @@ $(function () {
       if (d.exceptions && Object.values(d.exceptions).length > 0) {
         html += `<tr><th colspan="2" class="table-danger">Exception</th><td class="table-danger">${printException(d.exceptions)}</td></tr>`;
       }
-      html += '</tbody></table></div></div></div>';
+      html += '</tbody></table></div></div></div></div>';
 
       $log.append(html);
     });

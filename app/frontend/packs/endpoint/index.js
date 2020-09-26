@@ -1,4 +1,3 @@
-import 'bootstrap/dist/js/bootstrap';
 import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min';
 import Chart from 'chart.js';
 import Routes from '../../javascripts/js-routes.js.erb';
@@ -17,12 +16,14 @@ $(function () {
   });
 
   const PIE_CHART_OPTIONS = {
+    maintainAspectRatio: false,
     animation: {
       duration: 1000
     }
   };
 
   const LINE_CHART_OPTIONS = {
+    maintainAspectRatio: false,
     animation: {
       duration: 1000
     },

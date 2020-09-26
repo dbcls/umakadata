@@ -1,4 +1,3 @@
-import 'bootstrap/js/dist/carousel';
 import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min';
 import Chart from 'chart.js';
 import Routes from '../javascripts/js-routes.js.erb';
@@ -51,13 +50,7 @@ import '../stylesheets/dashboard';
     chart.update();
   };
 
-  $('#scores').carousel({
-    interval: 10000,
-    ride: 'carousel'
-  });
-
   const $calendar = $('#calendar');
-
   $calendar.datepicker({
     autoclose: true,
     startDate: $calendar.data('start-date'),
