@@ -5,8 +5,7 @@ ActiveAdmin.register DatasetRelation do
 
   config.sort_order = 'id_asc'
 
-  endpoints = -> { Endpoint.all.order(:id) }
-  endpoint_label = ->(endpoint) { "#{endpoint.id} - #{endpoint.name}" }
+  endpoints = -> { Endpoint.all.order(:name) }
 
   active_admin_import validate: true,
                       batch_transaction: true,
@@ -51,9 +50,9 @@ ActiveAdmin.register DatasetRelation do
     column :relation
   end
 
-  filter :endpoint, as: :select, collection: endpoints, member_label: endpoint_label
-  filter :src_endpoint_id, label: 'src endpoint', as: :select, collection: endpoints, member_label: endpoint_label
-  filter :dst_endpoint_id, label: 'dst endpoint', as: :select, collection: endpoints, member_label: endpoint_label
+  filter :endpoint, as: :select, collection: endpoints
+  filter :src_endpoint_id, label: 'src endpoint', as: :select, collection: endpoints
+  filter :dst_endpoint_id, label: 'dst endpoint', as: :select, collection: endpoints
 
   show do
     attributes_table do
@@ -75,9 +74,9 @@ ActiveAdmin.register DatasetRelation do
   form do |f|
     f.semantic_errors
     f.inputs do
-      input :endpoint, member_label: endpoint_label, include_blank: false
-      input :src_endpoint_id, as: :select, collection: endpoints.call, member_label: endpoint_label, include_blank: false
-      input :dst_endpoint_id, as: :select, collection: endpoints.call, member_label: endpoint_label, include_blank: false
+      input :endpoint, as: :select, collection: endpoints.call, include_blank: false
+      input :src_endpoint_id, as: :select, collection: endpoints.call, include_blank: false
+      input :dst_endpoint_id, as: :select, collection: endpoints.call, include_blank: false
     end
     f.actions do
       add_create_another_checkbox

@@ -5,8 +5,7 @@ ActiveAdmin.register ResourceURI do
 
   config.sort_order = 'id_asc'
 
-  endpoints = -> { Endpoint.all.order(:id) }
-  endpoint_label = ->(endpoint) { "#{endpoint.id} - #{endpoint.name}" }
+  endpoints = -> { Endpoint.all.order(:name) }
 
   index do
     selectable_column
@@ -20,7 +19,7 @@ ActiveAdmin.register ResourceURI do
     actions
   end
 
-  filter :endpoint, as: :select, collection: endpoints, member_label: endpoint_label
+  filter :endpoint, as: :select, collection: endpoints
   filter :uri
   filter :allow
   filter :deny
@@ -56,7 +55,7 @@ ActiveAdmin.register ResourceURI do
   form do |f|
     f.semantic_errors
     f.inputs do
-      input :endpoint, member_label: endpoint_label, include_blank: false
+      input :endpoint, as: :select, collection: endpoints.call, include_blank: false
       input :uri, label: 'URI'
       input :allow
       input :deny
