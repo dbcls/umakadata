@@ -5,13 +5,35 @@ We just let you know that a crawl job finished.
  Started at: <%= @crawl.started_at %>
 Finished at: <%= @crawl.finished_at %>
 
-Evaluated endpoints: <%= @crawl.evaluations.count %>
+
+::: Next scheduled crawl :::
+
+  Started at: <%= @next_crawl %>
+
+  You can skip next crawl by `<%= Rails.root / 'bin' / 'umakadata' %> crawler set <%= @next_crawl.to_date %> --no-active`
+
+
+::: Evaluated endpoints :::
+
+  <%= c = @crawl.evaluations.count %> <%= 'endpoint'.pluralize(c) %>
 
 <% evs = @crawl.evaluations.where.not(started_at: nil, finished_at: nil).sort_by { |x| x.finished_at - x.started_at }.reverse.take(10) %>
 <% if evs.present? %>
-Top 10 endpoints that spent longest crawling time
+
+::: Top 10 endpoints that spent longest crawling time :::
   <% evs.each do |ev| %>
   * <%= "#{ev.endpoint.name} - #{Time.at(ev.finished_at - ev.started_at).utc.strftime('%H:%M:%S')}" %>
+  <% end %>
+<% end %>
+
+<% if @measurement_with_exceptions.present? %>
+
+::: Errors while this crawl :::
+  <% @measurement_with_exceptions.to_a.group_by { |m| m.evaluation.endpoint }.sort_by { |k, _| k.name }.each do |k, v| %>
+  * <%= k.name %>
+    <% v.each do |m| %>
+    - <%= endpoint_log_url(id: k.id, name: m.name.split('.').last, date: @crawl.started_at.to_date) %>
+    <% end %>
   <% end %>
 <% end %>
 
