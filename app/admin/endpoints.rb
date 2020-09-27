@@ -77,7 +77,9 @@ ActiveAdmin.register Endpoint do
 
     panel 'List of Resource URI' do
       table_for endpoint.resource_uris do
-        column :id
+        column :id do |x|
+          link_to x.id, admin_resource_uri_path(x)
+        end
         column :uri
         column :allow
         column :deny
