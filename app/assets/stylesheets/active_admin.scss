@@ -36,3 +36,12 @@ tr.row-processing span.status_tag {
   min-width: 20px;
   margin: 2px 0 2px 0;
 }
+
+#wrapper {
+  display: block !important;
+  width: 100vw !important;
+
+  #main_content .paginated_collection_contents {
+    overflow-x: scroll !important;
+  }
+}
