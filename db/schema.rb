@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_02_024122) do
+ActiveRecord::Schema.define(version: 2020_09_28_093008) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -82,6 +82,7 @@ ActiveRecord::Schema.define(version: 2020_06_02_024122) do
     t.integer "label_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "timeout", default: 4.0
     t.index ["endpoint_url"], name: "index_endpoints_on_endpoint_url", unique: true
     t.index ["issue_id"], name: "index_endpoints_on_issue_id", unique: true
     t.index ["label_id"], name: "index_endpoints_on_label_id", unique: true
@@ -121,6 +122,7 @@ ActiveRecord::Schema.define(version: 2020_06_02_024122) do
     t.bigint "crawl_id"
     t.datetime "started_at"
     t.datetime "finished_at"
+    t.boolean "timeout"
     t.index ["crawl_id"], name: "index_evaluations_on_crawl_id"
     t.index ["created_at"], name: "index_evaluations_on_created_at"
     t.index ["endpoint_id"], name: "index_evaluations_on_endpoint_id"
