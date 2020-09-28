@@ -11,14 +11,22 @@ class CrawlerJob
     @crawl_id = crawl_id
     @endpoint_id = endpoint_id
 
+    timeout = endpoint.timeout
+    s1 = Time.current
+
     evaluation = create_evaluation.tap { |x| x.update!(crawler.basic_information) }
 
     begin
-      evaluation.started_at = (start_time = Time.current)
+      evaluation.started_at = (s2 = Time.current)
 
       crawler.run do |measurement|
-        set_value(evaluation, measurement, start_time)
-        start_time = Time.current
+        set_value(evaluation, measurement, s2)
+        s2 = Time.current
+
+        if timeout && (Time.current - s1) > timeout.hour
+          evaluation.timeout = true
+          break
+        end
       end
 
       evaluation.save!
