@@ -17,7 +17,8 @@
         td
           | Organization Information
           .umakadata-tooltip
-            span.small data specified by dcterms:publisher in VoID
+            span.small
+              | Data specified by dcterms:publisher in VoID
         td
           - if (publishers = evaluation.publisher).present?
             ul
@@ -28,7 +29,8 @@
         td
           | License Information
           .umakadata-tooltip
-            span.small data specified by dcterms:license in VoID
+            span.small
+              | Data specified by dcterms:license in VoID
         td
           - if (licenses = evaluation.license).present?
             ul
@@ -39,7 +41,8 @@
         td
           | Supported Language
           .umakadata-tooltip
-            span.small data specified by sd:supportedLanguage in Service Description
+            span.small
+              | Data specified by sd:supportedLanguage in Service Description
         td
           - if (languages = evaluation.language).present?
             ul
@@ -51,7 +54,7 @@
           | SERVICE Keyword
           .umakadata-tooltip
             span.small
-              | true if the query using 'SERVICE' keyword returns result, otherwise false.
+              | True if a query using 'SERVICE' keyword returns a result, otherwise false.
         td
           = evaluation.service_keyword
 
@@ -60,7 +63,7 @@
           | GRAPH Keyword
           .umakadata-tooltip
             span.small
-              | true if the query using 'GRAPH' keyword returns result, otherwise false.
+              | True if a query using 'GRAPH' keyword returns a result, otherwise false.
         td= evaluation.graph_keyword
 
       tr
@@ -68,8 +71,9 @@
           | Data Scale
           .umakadata-tooltip
             span.small
-              | a number represents the scale of data.<br/>
-                The value is determined by a formula, x = log<sub>10</sub>N where N is the number of data entries.
+              | This number represents the scale of data.
+              br
+              | The value is determined by a formula, x = log<sub>10</sub>N where N is the number of data entries.
         td= (n = evaluation.data_scale) ? format('%.1f', n) : '-'
 
       tr
@@ -77,7 +81,7 @@
           | Rank
           .umakadata-tooltip
             span.small
-              | ranked as shown in the following table
+              | Ranked based on the following table
               table.text-center
                 thead
                   tr
@@ -106,7 +110,7 @@
           | CORS
           .umakadata-tooltip
             span.small
-              | true if response header of endpoint contains 'access-control-allow-origin: *', otherwise false.
+              | True if a response header of the endpoint contains 'access-control-allow-origin: *', otherwise false.
         td= evaluation.cors
 
       tr
@@ -114,11 +118,16 @@
           | URI Indexed
           .umakadata-tooltip
             span.small
-              | true if URI rules of the endpoint are created. These are used for checking content negotiation and 4 Principles of Linked Data
+              | True if URI patterns of the endpoint are defined by us.
+                These are used for checking content negotiation and Four Principles of Linked Data
         td= endpoint.resource_uris.present?
 
       tr
-        td Last Checked
+        td
+          | Last Checked
+          .umakadata-tooltip
+            span.small
+              | Time when the crawler accessed and how long it took last time
         td
           = evaluation.created_at.getutc
           - if (s = evaluation.started_at) && (f = evaluation.finished_at)
@@ -129,10 +138,14 @@
             |)
 
       tr
-        td Class Structure
+        td
+          | Class Structure
+          .umakadata-tooltip
+            span.small
+              | The link to the site where you can learn the data structure
         td= link_to @endpoint.viewer_url, @endpoint.viewer_url unless @endpoint.viewer_url.nil?
 
-p
+p.mb-3
   ' Please see
   = link_to 'this document', '/umaka-score.html'
   '  for more details about Umaka Score.

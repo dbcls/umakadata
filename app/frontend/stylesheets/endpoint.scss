@@ -252,8 +252,24 @@ form {
 
 #basic-information,
 #evaluation {
+  margin-bottom: 4rem;
+
   th {
     border-bottom: 2px solid #dee2e6;
+  }
+}
+
+#basic-information {
+  tbody {
+    tr {
+      td:first-child {
+        white-space: nowrap;
+
+        span {
+          white-space: normal;
+        }
+      }
+    }
   }
 }
 
