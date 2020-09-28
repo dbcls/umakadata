@@ -1,7 +1,7 @@
 ActiveAdmin.register Endpoint do
   menu priority: 2
 
-  permit_params :name, :endpoint_url, :description_url, :enabled, :viewer_url, :issue_id, :label_id,
+  permit_params :name, :endpoint_url, :description_url, :timeout, :enabled, :viewer_url, :issue_id, :label_id,
                 resource_uris_attributes: %i[id uri allow deny regex case_insensitive created_at updated_at endpoint_id _destroy]
 
   config.sort_order = 'id_asc'
@@ -12,6 +12,7 @@ ActiveAdmin.register Endpoint do
     column :name
     column 'Endpoint URL', :endpoint_url
     column 'Description URL', :description_url
+    column :timeout
     column :enabled
     column :alert do |endpoint|
       if endpoint.just_registered?
@@ -45,6 +46,7 @@ ActiveAdmin.register Endpoint do
   filter :name
   filter :endpoint_url
   filter :description_url
+  filter :timeout
   filter :enabled
 
   batch_action :create_forum do |ids|
@@ -67,6 +69,7 @@ ActiveAdmin.register Endpoint do
       row :name
       row :endpoint_url
       row :description_url
+      row :timeout
       row :enabled
       row :viewer_url
       row :issue_id
