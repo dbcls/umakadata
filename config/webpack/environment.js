@@ -12,9 +12,6 @@ environment.plugins.prepend('Provide',
 const erb = require('./loaders/erb');
 environment.loaders.prepend('erb', erb);
 
-const eslint =  require('./loaders/eslint');
-environment.loaders.prepend('eslint', eslint);
-
 module.exports = environment;
 
 console.log('=== Environment ===');
