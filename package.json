@@ -13,12 +13,12 @@
     "cytoscape": "^3.11.0",
     "font-awesome": "^4.7.0",
     "jquery": "^3.5.0",
-    "popper.js": "^1.16.1"
+    "popper.js": "^1.16.1",
+    "rails-erb-loader": "^5.5.2"
   },
   "devDependencies": {
     "eslint": "^7.7.0",
     "eslint-loader": "^4.0.2",
-    "rails-erb-loader": "^5.5.2",
     "webpack-dev-server": "^3.7.2"
   }
 }
