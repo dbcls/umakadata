@@ -274,7 +274,25 @@
               i.fa.fa-file-text-o
 
       tr class=class_for_criteria(evaluation.performance)
-        td Performance (#{format('%.1f', evaluation.performance)})
+        td
+          | Performance (#{format('%.1f', evaluation.performance)})
+          - if evaluation.data_scale < 7
+            span.dataset-scale data-icon='small'
+            .umakadata-tooltip
+              span.small
+                | This icon indicates the database is small scale.
+          - elsif evaluation.data_scale < 9
+            span.dataset-scale data-icon='medium'
+              span.small
+                | This icon indicates the database is medium scale.
+          - elsif evaluation.data_scale < 11
+            span.dataset-scale data-icon='large'
+              span.small
+                | This icon indicates the database is large scale.
+          - elsif evaluation.data_scale >= 11
+            span.dataset-scale data-icon='xlarge'
+              span.small
+                | This icon indicates the database is extra large scale.
         td
           | Execution Time
           .umakadata-tooltip
