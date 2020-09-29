@@ -34,6 +34,7 @@ class Evaluation < ApplicationRecord
 
   def update_score
     self.alive_rate = calc_alive_rate
+    self.alive_score = calc_alive_score
     self.score = (vs = scores.values).sum / vs.size.to_f
     self.rank = calc_rank
 
@@ -70,6 +71,18 @@ class Evaluation < ApplicationRecord
     alive / count.to_f
   end
 
+  def calc_alive_score
+    f = -> (x) { (10.0 / 3.0) * Math.sqrt(-1.0 + (6.0 * Math.sqrt(100.0 - x ** 2 / 100.0)) + (9.0 * x ** 2 / 100.0)) }
+
+    previous_score = previous&.alive_score || ((alive_rate || 0) * 100.0)
+
+    if alive
+      [f.(previous_score), 100.0].min
+    else
+      [previous_score - (10.0 / 3.0), 0.0].max
+    end
+  end
+
   def days_since_last_update
     return unless last_updated
 
@@ -80,7 +93,7 @@ class Evaluation < ApplicationRecord
 
   module Scores
     def availability
-      alive_rate * 100.0
+      alive_score
     end
 
     def freshness
