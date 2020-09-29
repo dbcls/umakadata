@@ -22,6 +22,9 @@ RUN apt-get update && \
 
 RUN gem install bundler -v '< 2'
 
+# Avoid key length error on client side
+RUN sed -i -e 's/CipherString = DEFAULT@SECLEVEL=2/# CipherString = DEFAULT@SECLEVEL=2/g' /etc/ssl/openssl.cnf
+
 ADD docker-entrypoint.sh /
 
 WORKDIR app
