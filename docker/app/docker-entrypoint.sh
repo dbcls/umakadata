@@ -4,6 +4,9 @@ if [[ $1 = start ]]; then
   mkdir -p /app/tmp/sockets /app/tmp/pids
   rm -f /app/tmp/sockets/* /app/tmp/pids/*
 
+  bundle install
+  yarn install
+
   if [[ $RAILS_ENV = production ]]; then
     PROCFILE=${PROCFILE:-Procfile}
     rails assets:precompile
