@@ -37,7 +37,7 @@ class Crawl < ApplicationRecord
 
     return unless (email = ENV['UMAKADATA_MAILER_CRAWL_MAILER_TO'])
 
-    CrawlerMailer.notify_finished_to(AdminUser.new(email: email), self)
+    CrawlerMailer.notify_finished_to(AdminUser.new(email: email), self).deliver_now
   end
 
   def number_of_endpoints

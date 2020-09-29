@@ -5,7 +5,6 @@ We just let you know that a crawl job finished.
  Started at: <%= @crawl.started_at %>
 Finished at: <%= @crawl.finished_at %>
 
-
 ::: Next scheduled crawl :::
 
   Started at: <%= @next_crawl %>
@@ -21,6 +20,7 @@ Finished at: <%= @crawl.finished_at %>
 <% if evs.present? %>
 
 ::: Top 10 endpoints that spent longest crawling time :::
+
   <% evs.each do |ev| %>
   * <%= "#{ev.endpoint.name} - #{Time.at(ev.finished_at - ev.started_at).utc.strftime('%H:%M:%S')}" %>
   <% end %>
@@ -29,6 +29,7 @@ Finished at: <%= @crawl.finished_at %>
 <% if @measurement_with_exceptions.present? %>
 
 ::: Errors while this crawl :::
+
   <% @measurement_with_exceptions.to_a.group_by { |m| m.evaluation.endpoint }.sort_by { |k, _| k.name }.each do |k, v| %>
   * <%= k.name %>
     <% v.each do |m| %>
