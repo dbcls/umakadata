@@ -16,9 +16,8 @@ class CrawlerMailer < ApplicationMailer
       date = date.succ
     end
 
-    @measurement_with_exceptions = Measurement
-                                     .where(started_at: @crawl.started_at..@crawl.finished_at)
-                                     .where.not(exceptions: nil)
+    base = Measurement.includes(:activities).where(started_at: crawl.started_at..crawl.finished_at)
+    @measurement_with_exceptions = base.where.not(exceptions: nil).or(base.where.not(activities: { exceptions: nil }))
 
     mail to: user.email
   end
