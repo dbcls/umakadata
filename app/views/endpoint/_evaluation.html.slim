@@ -281,22 +281,22 @@
               span.dataset-scale data-icon='small'
               .umakadata-tooltip
                 span.small
-                  | This icon indicates the database is small scale. (Data scale &lt; 7.0)
+                  | This icon indicates the database is small scale. (Data Scale &lt; 7.0)
             - elsif evaluation.data_scale < 9
               span.dataset-scale data-icon='medium'
               .umakadata-tooltip
                 span.small
-                  | This icon indicates the database is medium scale. (7.0 &le; Data scale &lt; 9.0)
+                  | This icon indicates the database is medium scale. (7.0 &le; Data Scale &lt; 9.0)
             - elsif evaluation.data_scale < 11
               span.dataset-scale data-icon='large'
               .umakadata-tooltip
                 span.small
-                  | This icon indicates the database is large scale. (9.0 &le; Data scale &lt; 11.0)
+                  | This icon indicates the database is large scale. (9.0 &le; Data Scale &lt; 11.0)
             - elsif evaluation.data_scale >= 11
               span.dataset-scale data-icon='xlarge'
               .umakadata-tooltip
                 span.small
-                  | This icon indicates the database is extra large scale. (11.0 &le; Data scale)
+                  | This icon indicates the database is extra large scale. (11.0 &le; Data Scale)
         td
           | Execution Time
           .umakadata-tooltip
