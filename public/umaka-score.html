@@ -2,11 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+  <!--[if IE]>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <![endif]-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="generator" content="Asciidoctor 1.5.5">
   <title>Umaka Score</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
   <link rel="stylesheet" type="text/css" href="./umaka-score.css">
 </head>
 <body class="article">
@@ -17,10 +20,1032 @@
     <h2 id="_umaka_score">Umaka Score</h2>
     <div class="sectionbody">
       <div class="paragraph">
-        <p>We're updating this document now, and it's coming soon.</p>
+        <p>August 22, 2017</p>
+      </div>
+      <div class="paragraph">
+        <p><strong>Abstract</strong></p>
+      </div>
+      <div class="paragraph">
+        <p>Umaka Score is an index to help assess the datasets and SPARQL endpoints.
+          Umaka Score is calculated on the basis of the evaluation from the 6 aspects; Availability,
+          Freshness, Operation, Usefulness, Validity and Performance.
+          We also rank the endpoints on a scale of A to E according to the Umaka score.
+          In this document, we show how to calculate Umaka score.</p>
+      </div>
+    </div>
+  </div>
+  <div class="sect1">
+    <h2 id="_1_umaka_score">1. Umaka Score</h2>
+    <div class="sectionbody">
+      <div class="paragraph">
+        <p>Umaka Score represents how valuable endpoints are. We believe there are
+          six aspects, Availability, Freshness, Operation, Usefulness, Validity
+          and Performance, for valuable endpoints. We evaluate and score endpoints
+          from these aspects. Then Umaka Score is average of these score:</p>
+      </div>
+      <div class="exampleblock text-center">
+        <div class="content">
+          <div class="paragraph">
+            <p>Umaka Score = \(\frac{\displaystyle \sum_{aspects}score}{\displaystyle 6}\)</p>
+          </div>
+          <div class="paragraph">
+            <p>where</p>
+          </div>
+          <div class="paragraph">
+            <p>\(\begin{array}{llll}
+              {\rm aspects} = [ &amp; {\rm Availability}, &amp; {\rm Freshness}, &amp; {\rm Operation}, \\
+              &amp; {\rm Usefulness}, &amp; {\rm Validity}, &amp; {\rm Performance} ]
+              \end{array}\)</p>
+          </div>
+        </div>
+      </div>
+      <div class="paragraph">
+        <p>We rank the endpoint as shown in Table <a href="#umaka_rank">1</a></p>
+      </div>
+      <table id="umaka_rank" class="tableblock frame-all grid-all spread">
+        <caption class="title">Table 1. Umaka Rank</caption>
+        <colgroup>
+          <col style="width: 50%;">
+          <col style="width: 50%;">
+        </colgroup>
+        <thead>
+        <tr>
+          <th class="tableblock halign-center valign-top">Umaka Score</th>
+          <th class="tableblock halign-center valign-top">Umaka rank</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td class="tableblock halign-center valign-top"><p class="tableblock">81 - 100</p></td>
+          <td class="tableblock halign-center valign-top"><p class="tableblock">A</p></td>
+        </tr>
+        <tr>
+          <td class="tableblock halign-center valign-top"><p class="tableblock">61 - 80</p></td>
+          <td class="tableblock halign-center valign-top"><p class="tableblock">B</p></td>
+        </tr>
+        <tr>
+          <td class="tableblock halign-center valign-top"><p class="tableblock">41 - 60</p></td>
+          <td class="tableblock halign-center valign-top"><p class="tableblock">C</p></td>
+        </tr>
+        <tr>
+          <td class="tableblock halign-center valign-top"><p class="tableblock">21 - 40</p></td>
+          <td class="tableblock halign-center valign-top"><p class="tableblock">D</p></td>
+        </tr>
+        <tr>
+          <td class="tableblock halign-center valign-top"><p class="tableblock">0 - 20</p></td>
+          <td class="tableblock halign-center valign-top"><p class="tableblock">E</p></td>
+        </tr>
+        </tbody>
+      </table>
+      <div class="paragraph">
+        <p>In Section <a href="#metrics">2</a>, we show how to score endpoints from each aspect.</p>
+      </div>
+    </div>
+  </div>
+  <div class="sect1">
+    <h2 id="metrics">2. Metrics of Umaka Score</h2>
+    <div class="sectionbody">
+      <div class="sect2">
+        <h3 id="availability">2.1 Availability</h3>
+        <div class="paragraph">
+          <p>Availability represents the degree of ready for use. High availability value means we can access
+            the endpoint most of all the time. Low availability value means the endpoint is often down. We measure
+            the following metrics for availability:</p>
+        </div>
+        <div class="ulist">
+          <ul>
+            <li>
+              <p>Alive</p>
+              <div class="paragraph">
+                <p>We send the SPARQL query described in Listing <a href="#query_for_liveness_with_graph">1</a> to the
+                  endpoint URI daily. If the response status is not 2xx, we will try the query described in Listing
+                  <a href="#query_for_liveness_without_graph">2</a>. If the endpoint return 2xx HTTP response for
+                  either of queries, alive is true, otherwise false.</p>
+              </div>
+              <div id="query_for_liveness_with_graph" class="literalblock">
+                <div class="title">Listing 1. A query for checking liveness for the endpoint that supports graph
+                  keyword
+                </div>
+                <div class="content">
+<pre>
+CONSTRUCT {
+  ?s ?p ?o .
+}
+WHERE {
+  GRAPH ?g {
+    ?s ?p ?o .
+  }
+}
+LIMIT 1</pre>
+                </div>
+              </div>
+              <div id="query_for_liveness_without_graph" class="literalblock">
+                <div class="title">Listing 2. A query for checking liveness for the endpoint that does not support graph
+                  keyword
+                </div>
+                <div class="content">
+<pre>
+CONSTRUCT {
+  ?s ?p ?o .
+}
+WHERE {
+  ?s ?p ?o .
+}
+LIMIT 1</pre>
+                </div>
+              </div>
+            </li>
+            <li>
+              <p>Alive Score</p>
+              <div class="paragraph">
+                <p>Alive monitoring score that takes the value from 0 to 100.
+                  If the crawler fails to access the endpoint, the score drops from the previous score day by day.
+                  If the crawler successfully accesses to the endpoint, the score rises day by day based on the previous
+                  score.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="paragraph">
+          <p>The Availability score is calculated as:</p>
+        </div>
+        <div class="exampleblock text-center">
+          <div class="content">
+            <div class="paragraph">
+              <p>Availability = Alive Score</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sect2">
+        <h3 id="freshness">2.2 Freshness</h3>
+        <div class="paragraph">
+          <p>Freshness represents how often data in the endpoint is updated. We
+            measure the following metrics for freshness:</p>
+        </div>
+        <div class="ulist">
+          <ul>
+            <li>
+              <p>Last Updated</p>
+              <div class="paragraph">
+                <p>We retrieve the Vocabulary of Interlinked Datasets (VoID) and Service Description Vocabulary and get
+                  the literals specified by <code>dcterms:modified</code> or <code>dcterms:issued</code>. Then we assume
+                  the last updated as the latest date among
+                  those literals.</p>
+              </div>
+              <div id="triples_for_checking_freshness_in_void" class="literalblock">
+                <div class="title">Listing 3. Expected triples in VoID for checking freshness (see <a
+                  href="https://www.w3.org/TR/void/#dublin-core"
+                  target="_blank">https://www.w3.org/TR/void/#dublin-core</a>)
+                </div>
+                <div class="content">
+<pre>
+:DBpedia a void:Dataset;
+  dcterms:title "DBPedia";
+  dcterms:description "RDF data extracted from Wikipedia";
+  dcterms:contributor :FU_Berlin;
+  dcterms:contributor :University_Leipzig;
+  dcterms:contributor :OpenLink_Software;
+  dcterms:contributor :DBpedia_community;
+  dcterms:source &lt;http://dbpedia.org/resource/Wikipedia&gt;;
+  <strong>dcterms:modified "2008-11-17"^^xsd:date</strong>;
+</pre>
+                </div>
+              </div>
+              <div id="triples_for_checking_freshness_in_sd" class="literalblock">
+                <div class="title">Listing 4. Expected triples in Service Description for checking freshness (see <a
+                  href="https://www.w3.org/TR/void/#sparql-sd"
+                  target="_blank">https://www.w3.org/TR/void/#sparql-sd</a>)
+                </div>
+                <div class="content">
+<pre>
+&lt;#service&gt; a sd:Service;
+  sd:url &lt;http://example.org/geopedia/sparql&gt;;
+  sd:defaultDatasetDescription [
+    a sd:Dataset;
+    dcterms:title "GeoPedia";
+    dcterms:description "A mirror of DBpedia and Geonames";
+    void:triples 1100000100;
+    sd:defaultGraph [
+      a sd:Graph, void:Dataset;
+      dcterms:title "GeoPedia SPARQL Endpoint Description";
+      dcterms:description "Contains a copy of this SD+VoID file!";
+      void:triples 100;
+      <strong>dcterms:issued "yyyy-mm-dd"^^xsd:date</strong>;
+    ];
+    sd:namedGraph [
+      sd:name &lt;http://dbpedia.org/&gt;;
+      sd:graph [
+        a sd:Graph, void:Dataset;
+        dcterms:title "DBpedia";
+        foaf:homepage &lt;http://dbpedia.org/&gt;;
+        void:triples 1000000000;
+        <strong>dcterms:issued "yyyy-mm-dd"^^xsd:date</strong>;
+      ];
+    ];
+    sd:namedGraph [
+      sd:name &lt;http://geonames.org/&gt;;
+      sd:graph [
+        a sd:Graph, void:Dataset;
+        dcterms:title "Geonames";
+        foaf:homepage &lt;http://www.geonames.org/ontology/&gt;;
+        void:triples 100000000;
+        <strong>dcterms:issued "yyyy-mm-dd"^^xsd:date</strong>;
+      ];
+    ];
+  ];</pre>
+                </div>
+              </div>
+            </li>
+            <li>
+              <p>Update Interval</p>
+              <div class="paragraph">
+                <p>Update Interval is average of the interval between last updated. Update
+                  Interval is N/A if there are less than two last updated dates for the
+                  endpoint.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="paragraph">
+          <p>Currently, freshness score takes value from 30 to 100 as follows.</p>
+        </div>
+        <div class="exampleblock text-center">
+          <div class="content">
+            <div class="paragraph">
+              <table>
+                <tr>
+                  <td>Freshness</td>
+                  <td> =</td>
+                  <td>30 if update interval is N/A or more than 365</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td> =</td>
+                  <td>100 if update interval is less than 30</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td> =</td>
+                  <td>100 - 70 * (update interval -30) / 335 otherwise</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sect2">
+        <h3 id="operation">2.3 Operation</h3>
+        <div class="paragraph">
+          <p>Operation represents the degree of the maintenance. We send HTTP request
+            to the endpoint URI with using the accept request-header field to
+            specify both Turtle and RDF/XML, and validate the format of its
+            response. We measure the two metrics:</p>
+        </div>
+        <div class="ulist">
+          <ul>
+            <li>
+              <p>Service Description</p>
+              <div class="paragraph">
+                <p>True if Service Description can be retrieved in Turtle format or RDF/XML
+                  format, otherwise false. We access the endpoint URI via HTTP with the
+                  following HTTP Request Header:</p>
+              </div>
+              <div class="exampleblock">
+                <div class="content">
+                  <div class="paragraph">
+                    <p>Accept: text/turtle, application/rdf+xml</p>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <p>VoID</p>
+              <div class="paragraph">
+                <p>True if VoID can be retrieved from well-known URI<a href="#1">[1]</a> in Turtle format or
+                  RDF/XML format, otherwise false. We access the endpoint URI via HTTP
+                  with the following HTTP Request Header:</p>
+              </div>
+              <div class="exampleblock">
+                <div class="content">
+                  <div class="paragraph">
+                    <p>Accept: text/turtle, application/rdf+xml</p>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="paragraph">
+          <p>We calculate Operation score as follows:</p>
+        </div>
+        <div class="exampleblock text-center">
+          <div class="content">
+            <div class="paragraph">
+              <p>Operation = \(\left\{
+                \begin{array}{ll}
+                0 &amp; {\rm if~both~of~them~are~false } \\
+                50 &amp; {\rm if~one~of~them~is~false } \\
+                100 &amp; {\rm if~both~of~them~are~true }
+                \end{array}
+                \right.\)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sect2">
+        <h3 id="usefulness">2.4 Usefulness</h3>
+        <div class="paragraph">
+          <p>Usefulness represents the degree how easily we can link data in the
+            endpoint. We measure the three metrics:</p>
+        </div>
+        <div class="ulist">
+          <ul>
+            <li>
+              <p>Metadata Score</p>
+              <div class="paragraph">
+                <p>Metadata Score represents how much the endpoint contains metadata
+                  defined in <a href="#3">[3]</a>.</p>
+              </div>
+              <div class="paragraph">
+                <p>If there is GRAPH clause being applied, we retrieve a list of graphs in the endpoint using a query
+                  described in Listing <a href="#query_for_a_list_of_graphs">4</a>, otherwise we use one graph which
+                  does not have a name, called the background graph.</p>
+              </div>
+              <div id="query_for_a_list_of_graphs" class="literalblock">
+                <div class="title">Listing 4. Obtain graph URIs on a SPARQL endpoint</div>
+                <div class="content">
+<pre>
+SELECT DISTINCT ?g
+WHERE{
+  GRAPH ?g {
+    ?s ?p ?o .
+  }
+}</pre>
+                </div>
+              </div>
+              <div class="paragraph">
+                <p>Then we try to retrieve the metadata for each graph except for Table
+                  <a href="#ignore_graphs">2</a> as follows:</p>
+              </div>
+              <table id="ignore_graphs" class="tableblock frame-all grid-all spread">
+                <caption class="title">Table 2. List of Ignore Graphs</caption>
+                <colgroup>
+                  <col style="width: 100%;">
+                </colgroup>
+                <thead>
+                <tr>
+                  <th class="tableblock halign-left valign-top">Graph URI</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td class="tableblock halign-left valign-top"><p class="tableblock"><a
+                    href="http://www.openlinksw.com/schemas/virtrdf#" class="bare">http://www.openlinksw.com/schemas/virtrdf#</a>
+                  </p></td>
+                </tr>
+                </tbody>
+              </table>
+              <div class="olist arabic">
+                <ol class="arabic">
+                  <li>
+                    <p>Classes</p>
+                    <div class="paragraph">
+                      <p>we retrieve a list of classes using a query described in Listing
+                        <a href="#query_for_classes_on_a_graph">5</a> and
+                        <a href="#query_for_classes_having_instances_on_a_graph">6</a> if there is GRAPH clause being
+                        applied;
+                        otherwise
+                        Listing <a href="#query_for_classes_on_background_graph">7</a> and
+                        <a href="#query_for_classes_having_instances_on_background_graph">8</a>.</p>
+                    </div>
+                    <div id="query_for_classes_on_a_graph" class="literalblock">
+                      <div class="title">Listing 5. Obtain the classes on a graph g</div>
+                      <div class="content">
+<pre>
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+
+SELECT DISTINCT ?c
+FROM &lt;g&gt;
+WHERE {
+  {
+    ?c rdf:type rdfs:Class .
+  } UNION {
+    [] rdf:type ?c .
+  } UNION {
+    [] rdfs:domain ?c .
+  } UNION {
+    [] rdfs:range ?c .
+  } UNION {
+    ?c rdfs:subclassOf [] .
+  } UNION {
+    [] rdfs:subclassOf ?c .
+  }
+}
+LIMIT 100</pre>
+                      </div>
+                    </div>
+                    <div id="query_for_classes_having_instances_on_a_graph" class="literalblock">
+                      <div class="title">Listing 6. Obtain the classes having instances on a graph g</div>
+                      <div class="content">
+<pre>
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+
+SELECT DISTINCT ?c
+FROM &lt;g&gt;
+WHERE{
+  [] rdf:type ?c .
+}</pre>
+                      </div>
+                    </div>
+                    <div id="query_for_classes_on_background_graph" class="literalblock">
+                      <div class="title">Listing 7. Obtain the classes on the background graph</div>
+                      <div class="content">
+<pre>
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+
+SELECT DISTINCT ?c
+WHERE {
+  {
+    ?c rdf:type rdfs:Class .
+  } UNION {
+    [] rdf:type ?c .
+  } UNION {
+    [] rdfs:domain ?c .
+  } UNION {
+    [] rdfs:range ?c .
+  } UNION {
+    ?c rdfs:subclassOf [] .
+  } UNION {
+    [] rdfs:subclassOf ?c .
+  }
+}
+LIMIT 100</pre>
+                      </div>
+                    </div>
+                    <div id="query_for_classes_having_instances_on_background_graph" class="literalblock">
+                      <div class="title">Listing 8. Obtain the classes having instances on the background graph</div>
+                      <div class="content">
+<pre>
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+
+SELECT DISTINCT ?c
+WHERE {
+  [] rdf:type ?c .
+}</pre>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <p>Labels</p>
+                    <div class="paragraph">
+                      <p>We retrieve a list of labels using a query described in Listing
+                        <a href="#query_for_labels_of_classes_on_a_graph">9</a> if there is GRAPH clause being applied;
+                        otherwise Listing
+                        <a href="#query_for_labels_of_classes_on_background_graph">10</a>.</p>
+                    </div>
+                    <div id="query_for_labels_of_classes_on_a_graph" class="literalblock">
+                      <div class="title">Listing 9. Obtain labels of the classes c1 c2 &#8230;&#8203; cn from a graph
+                        g
+                      </div>
+                      <div class="content">
+<pre>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+
+SELECT DISTINCT ?c ?label
+WHERE {
+  GRAPH &lt;g&gt; {
+    ?c rdfs:label ?label .
+    FILTER (?c IN (&lt;c1&gt;, &lt;c2&gt;, ..., &lt;cn&gt;))
+  }
+}</pre>
+                      </div>
+                    </div>
+                    <div id="query_for_labels_of_classes_on_background_graph" class="literalblock">
+                      <div class="title">Listing 10. Obtain labels of the classes c1 c2 &#8230;&#8203; cn from the
+                        background graph
+                      </div>
+                      <div class="content">
+<pre>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+
+SELECT DISTINCT ?c ?label
+WHERE {
+  ?c rdfs:label ?label .
+  FILTER (?c IN (&lt;c1&gt;, &lt;c2&gt;, ..., &lt;cn&gt;))
+}</pre>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <p>Datatypes</p>
+                    <div class="paragraph">
+                      <p>We retrieve a list of datatypes using a query described in Listing
+                        <a href="#query_for_datatypes_on_a_graph">11</a> if there is GRAPH clause being applied;
+                        otherwise Listing
+                        <a href="#query_for_datatypes_on_background_graph">12</a>.</p>
+                    </div>
+                    <div id="query_for_datatypes_on_a_graph" class="literalblock">
+                      <div class="title">Listing 11. Obtain the datatypes on a graph g</div>
+                      <div class="content">
+<pre>
+SELECT DISTINCT (datatype(?o) AS ?ldt)
+
+FROM &lt;g&gt;
+WHERE{
+  [] ?p ?o .
+  FILTER (isLiteral(?o))
+}</pre>
+                      </div>
+                    </div>
+                    <div id="query_for_datatypes_on_background_graph" class="literalblock">
+                      <div class="title">Listing 12. Obtain the datatypes on the background graph</div>
+                      <div class="content">
+<pre>
+SELECT DISTINCT (datatype(?o) AS ?ldt)
+WHERE{
+  [] ?p ?o .
+  FILTER (isLiteral(?o))
+}</pre>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <p>Properties</p>
+                    <div class="paragraph">
+                      <p>We retrieve a list of properties using a query described in Listing
+                        <a href="#query_for_properties_on_a_graph">13</a> if there is GRAPH clause being applied;
+                        otherwise Listing
+                        <a href="#query_for_properties_on_background_graph">14</a>.</p>
+                    </div>
+                    <div id="query_for_properties_on_a_graph" class="literalblock">
+                      <div class="title">Listing 13. Obtain the properties on a graph g</div>
+                      <div class="content">
+<pre>
+SELECT DISTINCT ?p
+FROM &lt;g&gt;
+WHERE{
+  ?s ?p ?o .
+}</pre>
+                      </div>
+                    </div>
+                    <div id="query_for_properties_on_background_graph" class="literalblock">
+                      <div class="title">Listing 14. Obtain the properties on the background graph</div>
+                      <div class="content">
+<pre>
+SELECT DISTINCT ?p
+WHERE{
+  ?s ?p ?o .
+}</pre>
+                      </div>
+                    </div>
+                    <div class="paragraph">
+                      <p>We evaluate Metadata score as follows:</p>
+                    </div>
+                    <div class="exampleblock text-center">
+                      <div class="content">
+                        <div class="paragraph">
+                          <p>Metadata Score =
+                            \(\frac{\displaystyle \sum_{graphs}^{g}(c(g) + l(g) + p(g) + d(g))}{\displaystyle N}\)</p>
+                        </div>
+                        <div class="paragraph">
+                          <p>where</p>
+                        </div>
+                        <div class="paragraph">
+                          <p>\(N\) = Number of Graphs</p>
+                        </div>
+                        <div class="paragraph">
+                          <p>\(c(g) = \left\{
+                            \begin{array}{ll}
+                            0 &amp; {\rm if~g~does~not~contains~any~classes} \\
+                            25 &amp; {\rm if~g~contains~more~than~zero~classes}
+                            \end{array}
+                            \right.\)</p>
+                        </div>
+                        <div class="paragraph">
+                          <p>\(l(g) = \left\{
+                            \begin{array}{ll}
+                            0 &amp; {\rm if~g~does~not~contains~any~labels} \\
+                            25 &amp; {\rm if~g~contains~more~than~zero~labels}
+                            \end{array}
+                            \right.\)</p>
+                        </div>
+                        <div class="paragraph">
+                          <p>\(p(g) = \left\{
+                            \begin{array}{ll}
+                            0 &amp; {\rm if~g~does~not~contains~any~properties} \\
+                            25 &amp; {\rm if~g~contains~more~than~zero~properties}
+                            \end{array}
+                            \right.\)</p>
+                        </div>
+                        <div class="paragraph">
+                          <p>\(d(g) = \left\{
+                            \begin{array}{ll}
+                            0 &amp; {\rm if~g~does~not~contains~any~datatypes} \\
+                            25 &amp; {\rm if~g~contains~more~than~zero~datatypes}
+                            \end{array}
+                            \right.\)</p>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ol>
+              </div>
+            </li>
+            <li>
+              <p>Ontology Score</p>
+              <div class="paragraph">
+                <p>Ontology Score, which is calculated based on metadata, represents how
+                  much ontologies data used among endpoints handled in the UmakaData system
+                  or used in Linked Open Vocabularies (LOV).
+                  We can obtain ontologies in LOV via <a href="http://lov.okfn.org/dataset/lov/api/v2/vocabulary/list">LOV
+                    API</a>.</p>
+              </div>
+              <div class="paragraph">
+                <p>Ontology Score is calculated as follows:</p>
+              </div>
+              <div class="exampleblock text-center">
+                <div class="content">
+                  <div class="paragraph">
+                    <p>Ontology Score =
+                      \(50.0 * \frac{\displaystyle NOE}{\displaystyle NO} + 50.0 * \frac{\displaystyle
+                      NOLOV}{\displaystyle NO}\)</p>
+                  </div>
+                  <div class="paragraph">
+                    <p>where</p>
+                  </div>
+                  <div class="paragraph">
+                    <p>\(NO\) = Number of Ontologies used for Properties</p>
+                  </div>
+                  <div class="paragraph">
+                    <p>\(NOE\) = Number of Ontologies used for Properties among other endpoints</p>
+                  </div>
+                  <div class="paragraph">
+                    <p>\(NOLOV\) = Number of Ontologies used for Properties in LOV</p>
+                  </div>
+                </div>
+              </div>
+              <div class="paragraph">
+                <p>At last, we evaluate Usefulness Score as follows:</p>
+              </div>
+              <div class="exampleblock text-center">
+                <div class="content">
+                  <div class="paragraph">
+                    <p>\(\begin{array}{lll}
+                      {\rm Usefulness} &amp; = &amp; 50.0 * {\rm Metadata~Score} \\
+                      &amp; + &amp; 50.0 * {\rm Ontology~Score}
+                      \end{array}\)</p>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="sect2">
+        <h3 id="validity">2.5 Validity</h3>
+        <div class="paragraph">
+          <p>Validity represents how endpoint and data in it obey the rules. We
+            measure the two metrics:</p>
+        </div>
+        <div class="ulist">
+          <ul>
+            <li>
+              <p>Cool URI</p>
+              <div class="paragraph">
+                <p>The URI of endpoints is preferred to be Cool URI<a href="#5">[5]</a>, <a href="#4">[4]</a>.</p>
+              </div>
+              <div class="olist arabic">
+                <div class="title">We check four criteria:</div>
+                <ol class="arabic">
+                  <li>
+                    <p>A host of URI of endpoints should not be specified by IP address</p>
+                  </li>
+                  <li>
+                    <p>A port of URI of endpoints should be 80</p>
+                  </li>
+                  <li>
+                    <p>A URI of endpoints should not contain query parameters</p>
+                  </li>
+                  <li>
+                    <p>A length of URI of endpoints should be less than 30 characters</p>
+                  </li>
+                </ol>
+              </div>
+              <div class="paragraph">
+                <p>Cool URI Score is a percentage of the satisfied rules.</p>
+              </div>
+            </li>
+            <li>
+              <p>Linked Data Rule</p>
+              <div class="paragraph">
+                <p>Though the endpoints are preferred to be satisfied with the four rules of
+                  linked data<a href="#2">[2]</a>, we omit "1. Use URIs as names for things".
+                  This is because the first rule is natural for RDF and it is meaningless for umakadata score.</p>
+              </div>
+              <div class="olist arabic">
+                <div class="title">We check the four rules of Linked Data except "1. Use URIs as names for things":
+                </div>
+                <ol class="arabic" start="2">
+                  <li>
+                    <p>Use HTTP URIs so that people can look up those names</p>
+                    <div class="paragraph">
+                      <p>We assume all subjects of statements are things. We search invalid
+                        statement using a query described in Listing
+                        <a href="#non_http_uri_subject_on_a_graph">15</a> if there is GRAPH clause being applied;
+                        otherwise Listing
+                        <a href="#non_http_uri_subject_on_background_graph">16</a>. If nothing is found the endpoint
+                        satisfied this rule.</p>
+                    </div>
+                    <div class="paragraph">
+                      <p>Note that we ignore Virtuoso specific graphs since Virtuoso contains a
+                        graph which contains invalid statements.</p>
+                    </div>
+                    <div id="non_http_uri_subject_on_a_graph" class="literalblock">
+                      <div class="title">Listing 15. A Query for searching non-HTTP-URI subjects on a graph g</div>
+                      <div class="content">
+<pre>
+SELECT *
+WHERE {
+  GRAPH ?g {
+    ?s ?p ?o .
+  }
+  FILTER (!REGEX(STR(?s), "^http://", "i")
+          &amp;&amp; !isBLANK(?s)
+          &amp;&amp; ?g NOT IN (&lt;http://www.openlinksw.com/schemas/virtrdf#&gt;))
+}
+LIMIT 1</pre>
+                      </div>
+                    </div>
+                    <div id="non_http_uri_subject_on_background_graph" class="literalblock">
+                      <div class="title">Listing 16. A Query for searching non-HTTP-URI subjects on the background
+                        graph
+                      </div>
+                      <div class="content">
+<pre>
+SELECT *
+WHERE {
+  FILTER (!REGEX(STR(?s), "^http://", "i")
+          &amp;&amp; !isBLANK(?s))
+}
+LIMIT 1</pre>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <p>When someone looks up a URI, provide useful information, using the
+                      standards (RDF*, SPARQL)</p>
+                    <div class="paragraph">
+                      <p>We assess this rule by obtaining a subject (URI) using a query described
+                        in Listing <a href="#query_for_a_subject_on_a_graph">17</a> if there is GRAPH clause being
+                        applied
+                        otherwise Listing <a href="#query_for_a_subject_on_background_graph">18</a>
+                        , and accessing the URI via HTTP
+                        protocol. We assume that the endpoint is satisfied with the rule if the
+                        URI returns any data.</p>
+                    </div>
+                    <div class="paragraph">
+                      <p>Note that we ignore Virtuoso specific graphs since Virtuoso contains a
+                        graph which contains invalid statements.</p>
+                    </div>
+                    <div id="query_for_a_subject_on_a_graph" class="literalblock">
+                      <div class="title">Listing 17. A Query for a Subject on a graph g</div>
+                      <div class="content">
+<pre>
+SELECT ?s
+WHERE {
+  GRAPH ?g {
+    ?s ?p ?o .
+  }
+  FILTER (isURI(?s)
+          &amp;&amp; !REGEX(STR(?s), "^http://localhost", "i")
+          &amp;&amp; ?g NOT IN (&lt;http://www.openlinksw.com/schemas/virtrdf#&gt;))
+}
+LIMIT 1
+OFFSET 100</pre>
+                      </div>
+                    </div>
+                    <div id="query_for_a_subject_on_background_graph" class="literalblock">
+                      <div class="title">Listing 18. A Query for a Subject on the background graph</div>
+                      <div class="content">
+<pre>
+SELECT ?s
+WHERE {
+  ?s ?p ?o .
+  FILTER (isURI(?s)
+          &amp;&amp; !REGEX(STR(?s), "^http://localhost", "i")
+          &amp;&amp; !REGEX(STR(?s), "^http://www.openlinksw.com", "i"))
+}
+LIMIT 1
+OFFSET 100</pre>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <p>Include links to other URIs. so that they can discover more things</p>
+                    <div class="paragraph">
+                      <p>We assume the statement representing the link to other URI uses the
+                        vocabularies owl:sameAs or rdfs:seeAlso. We think if there are any
+                        statement of which property is owl:sameAs or rdfs:seeAlso, the endpoint
+                        is satisfied with the rule. We check the feasibility of the rule by
+                        using queries described in Listing <a href="#query_for_same_as_on_a_graph">19</a>,
+                        <a href="#query_for_see_also_on_a_graph">20</a> if there is GRAPH clause being applied;
+                        otherwise Listing <a href="#query_for_same_as_on_background_graph">21</a>,
+                        <a href="#query_for_see_also_on_background_graph">22</a></p>
+                    </div>
+                    <div id="query_for_same_as_on_a_graph" class="literalblock">
+                      <div class="title">Listing 19. A Query for a Same AS Statement on a graph g</div>
+                      <div class="content">
+<pre>
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
+
+SELECT *
+WHERE {
+  GRAPH ?g {
+    ?s owl:sameAs ?o .
+  }
+}
+LIMIT 1</pre>
+                      </div>
+                    </div>
+                    <div id="query_for_see_also_on_a_graph" class="literalblock">
+                      <div class="title">Listing 20. A Query for a See Also Statement on a graph g</div>
+                      <div class="content">
+<pre>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+
+SELECT *
+WHERE {
+  GRAPH ?g {
+    ?s rdfs:seeAlso ?o .
+  }
+}
+LIMIT 1</pre>
+                      </div>
+                    </div>
+                    <div id="query_for_same_as_on_background_graph" class="literalblock">
+                      <div class="title">Listing 21. A Query for a Same AS Statement on the background graph</div>
+                      <div class="content">
+<pre>
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
+
+SELECT *
+WHERE {
+  ?s owl:sameAs ?o .
+}
+LIMIT 1</pre>
+                      </div>
+                    </div>
+                    <div id="query_for_see_also_on_background_graph" class="literalblock">
+                      <div class="title">Listing 22. A Query for a See Also Statement on the background graph</div>
+                      <div class="content">
+<pre>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+
+SELECT *
+WHERE {
+  ?s rdfs:seeAlso ?o .
+}
+LIMIT 1</pre>
+                      </div>
+                    </div>
+                  </li>
+                </ol>
+              </div>
+              <div class="paragraph">
+                <p>Linked Data Score is a percentage of the satisfied rules.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="paragraph">
+          <p>We evaluate Validity as follows:</p>
+        </div>
+        <div class="exampleblock text-center">
+          <div class="content">
+            <div class="paragraph">
+              <p>Validity = 40 * Cool URI Score + 60.0 * Linked Data Rule Score</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sect2">
+        <h3 id="performance">2.6 Performance</h3>
+        <div class="paragraph">
+          <p>Performace suggests how powerful the endpoint is.</p>
+        </div>
+        <div class="paragraph">
+          <p>We measure the response times of the two queries, Listing
+            <a href="#query_ask">23</a>, <a href="#query_for_list_of_graphs">24</a>. The former query is a
+            most simple query and we use this query to estimate the transfer time.
+            The latter query requires a little computations for endpoints. We
+            believe the execution cost of this query does not differ very much
+            according to the size of data.</p>
+        </div>
+        <div id="query_ask" class="literalblock">
+          <div class="title">Listing 23. A Most Simple Query</div>
+          <div class="content">
+            <pre>ASK {}</pre>
+          </div>
+        </div>
+        <div id="query_for_list_of_graphs" class="literalblock">
+          <div class="title">Listing 24. A Query for retrieving the number of classes</div>
+          <div class="content">
+<pre>
+SELECT DISTINCT (COUNT(?class) AS ?c)
+WHERE {
+  [] a ?class .
+}</pre>
+          </div>
+        </div>
+        <div class="paragraph">
+          <p>We assume the execution time as:</p>
+        </div>
+        <div class="exampleblock text-center">
+          <div class="content">
+            <div class="paragraph">
+              <p>Execution Time = Differences of the response time for those queries.</p>
+            </div>
+          </div>
+        </div>
+        <div class="paragraph">
+          <p>After that, we evaluate Performance as:</p>
+        </div>
+        <div class="exampleblock text-center">
+          <div class="content">
+            <div class="paragraph">
+              <p>Performance = \(\left\{
+                \begin{array}{ll}
+                100.0 * (1.0 - (({\rm Execution~Time} {\rm ~ / ~} N) * 1000000)) &amp; {\rm
+                if~Execution~Time~is~less~than~1~second} \\
+                0 &amp; {\rm Otherwise}
+                \end{array}
+                \right.\)</p>
+            </div>
+            <div class="paragraph">
+              <p>where</p>
+            </div>
+            <div class="paragraph">
+              <p>N = Number of statements</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sect1">
+    <h2 id="_references">References</h2>
+    <div class="sectionbody">
+      <div class="paragraph">
+        <p><a id="1"></a>[1] Keith Alexander, Richard Cyganiak, Michael Hausenblas, and Jun
+          Zhao. Describing linked datasets with the void vocabulary.
+          <a href="https://www.w3.org/TR/void/" class="bare">https://www.w3.org/TR/void/</a>, March 2011.</p>
+      </div>
+      <div class="paragraph">
+        <p><a id="2"></a>[2] Tim Berners-Lee. Linked data - design issues.
+          <a href="https://www.w3.org/DesignIssues/LinkedData.html" class="bare">https://www.w3.org/DesignIssues/LinkedData.html</a>,
+          2006.</p>
+      </div>
+      <div class="paragraph">
+        <p><a id="3"></a>[3] DBCLS. Sparql queries for sparql builder metadata.
+          <a href="http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-buildermetadata/" class="bare">http://www.sparqlbuilder.org/doc/sparql-queries-for-sparql-buildermetadata/</a>.
+        </p>
+      </div>
+      <div class="paragraph">
+        <p><a id="4"></a>[4] Leigh Dodds and Ian Davis. Linked data patterns - a pattern
+          catalogue for modelling, publishing, and consuming linked data.
+          <a href="http://patterns.dataincubator.org" class="bare">http://patterns.dataincubator.org</a>, 2012.</p>
+      </div>
+      <div class="paragraph">
+        <p><a id="5"></a>[5] Leo Sauermann and Richard Cyganiak. Cool uris for the semantic web.
+          <a href="https://www.w3.org/TR/cooluris/" class="bare">https://www.w3.org/TR/cooluris/</a>, Descember 2008.
+        </p>
       </div>
     </div>
   </div>
 </div>
+<div id="footer">
+  <div id="footer-text">
+    Last update 2020-9-30
+  </div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.0/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
 </body>
 </html>
