@@ -16,13 +16,21 @@ ActiveAdmin.register DatasetRelation do
                         'Dst endpoint': 'dst_endpoint_id',
                         'Relation': 'relation'
                       },
-                      before_batch_import: lambda { |importer|
-                        DatasetRelation.where(id: importer.values_at('id')).delete_all
+                      before_batch_import: -> (_importer)  {
+                        DatasetRelation.delete_all
                       },
                       template_object: ActiveAdminImport::Model.new(
-                        hint: 'The headers of CSV should not be modified as download at index page or '\
-                              'should be "id","endpoint_id","src_endpoint_id","dst_endpoint_id","relation"'
+                        hint: 'You can download template CSV from <strong><a href="/admin/dataset_relations.csv">here</a></strong>.<br/>'\
+                              'All existing entries will be dropped before importing.'
                       )
+
+  csv do
+    column :id
+    column :endpoint_id
+    column :src_endpoint_id
+    column :dst_endpoint_id
+    column :relation
+  end
 
   index do
     selectable_column
