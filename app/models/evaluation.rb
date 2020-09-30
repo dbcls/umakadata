@@ -93,7 +93,7 @@ class Evaluation < ApplicationRecord
 
   module Scores
     def availability
-      alive_score
+      alive_score || (alive_rate || 0) * 100.0
     end
 
     def freshness
