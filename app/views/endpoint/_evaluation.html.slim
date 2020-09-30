@@ -15,13 +15,13 @@
       tr class=class_for_criteria(evaluation.availability)
         td Availability (#{format('%.1f', evaluation.availability)})
         td colspan=2
-          | Alive (Alive Rate)
+          | Alive (Alive Score)
           .umakadata-tooltip
             span.medium
-              | The endpoint was alive or not when we checked the endpoint last time.
-              br
-              | Alive rate shows how much the endpoint was alive in these 30 days.
-        td #{evaluation.alive} (#{format('%.1f', evaluation.alive_rate * 100)}%)
+              | Alive monitoring score that takes the value from 0 to 100.
+                If the crawler fails to access the endpoint, the score drops from the previous score day by day.
+                If the crawler successfully accesses to the endpoint, the score rises day by day based on the previous score.
+        td #{evaluation.alive}
         td.text-center
           - if measurements.find { |x| x.name == 'availability.alive' }.present?
             = link_to endpoint_log_path(id: endpoint.id, name: 'alive', date: date), target: '_blank' do
