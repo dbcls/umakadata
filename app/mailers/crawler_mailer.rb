@@ -11,8 +11,8 @@ class CrawlerMailer < ApplicationMailer
 
     date = Time.current < Crawl.start_time(Date.current) ? Date.current : Date.current.succ
     @next_crawl = loop do
-      crawl = Crawl.find_by(started_at: date.beginning_of_day..date.end_of_day)
-      break Crawl.start_time(date) if !crawl || (crawl && !crawl.skip)
+      c = Crawl.find_by(started_at: date.beginning_of_day..date.end_of_day)
+      break Crawl.start_time(date) if !c || (c && !c.skip)
       date = date.succ
     end
 
