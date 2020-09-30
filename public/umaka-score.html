@@ -951,13 +951,17 @@ LIMIT 1</pre>
           </div>
         </div>
         <div id="query_for_list_of_graphs" class="literalblock">
-          <div class="title">Listing 24. A Query for retrieving the number of classes</div>
+          <div class="title">Listing 24. A Query for retrieving classes</div>
           <div class="content">
 <pre>
-SELECT DISTINCT (COUNT(?class) AS ?c)
+SELECT DISTINCT ?c
 WHERE {
-  [] a ?class .
-}</pre>
+  GRAPH ?g {
+    [] a ?c .
+  }
+}
+LIMIT 100
+</pre>
           </div>
         </div>
         <div class="paragraph">
@@ -967,6 +971,7 @@ WHERE {
           <div class="content">
             <div class="paragraph">
               <p>Execution Time = Differences of the response time for those queries.</p>
+              <p>The final value is obtained by averaging over the results taken by three times.</p>
             </div>
           </div>
         </div>

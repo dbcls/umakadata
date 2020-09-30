@@ -302,7 +302,8 @@
           .umakadata-tooltip
             span.medium
               | This value represents the processing performance.
-              | It is calculated as a difference of the response time retrieving the number of classes query from its ASK{} query.
+                It is calculated as a difference of the response time retrieving the number of classes query from its ASK{} query.
+                The final value is obtained by averaging over the results taken by three times.
         td
         td
           = evaluation.execution_time.present? ? format('%.3f', evaluation.execution_time) : 'N/A'
