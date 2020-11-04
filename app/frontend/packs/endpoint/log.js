@@ -76,6 +76,12 @@ $(function () {
       html += '<div class="table-wrapper table-responsive">';
       html += '<table class="table table-bordered">';
       html += '<tbody>';
+      if (d.warnings && d.warnings.length > 0) {
+        html += `<tr><th colspan="2" class="table-warning">Warning</th><td class="table-warning">${printWarning(d.warnings)}</td></tr>`;
+      }
+      if (d.exceptions && Object.values(d.exceptions).length > 0) {
+        html += `<tr><th colspan="2" class="table-danger">Exception</th><td class="table-danger">${printException(d.exceptions)}</td></tr>`;
+      }
       html += `<tr><th colspan="2">Elapsed time</th><td>${Math.round(d.elapsed_time * 1000) / 1000.0} [s]</td></tr>`;
       html += `<tr><th rowspan="4" scope="rowgroup">Request</th><th scope="row">Method</th><td><pre><code>${d.request.method || ''}</code></pre></td></tr>`;
       html += `<tr><th scope="row">URL</th><td><pre><code>${d.request.url || ''}</code></pre></td></tr>`;
@@ -85,12 +91,6 @@ $(function () {
       html += `<tr><th scope="row">Status</th><td><pre><code>${d.response.status || ''}</code></pre></td></tr>`;
       html += `<tr><th scope="row">Headers</th><td><pre><code>${printHeader(d.response.headers)}</code></pre></td></tr>`;
       html += `<tr><th scope="row">Body</th><td><pre><code>${escapeHtml(d.response.body)}</code></pre></td></tr>`;
-      if (d.warnings && d.warnings.length > 0) {
-        html += `<tr><th colspan="2" class="table-warning">Warning</th><td class="table-warning">${printWarning(d.warnings)}</td></tr>`;
-      }
-      if (d.exceptions && Object.values(d.exceptions).length > 0) {
-        html += `<tr><th colspan="2" class="table-danger">Exception</th><td class="table-danger">${printException(d.exceptions)}</td></tr>`;
-      }
       html += '</tbody></table></div></div></div></div>';
 
       $log.append(html);
