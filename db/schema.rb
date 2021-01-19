@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_29_080032) do
+ActiveRecord::Schema.define(version: 2021_01_19_055956) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,8 +78,8 @@ ActiveRecord::Schema.define(version: 2020_09_29_080032) do
     t.string "description_url"
     t.boolean "enabled", default: true, null: false
     t.string "viewer_url"
-    t.integer "issue_id"
-    t.integer "label_id"
+    t.bigint "issue_id"
+    t.bigint "label_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.float "timeout", default: 4.0
