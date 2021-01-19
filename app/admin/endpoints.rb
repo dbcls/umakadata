@@ -54,7 +54,7 @@ ActiveAdmin.register Endpoint do
 
     batch_action_collection.find(ids).each do |endpoint|
       begin
-        Endpoint.create_forum(endpoint)
+        endpoint.create_forum
       rescue StandardError => e
         Rails.logger.error(e)
         message = e.message

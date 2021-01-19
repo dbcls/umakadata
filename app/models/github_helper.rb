@@ -32,11 +32,15 @@ class GithubHelper
   # @return [TrueClass, FalseClass]
   def self.label_exists?(name)
     get_label(name).present?
+  rescue Octokit::NotFound
+    false
   end
 
   # @return [TrueClass, FalseClass]
   def self.issue_exists?(title)
     find_issue_by_title(title).present?
+  rescue Octokit::NotFound
+    false
   end
 
   #
