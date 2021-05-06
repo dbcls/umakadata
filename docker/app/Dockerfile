@@ -3,6 +3,7 @@ FROM ruby:2.6.3-slim-buster
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       curl && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     curl -sL "https://deb.nodesource.com/setup_12.x" | bash - && \
     curl -sS "https://dl.yarnpkg.com/debian/pubkey.gpg" | apt-key add - && \
@@ -17,7 +18,9 @@ RUN apt-get update && \
       libxml2-dev \
       libxslt-dev \
       nodejs \
+      shared-mime-info \
       yarn && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 RUN gem install bundler -v '< 2'
