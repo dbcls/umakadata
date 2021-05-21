@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/dbcls/umakadata_gem.git
-  revision: d0880d4117f88fcf3db6ad47c7d85baf9dc0fb2f
+  revision: cac889528dcdb5183df9c8d6fab39d11f68d53b5
   specs:
     umakadata (1.0.0)
       activesupport (>= 5.2, < 7.0)
@@ -251,7 +251,7 @@ GEM
     net-http-persistent (3.1.0)
       connection_pool (~> 2.2)
     nio4r (2.5.2)
-    nokogiri (1.11.3)
+    nokogiri (1.11.5)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
     nokogumbo (2.0.5)
