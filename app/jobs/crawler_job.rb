@@ -20,7 +20,7 @@ class CrawlerJob
       evaluation.started_at = (s2 = Time.current)
 
       crawler.run do |measurement|
-        set_value(evaluation, measurement, s2)
+        set_value(evaluation, measurement, s2) if measurement
         s2 = Time.current
 
         if timeout && (Time.current - s1) > timeout.hour
@@ -35,6 +35,7 @@ class CrawlerJob
 
       evaluation.update!(finished_at: Time.current)
     rescue StandardError => e
+      error('Crawler.perform') { ([e.message] + e.backtrace).join("\n") }
       raise e
     ensure
       crawl.finalize! if crawl.last?
@@ -80,10 +81,10 @@ class CrawlerJob
     elsif evaluation.respond_to?("#{name}=")
       evaluation.send("#{name}=", v.is_a?(String) ? v.ensure_utf8 : v) if v.present?
     else
-      error('Crawler') { "Missing method #{name}= for #{evaluation.class}" }
+      error('Crawler.set_value') { "Missing method #{name}= for #{evaluation.class}" }
     end
   rescue StandardError => e
-    error('Crawler') { ([e.message] + e.backtrace).join("\n") }
+    error('Crawler.set_value') { ([e.message] + e.backtrace).join("\n") }
   end
 
   # @return [Crawl]
