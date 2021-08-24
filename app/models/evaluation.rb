@@ -12,6 +12,7 @@ class Evaluation < ApplicationRecord
 
   scope :alive, -> { where(alive: true) }
   scope :has_service_description, -> { where(service_description: true) }
+  scope :has_void, -> { where(void: true) }
 
   class << self
     def rank_number(label)

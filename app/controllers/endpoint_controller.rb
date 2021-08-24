@@ -61,23 +61,8 @@ class EndpointController < ApplicationController
 
   # GET /endpoint/statistics
   def statistics
-    to = current_date || Date.current
-    from = 10.days.ago(to)
-
-    begin
-      data = (from..to).map do |day|
-        key = day.strftime('%m/%d')
-        data = if (c = Crawl.finished.on(day))
-                 [c.score_average.to_i, c.score_median.round(0), (c.alive_rate * 100).to_i, (c.service_descriptions_rate * 100).to_i]
-               else
-                 Array.new(4) { nil }
-               end
-        [key, data]
-      end
-      render json: data.to_h
-    rescue
-      render json: { error: '500 Internal Server Error' }, status: 500
-    end
+    @to = current_date || Date.current
+    @from = 13.days.ago(@to)
   end
 
   # GET /endpoint/graph

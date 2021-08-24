@@ -64,6 +64,12 @@ class Crawl < ApplicationRecord
     evaluations.has_service_description.count / v.to_f
   end
 
+  def void_rate
+    return 0 unless (v = number_of_endpoints).positive?
+
+    evaluations.has_void.count / v.to_f
+  end
+
   def data_entries
     evaluations.map(&:data_entry).compact.sum
   end
