@@ -6,6 +6,7 @@ class Endpoint < ApplicationRecord
   has_many :vocabulary_prefixes, dependent: :destroy
 
   accepts_nested_attributes_for :resource_uris, allow_destroy: true
+  accepts_nested_attributes_for :excluding_graphs, allow_destroy: true
 
   validates :name, uniqueness: true
   validates :endpoint_url, uniqueness: true

@@ -1,5 +1,5 @@
 ActiveAdmin.register DatasetRelation do
-  menu priority: 4
+  menu priority: 5
 
   permit_params :src_endpoint_id, :dst_endpoint_id, :relation, :endpoint_id
 

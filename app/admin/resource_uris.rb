@@ -1,5 +1,5 @@
 ActiveAdmin.register ResourceURI do
-  menu priority: 3
+  menu priority: 4
 
   permit_params :uri, :allow, :deny, :regex, :case_insensitive, :endpoint_id
 

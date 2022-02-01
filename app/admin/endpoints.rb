@@ -2,7 +2,8 @@ ActiveAdmin.register Endpoint do
   menu priority: 2
 
   permit_params :name, :endpoint_url, :description_url, :timeout, :enabled, :viewer_url, :issue_id, :label_id,
-                resource_uris_attributes: %i[id uri allow deny regex case_insensitive created_at updated_at endpoint_id _destroy]
+                resource_uris_attributes: %i[id uri allow deny regex case_insensitive created_at updated_at endpoint_id _destroy],
+                excluding_graphs_attributes: %i[id uri endpoint_id created_at updated_at endpoint_id _destroy]
 
   config.sort_order = 'id_asc'
 
@@ -78,6 +79,17 @@ ActiveAdmin.register Endpoint do
       row :updated_at
     end
 
+    panel 'List of Excluding Graphs' do
+      table_for endpoint.excluding_graphs do
+        column :id do |x|
+          link_to x.id, admin_excluding_graph_path(x)
+        end
+        column :uri
+        column :created_at
+        column :updated_at
+      end
+    end
+
     panel 'List of Resource URI' do
       table_for endpoint.resource_uris do
         column :id do |x|
@@ -111,6 +123,10 @@ ActiveAdmin.register Endpoint do
     f.inputs
 
     f.inputs do
+      f.has_many :excluding_graphs, heading: 'List of Excluding Graphs', allow_destroy: true do |t|
+        t.input :uri, label: 'URI'
+      end
+
       f.has_many :resource_uris, heading: 'List of Resource URI', allow_destroy: true do |t|
         t.input :uri, label: 'URI'
         t.input :allow
