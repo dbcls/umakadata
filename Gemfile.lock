@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/dbcls/umakadata_gem.git
-  revision: c45dc33ae5b42ddfb099c3cfae425cc7ef4668d2
+  revision: f391ebf87808f0dbdf9517d19d4d9f9d52ffd897
   specs:
     umakadata (1.0.0)
       activesupport (>= 5.2, < 7.0)
@@ -150,7 +150,7 @@ GEM
       activesupport (>= 4.1)
     hashie (3.6.0)
     htmlentities (4.3.4)
-    i18n (1.8.11)
+    i18n (1.9.1)
       concurrent-ruby (~> 1.0)
     inherited_resources (1.11.0)
       actionpack (>= 5.0, < 6.1)
@@ -337,9 +337,9 @@ GEM
       rdf (~> 3.2)
     rdf-json (3.2.0)
       rdf (~> 3.2)
-    rdf-microdata (3.2.0)
+    rdf-microdata (3.2.1)
       htmlentities (~> 4.3)
-      nokogiri (~> 1.12)
+      nokogiri (~> 1.13)
       rdf (~> 3.2)
       rdf-rdfa (~> 3.2)
       rdf-xsd (~> 3.2)
