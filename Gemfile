@@ -46,7 +46,7 @@ gem 'recaptcha', '~> 5.0'
 gem 'simple_form', '~> 5.0'
 
 # asset
-gem 'font-awesome-sass', '~> 5.4.1'
+gem 'font-awesome-sass', '~> 6.1'
 
 # console
 gem 'pry-rails', '~> 0.3.9'
