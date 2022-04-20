@@ -29,7 +29,7 @@ gem 'slim-rails', '~> 3.2'
 ## js
 gem 'js-routes', '~> 1.4', '>= 1.4.9'
 gem 'uglifier', '>= 1.3.0'
-gem 'webpacker'
+gem 'webpacker', '~> 5.4', '>= 5.4.3'
 
 ## optimization
 gem 'bootsnap', '>= 1.1.0', require: false

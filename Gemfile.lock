@@ -557,7 +557,7 @@ DEPENDENCIES
   umakadata!
   unicorn (~> 5.5)
   web-console (>= 3.3.0)
-  webpacker
+  webpacker (~> 5.4, >= 5.4.3)
 
 RUBY VERSION
    ruby 2.6.3p62
