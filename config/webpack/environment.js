@@ -1,5 +1,6 @@
 const {environment} = require('@rails/webpacker');
 const webpack = require('webpack');
+const path = require('path');
 
 environment.plugins.prepend('Provide',
   new webpack.ProvidePlugin({
@@ -8,6 +9,14 @@ environment.plugins.prepend('Provide',
     Popper: 'popper.js/dist/popper'
   })
 );
+
+environment.config.merge({
+  resolve: {
+    alias: {
+      'jquery': path.join(__dirname, '../../node_modules/jquery/dist/jquery')
+    },
+  },
+});
 
 const erb = require('./loaders/erb');
 environment.loaders.prepend('erb', erb);
