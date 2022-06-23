@@ -8,16 +8,19 @@ class ExcludingGraphController < ApplicationController
                          ExcludingGraph.all
                        end
 
-    data = excluding_graphs.group_by { |x| x[:endpoint_id] }.map do |endpoint_id, g|
+    data = excluding_graphs.order(:endpoint_id)
+                           .group_by { |x| x[:endpoint_id] }
+                           .map do |endpoint_id, g|
       ep = Endpoint.find(endpoint_id)
 
       {
         endpoint: {
+          id: ep.id,
           name: ep.name,
           url: ep.endpoint_url,
           enabled: ep.enabled
         },
-        excluding_graphs: g.map(&:uri),
+        excluding_graphs: g.map(&:uri).sort,
       }
     end
 
