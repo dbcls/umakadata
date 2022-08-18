@@ -92,12 +92,16 @@ class GithubHelper
     rescue Octokit::ServiceUnavailable => e
       raise e if (retry_count += 1) > 3
 
-      sleep(5 * 2**retry_count)
+      sleep(5 * 2 ** retry_count)
     end
   end
 
   def self.client
-    Octokit::Client.new(access_token: Rails.application.credentials.github_token)
+    Octokit::Client.new(connection_options: {
+                          headers: {
+                            'Authorization' => "token #{Rails.application.credentials.github_token}"
+                          }
+                        })
   end
 
   def self.available?
