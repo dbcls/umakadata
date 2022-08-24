@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/dbcls/umakadata_gem.git
-  revision: f391ebf87808f0dbdf9517d19d4d9f9d52ffd897
+  revision: 4fbc46a3f86c8e0652c8c18680581f9cb853e889
   specs:
     umakadata (1.0.0)
       activesupport (>= 5.2, < 7.0)
@@ -80,8 +80,8 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-    addressable (2.8.0)
-      public_suffix (>= 2.0.2, < 5.0)
+    addressable (2.8.1)
+      public_suffix (>= 2.0.2, < 6.0)
     arbre (1.5.0)
       activesupport (>= 3.0.0, < 7.1)
       ruby2_keywords (>= 0.0.2, < 1.0)
@@ -244,7 +244,7 @@ GEM
     msgpack (1.5.1)
     multi_json (1.15.0)
     multi_xml (0.6.0)
-    multipart-post (2.1.1)
+    multipart-post (2.2.3)
     net-http-persistent (3.1.0)
       connection_pool (~> 2.2)
     nio4r (2.5.8)
@@ -278,7 +278,7 @@ GEM
       method_source (~> 1.0)
     pry-rails (0.3.9)
       pry (>= 0.10.4)
-    public_suffix (4.0.7)
+    public_suffix (5.0.0)
     puma (4.3.12)
       nio4r (~> 2.0)
     raabro (1.4.0)
@@ -322,9 +322,9 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     rchardet (1.8.0)
-    rdf (3.2.6)
+    rdf (3.2.9)
       link_header (~> 0.0, >= 0.0.8)
-    rdf-aggregate-repo (3.2.0)
+    rdf-aggregate-repo (3.2.1)
       rdf (~> 3.2)
     rdf-isomorphic (3.2.1)
       rdf (~> 3.2)
@@ -494,7 +494,7 @@ GEM
     thread_safe (0.3.6)
     thwait (0.2.0)
       e2mmap
-    tilt (2.0.10)
+    tilt (2.0.11)
     tzinfo (1.2.10)
       thread_safe (~> 0.1)
     uglifier (4.2.0)
