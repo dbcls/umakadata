@@ -13,7 +13,7 @@ gem 'sparql-client', git: 'https://github.com/dsatoh/sparql-client.git', branch:
 ## middleware
 gem 'foreman', '~> 0.85.0'
 gem 'pg', '>= 0.18', '< 2.0'
-gem 'puma', '~> 4.3'
+gem 'puma', '~> 5.6'
 # pin the rack version to 2.0.7 to avoid conflict with sidekiq
 gem 'rack', '2.1.4.1'
 gem 'redis', '~> 4.1', '>= 4.1.3'
