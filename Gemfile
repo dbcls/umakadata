@@ -19,7 +19,7 @@ gem 'rack', '2.1.4.1'
 gem 'redis', '~> 4.1', '>= 4.1.3'
 gem 'redis-rails', '~> 5.0', '>= 5.0.2'
 gem 'sendgrid-ruby', '~> 6.0'
-gem 'sidekiq', '~> 6.0'
+gem 'sidekiq', '~> 6.5'
 gem 'sidekiq-scheduler', '~> 3.0'
 gem 'unicorn', '~> 5.5'
 
