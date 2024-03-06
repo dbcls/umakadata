@@ -7,9 +7,6 @@ gem 'rails', '~> 5.2.3'
 
 gem 'umakadata', git: 'https://github.com/dbcls/umakadata_gem.git'
 
-# quick fix
-gem 'sparql-client', git: 'https://github.com/dsatoh/sparql-client.git', branch: 'fix_name_error'
-
 ## middleware
 gem 'foreman', '~> 0.85.0'
 gem 'pg', '>= 0.18', '< 2.0'
@@ -64,6 +61,4 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'web-console', '>= 3.3.0'
-
-  # gem 'capistrano-rails'
 end
