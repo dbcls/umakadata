@@ -1,5 +1,6 @@
 require 'umakadata'
 require 'forwardable'
+require 'fileutils'
 
 class CrawlerJob
   include Sidekiq::Worker
@@ -34,6 +35,8 @@ class CrawlerJob
       endpoint.update_vocabulary_prefixes!(*crawler.vocabulary_prefix)
 
       evaluation.update!(finished_at: Time.current)
+
+      remove_old_log_file
     rescue StandardError => e
       error('Crawler.perform') { ([e.message] + e.backtrace).join("\n") }
       raise e
@@ -147,6 +150,16 @@ class CrawlerJob
 
   def logger
     @logger ||= Umakadata::Crawler.config.logger
+  end
+
+  def remove_old_log_file
+    one_year_ago = Date.current.beginning_of_month.ago(1.year)
+
+    Dir.glob(Rails.root.join('log', 'crawl_*.log')).each do |f|
+      if (m = f.match(/crawl_.+_(\d+)_.+.log/)) && (date = m[1]) && Date.parse(date) < one_year_ago
+        FileUtils.rm f
+      end
+    end
   end
 
   def_delegators :logger, :debug, :info, :warn, :error, :fatal
