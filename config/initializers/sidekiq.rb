@@ -2,7 +2,7 @@ redis_config = {
   url: "redis://#{ENV.fetch('UMAKADATA_REDIS_HOST', 'localhost')}:#{ENV.fetch('UMAKADATA_REDIS_PORT', 6379)}/umakadata_#{Rails.env}",
 }
 redis_logger = if Rails.env.production?
-                 Sidekiq::Logger.new('log/sidekiq_server.log', level: Logger::INFO)
+                 Sidekiq::Logger.new('log/sidekiq_server.log', 5, 10 * 1024 * 1024, level: Logger::INFO)
                else
                  Sidekiq::Logger.new(STDOUT, level: Logger::DEBUG)
                end
