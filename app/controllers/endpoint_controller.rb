@@ -178,7 +178,7 @@ class EndpointController < ApplicationController
           return
         end
 
-        columns = %w[id name comment request response elapsed_time trace warnings]
+        columns = %w[id name comment request elapsed_time trace warnings]
         columns << 'exceptions' if admin_user_signed_in?
 
         begin
@@ -186,7 +186,7 @@ class EndpointController < ApplicationController
           activities = @measurement.activities.order(:id).offset((page - 1) * 10).limit(10)
           more = @measurement.activities.count > page * 10
 
-          data = activities.map { |x| x.attributes.slice(*columns) }
+          data = activities.map { |x| x.attributes.slice(*columns).merge(response: x.truncated_response) }
 
           data.each do |x|
             next unless (request = x['request']).is_a?(Hash)
