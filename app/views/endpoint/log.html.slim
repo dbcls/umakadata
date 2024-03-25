@@ -18,7 +18,7 @@ section.container-fluid.white-frame
           Finished at: #{@measurement.finished_at}
 
     .col.col-12
-      h3= @measurement.comment
+      h3.mt-4= @measurement.comment
       #log data={endpoint: @endpoint.id, date: @date, name: @name}
         / Activities will be appended here
 
