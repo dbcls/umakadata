@@ -35,7 +35,7 @@ module Umakadata
           ActiveRecord::Base.connection.execute sql
 
           warn("Deleting archived records")
-          Measurement.where(evaluation_id: Evaluation.where(crawl_id: Crawl.where(started_at: from..to))).destroy!
+          Measurement.where(evaluation_id: Evaluation.where(crawl_id: Crawl.where(started_at: from..to))).destroy_all
         end
       end
 
