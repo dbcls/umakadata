@@ -36,7 +36,7 @@ class Evaluation < ApplicationRecord
   def update_score
     self.alive_rate = calc_alive_rate
     self.alive_score = calc_alive_score
-    self.score = (vs = scores.values).sum / vs.size.to_f
+    self.score = ((vs = scores.values).sum / vs.size.to_f).to_i
     self.rank = calc_rank
 
     self
@@ -155,14 +155,14 @@ class Evaluation < ApplicationRecord
 
   def calc_rank
     case score
-    when (20..40) then
-      2
-    when (40..60) then
-      3
-    when (60..80) then
-      4
     when (80..100) then
       5
+    when (60...80) then
+      4
+    when (40...60) then
+      3
+    when (20...40) then
+      2
     else
       1
     end

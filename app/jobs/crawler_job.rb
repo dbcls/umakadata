@@ -60,11 +60,11 @@ class CrawlerJob
     hash[:activities] = hash[:activities]&.map { |activity| Activity.new(activity.to_h) }
 
     evaluation.measurements << begin
-      Measurement.new(hash) do |x|
-        x.started_at = start_time
-        x.finished_at = Time.current
-      end
-    end
+                                 Measurement.new(hash) do |x|
+                                   x.started_at = start_time
+                                   x.finished_at = Time.current
+                                 end
+                               end
 
     v = measurement.value
 
@@ -109,15 +109,15 @@ class CrawlerJob
 
   def crawler
     @crawler ||= begin
-      Umakadata::Crawler.config.backtrace = true
-      Umakadata::Crawler.config.logger = ::Logger.new(log_file_path, **logger_options)
-      Umakadata::Crawler.new(endpoint.endpoint_url, **crawler_options)
-    end
+                   Umakadata::Crawler.config.backtrace = true
+                   Umakadata::Crawler.config.logger = ::Logger.new(log_file_path, **logger_options)
+                   Umakadata::Crawler.new(endpoint.endpoint_url, **crawler_options)
+                 end
   end
 
   def crawler_options
     {
-      exclude_graph: endpoint.excluding_graphs.map(&:uri).presence,
+      graphs: (g = endpoint.graph).present? ? { g.mode.to_sym => g.graph_list } : nil,
       resource_uri: endpoint.resource_uris.map { |x| Umakadata::ResourceURI.new(x.attributes) }.presence,
       vocabulary_prefix_others: vocabulary_prefix
     }.compact

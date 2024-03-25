@@ -1,12 +1,12 @@
 class Endpoint < ApplicationRecord
   has_many :dataset_relations, dependent: :destroy
   has_many :evaluations, dependent: :destroy
-  has_many :excluding_graphs, dependent: :destroy
+  has_one :graph, dependent: :destroy
   has_many :resource_uris, class_name: ResourceURI.name, dependent: :destroy
   has_many :vocabulary_prefixes, dependent: :destroy
 
   accepts_nested_attributes_for :resource_uris, allow_destroy: true
-  accepts_nested_attributes_for :excluding_graphs, allow_destroy: true
+  accepts_nested_attributes_for :graph, allow_destroy: true
 
   validates :name, uniqueness: true
   validates :endpoint_url, uniqueness: true

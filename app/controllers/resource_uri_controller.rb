@@ -10,21 +10,19 @@ class ResourceUriController < ApplicationController
               end
 
     data = records.order(:endpoint_id, :id)
-                  .map do |x|
-      {
-        uri: x.uri,
-        allow: x.allow,
-        deny: x.deny,
-        regex: x.regex,
-        case_insensitive: x.case_insensitive,
-        endpoint: {
-          id: x.endpoint.id,
-          name: x.endpoint.name,
-          url: x.endpoint.endpoint_url,
-          enabled: x.endpoint.enabled
-        }
-      }
-    end
+                  .map { |x| {
+                    uri: x.uri,
+                    allow: x.allow,
+                    deny: x.deny,
+                    regex: x.regex,
+                    case_insensitive: x.case_insensitive,
+                    endpoint: {
+                      id: x.endpoint.id,
+                      name: x.endpoint.name,
+                      url: x.endpoint.endpoint_url,
+                      enabled: x.endpoint.enabled
+                    }
+                  } }
 
     respond_to do |format|
       format.json do

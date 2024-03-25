@@ -3,7 +3,7 @@ ActiveAdmin.register Endpoint do
 
   permit_params :name, :endpoint_url, :description_url, :timeout, :enabled, :viewer_url, :issue_id, :label_id,
                 resource_uris_attributes: %i[id uri allow deny regex case_insensitive created_at updated_at endpoint_id _destroy],
-                excluding_graphs_attributes: %i[id uri endpoint_id created_at updated_at endpoint_id _destroy]
+                graph_attributes: %i[id mode graphs endpoint_id created_at updated_at endpoint_id _destroy]
 
   config.sort_order = 'id_asc'
 
@@ -36,10 +36,6 @@ ActiveAdmin.register Endpoint do
         end
       end
     end
-
-    # column 'Viewer URL', :viewer_url
-    # column 'Issue ID', :issue_id
-    # column 'Label ID', :label_id
 
     actions
   end
@@ -79,12 +75,15 @@ ActiveAdmin.register Endpoint do
       row :updated_at
     end
 
-    panel 'List of Excluding Graphs' do
-      table_for endpoint.excluding_graphs do
+    panel 'List of Graphs' do
+      table_for endpoint.graph do
         column :id do |x|
-          link_to x.id, admin_excluding_graph_path(x)
+          link_to x.id, admin_graph_path(x)
         end
-        column :uri
+        column :mode
+        column :graphs do |graph|
+          simple_format(graph.graphs)
+        end
         column :created_at
         column :updated_at
       end
@@ -122,11 +121,12 @@ ActiveAdmin.register Endpoint do
 
     f.inputs
 
-    f.inputs do
-      f.has_many :excluding_graphs, heading: 'List of Excluding Graphs', allow_destroy: true do |t|
-        t.input :uri, label: 'URI'
-      end
+    f.inputs 'Graphs', for: [:graph, f.object.graph || Graph.new] do |t|
+      t.input :mode
+      t.input :graphs
+    end
 
+    f.inputs do
       f.has_many :resource_uris, heading: 'List of Resource URI', allow_destroy: true do |t|
         t.input :uri, label: 'URI'
         t.input :allow

@@ -5,8 +5,10 @@
     .number-data
       = metrics.dig(:data_collection, :current) || '-'
     .metrix-description
-      - if (v = metrics.dig(:data_collection, :diff))
-        | #{v} days without data
+      - if (v = metrics.dig(:data_collection, :diff)) && v == 0
+        | The last crawl was successful.
+      - elsif v > 0
+        | The last crawl failed.
       - else
         | No data.
 
