@@ -3,3 +3,9 @@ schedule_checker:
   queue: runner
   cron: '0 0 * * * *'
   description: 'This job checks whether if it is time to start crawler every hour.'
+
+schedule_archiver:
+  class: ArchiveJob
+  queue: runner
+  cron: '0 0 1 * * *'
+  description: 'This job archives old data and clean database once a month.'
