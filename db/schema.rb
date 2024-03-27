@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_03_25_091514) do
+ActiveRecord::Schema.define(version: 2024_03_27_054314) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -130,14 +130,6 @@ ActiveRecord::Schema.define(version: 2024_03_25_091514) do
     t.index ["updated_at"], name: "index_evaluations_on_updated_at"
   end
 
-  create_table "excluding_graphs", force: :cascade do |t|
-    t.string "uri"
-    t.bigint "endpoint_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["endpoint_id"], name: "index_excluding_graphs_on_endpoint_id"
-  end
-
   create_table "graphs", force: :cascade do |t|
     t.bigint "endpoint_id"
     t.integer "mode", default: 0, null: false
@@ -185,7 +177,6 @@ ActiveRecord::Schema.define(version: 2024_03_25_091514) do
   add_foreign_key "dataset_relations", "endpoints", column: "src_endpoint_id"
   add_foreign_key "evaluations", "crawls"
   add_foreign_key "evaluations", "endpoints"
-  add_foreign_key "excluding_graphs", "endpoints"
   add_foreign_key "graphs", "endpoints"
   add_foreign_key "measurements", "evaluations"
   add_foreign_key "resource_uris", "endpoints"
