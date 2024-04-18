@@ -76,7 +76,7 @@ ActiveAdmin.register Endpoint do
     end
 
     panel 'List of Graphs' do
-      table_for endpoint.graph do
+      table_for Array(endpoint.graph) do
         column :id do |x|
           link_to x.id, admin_graph_path(x)
         end
