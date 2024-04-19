@@ -1,7 +1,7 @@
 ActiveAdmin.register Endpoint do
   menu priority: 2
 
-  permit_params :name, :endpoint_url, :description_url, :timeout, :enabled, :viewer_url, :issue_id, :label_id,
+  permit_params :name, :endpoint_url, :description_url, :timeout, :enabled, :profiler, :viewer_url, :issue_id, :label_id,
                 resource_uris_attributes: %i[id uri allow deny regex case_insensitive created_at updated_at endpoint_id _destroy],
                 graph_attributes: %i[id mode graphs endpoint_id created_at updated_at endpoint_id _destroy]
 
@@ -15,6 +15,7 @@ ActiveAdmin.register Endpoint do
     column 'Description URL', :description_url
     column :timeout
     column :enabled
+    column :profiler
     column :alert do |endpoint|
       if endpoint.just_registered?
         content_tag('span', style: 'color: #608F66;') do
@@ -45,6 +46,7 @@ ActiveAdmin.register Endpoint do
   filter :description_url
   filter :timeout
   filter :enabled
+  filter :profiler
 
   batch_action :create_forum do |ids|
     message = 'The forums for endpoints have been created'
@@ -68,6 +70,7 @@ ActiveAdmin.register Endpoint do
       row :description_url
       row :timeout
       row :enabled
+      row :profiler
       row :viewer_url
       row :issue_id
       row :label_id

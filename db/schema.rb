@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_03_27_054314) do
+ActiveRecord::Schema.define(version: 2024_04_19_050033) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,6 +83,7 @@ ActiveRecord::Schema.define(version: 2024_03_27_054314) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.float "timeout", default: 4.0
+    t.boolean "profiler", default: true
     t.index ["endpoint_url"], name: "index_endpoints_on_endpoint_url", unique: true
     t.index ["issue_id"], name: "index_endpoints_on_issue_id", unique: true
     t.index ["label_id"], name: "index_endpoints_on_label_id", unique: true
