@@ -1,9 +1,13 @@
 FROM ruby:2.6.3-slim-buster
 
+RUN mkdir -p /usr/share/man/man1 # workaround for installing openjdk-11-jre-headless
+
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-      build-essential \
       ca-certificates \
+      ca-certificates-java && \
+    apt-get install -y --no-install-recommends \
+      build-essential \
       curl \
       git \
       libpq-dev \
@@ -11,7 +15,8 @@ RUN apt-get update && \
       libxslt-dev \
       nodejs \
       npm \
-      shared-mime-info && \
+      shared-mime-info \
+      openjdk-11-jre-headless && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
