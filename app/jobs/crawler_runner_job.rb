@@ -1,4 +1,4 @@
-class RunnerJob
+class CrawlerRunnerJob
   include Sidekiq::Worker
 
   sidekiq_options queue: :runner

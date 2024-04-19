@@ -1,7 +1,7 @@
 class ArchiveJob
   include Sidekiq::Worker
 
-  sidekiq_options queue: :runner
+  sidekiq_options queue: :archiver
 
   def perform
     backup_dir = ENV.fetch('UMAKADATA_DATABASE_BACKUP_DIR')

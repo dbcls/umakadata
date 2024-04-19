@@ -6,4 +6,6 @@ production:
 :queues:
   - crawler
   - runner
+  - archiver
+  - profiler
   - mailers
