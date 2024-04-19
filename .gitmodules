@@ -1,0 +1,3 @@
+[submodule "vendor/tripledataprofiler"]
+	path = vendor/tripledataprofiler
+	url = https://bitbucket.org/yayamamo/tripledataprofiler.git
