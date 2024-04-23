@@ -9,7 +9,7 @@ class ProfilerRunnerJob
     Endpoint.all.each do |ep|
       next unless ep.enabled && ep.profiler
 
-      ProfilerJob.perform_async(ep.id, Rails.root.join('tmp', 'profile', date))
+      ProfilerJob.perform_async(ep.id, Rails.root.join('tmp', 'triple_data_profiler', date))
     end
   end
 end
