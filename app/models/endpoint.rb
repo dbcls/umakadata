@@ -1,7 +1,7 @@
 class Endpoint < ApplicationRecord
   has_many :dataset_relations, dependent: :destroy
   has_many :evaluations, dependent: :destroy
-  has_one :graph, dependent: :destroy
+  has_one :graph, dependent: :destroy, required: false
   has_many :resource_uris, class_name: ResourceURI.name, dependent: :destroy
   has_many :vocabulary_prefixes, dependent: :destroy
 
@@ -13,7 +13,8 @@ class Endpoint < ApplicationRecord
   validates :issue_id, uniqueness: true, allow_nil: true
   validates :label_id, uniqueness: true, allow_nil: true
 
-  after_create_commit :after_create_callback
+  before_validation :remove_graph_if_blank
+  after_create_commit :create_forum
 
   scope :active, -> { where(enabled: true) }
 
@@ -96,6 +97,8 @@ class Endpoint < ApplicationRecord
       update_columns(label_id: label[:id], issue_id: issue[:number]) # skip callbacks
 
       GithubHelper.add_labels_to_an_issue(issue[:number], [label[:name], 'endpoints'])
+    rescue StandardError => e
+      Rails.logger.error(e)
     end
   end
 
@@ -103,9 +106,9 @@ class Endpoint < ApplicationRecord
 
   private
 
-  def after_create_callback
-    create_forum
-  rescue StandardError => e
-    Rails.logger.error(e)
+  def remove_graph_if_blank
+    if graph && (graph.mode.blank? || graph.graphs.blank?)
+      self.graph = nil
+    end
   end
 end
