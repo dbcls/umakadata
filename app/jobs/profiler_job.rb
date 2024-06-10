@@ -31,6 +31,8 @@ class ProfilerJob
 
     logger.info("id: #{endpoint_id}") { cmd.join(' ') }
 
+    FileUtils.mkdir_p(output_dir)
+
     Zlib::GzipWriter.open(File.join(output_dir, "#{ep.id}.ttl.gz")) do |gz|
       Open3.popen3(*cmd.map(&:to_s)) do |stdin, stdout, stderr, _wait_thr|
         stdin.close
