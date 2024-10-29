@@ -15,10 +15,17 @@ class CrawlerJob
     timeout = endpoint.timeout
     s1 = Time.current
 
-    evaluation = create_evaluation.tap { |x| x.update!(crawler.basic_information) }
+    evaluation = create_evaluation
 
     begin
       evaluation.started_at = (s2 = Time.current)
+
+      basic_information = crawler.basic_information || {}
+      evaluation.update!({
+                           service_keyword: basic_information[:service_keyword] || false,
+                           graph_keyword: basic_information[:graph_keyword] || false,
+                           cors: basic_information[:cors] || false
+                         })
 
       crawler.run do |measurement|
         set_value(evaluation, measurement, s2) if measurement
@@ -38,8 +45,7 @@ class CrawlerJob
 
       remove_old_log_file
     rescue StandardError => e
-      error('Crawler.perform') { ([e.message] + e.backtrace).join("\n") }
-      raise e
+      logger.error("ep = #{@endpoint_id}") { Array(e.backtrace).unshift(e.message).join("\n") }
     ensure
       crawl.finalize! if crawl.last?
     end
@@ -84,10 +90,10 @@ class CrawlerJob
     elsif evaluation.respond_to?("#{name}=")
       evaluation.send("#{name}=", v.is_a?(String) ? v.ensure_utf8 : v) if v.present?
     else
-      error('Crawler.set_value') { "Missing method #{name}= for #{evaluation.class}" }
+      logger.warn("ep = #{@endpoint_id}") { "Missing method #{name}= for #{evaluation.class}" }
     end
   rescue StandardError => e
-    error('Crawler.set_value') { ([e.message] + e.backtrace).join("\n") }
+    logger.error("ep = #{@endpoint_id}") { Array(e.backtrace).unshift(e.message).join("\n") }
   end
 
   # @return [Crawl]
@@ -125,10 +131,10 @@ class CrawlerJob
 
   def vocabulary_prefix
     if (cache = VocabularyPrefix.caches).present?
-      logger.info('VocabularyPrefix') { 'Cached prefixes will be used.' }
+      logger.info("ep = #{@endpoint_id}") { 'Cached prefixes will be used.' }
       cache.reject { |x| x['endpoint_id'] == @endpoint_id }.map { |x| x['uri'] }.uniq
     else
-      logger.info('VocabularyPrefix') { 'Prefixes from database will be used.' }
+      logger.info("ep = #{@endpoint_id}") { 'Prefixes from database will be used.' }
       VocabularyPrefix.where.not(endpoint_id: @endpoint_id).pluck(:uri).uniq
     end
   end
@@ -161,6 +167,4 @@ class CrawlerJob
       end
     end
   end
-
-  def_delegators :logger, :debug, :info, :warn, :error, :fatal
 end

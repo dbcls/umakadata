@@ -4,9 +4,11 @@ class ProfilerJob
   sidekiq_options queue: :profiler, retry: 0, backtrace: true
 
   def perform(endpoint_id, output_dir, wait: 50, timeout: 1000)
+    @output_dir = output_dir
+
     ep = Endpoint.find(endpoint_id)
 
-    logger.info("id: #{endpoint_id}") { "Job performed for #{ep.attributes.slice('id', 'name', 'endpoint_url').to_json}" }
+    logger.info("ep = #{endpoint_id}") { "Job performed for #{ep.attributes.slice('id', 'name', 'endpoint_url').to_json}" }
 
     cmd = [
       'java',
@@ -29,7 +31,7 @@ class ProfilerJob
       end
     end
 
-    logger.info("id: #{endpoint_id}") { cmd.join(' ') }
+    logger.info("ep = #{endpoint_id}") { cmd.join(' ') }
 
     FileUtils.mkdir_p(output_dir)
 
@@ -42,16 +44,16 @@ class ProfilerJob
         end
       end
     end
+
+    logger.info("ep = #{endpoint_id}") { "Job finished" }
   rescue StandardError => e
-    logger.error("id: #{endpoint_id}") { e }
+    logger.error("ep = #{endpoint_id}") { Array(e.backtrace).unshift(e.message).join("\n") }
   end
 
   private
 
-  LOG_FILE = Rails.root.join('log', 'profile.log')
-
   def logger
-    @logger ||= ActiveSupport::Logger.new(LOG_FILE, 5, 10 * 1024 * 1024).tap do |logger|
+    @logger ||= ActiveSupport::Logger.new(File.join(@output_dir, 'profile.log')).tap do |logger|
       logger.formatter = ::Logger::Formatter.new
     end
   end
