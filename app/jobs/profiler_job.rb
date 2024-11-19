@@ -8,7 +8,7 @@ class ProfilerJob
 
     ep = Endpoint.find(endpoint_id)
 
-    logger.info("ep = #{endpoint_id}") { "Job performed for #{ep.attributes.slice('id', 'name', 'endpoint_url').to_json}" }
+    logger.info(self.class.name) { "[ep = #{endpoint_id}] Job performed for #{ep.attributes.slice('id', 'name', 'endpoint_url').to_json}" }
 
     cmd = [
       'java',
@@ -31,23 +31,23 @@ class ProfilerJob
       end
     end
 
-    logger.info("ep = #{endpoint_id}") { cmd.join(' ') }
-
-    FileUtils.mkdir_p(output_dir)
+    logger.info(self.class.name) { "[ep = #{endpoint_id}] #{cmd.join(' ')}" }
 
     Zlib::GzipWriter.open(File.join(output_dir, "#{ep.id}.ttl.gz")) do |gz|
-      Open3.popen3(*cmd.map(&:to_s)) do |stdin, stdout, stderr, _wait_thr|
+      Open3.popen3(*cmd.map(&:to_s)) do |stdin, stdout, stderr, wait_thr|
         stdin.close
         stderr.close
         stdout.each do |line|
           gz.write line
         end
+
+        logger.info(self.class.name) { "[ep = #{endpoint_id}] Profiler exited with status = #{wait_thr.value}" }
       end
     end
 
-    logger.info("ep = #{endpoint_id}") { "Job finished" }
+    logger.info(self.class.name) { "[ep = #{endpoint_id}] Job finished" }
   rescue StandardError => e
-    logger.error("ep = #{endpoint_id}") { Array(e.backtrace).unshift(e.message).join("\n") }
+    logger.error(self.class.name) { Array(e.backtrace).unshift("[ep = #{endpoint_id}] #{e.message}").join("\n") }
   end
 
   private

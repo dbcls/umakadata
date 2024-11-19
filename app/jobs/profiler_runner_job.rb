@@ -4,15 +4,25 @@ class ProfilerRunnerJob
   sidekiq_options queue: :runner
 
   def perform
-    date = Date.current.strftime('%Y%m')
-    output_dir = Rails.root.join('tmp', 'triple_data_profiler', date)
+    @output_dir = Rails.root.join('tmp', 'triple_data_profiler', Date.current.strftime('%Y%m'))
 
-    FileUtils.mkdir_p(output_dir)
+    FileUtils.mkdir_p(@output_dir)
 
-    Endpoint.all.each do |ep|
+    logger.info(self.class.name) { "Starting profiler" }
+
+    Endpoint.where(enabled: true, profiler: true).order(:id).each do |ep|
       next unless ep.enabled && ep.profiler
 
-      ProfilerJob.perform_async(ep.id, output_dir)
+      ProfilerJob.perform_async(ep.id, @output_dir.to_s)
+      logger.info(self.class.name) { "Add profiler queue: ep = #{ep.id}" }
+    end
+  end
+
+  private
+
+  def logger
+    @logger ||= ActiveSupport::Logger.new(@output_dir.join('profile.log')).tap do |logger|
+      logger.formatter = ::Logger::Formatter.new
     end
   end
 end
