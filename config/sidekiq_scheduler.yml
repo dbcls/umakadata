@@ -1,3 +1,4 @@
+# cron = "Seconds Minutes Hours Days Months DayOfWeek"
 schedule_checker:
   class: CrawlerRunnerJob
   queue: runner
@@ -7,11 +8,11 @@ schedule_checker:
 schedule_archiver:
   class: ArchiveJob
   queue: archiver
-  cron: '0 0 1 * * *'
+  cron: '0 0 0 1 * *'
   description: 'This job archives old data and clean database once a month.'
 
 schedule_profiler:
   class: ProfilerRunnerJob
   queue: runner
-  cron: '0 3 1 * * *'
+  cron: '0 0 3 1 * *'
   description: 'This job obtain several statistics for SPARQL endpoints.'
