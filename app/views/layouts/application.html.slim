@@ -12,12 +12,12 @@ html[lang='en']
     = csrf_meta_tags
     = csp_meta_tag
     = stylesheet_pack_tag 'application'
-    = javascript_pack_tag 'application'
+    = javascript_pack_tag 'application', defer: true
     = analytics_init if Rails.env.production?
     = yield :head
 
   body
-    script#common-header-and-footer__script type='text/javascript' src='https://dbcls.rois.ac.jp/DBCLS-common-header-footer/v2/script/common-header-and-footer.js' style='display: block'
+    script#common-header-and-footer__script type='text/javascript' defer=true src='https://dbcls.rois.ac.jp/DBCLS-common-header-footer/v2/script/common-header-and-footer.js' style='display: block'
 
     header#header-wrapper
       = render partial: 'layouts/header'
