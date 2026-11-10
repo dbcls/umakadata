@@ -29,6 +29,25 @@ RUN npm install -g yarn
 # Avoid key length error on client side
 RUN sed -i -e 's/CipherString = DEFAULT@SECLEVEL=2/# CipherString = DEFAULT@SECLEVEL=2/g' /etc/ssl/openssl.cnf
 
+# >> Install openjdk-21
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      wget \
+      gnupg \
+      software-properties-common && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor -o /usr/share/keyrings/adoptium.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/adoptium.gpg] https://packages.adoptium.net/artifactory/deb buster main" > /etc/apt/sources.list.d/adoptium.list
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      temurin-21-jdk && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+# << Install openjdk-21
+
 ADD docker-entrypoint.sh /
 
 WORKDIR app
