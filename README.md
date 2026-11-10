@@ -73,6 +73,12 @@
     $ docker-compose run --rm app yarn install
     ```
 
+    On arm64 hosts (Apple Silicon), nokogiri must be built from source because its
+    precompiled `aarch64-linux` gem requires a newer glibc than buster provides.
+    The entrypoint sets `BUNDLE_FORCE_RUBY_PLATFORM` for you, but if the `app_bundle`
+    volume already holds a precompiled nokogiri from an earlier install, remove it
+    first with `docker-compose down -v`.
+
 1. Database initialization
 
     ```
